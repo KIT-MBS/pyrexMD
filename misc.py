@@ -1,6 +1,7 @@
 # miscellaneous
 from __future__ import division, print_function
 import PIL  # pillow/PIL (Pyhon Imaging Library)
+import pdf2image
 import pickle as pl
 import numpy as np
 import matplotlib
@@ -289,10 +290,11 @@ def bash_cmd(cmd):
 ### pillow/PIL stuff
 
 
-def convert_image(fin, fout, format="auto", quality=100):
+def convert_image(fin, fout, format="auto", **kwargs):
     """
     Converts image type. Currently ONLY tested for:
         tif -> png
+        pdf -> png
 
     Args:
         fin (str): file path for file in (including extension)
@@ -300,16 +302,48 @@ def convert_image(fin, fout, format="auto", quality=100):
         format (str): fout format/extension
             "auto"
             "png"
-        quality (int)
+    Kwargs:
+        dpi (tuple): dpi for each direction
+        quality (int): compression quality:  0 to 100
     """
-    image = PIL.Image.open(fin)
-    image.convert(mode="RGB")
+    default = {"dpi": (300, 300),
+               "quality": 100}
+    cfg = CONFIG(default, **kwargs)
+    ###############################
+    if "pdf" in fin:
+        image = pdf2image.convert_from_path(fin)[0]
+    else:
+        image = PIL.Image.open(fin)
+        image.convert(mode="RGB")
     # output format
     if format == "auto":
-        format = get_extension(fout)[1:].upper()
-        image.save(fout, format, quality=quality)
-    else:
-        image.save(fout)
+        format = get_extension(fout)[1:]
+    image.save(fout, format=format, **cfg)
+    return
+
+
+def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
+    """
+    Args:
+        folder_in (str):  file path for folder with input  images
+        folder_out (str): file path for folder with output images
+        format (str): fout format/extension
+            "auto"
+            "png"
+
+    Kwargs:
+        dpi (tuple): dpi for each direction
+        quality (int): compression quality:  0 to 100
+    """
+    default = {"dpi": (300, 300),
+               "quality": 100}
+    cfg = CONFIG(default, **kwargs)
+    ###############################
+    images = [os.path.join(folder_in, file) for file in os.listdir(folder_in) if os.path.isfile(os.path.join(folder_in, file))]
+    for i in images:
+        name = get_base(i)
+        name_out = f"{folder_out}/{name}.{format.lower()}"
+        convert_image(fin=i, fout=name_out, format=format, **cfg)
     return
 
 
@@ -465,6 +499,41 @@ def round_object(object, prec=3):
         new_object = np.array(new_object)
 
     return new_object
+
+
+def split_lists(A, n, remap=False):
+    """
+    split list A into two lists B1 and B2 according to
+        A = B1 + B2
+    where B2 contains every n-th element of A.
+
+
+    Args:
+        A (int/list/np.array):
+            (int): initialize A according to: A = list(range(A))
+            (list/np.array): input list A which should be split
+        n (int): split every n-th element of A into B2
+        remap (bool): remap Bi according to: Bi = range(0, len(Bi))
+
+    Returns:
+       A (list): input list A
+       B1 (list): partial list B1
+       B2 (list): partial list B2 (contains every n-th element of A)
+    """
+    if isinstance(A, int):
+        A = list(range(A))
+    elif isinstance(A, (type(range(0)), type((i for i in range(0))))):
+        A = list(A)
+    elif not isinstance(A, (list, np.ndarray)):
+        raise TypeError("A has to be int, list/np.array or range/generator.")
+
+    B1 = [i for k, i in enumerate(A) if (k+1) % n != 0]
+    B2 = [i for k, i in enumerate(A) if (k+1) % n == 0]
+
+    if remap:
+        B1 = list(range(len(B1)))
+        B2 = list(range(len(B2)))
+    return A, B1, B2
 
 
 def flatten_array(x):
