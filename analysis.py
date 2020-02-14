@@ -198,6 +198,7 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
 ################################################################################
 ### analysis.py "core" functions
 
+
 def norm_ids(u, info=''):
     """
     Modify existing MDA universe/atomgrp and normalize ids according to:
@@ -2125,9 +2126,9 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_nu
         GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
 
         # edit text box positions of labels "Frame", "TS", "HA"
-        text_pos_kws = {"text_pos_Frame"= [-8.8, -0.3],
-                        "text_pos_TS"= [-4.2, -0.3],
-                        "text_pos_HA"= [-1.9, -0.3]}
+        text_pos_kws = {"text_pos_Frame": [-8.8, -0.3],
+                        "text_pos_TS": [-4.2, -0.3],
+                        "text_pos_HA": [-1.9, -0.3]}
 
         # plot
         analysis.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)

@@ -12,6 +12,7 @@ import os
 import sys
 import subprocess
 import time
+import copy
 
 
 ################################################################################
@@ -45,6 +46,12 @@ class CONFIG(object):
         Make class objects subscriptable, i.e. access data via [] ~ brackets.
         """
         return self.__dict__[str(key)]
+
+    def deepcopy(self):
+        """
+        Return deep copy of object.
+        """
+        return copy.deepcopy(self)
 
     def keys(self):
         """
@@ -501,6 +508,27 @@ def round_object(object, prec=3):
     return new_object
 
 
+def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"]):
+    """
+    get substrings of string by removing each seperator.
+
+    Args:
+        string (str)
+        seperators (list)
+
+    Returns:
+        substrings (list): list of substrings
+
+    Example:
+        get_substrings("split.this/string_into:parts")
+        >> ['split', 'this', 'string', 'into', 'parts']
+    """
+    for sep in seperators:
+        string = string.replace(sep, " ")
+    substrings = [item for item in string.split(" ") if len(item) > 0]
+    return substrings
+
+
 def split_lists(A, n, remap=False):
     """
     split list A into two lists B1 and B2 according to
@@ -551,6 +579,27 @@ def flatten_array(x):
     except TypeError:
         flattened_array = x
     return flattened_array
+
+
+def norm_array(array, start_value=0):
+    """
+    normed array:
+        - starts with <start_value>
+        - deltaValue is fixed to 1 (i.e. array[i]- array[i+1] = 1)
+
+    Args:
+        array (list/array)
+
+    Returns:
+        normed_array (list/array)
+    """
+    l = len(array)
+    normed_array = [0]*l
+    if isinstance(array, np.ndarray):
+        normed_array = np.array(normed_array)
+    for i in range(l):
+        normed_array[i] = i + start_value
+    return normed_array
 
 
 def get_precision(number):
@@ -851,7 +900,8 @@ def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
     if verbose:
         for item in table_str.splitlines()[:verbose_stop]:
             print(item)
-        print(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).")
+        if (len(table_str.splitlines()) >= verbose_stop):
+            print(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).")
     return table_str
 
 
@@ -897,6 +947,37 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, **
         fout.write(table_str)
 
     return realpath
+
+
+def get_slice_indices(list1, list2):
+    """
+    Get slice indices of two lists (mainlist and sublist) where sublist is a slice of mainlist, e.g:
+    sublist = mainlist[slice_ndx1:slice_ndx2]
+
+    Args:
+        list1 (list/array): mainlist or sublist
+        list2 (list/array): mainlist or sublist
+
+    Returns:
+        slice_ndx1 (int): first slice index ("start")
+        slice_ndx2 (int): second slice index ("end")
+    """
+    if len(list1) > len(list2):
+        mainlist = list1
+        sublist = list2
+    else:
+        mainlist = list2
+        sublist = list1
+
+    slice_ndx1 = 0
+    for i in range(len(sublist)):
+        if sublist[i] != mainlist[i]:
+            mainlist = np.append(mainlist[1:], mainlist[:1])
+            slice_ndx1 += 1
+        else:
+            break
+    slice_ndx2 = slice_ndx1 + len(sublist)
+    return (slice_ndx1, slice_ndx2)
 
 
 def get_cutoff_array(array, cut_min=None, cut_max=None):
@@ -984,12 +1065,15 @@ def get_sorted_array(array):
     return(SORTED_ARRAY, SORTED_NDX)
 
 
-def get_ranked_array(array):
+def get_ranked_array(array, reverse=False):
     """
-    Returns ranked array (decreasing order) and the coresponding element indices of the input array.
+    Returns ranked array (decreasing order) and the corresponding element indices of the input array.
 
     Args:
         array (array/list): array-like object
+        reverse (bool):
+            True: ranked array in increasing order (low to high)
+            False: ranked array in decreasing order (high to low)
 
     Returns:
         RANKED_VALUES (array)
@@ -1003,8 +1087,12 @@ def get_ranked_array(array):
     if not isinstance(array, np.ndarray):
         array = np.array(array)
 
-    RANKED_ARRAY = np.flip(np.sort(array))
-    RANKED_NDX = np.flip(np.argsort(array))
+    if reverse:
+        RANKED_ARRAY = np.sort(array)
+        RANKED_NDX = np.argsort(array)
+    else:
+        RANKED_ARRAY = np.flip(np.sort(array))
+        RANKED_NDX = np.flip(np.argsort(array))
 
     return(RANKED_ARRAY, RANKED_NDX)
 
