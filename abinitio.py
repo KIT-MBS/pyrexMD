@@ -30,10 +30,11 @@ def abinitio_setup_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
         frag9inserts (int): number of frag9 inserts
         folding_cycles (int): folding move cycles
         folding_repeats (int): folding move repeats
-        job_cores (int): -np option for multiprocessing
-        job_repeats (int): total number of job repeats
         job_name (str)
+        n_decoys (int): total number of decoys
+        n_cores (int): -np option for multiprocessing
         decoy_ndx_shift (int): shift decoy index (output filename) by this value
+                               required for multiprocessing to fix names of decoys
         kT (float): kT parameter during Monte-Carlo simulation
 
     Returns:
@@ -48,9 +49,9 @@ def abinitio_setup_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
                "frag9inserts": 1,
                "folding_cycles": 1000,
                "folding_repeats": 10,
-               "job_cores": 10,
-               "job_repeats": 10,
                "job_name": pdbid,
+               "n_decoys": 10,
+               "n_cores": 1,
                "decoy_ndx_shift": 0,
                "kT": 1.0}
     cfg = _misc.CONFIG(default)
@@ -59,22 +60,74 @@ def abinitio_setup_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     return cfg
 
 
-def abinitio_create_decoys(abinitio_cfg, output_dir="./output",
+def abinitio_create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
                            stream2pymol=True, fastrelax=True, save_log=True):
     """
+    Create decoys within pyrosetta framework.
+
+    Args:
+        abinitio_cfg (CONFIG class)
+        output_dir (str): output directory for decoys
+        n_cores (int): -np option for multiprocessing. Overwrites parameter
+                         in abinitio_cfg
+        stream2pymol (bool): stream decoys to pymol
+        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
+        save_log (bool): save scores to logfile at <output_dir/scores.txt>
+    """
+    cfg = abinitio_cfg
+    cfg.update_config(n_cores=n_cores)
+
+    pool = multiprocessing.Pool()
+    pool_outputs = pool.map(_abinitio_create_decoys, range(cfg.n_cores))
+
+    # reset log for multiprocess run
+    if save_log:
+        log_file = f"{output_dir}/scores.txt"
+        if os.path.exists(log_file):
+            os.remove(log_file)
+
+    if cfg.n_decoys >= cfg.n_cores:
+        print(f">>> Decoy creation will be distributed to {cfg.n_cores} cores.")
+    else:
+        print(f"""CFG file issue:
+<n_decoys parameter>: {cfg.n_decoys}
+<n_cores parameter>: {cfg.n_cores}""")
+        print(f">>> Decoy creation will be distributed to use only {cfg.n_decoys} cores.")
+        cfg.n_cores = cfg.n_decoys
+
+    for worker in range(cfg.n_cores):
+        cfg = cfg.deepcopy()
+        cfg.decoy_ndx_shift = worker * int(cfg.n_decoys/cfg.n_cores)
+        args = [cfg, output_dir, stream2pymol, fastrelax, save_log]
+        pool.map(_abinitio_create_decoys, args)
+
+    pool.close()
+    pool.join()
+    return
+
+
+def BLABLUBB_abinitio_create_decoys(abinitio_cfg, output_dir="./output",
+                                    stream2pymol=True, fastrelax=True, save_log=True):
+    """
+    Create decoys within pyrosetta framework.
+
     Args:
         abinitio_cfg (CONFIG class)
         output_dir (str): output directory for decoys
         stream2pymol (bool): stream decoys to pymol
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
         save_log (bool): save scores to logfile at <output_dir/scores.txt>
+
+    Returns:
+        SCORES_low (list): centroid scores ~ score 3
+        SCORES_high (list): fa scores ~ ref2015
     """
     cfg = abinitio_cfg
 
     ### create output directory
     if output_dir[-1] == "/":
         output_dir = output_dir[:-1]
-    if os.path.exists(output_dir):
+    if os.path.exists(output_dir) and cfg.n_cores == 1:
         msg = f"""Output directory '{output_dir}' already exists.
 Creating decoys will overwrite existing decoys in this directory.
 Proceed? [y/n]"""
@@ -94,9 +147,6 @@ Proceed? [y/n]"""
     scorefxn_low = pyrosetta.create_score_function('score3')
     scorefxn_high = pyrosetta.create_score_function('ref2015')
     #scorefxn_high = get_fa_scorefxn() # ref2015
-
-    SCORES_low = [0]*(cfg.job_repeats)  # scores array
-    SCORES_high = [0]*(cfg.job_repeats)  # scores array
 
     ### pose objects
     # linear pose
@@ -133,22 +183,30 @@ Proceed? [y/n]"""
     mc = pyrosetta.MonteCarlo(pose, scorefxn_low, cfg.kT)
     trial = pyrosetta.TrialMover(folding_mover, mc)
     folding = protocols.moves.RepeatMover(trial, cfg.folding_cycles)
-    #jd = PyJobDistributor(cfg.job_name, cfg.job_repeats, scorefxn_high)
+    #jd = PyJobDistributor(cfg.job_name, cfg.n_decoys, scorefxn_high)
 
     if stream2pymol:
         pmm = pyrosetta.PyMOLMover()
         pmm.keep_history(True)
 
     ### job distributor stuff
-    for i in range(cfg.job_repeats):
-        print(f"\n>>> Working on decoy: {output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb")
+    worker_jobs = int(cfg.n_decoys/cfg.n_cores)
+    #SCORES_low = [0]*(worker_jobs)  # scores array
+    #SCORES_high = [0]*(worker_jobs)  # scores array
+    DECOYS = []
+    SCORES_low = []
+    SCORES_high = []
+    for i in range(worker_jobs):
+        print(f">>> Working on decoy: {output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb")
+        DECOYS.append(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
         pose.assign(pose_0)
         pose.pdb_info().name(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
         mc.reset(pose)
         for j in range(cfg.folding_repeats):
             folding.apply(pose)
             mc.recover_low(pose)
-        SCORES_low[i] = scorefxn_low(pose)
+        #SCORES_low[i] = scorefxn_low(pose)
+        SCORES_low.append(scorefxn_low(pose))
         to_fullatom.apply(pose)
 
         if fastrelax:
@@ -156,7 +214,8 @@ Proceed? [y/n]"""
             relax.set_scorefxn(scorefxn_high)
             relax.apply(pose)
 
-        SCORES_high[i] = scorefxn_high(pose)
+        #SCORES_high[i] = scorefxn_high(pose)
+        SCORES_high.append(scorefxn_high(pose))
         pose.dump_pdb(f"{output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb")
 
         if stream2pymol:
@@ -164,14 +223,139 @@ Proceed? [y/n]"""
 
     if save_log:
         logfile = f"{output_dir}/scores.txt"
-        write_header = True
-        with open(logfile, "r") as log:
-            if "ref2015" in log.readline():
-                write_header = False
+        if not os.path.exists(logfile):
+            with open(logfile, "w") as log:
+                log.write(f"{'decoy'}\t{'score3'}\t{'ref2015'}\n")  # write header
         with open(logfile, "a") as log:
-            if write_header:
-                log.write(f"{'decoy'}\t{'score3'}\t{'ref2015'}\n")
-            DECOYS = [f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}" for i in range(cfg.job_repeats)]
+            #DECOYS = [f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}" for i in range(worker_jobs)]
+            table_str = _misc.print_table([DECOYS, SCORES_low, SCORES_high])
+            log.write(table_str)
+
+    return SCORES_low, SCORES_high
+
+
+def _abinitio_create_decoys(abinitio_cfg, output_dir="./output",
+                            stream2pymol=True, fastrelax=True, save_log=True):
+    """
+    Create decoys within pyrosetta framework.
+
+    Args:
+        abinitio_cfg (CONFIG class)
+        output_dir (str): output directory for decoys
+        stream2pymol (bool): stream decoys to pymol
+        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
+        save_log (bool): save scores to logfile at <output_dir/scores.txt>
+
+    Returns:
+        SCORES_low (list): centroid scores ~ score 3
+        SCORES_high (list): fa scores ~ ref2015
+    """
+    cfg = abinitio_cfg
+
+    ### create output directory
+    if output_dir[-1] == "/":
+        output_dir = output_dir[:-1]
+    if os.path.exists(output_dir) and cfg.n_cores == 1:
+        msg = f"""Output directory '{output_dir}' already exists.
+Creating decoys will overwrite existing decoys in this directory.
+Proceed? [y/n]"""
+        answer = input(msg).lower()
+        if (answer == "y" or answer == "yes"):
+            pass
+        if (answer == "n" or answer == "no"):
+            return
+    _misc.mkdir(output_dir)
+
+    ### create decoys code
+    # conversion movers
+    to_centroid = pyrosetta.SwitchResidueTypeSetMover('centroid')
+    to_fullatom = pyrosetta.SwitchResidueTypeSetMover('fa_standard')
+
+    # score function and score array
+    scorefxn_low = pyrosetta.create_score_function('score3')
+    scorefxn_high = pyrosetta.create_score_function('ref2015')
+    #scorefxn_high = get_fa_scorefxn() # ref2015
+
+    ### pose objects
+    # linear pose
+    pose_0 = pyrosetta.pose_from_sequence(cfg.fasta_seq)
+    pose_0.pdb_info().name(f"{cfg.pdbid} (linear)")
+
+    # test pose
+    pose = pyrosetta.Pose()
+    pose.assign(pose_0)
+    pose.pdb_info().name(cfg.pdbid)
+
+    # switch to centroid
+    to_centroid.apply(pose_0)
+    to_centroid.apply(pose)
+
+    ### mover and fragset objects
+    movemap = pyrosetta.MoveMap()
+    movemap.set_bb(True)
+
+    fragset_3mer = pyrosetta.rosetta.core.fragment.ConstantLengthFragSet(3, cfg.frag3mer)
+    fragset_9mer = pyrosetta.rosetta.core.fragment.ConstantLengthFragSet(9, cfg.frag9mer)
+
+    mover_frag3 = protocols.simple_moves.ClassicFragmentMover(fragset_3mer, movemap)
+    mover_frag9 = protocols.simple_moves.ClassicFragmentMover(fragset_9mer, movemap)
+
+    insert_frag3 = protocols.moves.RepeatMover(mover_frag3, cfg.frag3inserts)
+    insert_frag9 = protocols.moves.RepeatMover(mover_frag9, cfg.frag9inserts)
+
+    folding_mover = protocols.moves.SequenceMover()
+    folding_mover.add_mover(insert_frag9)
+    folding_mover.add_mover(insert_frag3)
+
+    # MC stuff
+    mc = pyrosetta.MonteCarlo(pose, scorefxn_low, cfg.kT)
+    trial = pyrosetta.TrialMover(folding_mover, mc)
+    folding = protocols.moves.RepeatMover(trial, cfg.folding_cycles)
+    #jd = PyJobDistributor(cfg.job_name, cfg.n_decoys, scorefxn_high)
+
+    if stream2pymol:
+        pmm = pyrosetta.PyMOLMover()
+        pmm.keep_history(True)
+
+    ### job distributor stuff
+    worker_jobs = int(cfg.n_decoys/cfg.n_cores)
+    #SCORES_low = [0]*(worker_jobs)  # scores array
+    #SCORES_high = [0]*(worker_jobs)  # scores array
+    DECOYS = []
+    SCORES_low = []
+    SCORES_high = []
+    for i in range(worker_jobs):
+        print(f">>> Working on decoy: {output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb")
+        DECOYS.append(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
+        pose.assign(pose_0)
+        pose.pdb_info().name(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
+        mc.reset(pose)
+        for j in range(cfg.folding_repeats):
+            folding.apply(pose)
+            mc.recover_low(pose)
+        #SCORES_low[i] = scorefxn_low(pose)
+        SCORES_low.append(scorefxn_low(pose))
+        to_fullatom.apply(pose)
+
+        if fastrelax:
+            relax = protocols.relax.FastRelax()
+            relax.set_scorefxn(scorefxn_high)
+            relax.apply(pose)
+
+        #SCORES_high[i] = scorefxn_high(pose)
+        SCORES_high.append(scorefxn_high(pose))
+        pose.dump_pdb(f"{output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb")
+
+        if stream2pymol:
+            pmm.apply(pose)
+
+    if save_log:
+        logfile = f"{output_dir}/scores.txt"
+        if not os.path.exists(logfile):
+            with open(logfile, "w") as log:
+                log.write(f"{'decoy'}\t{'score3'}\t{'ref2015'}\n")  # write header
+        with open(logfile, "a") as log:
+            #DECOYS = [f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}" for i in range(worker_jobs)]
             table_str = _misc.print_table([DECOYS, SCORES_low, SCORES_high])
             log.write(table_str)
 
@@ -312,7 +496,7 @@ def abinitio_get_decoy_precission(ref, decoy_prefix="./output/2hda_", decoy_ndx_
         decoy_path = f"{decoy_prefix}{i}.pdb"
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
-            break
+            continue
 
         # set DECOY
         DECOY.append(decoy_path)

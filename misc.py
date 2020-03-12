@@ -629,25 +629,6 @@ def get_precision(number):
     return precission
 
 
-def get_extension(str_):
-    """
-    Get ".ext" (extension) of string "str_".
-
-    Args:
-        str_ (str)
-
-    Returns:
-        ext (str)
-
-    Example:
-        get_extension("random_plot.png")
-        >> ".png"
-    """
-    str_ = str(str_).rsplit("/", 1)[-1]
-    ext = "."+str_.rsplit(".", 1)[-1]
-    return ext
-
-
 def get_base(str_):
     """
     Get base (i.e. everything except extension) of string "str_".
@@ -665,6 +646,25 @@ def get_base(str_):
     str_ = str(str_).rsplit("/", 1)[-1]
     base = str_.rsplit(".", 1)[0]
     return base
+
+
+def get_extension(str_):
+    """
+    Get ".ext" (extension) of string "str_".
+
+    Args:
+        str_ (str)
+
+    Returns:
+        ext (str)
+
+    Example:
+        get_extension("random_plot.png")
+        >> ".png"
+    """
+    str_ = str(str_).rsplit("/", 1)[-1]
+    ext = "."+str_.rsplit(".", 1)[-1]
+    return ext
 
 
 def autodetect_header(fin):
