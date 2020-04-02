@@ -748,7 +748,7 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(2, 3), skiprows='auto', filter_DCA=Tr
     Args:
         DCA_fin (str): DCA input file (path)
         n_DCA (int): number of used DCA contacts
-        usecols (sequence): columns containing the RES pairs in DCA_fin
+        usecols (tuple/list): columns containing the RES pairs in DCA_fin
         skiprows ('auto'/int): ignore header rows of DCA_fin
             'auto' or -1: auto detect
         filter_DCA (bool):

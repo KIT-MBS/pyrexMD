@@ -84,7 +84,7 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
     return RES, ATOM, NAME
 
 
-def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
+def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
                     filter_DCA=True, save_log=True, logFileName="PDBID_DCA_used.txt"):
     """
     Return lists of matching RES pairs and ATOM pairs for "DCA REX Workflow"
@@ -104,6 +104,7 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, n_bonds=1, ref_skiprows="auto", DCA
             -1 or "auto": auto detect
         DCA_fin (str): DCA file (path)
         n_DCA (int): number of DCA contacts which should be used
+        usecols (tuple/list): columns containing the RES pairs in DCA_fin
         n_bonds (int/str): number of restraints per DCA contact
             "all", 0 or -1: bonds between all heavy atoms of RES pair ij
                     -> all permutations of heavy atoms per DCA pair
@@ -129,7 +130,7 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, n_bonds=1, ref_skiprows="auto", DCA
 
     # read files
     RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(ref_pdb, ref_skiprows)
-    DCA_PAIR = _ana.read_DCA_file(DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows=DCA_skiprows, filter_DCA=filter_DCA)
+    DCA_PAIR = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=usecols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
 
     RES_PAIR = []
     ATOM_PAIR = []
@@ -260,6 +261,45 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, n_bonds=1, ref_skiprows="auto", DCA
     return RES_PAIR, ATOM_PAIR
 
 
+def DCAREX_modify_scoreFile(score_fin, shift_res, outputFileName="PDBID_mod.score", res_cols=(2, 3), score_col=(5)):
+    """
+    Modify score file (MSA scores) by shifting residues.
+
+    Args:
+        score_fin (str): path to score file
+        shift_res (int): shift residues by this value
+        outputFileName (str): realpath to modified score file
+            if "PDBID_mod.score" is left as default: try to automatically detect
+            pattern based on score_fin and add the "_mod" part into filename.
+        res_cols (tuple/list): columns with residue numbers
+        score_col (tuple/list): column with score/confidence
+
+    Returns:
+        outputFileName (str): realpath to modified score file
+    """
+    resi, resj = _misc.read_file(score_fin, usecols=res_cols, skiprows='auto', dtype=np.int_)
+    score = _misc.read_file(score_fin, usecols=score_col, skiprows='auto', dtype=np.float_)
+
+    # shift residues
+    print(f"Shifting score file residues by {shift_res}.")
+    resi += shift_res
+    resj += shift_res
+
+    if outputFileName == "PDBID_mod.score":
+        dirpath = _misc.dirpath(score_fin)
+        base = _misc.get_base(score_fin)
+        ext = _misc.get_extension(score_fin)
+        outputFileName = f"{dirpath}/{base}_mod{ext}"
+
+    with open(outputFileName, "w") as fout:
+        for i in range(len(resi)):
+            fout.write(f"{resi[i]}\t{resj[i]}\t{score[i]}\n")
+
+    outputFileName = _misc.realpath(outputFileName)
+    print(f"Saved file as: {outputFileName}")
+    return outputFileName
+
+
 def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto", outputFileName="PDBID_topol_mod.top"):
     """
     Modify topology:
@@ -325,6 +365,9 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
 def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_scaling="T", outputFileName="PDBID_topol_mod.top"):
     """
     TODO
+
+    Modify topology with lambda scaling prop to temperature.
+
     Args:
         top_fin
         temps_fin
