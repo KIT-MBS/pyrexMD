@@ -1819,10 +1819,12 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
 
     if align_ylim:
         for ndx in range(cfg.grid[0]*cfg.grid[1]):
-            i = ndx//cfg.grid[1]
-            j = i + ndx % cfg.grid[1]
-            if i != j:
-                align_limits(ref_ax=ax[i], target_ax=ax[j], apply_on='y')
+            if ndx % cfg.grid[1] == 0:
+                ref_ax = ax[ndx]
+            else:
+                target_ax = ax[ndx]
+            if ndx > 0:
+                align_limits(ref_ax=ref_ax, target_ax=target_ax, apply_on='y')
         """
         if "grid" in kwargs:
             for ndx in range(kwargs["grid"][0]*kwargs["grid"][1]):
