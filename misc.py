@@ -1020,7 +1020,7 @@ def get_cutoff_array(array, cut_min=None, cut_max=None):
     if isinstance(array, np.ndarray):
         cutoff_array = np.array(cutoff_array)
         cutoff_array_ndx = np.array(cutoff_array_ndx)
-    return(cutoff_array, cutoff_array_ndx)
+    return (cutoff_array, cutoff_array_ndx)
 
 
 def get_sub_array(array, ndx_sel):
@@ -1062,7 +1062,7 @@ def get_sorted_array(array):
     SORTED_ARRAY = np.sort(array)
     SORTED_NDX = np.argsort(array)
 
-    return(SORTED_ARRAY, SORTED_NDX)
+    return (SORTED_ARRAY, SORTED_NDX)
 
 
 def get_ranked_array(array, reverse=False):
@@ -1094,7 +1094,7 @@ def get_ranked_array(array, reverse=False):
         RANKED_ARRAY = np.flip(np.sort(array))
         RANKED_NDX = np.flip(np.argsort(array))
 
-    return(RANKED_ARRAY, RANKED_NDX)
+    return (RANKED_ARRAY, RANKED_NDX)
 
 
 def get_quantile(data, p, prec=2, **kwargs):
@@ -1226,7 +1226,7 @@ def figure(num=None, figsize=(6.5, 4), dpi=None, grid=[1, 1], hr=[], wr=[],
 
     if len(ax) == 1:
         ax = ax[0]
-    return(fig, ax)
+    return (fig, ax)
 
 
 def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, loc=None, **kwargs):
@@ -1382,9 +1382,9 @@ def autoapply_limits(fig_or_ax, margin=0.05):
                 YLIM.append(ylim)
 
     if len(XLIM) == 1:
-        return(xlim, ylim)
+        return (xlim, ylim)
     else:
-        return(XLIM, YLIM)
+        return (XLIM, YLIM)
 
 ################################################################################
 ################################################################################
@@ -1702,7 +1702,7 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
         if not plot:
             fig.set_size_inches(0, 0)
             plt.close()
-        return(ax_data, line_data, rect_data)
+        return (ax_data, line_data, rect_data)
 
     else:
         return obj
@@ -1839,7 +1839,10 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
 
     plt.tight_layout()
     plt.show()
-    return(fig, ax)
+
+    #fig = plt.gcf()
+    #ax = fig.axes
+    return (fig, ax)
 
 
 def hide_figure(fig_or_ax=None, num=None, close=True):
