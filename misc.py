@@ -1818,6 +1818,8 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
             plt.yscale(yscale)
 
     if align_ylim:
+        fig = plt.gcf()
+        ax = fig.axes
         for ndx in range(cfg.grid[0]*cfg.grid[1]):
             if ndx % cfg.grid[1] == 0:
                 ref_ax = ax[ndx]
@@ -1959,7 +1961,7 @@ def align_ticks(ref_ax, target_ax, apply_on='y', new_ticks=[]):
 
 def align_ticklabels(ref_ax, target_ax, apply_on='y', new_ticklabels=[]):
     """
-    - Read tickalbels of ref_ax and asign them to target_ax
+    - Read ticklabels of ref_ax and asign them to target_ax
     - if "new_ticklabels" is passed: assign new values to both ref_ax and target_ax
 
     Args:
@@ -2013,6 +2015,48 @@ def apply_shared_axes(ax, grid):
         item.set_yticklabels([])
     for item in [ax[i] for i in ndx if i not in set(ndx_bottom)]:
         item.set_xticklabels([])
+    return
+
+
+def convert_ticklabels(axes, multiplier, apply_on='y', prec=0):
+    """
+    Read ticklabels of axes and multiply with "multiplier"
+
+    Args:
+        axes (list of matplotlib.axes._subplots.Axes)
+        multiplier (int/float): multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue
+        apply_on (str): 'x', 'y', 'xy'
+        prec (int): precission
+            0: int precission
+            n: float with n decimal precission
+    """
+    for ax in axes:
+        if "x" in apply_on:
+            # read
+            xticklabels = []
+            temp = list(ax.get_xticklabels())
+            for item in temp:
+                xticklabels.append(item.get_text())
+            # convert
+            if prec == 0:
+                xticklabels = [int(float(item)*multiplier) for item in xticklabels]
+            elif prec > 0:
+                xticklabels = [round(float(item)*multiplier, prec) for item in xticklabels]
+            ax.set_xticklabels(xticklabels)
+
+        if "y" in apply_on:
+            # read
+            yticklabels = []
+            temp = list(ax.get_yticklabels())
+            for item in temp:
+                yticklabels.append(item.get_text())
+
+            # convert
+            if prec == 0:
+                yticklabels = [int(float(item)*multiplier) for item in yticklabels]
+            elif prec > 0:
+                yticklabels = [round(float(item)*multiplier, prec) for item in yticklabels]
+            ax.set_yticklabels(yticklabels)
     return
 
 
