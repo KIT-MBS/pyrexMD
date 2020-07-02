@@ -15,6 +15,32 @@ import time
 import copy
 
 
+def apply_matplotlib_rc_settings():
+    """
+    apply matplotlib rc settings:
+        - render math text including greek letters in italic font by default
+        - render math text including greek letters in non-italic font using \\mathrm{}
+        - does not require an external LaTeX installation
+
+    Code:
+        matplotlib.rcParams['font.size'] = 12
+        matplotlib.rcParams['font.weight'] = "normal"
+        matplotlib.rcParams['font.family'] = 'sans-serif'
+        matplotlib.rcParams['font.sans-serif'] = 'Arial'
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'sans'
+        matplotlib.rcParams['mathtext.it'] = 'sans:italic'
+        matplotlib.rcParams['mathtext.default'] = 'it'
+    """
+    matplotlib.rcParams['font.size'] = 12
+    matplotlib.rcParams['font.weight'] = "normal"
+    matplotlib.rcParams['font.family'] = 'sans-serif'
+    matplotlib.rcParams['font.sans-serif'] = 'Arial'
+    matplotlib.rcParams['mathtext.fontset'] = 'custom'
+    matplotlib.rcParams['mathtext.rm'] = 'sans'
+    matplotlib.rcParams['mathtext.it'] = 'sans:italic'
+    matplotlib.rcParams['mathtext.default'] = 'it'
+    return
 ################################################################################
 ################################################################################
 ### CONFIG CLASS
