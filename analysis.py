@@ -1617,8 +1617,7 @@ def plot_HEATMAP_REX_RMSD(REX_RMSD_dir, cps=["RdBu_r", 50, 0, 8], auto_convert=T
 
 ################################################################################
 ################################################################################
-# CASP PLOTS
-# TODO: save PD_xxx to logfile --> which RES fulfil the condition --> used for plot later
+# GDT: Global Distance Test
 
 
 def get_array_percent(dist_array, cutoff):
