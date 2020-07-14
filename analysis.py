@@ -1710,7 +1710,7 @@ def _HELP_sss_None2int(u, cfg):
         if cfg.sss[0] == None:
             cfg.sss[0] = 0
         if cfg.sss[1] == None:
-            max_ndx = u.trajectory.n_frames - 1
+            max_ndx = u.trajectory.n_frames
             cfg.sss[1] = max_ndx
         if cfg.sss[2] == None:
             cfg.sss[2] = 1
@@ -1719,7 +1719,7 @@ def _HELP_sss_None2int(u, cfg):
         if cfg.start == None:
             cfg.start = 0
         if cfg.stop == None:
-            max_ndx = u.trajectory.n_frames - 1
+            max_ndx = u.trajectory.n_frames
             cfg.stop = max_ndx
         if cfg.step == None:
             cfg.step = 1
@@ -1768,7 +1768,7 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
     Returns:
         GDT_percent (list): GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes
                             percent of residues under distance cutoff <= x Angstrom
-        GDT_resids (list):
+        GDT_resids (list): resids within cutoff
             if true_resids == True:
                 true resids; possible values are: minRES <= value <= maxRES
             if true_resids == False:
