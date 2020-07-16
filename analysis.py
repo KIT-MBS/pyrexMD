@@ -7,6 +7,7 @@
 from __future__ import division, print_function
 import myPKG.misc as _misc
 from tqdm import tqdm_notebook as tqdm
+#from tqdm import tqdm
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align
 import MDAnalysis as mda
 import numpy as np
@@ -1683,47 +1684,66 @@ def get_PairDistances(mobile, ref, sel="protein and name CA", mobile_sel="auto",
     return(PAIR_DISTANCES, RMSD, _resids_mobile, _resids_ref)
 
 
-def _HELP_sss_None2int(u, cfg):
+def _HELP_sss_None2int(obj, cfg):
     """
-    Note: this function is (probably) required when a custom function
-          uses a MDA universe and a misc.CONFIG class with the keys
-          sss, start, stop, step.
+    Note: this function is (probably) required when a custom function uses
+    either a MDA universe or (distance)matrix and a misc.CONFIG class with
+    the keys "sss", "start", "stop", "step".
+
     Reason:
         slicing: aList[None:None:None] is equal to aList[::]
         get item: aList[None] does not exist
 
     Converts None entries of the config keys to integers:
-        sss = [None, None, None] -> [0, max frame of u, 1]
+        sss = [None, None, None] -> [0, max frame of MDA universe, 1]
         start = None ->  0
         stop = None ->  max frame of u
         step = None ->  1
 
     Args:
-        u (MDA universe)
+        obj (MDA universe / matrix): MDA universe or distane(matrix)
         cfg (misc.CONFIG class)
 
     Returns:
         cfg (misc.CONFIG class)
     """
+    if isinstance(obj, mda.core.universe.Universe):
+        if "sss" in cfg.keys():
+            if cfg.sss[0] == None:
+                cfg.sss[0] = 0
+            if cfg.sss[1] == None:
+                max_ndx = obj.trajectory.n_frames
+                cfg.sss[1] = max_ndx
+            if cfg.sss[2] == None:
+                cfg.sss[2] = 1
 
-    if "sss" in cfg.keys():
-        if cfg.sss[0] == None:
-            cfg.sss[0] = 0
-        if cfg.sss[1] == None:
-            max_ndx = u.trajectory.n_frames
-            cfg.sss[1] = max_ndx
-        if cfg.sss[2] == None:
-            cfg.sss[2] = 1
+        if "start" in cfg.keys() or "stop" in cfg.keys() or "step" in cfg.keys():
+            if cfg.start == None:
+                cfg.start = 0
+            if cfg.stop == None:
+                max_ndx = obj.trajectory.n_frames
+                cfg.stop = max_ndx
+            if cfg.step == None:
+                cfg.step = 1
 
-    if "start" in cfg.keys():
-        if cfg.start == None:
-            cfg.start = 0
-        if cfg.stop == None:
-            max_ndx = u.trajectory.n_frames
-            cfg.stop = max_ndx
-        if cfg.step == None:
-            cfg.step = 1
+    elif isinstance(obj, np.ndarray):
+        if "sss" in cfg.keys():
+            if cfg.sss[0] == None:
+                cfg.sss[0] = 0
+            if cfg.sss[1] == None:
+                max_ndx = len(obj) - 1
+                cfg.sss[1] = max_ndx
+            if cfg.sss[2] == None:
+                cfg.sss[2] = 1
 
+        if "start" in cfg.keys() or "stop" in cfg.keys() or "step" in cfg.keys():
+            if cfg.start == None:
+                cfg.start = 0
+            if cfg.stop == None:
+                max_ndx = len(obj) - 1
+                cfg.stop = max_ndx
+            if cfg.step == None:
+                cfg.step = 1
     return cfg
 
 
@@ -1757,9 +1777,9 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
 
     Kwargs:
         aliases for sss items:
-            start (None/int)
-            stop (None/int)
-            step (None/int)
+            start (None/int): start frame
+            stop (None/int): stop frame
+            step (None/int): step size
         aliases for cutoff items:
             min_cutoff (float)
             max_cutoff (float)
@@ -1827,7 +1847,6 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
     if np.any(_resids_mobile != _resids_ref):
         raise ValueError(f'''{GDT.__module__}.{GDT.__name__}():\
         \nGDT_resids: Residue IDs of mobile and reference don't match! Norm and align universe first.''')
-
     return(GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME)
 
 

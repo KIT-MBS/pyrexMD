@@ -663,7 +663,7 @@ def get_base(str_):
         str_ (str)
 
     Returns:
-        base (str)
+        base (str): base of str_
 
     Example:
         get_base("random_plot.png")
@@ -682,7 +682,7 @@ def get_extension(str_):
         str_ (str)
 
     Returns:
-        ext (str)
+        ext (str): extension of str_
 
     Example:
         get_extension("random_plot.png")
@@ -691,6 +691,34 @@ def get_extension(str_):
     str_ = str(str_).rsplit("/", 1)[-1]
     ext = "."+str_.rsplit(".", 1)[-1]
     return ext
+
+
+def append_str(str1, str2, sep):
+    """
+    Args:
+        str1 (str): base string
+        str2 (str): append string
+        sep (str): seperator
+
+    Returns:
+        str_ (str): new string
+    """
+    str_ = str1.split(sep)[0] + sep + str2 + str1.split(sep)[1]
+    return str_
+
+
+def prepend_str(str1, str2, sep):
+    """
+    Args:
+        str1 (str): base string
+        str2 (str): append string
+        sep (str): seperator
+
+    Returns:
+        str_ (str): new string
+    """
+    str_ = str1.split(sep)[0] + str2 + sep + str1.split(sep)[1]
+    return str_
 
 
 def autodetect_header(fin):
