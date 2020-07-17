@@ -8,6 +8,7 @@ import h5py
 import distruct as ds
 import Bio
 import myPKG.misc as _misc
+from myPKG.misc import HiddenPrints
 from myPKG.analysis import _HELP_sss_None2int  # required for internal conversion
 
 
@@ -192,7 +193,8 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
     return dist_file
 
 
-def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default", verbose=True, **kwargs):
+def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
+                                verbose=True, verbose_distruct=False, **kwargs):
     """
     Use distruct to generate structure.
 
@@ -211,6 +213,7 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default", ve
             reason:
                 relative/absolute path are intended
         verbose (bool)
+        verbose_distruct (bool): show/hide distruct prints
 
     Kwargs:
         save_dir (str): save directory of .pdb/.cif files
@@ -243,10 +246,17 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default", ve
     _misc.bash_cmd(f"rm {dist_file}")
 
     # generate structure
-    s = ds.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
-    s.generate_primary_contacts()
-    s.set_tertiary_contacts(contacts)
-    s.run()
+    if verbose_distruct:
+        s = ds.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
+        s.generate_primary_contacts()
+        s.set_tertiary_contacts(contacts)
+        s.run()
+    else:
+        with HiddenPrints():
+            s = ds.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
+            s.generate_primary_contacts()
+            s.set_tertiary_contacts(contacts)
+            s.run()
 
     # save structure as .pdb or .cif
     if save_as == "default":

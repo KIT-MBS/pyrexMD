@@ -43,6 +43,29 @@ def apply_matplotlib_rc_settings():
     return
 ################################################################################
 ################################################################################
+### HiddenPrints CLASS
+### Note: taken from Stackoverflow: https://stackoverflow.com/questions/8391411/suppress-calls-to-print-python
+
+
+class HiddenPrints:
+    """
+    Class to hide print commands.
+
+    Example:
+        with HiddenPrints():
+            print("This print is hidden")
+        print("This print is shown")
+    """
+
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+################################################################################
+################################################################################
 ### CONFIG CLASS
 
 
