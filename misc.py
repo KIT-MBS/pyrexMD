@@ -44,7 +44,6 @@ def apply_matplotlib_rc_settings():
 ################################################################################
 ################################################################################
 ### HiddenPrints CLASS
-### Note: taken from Stackoverflow: https://stackoverflow.com/questions/8391411/suppress-calls-to-print-python
 
 
 class HiddenPrints:
