@@ -1,15 +1,15 @@
 import myPKG.core as core
 #from myPKG.core import iColor, iWidgets, iPlayer, iColor
 import myPKG.analysis as ana
-import myPKG.rex as rex
 import myPKG.misc as misc
+
 
 version = 1.0
 
 
 def init():
     """
-    Init all modules of myPKG and other important packages
+    Init important modules of myPKG and other packages
     by copy pasting the printed message.
     """
     print("""
@@ -23,10 +23,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import MDAnalysis as mda
-import nglview as ngl
 import myPKG.core as core
-import myPKG.analysis as ana
-import myPKG.rex as rex
 import myPKG.misc as misc
+import myPKG.analysis as ana
+import myPKG.gmx as gmx
     """)
     return

@@ -324,9 +324,11 @@ def mkdir(path, verbose=True):
     return realpath
 
 
-def bash_cmd(cmd):
+def bash_cmd(cmd, verbose=False):
     """
     Execte any bash command via python.
+
+    Note: works with pipe.
 
     Args:
         cmd (str): bash cmd
@@ -338,8 +340,19 @@ def bash_cmd(cmd):
     bash_cmd("ls")
     >> test
     """
-    subprocess.check_call(cmd.split())
+    if verbose:
+        print("executing shell command:", cmd)
+
+    p = subprocess.Popen(cmd, stdin=subprocess.PIPE, shell=True)
+
+    # wait until subprocess is finished
+    while True:
+        p.poll()
+        if p.returncode is not None:
+            break
     return
+
+
 ################################################################################
 ################################################################################
 ### pillow/PIL stuff
