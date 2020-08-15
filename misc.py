@@ -918,7 +918,7 @@ def get_PDBid(ref):
         return
 
 
-def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
+def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
     """
     Prints each item of "data" elementwise next to each other as a table.
 
@@ -927,6 +927,8 @@ def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
         prec(None/int):
             (None): rounding off
             (int):  rounding on
+        spacing (int): spacing between columns (via "".expandtabs(spacing))
+            8: default \\t width
         verbose (bool): print table
         verbose_stop (None/int): stop printing after N lines
 
@@ -937,9 +939,9 @@ def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
         letters = ["A", "B", "C"]
         numbers = [1, 2, 3]
         table = misc.print_table([letters, numbers])
-        >>  A	1
-            B	2
-            C	3
+        >>  A   1
+            B   2
+            C   3
 
         # save table as log file:
         with open("table.log", "w") as fout:
@@ -950,6 +952,7 @@ def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
         data = round_object(data, prec)
 
     table_str = ""
+
     if len(data) == 1:
         for item in data:
             table_str += "{}\n".format(item)
@@ -986,6 +989,8 @@ def print_table(data=[], prec=3, verbose=True, verbose_stop=30):
                                                                    data[2][ndx], data[3][ndx],
                                                                    data[4][ndx], data[5][ndx],
                                                                    data[6][ndx], data[7][ndx])
+    table_str = table_str.expandtabs(spacing)
+
     if verbose:
         for item in table_str.splitlines()[:verbose_stop]:
             print(item)
@@ -1154,7 +1159,7 @@ def get_sorted_array(array):
     return (SORTED_ARRAY, SORTED_NDX)
 
 
-def get_ranked_array(array, reverse=False):
+def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
     """
     Returns ranked array (decreasing order) and the corresponding element indices of the input array.
 
@@ -1163,6 +1168,16 @@ def get_ranked_array(array, reverse=False):
         reverse (bool):
             True: ranked array in increasing order (low to high)
             False: ranked array in decreasing order (high to low)
+        verbose (bool): print table with RANKED_VALUES, RANKED_NDX
+
+    Kwargs:
+        # see help(misc.print_table)
+        prec(None/int):
+            (None): rounding off
+            (int):  rounding on
+        spacing (int): spacing between columns (via "".expandtabs(spacing))
+            8: default \\t width
+        verbose_stop (None/int): stop printing after N lines
 
     Returns:
         RANKED_VALUES (array)
@@ -1170,7 +1185,7 @@ def get_ranked_array(array, reverse=False):
 
     Example:
         A = np.array([1, 3, 2, 4])
-        get_ranked_array(A)
+        get_ranked_array(A, verbose=False)
         >> > (array([4, 3, 2, 1]), array([3, 1, 2, 0]))
     """
     if not isinstance(array, np.ndarray):
@@ -1182,6 +1197,9 @@ def get_ranked_array(array, reverse=False):
     else:
         RANKED_ARRAY = np.flip(np.sort(array))
         RANKED_NDX = np.flip(np.argsort(array))
+
+    if verbose:
+        print_table([RANKED_ARRAY, RANKED_NDX], **kwargs)
 
     return (RANKED_ARRAY, RANKED_NDX)
 

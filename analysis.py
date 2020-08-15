@@ -95,8 +95,26 @@ class Universe(object):
 #         rmsd = _rms.rmsd(mobile, ref, superposition=superposition)
 #     return rmsd
 
+def get_timeconversion(u):
+    """
+    get/print time conversion of MDA universe <u>
 
-def get_RMSD(mobile, ref, sel='backbone', weights='mass', plot=False, alt_return=True):
+    Args:
+        u (MDA universe)
+    """
+    if isinstance(u, mda.core.universe.Universe):
+        dt = u.trajectory.dt
+        tu = u.trajectory.units["time"]
+        if tu == "ps":
+            print(f"Time = Frame * {dt} {tu} = Frame * {0.001*dt} ns")
+        else:
+            print(f"Time=Frame * {dt} {tu}")
+    else:
+        raise TypeError("type(u) must be MDAnalysis.core.universe.Universe.")
+    return
+
+
+def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot=False, alt_return=True, **kwargs):
     """
     Calculates the RMSD between mobile and ref after superimposing (translation and rotation).
     Alias function of MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for more information.
@@ -104,7 +122,8 @@ def get_RMSD(mobile, ref, sel='backbone', weights='mass', plot=False, alt_return
     Args:
         mobile (MDA universe/atomgrp): mobile structure
         ref (MDA universe/atomgrp): reference structure
-        sel (str): selection string
+        sel1 (str): selection string of mobile structure
+        sel2 (str): selection string of reference structure
         weights (bool/str/array_like): weights during superposition of mobile and reference
            None: no weights
            "mass": atom masses as weights
@@ -128,6 +147,9 @@ def get_RMSD(mobile, ref, sel='backbone', weights='mass', plot=False, alt_return
                 time = ftr_array[:,1]
                 rmsd = ftr_array[:,2]
 
+    Kwargs:
+        see help(misc.figure)
+
     Returns:
         if alt_return == True:
             ftr_tuple (tuple)    # ftr: frame, time, rmsd
@@ -141,7 +163,7 @@ def get_RMSD(mobile, ref, sel='backbone', weights='mass', plot=False, alt_return
         return
 
     else:
-        RMSD = _rms.RMSD(mobile.select_atoms(sel), ref.select_atoms(sel), weights=weights)
+        RMSD = _rms.RMSD(mobile.select_atoms(sel1), ref.select_atoms(sel2), weights=weights)
         RMSD.run()
 
         ftr_array = RMSD.rmsd
@@ -150,7 +172,8 @@ def get_RMSD(mobile, ref, sel='backbone', weights='mass', plot=False, alt_return
         rmsd = RMSD.rmsd[:, 2]
 
     if plot:
-        PLOT(xdata=frame, ydata=rmsd, xlabel='Frame', ylabel='RMSD')
+        #PLOT(xdata=frame, ydata=rmsd, xlabel='Frame', ylabel=f'RMSD ($\AA$)', **kwargs)
+        PLOT(xdata=time, ydata=rmsd, xlabel='Time (ps)', ylabel=f'RMSD ($\AA$)', **kwargs)
 
     if alt_return is False:
         return ftr_array
@@ -872,6 +895,120 @@ def Contact_Analysis_CA(ref, top, traj, d_cutoff=6.0, sel='protein and name CA',
 ### analysis.py plot functions
 
 
+def get_trendline(xdata, ydata, compress=10):
+    """
+    Reduces <xdata, ydata> by <compress> factor and returns trendline data.
+    (Trendline: sum and normalize each <compress> elements of input data)
+
+    Args:
+        xdata (list/array)
+        ydata (list/array)
+        compress (int): compress factor (sum and normalize <compress> elements)
+
+    Returns:
+        trend_xdata (list/array)
+        trend_ydata (list/array)
+    """
+    if len(xdata) != len(ydata):
+        raise ValueError("xdata and ydata have unequal length.")
+
+    trend_xdata = np.add.reduceat(xdata, np.arange(0, len(xdata), compress))/float(compress)
+    trend_ydata = np.add.reduceat(ydata, np.arange(0, len(ydata), compress))/float(compress)
+    trend_xdata = trend_xdata.tolist()
+    trend_ydata = trend_ydata.tolist()
+
+    # fix normalization of last element if data is not fully divisible by compress (ie remainder exists)
+    remainder = len(xdata) % compress
+    if remainder != 0:
+        trend_xdata = trend_xdata[: -1] + [sum(xdata[-remainder:])/float(remainder)]
+        trend_ydata = trend_ydata[: -1] + [sum(ydata[-remainder:])/float(remainder)]
+
+    if isinstance(xdata, np.ndarray):
+        trend_xdata = np.array(trend_xdata)
+    if isinstance(ydata, np.ndarray):
+        trend_ydata = np.array(trend_ydata)
+    return trend_xdata, trend_ydata
+
+
+def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
+    """
+    Plot trendline of <xdata, ydata> and return trendline object
+    Remove trendline via trendline.remove()
+
+    Args:
+        xdata (list/array)
+        ydata (list/array)
+        compress (int): compress factor (sum and normalize <compress> elements)
+        fignum (int): figure number (get with plt.gcf().number)
+
+    Kwargs:
+        "alpha": 1.0
+        "color": "black"
+        "ls": "-"
+        "lw": 2.0
+        "ms": 1
+        "marker": "
+
+    Returns:
+        trendline (matplotlib.lines.Line2D): trendline object
+    """
+    default = {"alpha": 1.0,
+               "color": "black",
+               "label": None,
+               "ls": "-",
+               "lw": 2.0,
+               "ms": 1,
+               "marker": "."}
+    cfg = _misc.CONFIG(default, **kwargs)
+    #####################################
+    # get trendline data
+    trend_xdata, trend_ydata = get_trendline(xdata, ydata, compress=compress)
+
+    # use existing figure
+    if isinstance(fig, int):
+        fig = plt.figure(num=fig)
+    elif isinstance(fig, matplotlib.figure.Figure):
+        fig = plt.figure(num=fig.number)
+    else:
+        fig = plt.gcf()
+
+    # remove existing trendline
+    try:
+        fig.trendline.remove()
+        del fig.trendline
+    except AttributeError:
+        pass  # no trendline found -> do nothing
+
+    # plot new trendline
+    trendline = plt.plot(trend_xdata, trend_ydata,
+                         alpha=cfg.alpha, color=cfg.color, label=cfg.label,
+                         ls=cfg.ls, lw=cfg.lw, ms=cfg.ms, marker=cfg.marker)
+
+    fig.trendline = trendline[0]
+    return fig.trendline
+
+
+def remove_trendline(trendline=None, fig=None):
+    """
+    """
+    if trendline is not None:
+        trendline.remove()
+        del trendline
+        return
+    elif fig is not None:
+        fig.trendline.remove()
+        del fig.trendline
+        return
+    elif trendline is None and fig is None:
+        fig = plt.gcf()
+    try:
+        fig.trendline.remove()
+        del fig.trendline
+    except AttributeError:
+        print("Figure has no trendline object.")
+    return
+
+
 def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **kwargs):
     """
     General plot function for analysis.py
@@ -888,6 +1025,12 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
     Kwargs:
         # see args of misc.figure()
 
+        "alpha": 0.3
+        "color": "r"
+        "lw": 1.5
+        "ms": 1
+        "marker": "."
+
     Returns:
         fig (matplotlib.figure.Figure)
         ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
@@ -896,19 +1039,29 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
         >> PLOT(TIME, RMSD, xlabel="time (ns)", ylabel=r"RMSD ($\AA$)", title="RMSD plot",
                 xlim=[50, 500], ylim=[0, 20])
     """
+    # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
+    default = {"alpha": 0.3,
+               "color": "r",
+               "lw": 1.5,
+               "ms": 1,
+               "marker": "."}
+    cfg = _misc.CONFIG(default, **kwargs)
+    #####################################
     fig, ax = _misc.figure(**kwargs)
     cp = sns.color_palette(None)
 
     _dim_xdata = len(np.shape(xdata))
     if _dim_xdata == 1:
-        plt.plot(xdata, ydata, color=cp[0], alpha=0.85)
+        plt.plot(xdata, ydata, color=cfg.color, ls="", marker=cfg.marker, ms=cfg.ms)
+        plt.plot(xdata, ydata, color=cfg.color, lw=cfg.lw, alpha=cfg.alpha)
     else:
         for i in range(len(xdata)):
             j = i % 10  # sns color_palette has usually 10 colors
-            plt.plot(xdata[i], ydata[i], color=cp[j], alpha=0.85)
+            plt.plot(xdata[i], ydata[i], color=cp[j], ls="", marker=cfg.marker, ms=cfg.ms)
+            plt.plot(xdata[i], ydata[i], color=cp[j], lw=cfg.lw, alpha=cfg.alpha)
 
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+    plt.xlabel(xlabel, fontweight="bold")
+    plt.ylabel(ylabel, fontweight="bold")
     if title != "" or title != None:
         plt.title(title, fontweight='bold')
 
@@ -979,7 +1132,7 @@ def plot_RMSD(RMSD_file, sss=[None, None, 10], verbose=None, save_as="", **kwarg
     TIME = np.loadtxt(RMSD_file, skiprows=header, usecols=(0,))
     TIME = [round(x, 3) for x in TIME[cfg.start:cfg.stop:cfg.step]]
     RMSD = np.loadtxt(RMSD_file, skiprows=header, usecols=(1,))
-    RMSD = RMSD[cfg.start:cfg.stop:cfg.step]
+    RMSD = RMSD[cfg.start: cfg.stop: cfg.step]
 
     # apply cutoff and force same dimensions by tracking indices
     if cfg.cut_min is not None or cfg.cut_max is not None:
@@ -1143,13 +1296,13 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
 
     # apply cutoff if specified
     if data_length == 1:
-        data, _ = _misc.get_cutoff_array(data[cfg.start:cfg.stop:cfg.step],
+        data, _ = _misc.get_cutoff_array(data[cfg.start: cfg.stop: cfg.step],
                                          cfg.cut_min, cfg.cut_max)
     else:
         data_temp = list(data)
         data = []
         for item in data_temp:
-            cutoff_data, _ = _misc.get_cutoff_array(item[cfg.start:cfg.stop:cfg.step],
+            cutoff_data, _ = _misc.get_cutoff_array(item[cfg.start: cfg.stop: cfg.step],
                                                     cfg.cut_min, cfg.cut_max)
             data.append(cutoff_data)
 
@@ -1184,12 +1337,12 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
         if cfg.orientation == "vertical":
             h = hist[0]
             w = bins_step
-            plt.bar(bins[:-1], height=h, width=w, align=cfg.align_bins,
+            plt.bar(bins[: -1], height=h, width=w, align=cfg.align_bins,
                     color=cfg.colors[0], alpha=cfg.alpha, ec=cfg.ec, log=cfg.logscale)
         if cfg.orientation == "horizontal":
             h = bins_step
             w = hist[0]
-            plt.barh(bins[:-1], height=h, width=w, align=cfg.align_bins,
+            plt.barh(bins[: -1], height=h, width=w, align=cfg.align_bins,
                      color=cfg.colors[0], alpha=cfg.alpha, ec=cfg.ec, log=cfg.logscale)
 
     else:
@@ -1197,12 +1350,12 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
             if cfg.orientation == "vertical":
                 h = HIST[ndx][0]
                 w = bins_step
-                plt.bar(bins[:-1], height=h, width=w, align=cfg.align_bins,
+                plt.bar(bins[: -1], height=h, width=w, align=cfg.align_bins,
                         color=cfg.colors[ndx], alpha=cfg.alpha, ec=cfg.ec, log=cfg.logscale)
             if cfg.orientation == "horizontal":
                 h = bins_step
                 w = HIST[ndx][0]
-                plt.barh(bins[:-1], height=h, width=w, align=cfg.align_bins,
+                plt.barh(bins[: -1], height=h, width=w, align=cfg.align_bins,
                          color=cfg.colors[ndx], alpha=cfg.alpha, ec=cfg.ec, log=cfg.logscale)
 
     if cfg.orientation == "vertical":
@@ -1314,8 +1467,8 @@ def plot_deltahist(RMSD_file, RMSD_ref, sss=[None, None, None],
     RMSD_ref = np.loadtxt(RMSD_ref, skiprows=header, usecols=(1,))
 
     if [cfg.start, cfg.stop, cfg.step] != [0, -1, 1]:
-        RMSD = RMSD[cfg.start:cfg.stop:cfg.step]
-        RMSD_ref = RMSD_ref[cfg.start:cfg.stop:cfg.step]
+        RMSD = RMSD[cfg.start: cfg.stop: cfg.step]
+        RMSD_ref = RMSD_ref[cfg.start: cfg.stop: cfg.step]
     ##############################################################
     ################# ref and non-ref histogram ##################
     ##############################################################
@@ -1356,34 +1509,34 @@ def plot_deltahist(RMSD_file, RMSD_ref, sss=[None, None, None],
     if cfg.orientation == "horizontal":
         if cfg.logscale:
             # positive delta ~ green; fix dim by ignoring last element
-            plt.barh(bins[:-1], width=positive, height=bins_step,
+            plt.barh(bins[: -1], width=positive, height=bins_step,
                      color=cfg.colors[0], ec=cfg.ec, alpha=cfg.alpha, log=True)
             # negative delta ~ red; fix dim by ignoring last element
-            plt.barh(bins[:-1], width=abs_negative, height=bins_step,
+            plt.barh(bins[: -1], width=abs_negative, height=bins_step,
                      color=cfg.colors[1], ec=cfg.ec, alpha=cfg.alpha, log=True)
         else:
             # positive delta ~ green; fix dim by ignoring last element
-            plt.barh(bins[:-1], width=positive, height=bins_step,
+            plt.barh(bins[: -1], width=positive, height=bins_step,
                      color=cfg.colors[0], ec='None', alpha=cfg.alpha, log=False)
             # negative delta ~ red; fix dim by ignoring last element
-            plt.barh(bins[:-1], width=negative, height=bins_step,
+            plt.barh(bins[: -1], width=negative, height=bins_step,
                      color=cfg.colors[1], ec='None', alpha=cfg.alpha, log=False)
         if cfg.apply_cut_limits:
             plt.ylim(cfg.vmin, cfg.vmax)  # here: vmin/vmax alias of cut_min/cut_max
     elif cfg.orientation == "vertical":
         if cfg.logscale:
             # positive delta ~ green; fix dim by ignoring last element
-            plt.bar(bins[:-1], height=positive, width=bins_step,
+            plt.bar(bins[: -1], height=positive, width=bins_step,
                     color=cfg.colors[0], ec=cfg.ec, alpha=cfg.alpha, log=True)
             # negative delta ~ red; fix dim by ignoring last element
-            plt.bar(bins[:-1], height=abs_negative, width=bins_step,
+            plt.bar(bins[: -1], height=abs_negative, width=bins_step,
                     color=cfg.colors[1], ec=cfg.ec, alpha=cfg.alpha, log=True)
         else:
             # positive delta ~ green; fix dim by ignoring last element
-            plt.bar(bins[:-1], height=positive, width=bins_step,
+            plt.bar(bins[: -1], height=positive, width=bins_step,
                     color=cfg.colors[0], ec=cfg.ec, alpha=cfg.alpha, log=False)
             # negative delta ~ red; fix dim by ignoring last element
-            plt.bar(bins[:-1], height=negative, width=bins_step,
+            plt.bar(bins[: -1], height=negative, width=bins_step,
                     color=cfg.colors[1], ec=cfg.ec, alpha=cfg.alpha, log=False)
         if cfg.apply_cut_limits:
             plt.xlim(cfg.vmin, cfg.vmax)  # here: vmin/vmax alias of cut_min/cut_max
@@ -1818,13 +1971,13 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
     min_cutoff, max_cutoff, step_cutoff = cutoff[0], cutoff[1], cutoff[2]
     GDT_cutoff = list(np.arange(min_cutoff, max_cutoff+step_cutoff, step_cutoff))  # list with values 0.5 to 10 with steps of 0.5
     while GDT_cutoff[-1] > max_cutoff:
-        GDT_cutoff = GDT_cutoff[:-1]
+        GDT_cutoff = GDT_cutoff[: -1]
     GDT_resids = []  # list: RES indices (code-style) which fulfil cutoff condition
     GDT_percent = []  # list: percent of RES (CA) for each cutoff condition
     RMSD = []  # list: tuples with (RMSD before alignment, RMSD after alignment)
 
     # analyze trajectory
-    for ts in tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step]):
+    for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step]):
         PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_PairDistances(
             mobile, ref, sel=sel, mobile_sel=mobile_sel, ref_sel=ref_sel, weights=weights)
         RMSD.append(_RMSD)
@@ -2183,8 +2336,8 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_nu
         PAIR_DISTANCES.append(PD)
 
     if cfg.prec != None and cfg.prec != -1:
-        GDT_TS = np.around(GDT_TS[:rank_num], cfg.prec)
-        GDT_HA = np.around(GDT_HA[:rank_num], cfg.prec)
+        GDT_TS = np.around(GDT_TS[: rank_num], cfg.prec)
+        GDT_HA = np.around(GDT_HA[: rank_num], cfg.prec)
 
     xticks = mobile.residues.resids
     xticks = [x if x % 5 == 0 else "." for x in xticks]

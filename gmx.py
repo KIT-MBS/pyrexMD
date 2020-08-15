@@ -336,10 +336,43 @@ def get_RMSD(ref, xtc, o="default", tu="ns", sel="bb", verbose=True, **kwargs):
     return o_file
 
 
+def get_ref_structure(f, o="default", water="tip3p", input="6", verbose=True, **kwargs):
+    """
+    Creates ref structure of input structure via pdb2gmx to fix atom count.
+
+    Args:
+        f (str):  input structure file: pdb gro tpr (g96 brk ent esp)
+        o (str): output structure file: pdb gro trp (g96 brk ent esp)
+        water (str): water model
+        input (str): force field number
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        see gromacs.pdb2gmx.help()
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    if o == "default":
+        o = f"{misc.get_base(f)}_ref.pdb"
+
+    # GromacsWrapper
+    if verbose:
+        gromacs.pdb2gmx(f=f, o=o, water=water, input=input, **kwargs)
+    else:
+        with HiddenPrints():
+            gromacs.pdb2gmx(f=f, o=o, water=water, input=input, **kwargs)
+
+    # save message
+    o_file = misc.realpath(o)
+    print("Saved file as:", o_file)
+    return o_file
+
 ################################################################################
 ### WORKFLOW FUNCTIONS
 
-def WF_get_RMSD(files_cfg, verbose=True, **kwargs):
+
+def WF_get_RMSD(cfg, verbose=True, **kwargs):
     """
     1) convert TPR:
         - select protein atoms
@@ -375,13 +408,15 @@ def WF_get_RMSD(files_cfg, verbose=True, **kwargs):
             xtc_protein (str): realpath to fixed trajectory file
             rmsd_file (str): realpath to RMSD file
     """
-    cfg = misc.CONFIG(files_cfg, **kwargs)
+    cfg = misc.CONFIG(cfg, **kwargs)
+
+    ## TODO
 
     # fix trajectory
-    tpr_protein, xtc_protein = fix_TRAJ(s=cfg.tpr_protein, f=cfg.xtc, **kwargs)
-    cfg.update_config(tpr_protein=tpr_protein, xtc_protein=xtc_protein)
+    #tpr_protein, xtc_protein = fix_TRAJ(s=cfg.tpr_protein, f=cfg.xtc, **kwargs)
+    #cfg.update_config(tpr_protein=tpr_protein, xtc_protein=xtc_protein)
 
     # get backbone RMSD
-    rmsd_file = get_RMSD(ref=cfg.ref, xtc=cfg.xtc_protein, verbose=verbose)
-    cfg.update_config(rmsd_file=rmsd_file)
+    #rmsd_file = get_RMSD(ref=cfg.ref, xtc=cfg.xtc_protein, verbose=verbose)
+    #cfg.update_config(rmsd_file=rmsd_file)
     return cfg
