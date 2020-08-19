@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import seaborn as sns
 import os
+import glob
 import sys
 import subprocess
 import time
@@ -197,15 +198,23 @@ def timeit(timer=None):
     """
     Test elapsed time of a process
 
+    Arg:
+        timer (None/TIMER CLASS)
+
+    Returns:
+        timer (TIMER CLASS)
+
     Example:
-        timer1 = timeit()
+        t = TIMER()
+        timeit(t)
         <code>
-        timer1 = timerit(timer1)
+        timeit(t)
     """
     if timer == None:
         timer = TIMER()
         timer.t0 = timer._get_time()
-
+    elif timer.t0 == 0:
+        timer.t0 = timer._get_time()
     elif timer.t0 != 0:
         timer.t1 = timer._get_time()
 
@@ -221,18 +230,18 @@ def timeit(timer=None):
 ### linux-like cmds ~ os package
 
 
-def pwd(print=True):
+def pwd(verbose=True):
     """
     Print working directory
 
     Args:
-        print (bool)
+        verbose (bool): print cwd
 
     Returns:
         cwd (str): current working directory
     """
     if print:
-        print(os.getcwd())
+        print("cwd:", os.getcwd())
     return os.getcwd()
 
 
@@ -306,6 +315,7 @@ def mkdir(path, verbose=True):
 
     Args:
         path (str): directory path
+        verbose (bool): print message ('New folder created: ...')
 
     Returns:
         realpath (str): realpath to new directory
@@ -320,8 +330,57 @@ def mkdir(path, verbose=True):
     realpath = os.path.realpath(path)
     if not os.path.exists(realpath):
         os.makedirs(realpath)
-        print('New folder created: ', realpath)
+        if verbose:
+            print('New folder created: ', realpath)
     return realpath
+
+
+def cd(path, verbose=True):
+    """
+    Change directory
+
+    Args:
+        path (str): directory path
+        verbose (bool): print message ('Changed directory to: ...')
+
+    Returns:
+        realpath (str): realpath of changed directory
+    """
+    realpath = os.path.realpath(path)
+    os.cdir(realpath)
+    if verbose:
+        print('Changed directory to:', realpath)
+    return realpath
+
+
+def rm(path, pattern=None, verbose=True):
+    """
+    Remove file(s) from path.
+
+    Note: pattern can be implemented into path variable directly.
+
+    Args:
+        path (str): directory path
+        pattern (None/str): pattern
+            (None): check for files with path only
+            (str):  check for files with joined path of path + pattern
+        verbose (bool): print message ('removed file: ... ')
+    """
+    if pattern is None:
+        realpath = os.path.realpath(path)
+    else:
+        realpath = joinpath(path, pattern)
+
+    # remove files
+    for item in glob.glob(realpath):
+        os.remove(item)
+        if verbose:
+            print('removed file:', item)
+    return
+
+
+# Alias function
+remove = rm
 
 
 def bash_cmd(cmd, verbose=False):

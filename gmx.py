@@ -1,7 +1,42 @@
+import os
+import glob
 import gromacs
 import MDAnalysis as mda
-import myPKG.misc as misc
+import myPKG.misc as _misc
 from myPKG.misc import HiddenPrints
+
+
+def clean_up(path="./", pattern="gmx_pattern", verbose=True):
+    """
+    Clean up gromacs backup files with the patterns #*# and .*offsets.npz
+
+    Note: pattern can be implemented into path variable directly.
+
+    Args:
+        path (str): directory path
+        pattern (None/str): pattern
+            (None): check for files with path only
+            (str):  check for files with joined path of path + pattern
+            "gmx_pattern": remove files with the patterns #*# and .*offsets.npz
+        verbose (bool): print message ('removed file: ... ')
+    """
+    if pattern == "gmx_pattern":
+        # iterate itself with gmx patterns
+        clean_up(path=path, pattern="*#*", verbose=True)
+        clean_up(path=path, pattern=".*offsets.npz", verbose=False)
+        return
+
+    elif pattern is None:
+        realpath = os.path.realpath(path)
+    else:
+        realpath = _misc.joinpath(path, pattern)
+
+    # remove files
+    for item in glob.glob(realpath):
+        os.remove(item)
+        if verbose:
+            print('removed file:', item)
+    return
 
 
 def _get_sel_code(sel, **kwargs):
@@ -36,7 +71,7 @@ def _get_sel_code(sel, **kwargs):
 
 
 # same function as TPR2PDB()
-def editconf(f, o="default", verbose=True, **kwargs):
+def editconf(f, o="default", odir="./", verbose=True, **kwargs):
     """
     Alias function to
         TPR2PDB()
@@ -49,6 +84,8 @@ def editconf(f, o="default", verbose=True, **kwargs):
         f (str): tpr (gro g96 pdb brk ent esp)
         o (str): pdb (gro g96)
             "default": <f>.tpr -> <f>.pdb
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -58,7 +95,9 @@ def editconf(f, o="default", verbose=True, **kwargs):
         o_file (str): realpath of output file
     """
     if o == "default":
-        o = f"{misc.get_base(f)}.pdb"
+        o = _misc.joinpath(odir, f"{_misc.get_base(f)}.pdb")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
@@ -68,13 +107,13 @@ def editconf(f, o="default", verbose=True, **kwargs):
             gromacs.editconf(f=f, o=o, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
 
 # same function as editconf()
-def convert_TPR2PDB(tpr, o="default", verbose=True, **kwargs):
+def convert_TPR2PDB(tpr, o="default", odir="./", verbose=True, **kwargs):
     """
     Alias function to
         editconf()
@@ -87,6 +126,8 @@ def convert_TPR2PDB(tpr, o="default", verbose=True, **kwargs):
         tpr (str): tpr (gro g96 pdb brk ent esp)
         o (str): pdb (gro g96)
             "default": <filename>.tpr -> <filename>.pdb
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -96,7 +137,9 @@ def convert_TPR2PDB(tpr, o="default", verbose=True, **kwargs):
         o_file (str): realpath of output file
     """
     if o == "default":
-        o = f"{misc.get_base(tpr)}.pdb"
+        o = _misc.join_path(odir, f"{_misc.get_base(tpr)}.pdb")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
@@ -106,12 +149,12 @@ def convert_TPR2PDB(tpr, o="default", verbose=True, **kwargs):
             gromacs.editconf(f=tpr, o=o, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
 
-def convert_TPR(s, o="default", sel="protein", verbose=True, **kwargs):
+def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
     Alias function gromacs.convert_tpr().
 
@@ -119,14 +162,16 @@ def convert_TPR(s, o="default", sel="protein", verbose=True, **kwargs):
         'gmx convert-tpr' can edit run input files in three ways:
         - modify tpr settings
         - create new tpr for a subset of original tpr
-        - setting the charges of a specified group to zero (useful when doing
+        - setting the charges of a specified group to zero(useful when doing
           free energy estimates using the LIE (Linear Interaction Energy) method.
 
     Args:
         s (str): tpr
         o (str): tpr
             "default": <s>.tpr -> <s>_<sel>.tpr
-        sel (str): selection string (case independant)
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
+        sel (str): selection string(case independant)
             "system" or "all": all atoms
             "protein": protein atoms
             "ca" or "calpha": CA atoms
@@ -141,7 +186,9 @@ def convert_TPR(s, o="default", sel="protein", verbose=True, **kwargs):
     """
     sel_code = _get_sel_code(sel)
     if o == "default":
-        o = f"{misc.get_base(s)}_{sel.lower()}.tpr"
+        o = _misc.joinoath(odir, f"{_misc.get_base(s)}_{sel.lower()}.tpr")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
@@ -151,12 +198,12 @@ def convert_TPR(s, o="default", sel="protein", verbose=True, **kwargs):
             gromacs.convert_tpr(s=s, o=o, input=sel_code, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
 
-def trjconv(s, f, o="default", sel="protein", verbose=True, **kwargs):
+def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
     Alias function to gromacs.trjconv().
 
@@ -175,6 +222,8 @@ def trjconv(s, f, o="default", sel="protein", verbose=True, **kwargs):
         f (str): trajectory: xtc (trr cpt gro g96 pdb tng)
         o (str): trajectory: xtc (trr gro g96 pdb tng)
             "default": <f>.xtc -> <f>_<sel>.xtc
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         sel (str): selection string (case independant)
             "system" or "all": all atoms
             "protein": protein atoms
@@ -202,7 +251,9 @@ def trjconv(s, f, o="default", sel="protein", verbose=True, **kwargs):
         if kwargs["center"] is True:
             sel_code = f"{sel_code} {sel_code}"
     if o == "default":
-        o = f"{misc.get_base(f)}_{sel.lower()}.xtc"
+        o = _misc.joinpath(odir, f"{_misc.get_base(f)}_{sel.lower()}.xtc")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
@@ -212,12 +263,12 @@ def trjconv(s, f, o="default", sel="protein", verbose=True, **kwargs):
             gromacs.trjconv(s=s, f=f, o=o, input=sel_code, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
 
-def fix_TRAJ(tpr, xtc, o="default", tu="ns", sel="protein", pbc="mol", center=True,
+def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol", center=True,
              verbose=True, **kwargs):
     """
     Fix topology:
@@ -239,10 +290,12 @@ def fix_TRAJ(tpr, xtc, o="default", tu="ns", sel="protein", pbc="mol", center=Tr
                 <tpr>.tpr -> <xtc>_<sel>.tpr
                 <xtc>.xtc -> <xtc>_<sel>.xtc
             [os, of] (list):
-                os (str):  filename of new structure (selection only)
-                of (str):  filename of new trajectory (selection only)
+                os (str): filename of new structure (selection only)
+                of (str): filename of new trajectory (selection only)
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         tu (str): time unit: fs ps ns us ms s
-        sel (str): selection string (case independant)
+        sel (str): selection string(case independant)
             "system" or "all": all atoms
             "protein": protein atoms
             "ca" or "calpha": CA atoms
@@ -265,29 +318,37 @@ def fix_TRAJ(tpr, xtc, o="default", tu="ns", sel="protein", pbc="mol", center=Tr
     """
     # check if o arg is "default" or list
     if o == "default":
-        o = [f"{misc.get_base(tpr)}_{sel.lower()}.tpr",
-             f"{misc.get_base(xtc)}_{sel.lower()}.xtc"]
+        o = [_misc.joinpath(odir, f"{_misc.get_base(tpr)}_{sel.lower()}.tpr"),
+             _misc.joinpath(odir, f"{_misc.get_base(xtc)}_{sel.lower()}.xtc")]
     else:
+        # error test
         if not isinstance(o, list):
             raise ValueError("""Invalid value of 'o' argument.
     o (str or list): filenames of new structure and new trajectory (both selection only)
         "default" (str):
-            <s>.tpr -> <s>_<sel>.tpr
-            <f>.xtc -> <f>_<sel>.xtc
+            <tpr>.tpr -> <xtc>_<sel>.tpr
+            <xtc>.xtc -> <xtc>_<sel>.xtc
         [os, of] (list):
-            os (str):  filename of new structure (selection only)
-            of (str):  filename of new trajectory (selection only)""")
+            os (str): filename of new structure (selection only)
+            of (str): filename of new trajectory (selection only)""")
+        # if no error: joinpath
+        o = [_misc.joinpath(odir, o[0]),
+             _misc.joinpath(odir, o[1])]
 
     ### GromacsWrapper
-    # fix topology
-    tpr_file = convert_TPR(s=tpr, o=o[0], sel=sel, verbose=verbose)  # selection only
-    # fix trajectory
-    xtc_file = trjconv(s=tpr_file, f=xtc, o=o[1], tu=tu, sel=sel, pbc=pbc,
+    print("Fixing topology:")
+    tpr_file = convert_TPR(s=tpr, o=o[0], odir=odir, sel=sel, verbose=verbose)  # selection only
+
+    print("Fixing trajectory:")
+    xtc_file = trjconv(s=tpr_file, f=xtc, o=o[1], odir=odir, tu=tu, sel=sel, pbc=pbc,
                        center=center, verbose=verbose, **kwargs)
+
+    #clean up
+    clean_up(path=odir, verbose=verbose)
     return tpr_file, xtc_file
 
 
-def get_RMSD(ref, xtc, o="default", tu="ns", sel="bb", verbose=True, **kwargs):
+def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, **kwargs):
     """
     Alias function to gromacs.rms().
     Calculate backbone RMSD.
@@ -297,6 +358,8 @@ def get_RMSD(ref, xtc, o="default", tu="ns", sel="bb", verbose=True, **kwargs):
         xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)
         o (str): xvg
             "default": rmsd.xvg
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         tu (str): time unit: fs ps ns us ms s
         sel (str): selection string (case independant)
             "system" or "all": all atoms
@@ -321,7 +384,9 @@ def get_RMSD(ref, xtc, o="default", tu="ns", sel="bb", verbose=True, **kwargs):
         Atoms in xtc: {u2.atoms.n_atoms}""")
 
     if o == "default":
-        o = "rmsd.xvg"
+        o = _misc.joinpath(odir, "rmsd.xvg")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
@@ -331,18 +396,21 @@ def get_RMSD(ref, xtc, o="default", tu="ns", sel="bb", verbose=True, **kwargs):
             gromacs.rms(s=ref, f=xtc, o=o, tu=tu, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
 
-def get_ref_structure(f, o="default", water="tip3p", input="6", verbose=True, **kwargs):
+def get_ref_structure(s, o="default", odir="./", water="tip3p", input="6",
+                      verbose=True, **kwargs):
     """
     Creates ref structure of input structure via pdb2gmx to fix atom count.
 
     Args:
-        f (str):  input structure file: pdb gro tpr (g96 brk ent esp)
+        s (str): input structure file: pdb gro tpr (g96 brk ent esp)
         o (str): output structure file: pdb gro trp (g96 brk ent esp)
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
         water (str): water model
         input (str): force field number
         verbose (bool): print/mute gromacs messages
@@ -354,17 +422,19 @@ def get_ref_structure(f, o="default", water="tip3p", input="6", verbose=True, **
         o_file (str): realpath of output file
     """
     if o == "default":
-        o = f"{misc.get_base(f)}_ref.pdb"
+        o = _misc.joinpath(odir, f"{_misc.get_base(s)}_ref.pdb")
+    else:
+        o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     if verbose:
-        gromacs.pdb2gmx(f=f, o=o, water=water, input=input, **kwargs)
+        gromacs.pdb2gmx(f=s, o=o, water=water, input=input, **kwargs)
     else:
         with HiddenPrints():
-            gromacs.pdb2gmx(f=f, o=o, water=water, input=input, **kwargs)
+            gromacs.pdb2gmx(f=s, o=o, water=water, input=input, **kwargs)
 
     # save message
-    o_file = misc.realpath(o)
+    o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
     return o_file
 
@@ -372,51 +442,51 @@ def get_ref_structure(f, o="default", water="tip3p", input="6", verbose=True, **
 ### WORKFLOW FUNCTIONS
 
 
-def WF_get_RMSD(cfg, verbose=True, **kwargs):
-    """
-    1) convert TPR:
-        - select protein atoms
-        - save as <filename>_protein.tpr
-    2) fix trajectory:
-        - select protein atoms
-        - tu ns
-        - pbc mol
-        - center
-        - save as <filename>_protein.xtc
-    3) get backbone RMSD:
-        - tu ns
-        - save as rmsd.xvg
-
-    Args:
-        files_cfg (misc.CONFIG): config class with (real)paths to input files
-            KEYWORDS:  ARGUMENTS
-            ref (str): (real)path to reference pdb (protein atoms)
-            tpr (str): (real)path to .trp file (all atoms/protein atoms)
-            xtc (str): (real)path to .xtc file (protein atoms)
-        verbose (bool): print/mute gromacs messages
-
-    Kwargs:
-        see KWARGS from gmx.fix_TRAJ() and gmx.get_RMSD().
-
-    Returns:
-        cfg (misc.CONFIG): config class with (real)paths to input and output files
-            KEYWORDS:  ARGUMENTS
-            ref (str): (real)path to reference pdb (protein atoms)
-            tpr (str): (real)path to .trp file (all atoms/protein atoms)
-            tpr_protein (str): (real)path to .trp file (all atoms/protein atoms)
-            xtc (str): (real)path to .xtc file (protein atoms)
-            xtc_protein (str): realpath to fixed trajectory file
-            rmsd_file (str): realpath to RMSD file
-    """
-    cfg = misc.CONFIG(cfg, **kwargs)
-
-    ## TODO
-
-    # fix trajectory
-    #tpr_protein, xtc_protein = fix_TRAJ(s=cfg.tpr_protein, f=cfg.xtc, **kwargs)
-    #cfg.update_config(tpr_protein=tpr_protein, xtc_protein=xtc_protein)
-
-    # get backbone RMSD
-    #rmsd_file = get_RMSD(ref=cfg.ref, xtc=cfg.xtc_protein, verbose=verbose)
-    #cfg.update_config(rmsd_file=rmsd_file)
-    return cfg
+# def WF_get_RMSD(cfg, verbose=True, **kwargs):
+#     """
+#     1) convert TPR:
+#         - select protein atoms
+#         - save as < filename > _protein.tpr
+#     2) fix trajectory:
+#         - select protein atoms
+#         - tu ns
+#         - pbc mol
+#         - center
+#         - save as < filename > _protein.xtc
+#     3) get backbone RMSD:
+#         - tu ns
+#         - save as rmsd.xvg
+#
+#     Args:
+#         files_cfg(misc.CONFIG): config class with (real)paths to input files
+#             KEYWORDS: ARGUMENTS
+#             ref(str): (real)path to reference pdb(protein atoms)
+#             tpr(str): (real)path to .trp file(all atoms/protein atoms)
+#             xtc(str): (real)path to .xtc file(protein atoms)
+#         verbose(bool): print/mute gromacs messages
+#
+#     Kwargs:
+#         see KWARGS from gmx.fix_TRAJ() and gmx.get_RMSD().
+#
+#     Returns:
+#         cfg(misc.CONFIG): config class with (real)paths to input and output files
+#             KEYWORDS: ARGUMENTS
+#             ref(str): (real)path to reference pdb(protein atoms)
+#             tpr(str): (real)path to .trp file(all atoms/protein atoms)
+#             tpr_protein(str): (real)path to .trp file(all atoms/protein atoms)
+#             xtc(str): (real)path to .xtc file(protein atoms)
+#             xtc_protein(str): realpath to fixed trajectory file
+#             rmsd_file(str): realpath to RMSD file
+#     """
+#     cfg = _misc.CONFIG(cfg, **kwargs)
+#
+#     ## TODO
+#
+#     # fix trajectory
+#     #tpr_protein, xtc_protein = fix_TRAJ(s=cfg.tpr_protein, f=cfg.xtc, **kwargs)
+#     #cfg.update_config(tpr_protein=tpr_protein, xtc_protein=xtc_protein)
+#
+#     # get backbone RMSD
+#     #rmsd_file = get_RMSD(ref=cfg.ref, xtc=cfg.xtc_protein, verbose=verbose)
+#     #cfg.update_config(rmsd_file=rmsd_file)
+#     return cfg

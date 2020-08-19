@@ -49,7 +49,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None], sel="protein and name 
     return DM
 
 
-def save_h5(data, save_as, HDF_group="/distance_matrices", verbose=True):
+def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
     """
     Save data (e.g. distance matrices DM) as h5 file.
 
@@ -60,6 +60,8 @@ def save_h5(data, save_as, HDF_group="/distance_matrices", verbose=True):
     Args:
         DM (np.array): array of distance matrices
         save_as (str)
+        save_dir (str): save directory
+            special case: save_dir is ignored when save_as is relative/absolute path
         HDF_group (str): Hierarchical Data Format group
 
     Returns:
@@ -67,7 +69,8 @@ def save_h5(data, save_as, HDF_group="/distance_matrices", verbose=True):
     """
     if _misc.get_extension(save_as) != ".h5":
         save_as += ".h5"
-    h5_file = _misc.realpath(save_as)
+
+    h5_file = _misc.joinpath(save_dir, save_as)
     with h5py.File(h5_file, "w") as handle:
         handle["/distance_matrices"] = data
     if verbose:
@@ -110,6 +113,9 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20):
         counts (np.array): counts per cluster
         centroids (np.array): cluster centroids
     """
+    timer = _misc.TIMER()
+    _misc.timeit(timer)  # start timer
+
     data = ht.load(h5_file, HDF_group, split=0)
     data_length, data_dim = np.shape(data)
 
@@ -121,10 +127,14 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20):
     centroids = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(data_dim)), int(np.sqrt(data_dim))))
     # medoids = <unsupported by heat>
 
+    _misc.timeit(timer)  # stop timer
+
     return kmeans, labels, counts, centroids
 
 
-def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protein and name CA", verbose=False):
+def _distruct_generate_dist_file(u, DM, DM_ndx,
+                                 save_as="temp.dist", save_dir="./",
+                                 sel="protein and name CA", verbose=False):
     """
     Generate dist file based on protein and given distance matrix.
     (e.g. use protein and centroid -> dist file)
@@ -136,6 +146,8 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
             (np.array): distance matrices
         DM_ndx: distance matrices index ~ frame which should be used
         save_as (str)
+        save_dir (str): save directory
+            special case: save_dir is ignored when save_as is relative/absolute path
         sel (str): selection string (limit to CA atoms only ~ distruct)
         verbose (bool)
 
@@ -148,9 +160,9 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
     a = u.select_atoms("protein and name CA")
 
     if _misc.get_extension(save_as) != ".dist":
-        dist_file = _misc.realpath(f"{save_as}.dist")
+        dist_file = _misc.joinpath(save_dir, f"{save_as}.dist")
     else:
-        dist_file = _misc.realpath(save_as)
+        dist_file = _misc.joinpath(save_dir, save_as)
 
     # read distance matrix
     if isinstance(DM, str):
@@ -164,8 +176,9 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
         # DM are centroids
         DM_length, protein_length, protein_lenght = np.shape(DM)
 
-        # write dist file for a single frame of DM
+    # write dist file for a single frame of DM
     with open(dist_file, "w") as fout:
+        fix_chain_msg = True
         for i in range(len(a.names)):
             for j in range(len(a.names)):
                 if i == j:
@@ -175,10 +188,13 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
                 c1, r1, a1 = a.segids[i], a.resids[i], a.names[i]
                 c2, r2, a2 = a.segids[j], a.resids[j], a.names[j]
 
-                # fix chainid if MDA stored it as "SYSTEM"
-                if c1 == "SYSTEM":
+                # fix chainid if MDA stored it as "SYSTEM" or some other weird string
+                if verbose is True and fix_chain_msg is True and len(c1) != 1:
+                    print(f"Fixing chain id for dist file (distruct): {c1} -> A")
+                    fix_chain_msg = False
+                if len(c1) != 1:
                     c1 = "A"
-                if c2 == "SYSTEM":
+                if len(c2) != 1:
                     c2 = "A"
 
                 weight = 1.0
@@ -193,7 +209,8 @@ def _distruct_generate_dist_file(u, DM, DM_ndx, save_as="temp.dist", sel="protei
     return dist_file
 
 
-def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
+def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq,
+                                save_as="default", save_dir="./structures",
                                 verbose=True, verbose_distruct=False, **kwargs):
     """
     Use distruct to generate structure.
@@ -208,22 +225,19 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
         seq (str): fasta sequence
         save_as (str): structure file saved as .pdb or .cif
             "default": ./structures/<pdbid>_<DM_ndx>.pdb
-            special cases:
-                save_as is relative/absolute path: ignore save_dir (see kwarg)
-            reason:
-                relative/absolute path are intended
+        save_dir (str): save directory
+            special case: save_dir is ignored when save_as is relative/absolute path
         verbose (bool)
         verbose_distruct (bool): show/hide distruct prints
 
     Kwargs:
-        save_dir (str): save directory of .pdb/.cif files
         save_format (str): "pdb", "cif"
 
     Returns:
         io_file (str): realpath of .pdb/.cif file (generated structure)
     """
-    default = {"save_dir": "./structures",
-               "save_as": save_as,
+    default = {"save_as": save_as,
+               "save_dir": save_dir,
                "save_format": "pdb"}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
@@ -237,13 +251,11 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
     contacts = []
     with open(dist_file, 'r') as f:
         for line in f:
-            # c: chainid,below r: resid, a: atomid == CA
+            # c: chainid, r: resid, a: atomid == CA
             (c1, r1, a1, c2, r2, a2, distance, weight) = line.split()
             c = (((c1, int(r1), a1), (c2, int(r2), a2)), float(distance), float(weight))
             contacts.append(c)
-
-    # delete temporary dist file
-    _misc.bash_cmd(f"rm {dist_file}")
+        f.close()
 
     # generate structure
     if verbose_distruct:
@@ -262,7 +274,7 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
     if save_as == "default":
         io_file = _misc.joinpath(cfg.save_dir, f"/{pdbid}_{DM_ndx}.{cfg.save_format}", create_dir=True)
     elif ".pdb" not in _misc.get_extension(save_as) or ".cif" not in _misc.get_extension(save_as):
-        io_file = _misc.joinpath(cfg.save_dir, f"{save_as}.{cfg.save_format}", create_dir=True)
+        io_file = _misc.joinpath(cfg.save_dir, f"{cfg.save_as}.{cfg.save_format}", create_dir=True)
 
     if cfg.save_format == "pdb":
         io = Bio.PDB.PDBIO()
@@ -273,4 +285,6 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq, save_as="default",
     if verbose:
         print(f"Generated structure: {io_file}")
 
+    # delete temporary dist file
+    _misc.rm(dist_file, verbose=False)
     return io_file
