@@ -26,5 +26,6 @@ import myPKG.core as core
 import myPKG.misc as misc
 import myPKG.analysis as ana
 import myPKG.gmx as gmx
+misc.apply_matplotlib_rc_settings()
     """)
     return
