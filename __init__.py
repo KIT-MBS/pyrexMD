@@ -17,7 +17,6 @@ copy&paste in jupyter notebook:
 
 %matplotlib notebook
 
-from IPython.display import display
 from tqdm import tqdm_notebook as tqdm
 import numpy as np
 import matplotlib.pyplot as plt
