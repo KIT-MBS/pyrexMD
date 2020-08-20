@@ -194,7 +194,7 @@ class TIMER(object):
         return time.time()
 
 
-def timeit(timer=None):
+def timeit(timer=None, msg="elapsed time:"):
     """
     Test elapsed time of a process
 
@@ -220,7 +220,7 @@ def timeit(timer=None):
 
     if timer.t1 != 0:
         t_diff = timer.t1 - timer.t0
-        print("Elapsed time:", t_diff, "s")
+        print(f"{msg} {t_diff}s")
 
     return timer
 

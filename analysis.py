@@ -95,7 +95,7 @@ class Universe(object):
 #         rmsd = _rms.rmsd(mobile, ref, superposition=superposition)
 #     return rmsd
 
-def get_timeconversion(u):
+def get_time_conversion(u):
     """
     get/print time conversion of MDA universe <u>
 
@@ -218,6 +218,49 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
     return rmsf
 
 
+def get_Distance_Matrices(mobile, sss=[None, None, None],
+                          sel="protein and name CA", flatten=False,
+                          **kwargs):
+    """
+    Calculate distance matrices for mobile and return them.
+
+    Args:
+        mobile (MDA universe/atomgrp): structure with trajectory
+        sss (list): [start, stop, step]
+            start (None/int): start frame
+            stop (None/int): stop frame
+            step (None/int): step size
+        sel (str): selection string
+        flatten (bool): returns flattened distance matrices
+
+    Kwargs:
+        aliases for sss items:
+            start (None/int): start frame
+            stop (None/int): stop frame
+            step (None/int): step size
+
+    Returns:
+        DM (np.array): array of distance matrices
+    """
+    ############################################################################
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2]
+               }
+    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _HELP_sss_None2int(mobile, cfg)  # convert None values of they keys sss, start, stop, step to integers
+    ############################################################################
+    a = mobile.select_atoms(sel)
+
+    DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
+                   a.n_atoms*a.n_atoms))  # tuple args: length, size (of flattened array)
+    for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
+        DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
+
+    if not flatten:
+        DM = DM.reshape((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
+                         a.n_atoms, a.n_atoms))  # tuple args: length, N_CA, N_CA
+    return DM
 ################################################################################
 ################################################################################
 ### analysis.py "core" functions
@@ -1865,8 +1908,7 @@ def _HELP_sss_None2int(obj, cfg):
             if cfg.sss[0] == None:
                 cfg.sss[0] = 0
             if cfg.sss[1] == None:
-                max_ndx = obj.trajectory.n_frames
-                cfg.sss[1] = max_ndx
+                cfg.sss[1] = obj.trajectory.n_frames
             if cfg.sss[2] == None:
                 cfg.sss[2] = 1
 
@@ -1874,18 +1916,16 @@ def _HELP_sss_None2int(obj, cfg):
             if cfg.start == None:
                 cfg.start = 0
             if cfg.stop == None:
-                max_ndx = obj.trajectory.n_frames
-                cfg.stop = max_ndx
+                cfg.stop = obj.trajectory.n_frames
             if cfg.step == None:
                 cfg.step = 1
 
-    elif isinstance(obj, np.ndarray):
+    elif isinstance(obj, (np.ndarray, list)):
         if "sss" in cfg.keys():
             if cfg.sss[0] == None:
                 cfg.sss[0] = 0
             if cfg.sss[1] == None:
-                max_ndx = len(obj) - 1
-                cfg.sss[1] = max_ndx
+                cfg.sss[1] = len(obj)
             if cfg.sss[2] == None:
                 cfg.sss[2] = 1
 
@@ -1893,8 +1933,7 @@ def _HELP_sss_None2int(obj, cfg):
             if cfg.start == None:
                 cfg.start = 0
             if cfg.stop == None:
-                max_ndx = len(obj) - 1
-                cfg.stop = max_ndx
+                cfg.stop = len(obj)
             if cfg.step == None:
                 cfg.step = 1
     return cfg

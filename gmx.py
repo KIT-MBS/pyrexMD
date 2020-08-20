@@ -200,6 +200,9 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     # save message
     o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
+
+    #clean up
+    clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
     return o_file
 
 
@@ -265,6 +268,9 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
     # save message
     o_file = _misc.realpath(o)
     print("Saved file as:", o_file)
+
+    #clean up
+    clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
     return o_file
 
 
@@ -344,7 +350,8 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
                        center=center, verbose=verbose, **kwargs)
 
     #clean up
-    clean_up(path=odir, verbose=verbose)
+    clean_up(path=_misc.dirpath(tpr_file), verbose=verbose)
+    clean_up(path=_misc.dirpath(xtc_file), verbose=verbose)
     return tpr_file, xtc_file
 
 

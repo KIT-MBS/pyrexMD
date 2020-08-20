@@ -2,51 +2,13 @@ from __future__ import division, print_function
 from tqdm import tqdm_notebook as tqdm
 #from tqdm import tqdm
 import numpy as np
-import MDAnalysis as mda
 import heat as ht
 import h5py
-import distruct as ds
+import distruct
 import Bio
 import myPKG.misc as _misc
 from myPKG.misc import HiddenPrints
-from myPKG.analysis import _HELP_sss_None2int  # required for internal conversion
-
-
-def get_Distance_Matrices(mobile, sss=[None, None, None], sel="protein and name CA", **kwargs):
-    """
-    Calculate distance matrices for mobile and return them.
-
-    Args:
-        mobile (MDA universe/atomgrp): structure with trajectory
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        sel (str): selection string
-    Kwargs:
-        aliases for sss items:
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-
-    Returns:
-        DM (np.array): array of distance matrices
-    """
-    ############################################################################
-    default = {"start": sss[0],
-               "stop": sss[1],
-               "step": sss[2]
-               }
-    cfg = _misc.CONFIG(default, **kwargs)
-    cfg = _HELP_sss_None2int(mobile, cfg)  # convert None values of they keys sss, start, stop, step to integers
-    ############################################################################
-    a = mobile.select_atoms(sel)
-    DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
-                   a.n_atoms*a.n_atoms))  # Args: length, size (of flattened array)
-
-    for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
-        DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
-    return DM
+from myPKG.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
@@ -58,7 +20,7 @@ def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbos
         h5: Hierarchical Data Format 5
 
     Args:
-        DM (np.array): array of distance matrices
+        data (np.array): array of distance matrices
         save_as (str)
         save_dir (str): save directory
             special case: save_dir is ignored when save_as is relative/absolute path
@@ -69,16 +31,16 @@ def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbos
     """
     if _misc.get_extension(save_as) != ".h5":
         save_as += ".h5"
-
     h5_file = _misc.joinpath(save_dir, save_as)
+
     with h5py.File(h5_file, "w") as handle:
-        handle["/distance_matrices"] = data
+        handle[HDF_group] = data
     if verbose:
         print(f"Saved h5 file as: {h5_file}")
     return h5_file
 
 
-def read_h5(fin, HDF_group="/distance_matrices"):
+def read_h5(h5_file, HDF_group="/distance_matrices"):
     """
     read data (e.g. distance matrices DM) from h5 file.
 
@@ -87,25 +49,91 @@ def read_h5(fin, HDF_group="/distance_matrices"):
         h5: Hierarchical Data Format 5
 
     Args:
-        fin (str)
+        h5_file (str)
         HDF_group (str): Hierarchical Data Format group
 
     Returns:
         data (np.array): data of h5 file
     """
-    with h5py.File(fin, "r") as handle:
-        data = list(handle[HDF_group])
+    if _misc.get_extension(h5_file) != ".h5":
+        h5_file += ".h5"
+    with h5py.File(h5_file, "r") as handle:
+        data = np.array(handle[HDF_group])
         return data
 
 
-def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20):
+def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs):
+    """
+    Reshape data between the shapes: (length, size) <-> (length, sizeD1, sideD2)
+
+    Args:
+        data (np.array/ht.DNDarray)
+        dim_out (int): output dimension of data
+            2: output data with shape: (length, size)
+            3: output data with shape: (length, sizeD1, sideD2)
+        sss (list): [start, stop, step]
+            start (None/int): start index
+            stop (None/int): stop index
+            step (None/int): step size
+        verbose (bool): print messages ('reshaped data: ...')
+
+    Kwargs:
+        aliases for sss items:
+            start (None/int): start index
+            stop (None/int): stop index
+            step (None/int): step size
+
+    Returns:
+        data (np.array/ht.DNDarray): data (same data-type as input)
+    """
+    ############################################################################
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2]
+               }
+    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _HELP_sss_None2int(data, cfg)  # convert None values of they keys sss, start, stop, step to integers
+    data = data[cfg.start:cfg.stop:cfg.step]
+    ############################################################################
+    if (len(np.shape(data)) == dim_out):
+        return data
+    else:
+        if len(np.shape(data)) == 2:
+            length, size = np.shape(data)
+            new_size = int(np.sqrt(size))
+            data = data.reshape((length, new_size, new_size))
+            if verbose:
+                print(f"reshaped data: ({length}, {size}) -> ({length}, {new_size}, {new_size})")
+
+        elif len(np.shape(data)) == 3:
+            length, sizeD1, sizeD2 = np.shape(data)
+            new_size = sizeD1*sizeD2
+            data = data.reshape((length, new_size))
+            if verbose:
+                print(f"reshaped data: ({length}, {sizeD1}, {sizeD2}) -> ({length}, {new_size})")
+    return data
+
+
+def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20,
+                sss=[None, None, None], verbose=True, **kwargs):
     """
     Use heat's KMeans Clustering
 
     Args:
-        h5_file (str): path to h5 file (data set)
+        data (str): path to h5 file containing data
         HDF_group (str): Hierarchical Data Format group
         n_clusters (int): number of clusters
+        verbose (bool)
+        sss (list): [start, stop, step] indices of <h5_file> data
+            start (None/int): start index
+            stop (None/int): stop index
+            step (None/int): step size
+
+    Kwargs:
+        aliases for sss items:
+            start (None/int): start index
+            stop (None/int): stop index
+            step (None/int): step size
 
     Returns:
         kmeans (heat.cluster.kmeans.KMeans): KMeans class fitted to data set
@@ -113,21 +141,28 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20):
         counts (np.array): counts per cluster
         centroids (np.array): cluster centroids
     """
-    timer = _misc.TIMER()
-    _misc.timeit(timer)  # start timer
+    if isinstance(h5_file, str):
+        if verbose:
+            print("loading data...")
+        data = ht.load(h5_file, HDF_group, split=0)
+    if np.shape(data) != 2:
+        data = reshape_data(data, dim_out=2, sss=sss, verbose=True)
+    if verbose:
+        print("clustering data...")
+        timer = _misc.TIMER()
+        _misc.timeit(timer)  # start timer
 
-    data = ht.load(h5_file, HDF_group, split=0)
-    data_length, data_dim = np.shape(data)
-
+    length, size = np.shape(data)
     kmeans = ht.cluster.KMeans(n_clusters=n_clusters)
     kmeans.fit(data)
 
     labels = kmeans.labels_.numpy()
     counts = np.bincount(labels.flatten())
-    centroids = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(data_dim)), int(np.sqrt(data_dim))))
+    centroids = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
     # medoids = <unsupported by heat>
 
-    _misc.timeit(timer)  # stop timer
+    if verbose:
+        _misc.timeit(timer, msg="clustering time:")  # stop timer
 
     return kmeans, labels, counts, centroids
 
@@ -174,7 +209,7 @@ def _distruct_generate_dist_file(u, DM, DM_ndx,
         protein_length = int(np.sqrt(DM_dim_squared))
     elif len(np.shape(DM)) == 3:
         # DM are centroids
-        DM_length, protein_length, protein_lenght = np.shape(DM)
+        DM_length, protein_length, protein_length = np.shape(DM)
 
     # write dist file for a single frame of DM
     with open(dist_file, "w") as fout:
@@ -199,9 +234,9 @@ def _distruct_generate_dist_file(u, DM, DM_ndx,
 
                 weight = 1.0
                 if DM_length == 1:
-                    distance = DM.reshape(protein_length, protein_length)[i][j]
+                    distance = DM.reshape((protein_length, protein_length))[i][j]
                 else:
-                    distance = DM[DM_ndx].reshape(protein_length, protein_length)[i][j]
+                    distance = DM[DM_ndx].reshape((protein_length, protein_length))[i][j]
 
                 fout.write(f"{c1} {r1} {a1} {c2} {r2} {a2} {distance} {weight}\n")
         if verbose:
@@ -259,13 +294,13 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq,
 
     # generate structure
     if verbose_distruct:
-        s = ds.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
+        s = distruct.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
         s.generate_primary_contacts()
         s.set_tertiary_contacts(contacts)
         s.run()
     else:
         with HiddenPrints():
-            s = ds.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
+            s = distruct.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
             s.generate_primary_contacts()
             s.set_tertiary_contacts(contacts)
             s.run()
