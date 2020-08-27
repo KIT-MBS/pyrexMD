@@ -1214,6 +1214,34 @@ def get_cutoff_array(array, cut_min=None, cut_max=None):
     return (cutoff_array, cutoff_array_ndx)
 
 
+def get_sub_array_start(array, sub_array):
+    """
+    Returns start index of <array> at which <sub_array> matches.
+
+    Args:
+        array (list/array)
+        sub_array (list/arr)
+
+    Returns:
+        start_ndx (None/int):
+            None: arrays do not match
+            int: starting index of <array> at which <sub_array> matches
+    """
+    if len(array) < len(sub_array):
+        raise ValueError("get_sub_array_start(array, sub_array): lenght(array) < length(sub_array).")
+    if isinstance(array, np.ndarray):
+        array = array.tolist()
+    if isinstance(sub_array, np.ndarray):
+        sub_array = sub_array.tolist()
+
+    ndx_list = [x for x in range(len(array)) if array[x:x+len(sub_array)] == sub_array]
+    if len(ndx_list) == 0:
+        start_ndx = None
+    else:
+        start_ndx = ndx_list[0]
+    return start_ndx
+
+
 def get_sub_array(array, ndx_sel):
     """
     Returns sub array of <array> for items with indices <ndx_sel>.

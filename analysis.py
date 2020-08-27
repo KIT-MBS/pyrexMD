@@ -114,6 +114,74 @@ def get_time_conversion(u):
     return
 
 
+def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False):
+    """
+    Modified version of MDAnalysis.analysis.align.alignto()
+        -> now works properly with two different selection strings
+
+    Description:
+        Perform a spatial superposition by minimizing the RMSD.
+
+        Spatially align the group of atoms `mobile` to `reference` by doing a
+        RMSD fit on `sel1` of mobile atoms and `sel1` of referece atoms.
+
+        The superposition is done in the following way:
+
+        1. A rotation matrix is computed that minimizes the RMSD between
+           the coordinates of `mobile.select_atoms(sel1)` and
+           `reference.select_atoms(sel2)`; before the rotation, `mobile` is
+           translated so that its center of geometry (or center of mass)
+           coincides with the one of `reference`. (See below for explanation of
+           how *sel1* and *sel2* are derived from `select`.)
+        2. All atoms in :class:`~MDAnalysis.core.universe.Universe` that
+           contain `mobile` are shifted and rotated. (See below for how
+           to change this behavior through the `subselection` keyword.)
+
+    Args:
+        mobile (MDA universe): mobile structure
+        ref (MDA universe): reference structure
+        sel1 (str): selection string of mobile structure
+        sel2 (str): selection string of reference structure
+        weights (None/str/array):
+            None: weigh each atom equally
+            "mass": weigh atoms based on mass
+            array: If a float array of the same length as `mobile` is provided,
+                   use each element of the `array_like` as a weight for the
+                   corresponding atom in `mobile`.
+        tol_mass (float): Reject match if the atomic masses for matched atoms
+                          differ by more than `tol_mass`, default [0.1]
+        strict (bool):
+            True: Will raise :exc:`SelectionError` if a single atom does not
+                  match between the two selections.
+            False:  Will try to prepare a matching selection by dropping
+                    residues with non-matching atoms.
+                    See :func:`get_matching_atoms` for details.
+
+    Returns:
+        old_rmsd (float): RMSD before spatial alignment
+        new_rmsd (float): RMSD after spatial alignment
+    """
+    mobile_atoms = mobile.select_atoms(sel1)
+    ref_atoms = ref.select_atoms(sel2)
+    mobile_atoms, ref_atoms = _align.get_matching_atoms(mobile_atoms, ref_atoms,
+                                                        tol_mass=tol_mass,
+                                                        strict=strict)
+
+    weights = _align.get_weights(ref_atoms, weights)
+    mobile_com = mobile_atoms.center(weights)
+    ref_com = ref_atoms.center(weights)
+
+    mobile_coordinates = mobile_atoms.positions - mobile_com
+    ref_coordinates = ref_atoms.positions - ref_com
+
+    old_rmsd = _rms.rmsd(mobile_coordinates, ref_coordinates, weights)
+    # _fit_to DOES subtract center of mass, will provide proper min_rmsd
+    mobile_atoms, new_rmsd = _align._fit_to(mobile_coordinates, ref_coordinates,
+                                            mobile_atoms, mobile_com, ref_com,
+                                            weights=weights)
+    return old_rmsd, new_rmsd
+
+
 def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot=False, alt_return=True, **kwargs):
     """
     Calculates the RMSD between mobile and ref after superimposing (translation and rotation).
@@ -266,6 +334,61 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
 ### analysis.py "core" functions
 
 
+def get_resids_shift(mobile, ref):
+    """
+    Compares universe.residues.resnames between mobile and ref in order to get resids shift.
+
+    Args:
+        mobile (MDA universe): N
+        ref (MDA universe):
+    """
+    start_ndx = _misc.get_sub_array_start(mobile.residues.resnames, ref.residues.resnames)
+    shift = ref.residues.resids[0] - start_ndx
+    return shift
+
+
+def shift_resids(u, shift=None, verbose=True):
+    """
+    Shift mda.universe.residues by <shift> value.
+
+    Args:
+        u (MDA universe)
+        shift (None/int): shift value
+        verbose (bool)
+    """
+    if shift == None or shift == 0:
+        return
+
+    for item in u._topology.attrs:
+        if isinstance(item, mda.core.topologyattrs.Resids):
+            before = u.residues.resids
+            item.set_residues(u.residues, item.get_residues(u.residues)+1)
+            after = u.residues.resids
+        if isinstance(item, mda.core.topologyattrs.Resnums):
+            item.set_residues(u.residues, item.get_residues(u.residues)+1)
+
+    if verbose:
+        print("Shifting resids from:\n", before)
+        print("\nto:\n", after)
+    return
+
+
+def align_resids(mobile, ref, verbose=True):
+    """
+    Align resids of mobile to match reference by comparing universe.residues.resnames
+
+    Args:
+        mobile (MDA universe)
+        ref (MDA universe)
+        verbose (bool)
+    """
+    shift = get_resids_shift(mobile, ref)
+    if shift is not None and verbose is True:
+        _misc.cprint("Aligning mobile resids...\n", "blue")
+        shift_resids(mobile, shift, verbose=verbose)
+    return
+
+
 def norm_ids(u, info=''):
     """
     Modify existing MDA universe/atomgrp and normalize ids according to:
@@ -344,7 +467,7 @@ def norm_resids(u, info=''):
         else:
             print('Norming resids of {}...'.format(info))
         while min(u.residues.resids) < 1:
-            u.residues.resids += 1
+            shift_resids(u, 1, verbose=False)
     return
 
 
@@ -370,7 +493,7 @@ def norm_universe(u, info=''):
     return
 
 
-def norm_and_align_universe(ref, mobile):
+def norm_and_align_universe(mobile, ref, verbose=True):
     """
     - Norm reference and mobile universe
     - Align mobile universe on reference universe (matching atom ids and RES ids)
@@ -382,8 +505,9 @@ def norm_and_align_universe(ref, mobile):
         - help(<PKG_name>.norm_and_align_universe)
 
     Args:
-        ref    (MDA universe/atomgrp)
         mobile (MDA universe/atomgrp)
+        ref    (MDA universe/atomgrp)
+        verbose (bool)
     """
 
     if len(ref.atoms.ids) != len(mobile.atoms.ids):
@@ -416,7 +540,7 @@ def norm_and_align_universe(ref, mobile):
     if np.any(ref.residues.resids != mobile.residues.resids):
         print('Reference and mobile resids are inconsistent! Aligning mobile resids to match with reference structure...')
         shift = ref.residues.resids - mobile.residues.resids
-        mobile.residues.resids += shift
+        shift_resids(mobile, shift=shift, verbose=verbose)
 
     print("Both universes are normed and aligned (atom ids + resids).")
     return
@@ -1842,46 +1966,30 @@ def get_array_percent(dist_array, cutoff):
     return(p, ndx)
 
 
-def get_PairDistances(mobile, ref, sel="protein and name CA", mobile_sel="auto", ref_sel="auto", weights="mass"):
+def get_PairDistances(mobile, ref, sel1="protein and name CA", sel2="protein and name CA", **kwargs):
     """
     Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).
 
     Args:
         mobile (MDA universe/atomgrp): mobile structure with trajectory
         ref (MDA universe/atomgrp): reference structure
-        sel (str): selection string
-        mobile_sel (str/MDA atomgrp)
-        ref_sel (str/MDA atomgrp)
-        weights
+        sel1 (str): selection string of mobile structure
+        sel2 (str): selection string of reference structure
 
     Returns:
         PAIR_DISTANCES
+        RMSD (tuple): (RMSD before alignment, RMSD after alignment)
         _resids_mobile (array)
         _resids_ref (array)
-        _RMSD (tuple): (RMSD before alignment, RMSD after alignment)
         """
-    # Test if input is either class or string (otherwise runtime error due to == operator)
-    if isinstance(mobile_sel, mda.core.groups.AtomGroup):
-        pass
-    elif mobile_sel == "auto":
-        mobile_sel = mobile.select_atoms(sel)
-    else:
-        raise TypeError(f'''{get_PairDistances.__module__}.{get_PairDistances.__name__}(): mobile_sel has to be either:\
-        \n    class: <MDAnalysis.core.groups.AtomGroup>\
-        \n    str: 'auto'.''')
-
-    if isinstance(ref_sel, mda.core.groups.AtomGroup):
-        pass
-    elif ref_sel == "auto":
-        ref_sel = ref.select_atoms(sel)
-    else:
-        raise TypeError(f'''{get_PairDistances.__module__}.{get_PairDistances.__name__}(): ref_sel has to be either:\
-        \n    class: <MDAnalysis.core.groups.AtomGroup>\
-        \n    str: 'auto'.''')
+    mobile_atoms = mobile.atoms.select_atoms(sel1)
+    ref_atoms = ref.atoms.select_atoms(sel2)
+    weights = "mass"  # hard coded weights
+    #################################################
 
     # get_PairDistances function
-    RMSD = _align.alignto(mobile, ref, select=sel, weights=weights)
-    _resids_mobile, _resids_ref, PAIR_DISTANCES = mda.analysis.distances.dist(mobile_sel, ref_sel)
+    RMSD = alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
+    _resids_mobile, _resids_ref, PAIR_DISTANCES = mda.analysis.distances.dist(mobile_atoms, ref_atoms)
     return(PAIR_DISTANCES, RMSD, _resids_mobile, _resids_ref)
 
 
@@ -1944,22 +2052,24 @@ def _HELP_sss_None2int(obj, cfg):
     return cfg
 
 
-def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True, **kwargs):
+def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
+        sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True, **kwargs):
     """
     GDT: Global Distance Test
 
     Algorithm to identify how good "mobile" matches to "reference" by calculating the sets
     of residues which do not deviate more than a specified (pairwise) CA distance cutoff.
 
-    Note: hardcoded selection string and weights for alignment(GDT Algorithm)
-        sel="protein and name CA"
-        mobile_sel=mobile.select_atoms(sel)
-        ref_sel=ref.select_atoms(sel)
-        weights="mass"
+    Note:
+        sel1 = mobile.select_atoms(sel1)
+        sel2 = ref.select_atoms(sel2)
+        weights="mass"  # hardcoded weights for alignment
 
     Args:
         mobile (MDA universe/atomgrp): mobile structure with trajectory
         ref (MDA universe/atomgrp): reference structure
+        sel1 (str): selection string of mobile structure
+        sel2 (str): selection string of reference structure
         sss (list): [start, stop, step]
             start (None/int): start frame
             stop (None/int): stop frame
@@ -1995,11 +2105,9 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
         FRAME (list): analyzed frames
     """
     ############################################################################
-    # hardcoded selection string and weights for alignment (GDT Algorithm)
-    sel = "protein and name CA"
-    mobile_sel = mobile.select_atoms(sel)
-    ref_sel = ref.select_atoms(sel)
-    weights = "mass"
+    #sel_mobile = mobile.select_atoms(sel1)
+    #sel_ref = ref.select_atoms(sel2)
+    weights = "mass"  # hardcoded weights for alignment
     ############################################################################
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"start": sss[0],
@@ -2023,13 +2131,13 @@ def GDT(mobile, ref, sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=
     # analyze trajectory
     for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step]):
         PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_PairDistances(
-            mobile, ref, sel=sel, mobile_sel=mobile_sel, ref_sel=ref_sel, weights=weights)
+            mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
         RMSD.append(_RMSD)
 
         # get elements of PAIR_DISTANCES that are <= cutoff
         PD_ndx = []
         PD_percent = []
-        shift = min(mobile_sel.residues.resids)
+        shift = min(mobile.atoms.select_atoms(sel1).residues.resids)
         for cutoff in GDT_cutoff:
             p, ndx = get_array_percent(PAIR_DISTANCES, cutoff)
             if true_resids:
@@ -2277,8 +2385,11 @@ def GDT_continuous_segments(GDT_resids):
     return SEGMENTS
 
 
-def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_num=30,
-            cmap="GDT_HA", show_cbar=True, show_frames=False, show_scores=True, save_as="", **kwargs):
+def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
+            sel1="protein and name CA", sel2="protein and name CA",
+            ndx_offset=0, rank_num=30, cmap="GDT_HA",
+            show_cbar=True, show_frames=False, show_scores=True,
+            save_as="", **kwargs):
     """
     Create LocalAccuracy Plot (heatmap) with:
         xdata = Residue ID
@@ -2294,6 +2405,8 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_nu
         GDT_TS (array): array with GDT_TS values
         GDT_HA (array): array with GDT_HA values
         GTD_ndx (array): array with corresponding index values (representative for frame numbers)
+        sel1 (str): selection string of mobile structure (calculation of PairDistances)
+        sel2 (str): selection string of reference structure (calculation of PairDistances)
         ndx_offset (int): offset/shift of GDT_ndx to match real "mobile" frames.
                           Look up "start" parameter during execution of analysis.GDT()
         rank_num (int): plot only <rank_num> best ranked frames
@@ -2376,14 +2489,14 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_nu
     FRAMES = [i+ndx_offset for i in GDT_ndx[:rank_num]]
 
     for ts in mobile.trajectory[FRAMES]:
-        PD, *_ = get_PairDistances(mobile, ref)
+        PD, *_ = get_PairDistances(mobile, ref, sel1=sel1, sel2=sel2)
         PAIR_DISTANCES.append(PD)
 
     if cfg.prec != None and cfg.prec != -1:
         GDT_TS = np.around(GDT_TS[: rank_num], cfg.prec)
         GDT_HA = np.around(GDT_HA[: rank_num], cfg.prec)
 
-    xticks = mobile.residues.resids
+    xticks = mobile.select_atoms(sel1).residues.resids
     xticks = [x if x % 5 == 0 else "." for x in xticks]
     xticklabels = xticks
 
@@ -2420,7 +2533,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[], ndx_offset=0, rank_nu
         cbar_kws = {'orientation': cfg.cbar_orientation}
     else:
         cbar_ax = None
-        cbar_kws = dict()
+        cbar_kws = dict()(7.5, 6)
 
     if cfg.cmap == "GDT_HA" or cfg.cmap == "GDT_TS":
         hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_GDT, vmin=vmin, vmax=vmax,
