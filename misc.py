@@ -14,7 +14,7 @@ import sys
 import subprocess
 import time
 import copy
-from termcolor import colored
+import termcolor
 
 
 def apply_matplotlib_rc_settings():
@@ -492,6 +492,29 @@ def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
 ################################################################################
 ################################################################################
 ### misc
+
+def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
+    """
+    Colored print (alias function of termcolor.cprint())
+
+    Args:
+        msg (str)
+        color (None/str)
+            grey, red, green, yellow, blue, magenta, cyan, white
+        on_color (None/str):
+            on_grey, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white
+        attr (None/list): attributes list
+            bold, dark, underline, blink, reverse, concealed
+
+    Kwargs:
+        # see help(print)
+        sep: string inserted between values, default a space.
+        end: string appended after the last value, default a newline.
+        file: a file-like object (stream); defaults to the current sys.stdout.
+        flush: whether to forcibly flush the stream.
+    """
+    termcolor.cprint(msg, color, on_color, attrs=attr, **kwargs)
+    return
 
 
 def unzip(iterable):
@@ -1069,7 +1092,7 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
         for item in table_str.splitlines()[:verbose_stop]:
             print(item)
         if (len(table_str.splitlines()) >= verbose_stop):
-            print(colored(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue"))
+            cprint(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue")
     return table_str
 
 
