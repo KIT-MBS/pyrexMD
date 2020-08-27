@@ -1357,7 +1357,10 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
                                                 bins=cfg.bins, n_bins=cfg.n_bins, n_bins_autoadd=cfg.n_bins_autoadd)
     cfg.update_config(**sub_cfg)
 
-    fig, ax = _misc.figure(**cfg)
+    if "ax" in cfg.keys():
+        plt.sca(cfg["ax"])
+    else:
+        fig, ax = _misc.figure(**cfg)
     # plt.hist version
     if data_length == 1:
         hist = plt.hist(data, bins=bins,
@@ -1375,6 +1378,8 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
             HIST.append(hist)
 
     # plt.bar/plt.barh version (redraw -> needed for pickle functions)
+    if "num" in cfg.keys():
+        del cfg["num"]
     fig, ax = _misc.figure(num=fig.number, **cfg)
     if data_length == 1:
         if cfg.orientation == "vertical":
@@ -2155,12 +2160,12 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
         if verbose:
             print(f"Output ranking ordered by FRAME number")
     elif ranking_order.upper() == "GDT_TS":
-        GDT_TS_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_TS)
+        GDT_TS_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_TS, verbose=verbose)
         GDT_HA_ranked = np.array([GDT_HA[ndx] for ndx in GDT_ndx_ranked])
         if verbose:
             print(f"Output ranking ordered by GDT_TS")
     elif ranking_order.upper() == "GDT_HA":
-        GDT_HA_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_HA)
+        GDT_HA_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_HA, verbose=verbose)
         GDT_TS_ranked = np.array([GDT_TS[ndx] for ndx in GDT_ndx_ranked])
         if verbose:
             print(f"Output ranking ordered by GDT_HA")
@@ -2221,7 +2226,7 @@ def GDT_rank_percent(GDT_percent):
     Psum = []
     for item in GDT_percent:
         Psum.append(sum(item))
-    RANKED_Psum, RANKED_Psum_ndx = _misc.get_ranked_array(Psum)
+    RANKED_Psum, RANKED_Psum_ndx = _misc.get_ranked_array(Psum, verbose=verbose)
 
     return(RANKED_Psum, RANKED_Psum_ndx)
 

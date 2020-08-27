@@ -14,6 +14,7 @@ import sys
 import subprocess
 import time
 import copy
+from termcolor import colored
 
 
 def apply_matplotlib_rc_settings():
@@ -88,6 +89,20 @@ class CONFIG(object):
         Alias for print_config() method.
         """
         self.print_config()
+        return
+
+    def __setitem__(self, key, value):
+        """
+        Set config object key via [] ~ backets, e.g. cfg["key"] = value
+        """
+        self.__setattr__(key, value)
+        return
+
+    def __delitem__(self, key):
+        """
+        Delete config object key via [] ~ backets, e.g. del cfg["key"]
+        """
+        self.__delattr__(key)
         return
 
     def __getitem__(self, key):
@@ -1054,7 +1069,7 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
         for item in table_str.splitlines()[:verbose_stop]:
             print(item)
         if (len(table_str.splitlines()) >= verbose_stop):
-            print(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).")
+            print(colored(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue"))
     return table_str
 
 
@@ -1557,7 +1572,8 @@ def autoapply_limits(fig_or_ax, margin=0.05):
 # pickle functions
 
 
-def pickle_dump(obj, filename='', pickledir='./pickle', overwrite=True, **kwargs):
+def pickle_dump(obj, filename='', pickledir='./pickle',
+                overwrite=True, verbose=True, **kwargs):
     """
     bug: can't dump figures which used the misc.add_cbar() or misc.add_cbar_ax() function
          because of the use of ax.inset_axes().
@@ -1576,6 +1592,7 @@ def pickle_dump(obj, filename='', pickledir='./pickle', overwrite=True, **kwargs
                         Can be relative or absolute path including the filename.
         pickledir (str): default pickle directory
         overwrite (bool): overwrite pickle dumped file if it already exists
+        verbose (bool)
 
     Kwargs:
         save_as (str): alias to filename
@@ -1596,10 +1613,11 @@ def pickle_dump(obj, filename='', pickledir='./pickle', overwrite=True, **kwargs
         if os.path.exists(filepath):
             os.remove(filepath)
     pl.dump(obj, open(filepath, 'wb'))
-    if isinstance(obj, matplotlib.figure.Figure):
-        print(f"pickle.dumped figure as:", os.path.realpath(filepath))
-    else:
-        print(f"pickle.dumped object as:", os.path.realpath(filepath))
+    if verbose:
+        if isinstance(obj, matplotlib.figure.Figure):
+            print(f"pickle.dumped figure as:", os.path.realpath(filepath))
+        else:
+            print(f"pickle.dumped object as:", os.path.realpath(filepath))
     return filepath
 
 

@@ -203,6 +203,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
 
     #clean up
     clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=_misc.dirpath(o_file), pattern="#*_protein.tpr*#", verbose=False)
     return o_file
 
 
@@ -271,6 +272,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
 
     #clean up
     clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=_misc.dirpath(o_file), pattern="#*_protein.xtc*#", verbose=False)
     return o_file
 
 
