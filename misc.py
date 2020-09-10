@@ -1214,7 +1214,7 @@ def get_cutoff_array(array, cut_min=None, cut_max=None):
     return (cutoff_array, cutoff_array_ndx)
 
 
-def get_sub_array_start(array, sub_array):
+def get_sub_array_start_ndx(array, sub_array):
     """
     Returns start index of <array> at which <sub_array> matches.
 

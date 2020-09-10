@@ -8,6 +8,7 @@ from __future__ import division, print_function
 import myPKG.misc as _misc
 from tqdm import tqdm_notebook as tqdm
 #from tqdm import tqdm
+from Bio.PDB import PDBParser, Polypeptide
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align
 import MDAnalysis as mda
 import numpy as np
@@ -95,23 +96,48 @@ class Universe(object):
 #         rmsd = _rms.rmsd(mobile, ref, superposition=superposition)
 #     return rmsd
 
-def get_time_conversion(u):
+def get_time_conversion(u, **kwargs):
     """
     get/print time conversion of MDA universe <u>
 
     Args:
         u (MDA universe)
+
+    Kwargs:
+        #see args and kwargs of misc.cprint()
     """
     if isinstance(u, mda.core.universe.Universe):
         dt = u.trajectory.dt
         tu = u.trajectory.units["time"]
         if tu == "ps":
-            print(f"Time = Frame * {dt} {tu} = Frame * {0.001*dt} ns")
+            _misc.cprint(f"Time = Frame * {dt} {tu} = Frame * {0.001*dt} ns", **kwargs)
         else:
-            print(f"Time=Frame * {dt} {tu}")
+            _misc.cprint(f"Time=Frame * {dt} {tu}", **kwargs)
     else:
         raise TypeError("type(u) must be MDAnalysis.core.universe.Universe.")
     return
+
+
+def get_FASTA(pdb_file, verbose=True):
+    """
+    get FASTA sequence for each polypeptide of pdb_file
+
+    Args:
+        pdb_file (str): path to pdb_file
+        verbose (bool): print sequences
+
+    RETURNS:
+        FASTA (list): list with FASTA sequences (one per polypeptide)
+    """
+    structure = PDBParser().get_structure("pdb_label", pdb_file)  # label not required
+    ppb = Polypeptide.PPBuilder()
+
+    FASTA = []
+    for ndx, pp in enumerate(ppb.build_peptides(structure)):
+        if verbose:
+            print(f"Polypeptide {ndx+1}: {pp.get_sequence()}")
+            FASTA.append("".join(pp.get_sequence()))
+    return FASTA
 
 
 def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False):
@@ -155,7 +181,7 @@ def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False)
                   match between the two selections.
             False:  Will try to prepare a matching selection by dropping
                     residues with non-matching atoms.
-                    See :func:`get_matching_atoms` for details.
+                    See :func:`ching_atoms` for details.
 
     Returns:
         old_rmsd (float): RMSD before spatial alignment
@@ -233,6 +259,7 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
     else:
         RMSD = _rms.RMSD(mobile.select_atoms(sel1), ref.select_atoms(sel2), weights=weights)
         RMSD.run()
+        RMSD.rmsd[0]
 
         ftr_array = RMSD.rmsd
         frame = RMSD.rmsd[:, 0]
@@ -339,11 +366,20 @@ def get_resids_shift(mobile, ref):
     Compares universe.residues.resnames between mobile and ref in order to get resids shift.
 
     Args:
-        mobile (MDA universe): N
-        ref (MDA universe):
+        mobile (MDA universe)
+        ref (MDA universe)
+
+    Returns:
+        shift (int): shift value of ref residues to match mobile residues
     """
-    start_ndx = _misc.get_sub_array_start(mobile.residues.resnames, ref.residues.resnames)
-    shift = ref.residues.resids[0] - start_ndx
+    start_ndx = _misc.get_sub_array_start_ndx(mobile.residues.resnames, ref.residues.resnames)
+
+    # start_ndx is static, but shift value should be either start_ndx or 0 (after previous shift)
+    # test if shift already performed
+    if min(ref.residues.resids) == 1:
+        shift = start_ndx
+    else:
+        shift = 0
     return shift
 
 
@@ -362,76 +398,116 @@ def shift_resids(u, shift=None, verbose=True):
     for item in u._topology.attrs:
         if isinstance(item, mda.core.topologyattrs.Resids):
             before = u.residues.resids
-            item.set_residues(u.residues, item.get_residues(u.residues)+1)
+            item.set_residues(u.residues, item.get_residues(u.residues)+shift)
             after = u.residues.resids
         if isinstance(item, mda.core.topologyattrs.Resnums):
-            item.set_residues(u.residues, item.get_residues(u.residues)+1)
+            item.set_residues(u.residues, item.get_residues(u.residues)+shift)
 
     if verbose:
-        print("Shifting resids from:\n", before)
-        print("\nto:\n", after)
+        print(f"Shifting resids from:\n{before}")
+        print(f"\nto:\n{after}")
     return
 
 
-def align_resids(mobile, ref, verbose=True):
+def align_resids(mobile, ref, norm=True, verbose=True):
     """
-    Align resids of mobile to match reference by comparing universe.residues.resnames
+    Align resids of mobile and ref by comparing universe.residues.resnames and
+    shifting the resids of reference (usually smaller than mobile).
 
     Args:
         mobile (MDA universe)
         ref (MDA universe)
+        norm (bool): norm resids before alignment
         verbose (bool)
     """
+    if norm:
+        norm_resids(mobile, 'mobile', verbose=verbose)
+        norm_resids(ref, 'reference', verbose=verbose)
+
     shift = get_resids_shift(mobile, ref)
-    if shift is not None and verbose is True:
-        _misc.cprint("Aligning mobile resids...\n", "blue")
-        shift_resids(mobile, shift, verbose=verbose)
+    if shift is not None:
+        _misc.cprint("Aligning reference res ids...\n", "blue")
+        shift_resids(ref, shift, verbose=verbose)
     return
 
 
-def norm_ids(u, info=''):
+True
+
+
+def get_matching_selection(mobile, ref, sel_detail="CA", verbose=True):
+    """
+    Get matching selection strings of mobile and reference after resids alignment.
+
+    Args:
+        mobile (MDA universe)
+        ref (MDA universe)
+        sel_detail (str): add 'name <del_detail>' to matching selection strings
+        verbose (bool)
+
+    Returns:
+        sel1 (str): matching selection string (mobile)
+        sel2 (str): matching selection string (ref)
+    """
+    if get_resids_shift(mobile, ref) != 0:
+        align_resids(mobile, ref, norm=True, verbose=verbose)
+    sel1 = f"resid {min(ref.residues.resids)}-{max(ref.residues.resids)} and name {sel_detail}"
+    sel2 = f"name {sel_detail}"
+
+    if np.all(ref.select_atoms(sel1).residues.resnames == ref.select_atoms(sel2).residues.resnames):
+        pass
+    else:
+        raise ValueError("No matching selection found.")
+    return sel1, sel2
+
+
+def norm_ids(u, info='', verbose=True):
     """
     Modify existing MDA universe/atomgrp and normalize ids according to:
-       - min(universe.atoms.ids) > 0
-       - min(universe.atoms.ids) can but must not be 1
+    min(universe.atoms.ids) = 1
 
     Args:
         u (MDA universe/atomgrp): structure
         info (str): additional info for print message
             - 'reference'
-            - 'topology'
+            - 'mobile'
+        verbose (bool)
 
     Example:
-        u = mda.Universe(<top>)
-        print(u.atoms.ids)
+        ref = mda.Universe(<top>)
+        print(ref.atoms.ids)
         >> [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
 
-        norm_ids(u, 'topology')
-        >> Norming atom ids of topology...
+        norm_ids(ref, 'reference')
+        >> Norming atom ids of reference...
 
-        print(u.atoms.ids)
+        print(ref.atoms.ids)
         >> [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
+    def __HELP_print(info='', verbose=True):
+        if verbose:
+            if info == '':
+                print('Norming atom ids...')
+            else:
+                print(f'Norming {info} atom ids...')
+        else:
+            return
+
     if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
-        raise TypeError(f'''{norm_ids.__module__}.{norm_ids.__name__}():\
+        raise TypeError('''{norm_ids.__module__}.{norm_ids.__name__}():\
         \nInvalid input. u must be MDA universe/atomgrp.''')
         return
 
-    if min(u.atoms.ids) < 1:
-        if info == '':
-            print('Norming atom ids...')
-        else:
-            print('Norming atom ids of {}...'.format(info))
-        while min(u.atoms.ids) < 1:
-            u.atoms.ids += 1
+    if min(u.atoms.ids) != 1:
+        shift = 1 - min(u.atoms.ids)
+        u.atoms.ids += shift
+        __HELP_print(info, verbose)
     return
 
 
-def norm_resids(u, info=''):
+def norm_resids(u, info='', verbose=True):
     """
     Modify existing MDA universe/atomgrp and normalize resids according to:
-       - min(universe.residues.resids) > 0
-       - min(universe.residues.resids) can but must not be 1
+    min(universe.residues.resids) = 1
 
     Args:
         u (MDA universe/atomgrp): structure
@@ -440,38 +516,38 @@ def norm_resids(u, info=''):
             - 'topology'
 
     Example:
-        u = mda.Universe(<top>)
-        a = mda.select_atoms('protein')
-
-        print(u.residues.resids)
-        print(a.residues.resids)
-        >> [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
+        ref = mda.Universe(<top>)
+        print(ref.residues.resids)
         >> [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
 
-        norm_resids(u, 'topology')
-        >> Norming topology resids...
+        norm_resids(u, 'reference')
+        >> Norming resids of reference...
 
-        print(u.residues.resids)
-        print(a.residues.resids)  # atomgrp is linked to universe -> same values
-        >> [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
+        print(ref.residues.resids)
         >> [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
+    def __HELP_print(info='', verbose=True):
+        if verbose:
+            if info == '':
+                print('Norming res ids...')
+            else:
+                print(f'Norming {info} res ids...')
+        else:
+            return
+
     if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError('''{norm_resids.__module__}.{name_resids.__name__}():\
         \nInvalid input. u must be MDA universe/atomgrp.''')
         return
 
-    if min(u.residues.resids) < 1:
-        if info == '':
-            print('Norming resids...')
-        else:
-            print('Norming resids of {}...'.format(info))
-        while min(u.residues.resids) < 1:
-            shift_resids(u, 1, verbose=False)
+    if min(u.residues.resids) != 1:
+        shift = 1 - min(u.residues.resids)
+        shift_resids(u, shift, verbose=False)
+        __HELP_print(info, verbose)
     return
 
 
-def norm_universe(u, info=''):
+def norm_universe(u, info='', verbose=True):
     """
     Executes the functions:
         - norm_ids(u, info)
@@ -486,17 +562,18 @@ def norm_universe(u, info=''):
         u (MDA universe/atomgrp): structure
         info (str): additional info for print message
             - 'reference'
-            - 'topology'
+            - 'mobile'
+        verbose (bool)
     """
-    norm_ids(u, info)
-    norm_resids(u, info)
+    norm_ids(u, info, verbose)
+    norm_resids(u, info, verbose)
     return
 
 
 def norm_and_align_universe(mobile, ref, verbose=True):
     """
     - Norm reference and mobile universe
-    - Align mobile universe on reference universe (matching atom ids and RES ids)
+    - Align mobile universe on reference universe (matching atom ids and res ids)
 
     For additional information, type:
         - help(<PKG_name>.norm_ids)
