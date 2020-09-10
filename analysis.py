@@ -135,8 +135,8 @@ def get_FASTA(pdb_file, verbose=True):
     FASTA = []
     for ndx, pp in enumerate(ppb.build_peptides(structure)):
         if verbose:
-            print(f"Polypeptide {ndx+1}: {pp.get_sequence()}")
-            FASTA.append("".join(pp.get_sequence()))
+            print(f"Polypeptide {ndx+1} FASTA: {pp.get_sequence()}")
+        FASTA.append("".join(pp.get_sequence()))
     return FASTA
 
 
