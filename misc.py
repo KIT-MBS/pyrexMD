@@ -574,7 +574,7 @@ def percent(num, div, prec=2):
     return p
 
 
-def round_down(number, base):
+def round_down(number, base=1):
     """
     Args:
         number (int)
@@ -598,7 +598,7 @@ def round_down(number, base):
     return number - (number % base)
 
 
-def round_up(number, base):
+def round_up(number, base=1):
     """
     Args:
         number (int)
@@ -927,7 +927,7 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
         return DATA
 
 
-def read_DCA_file(DCA_fin, n_DCA, usecols=(2, 3), skiprows='auto', filter_DCA=True):
+def read_DCA_file(DCA_fin, n_DCA, usecols=(0, 1), skiprows='auto', filter_DCA=True, RES_range=[None, None]):
     """
     Read DCA file and return DCA pairs IJ.
 
@@ -940,12 +940,18 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(2, 3), skiprows='auto', filter_DCA=Tr
         filter_DCA (bool):
             True: ignore DCA pairs with |i-j| < 4
             False: use all DCA pairs w/o applying filter
+        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids
+            None: do not narrow down RES range
 
     Returns:
         DCA_PAIRS (list): DCA pairs IJ
     """
     I, J = read_file(DCA_fin, usecols=usecols, skiprows=skiprows, dtype=np.int_)
     DCA_PAIRS = []
+    if RES_range[0] is None:
+        RES_range[0] = min(min(I), min(J))
+    if RES_range[1] is None:
+        RES_range[1] = max(max(I), max(J))
 
     for k in range(len(I)):
         if len(DCA_PAIRS) == n_DCA:
@@ -954,7 +960,10 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(2, 3), skiprows='auto', filter_DCA=Tr
             if abs(I[k] - J[k]) < 4:
                 pass    # ignore sites with indexdiff < 4
             else:
-                DCA_PAIRS.append((I[k], J[k]))
+                if I[k] >= RES_range[0] and J[k] <= RES_range[1]:
+                    DCA_PAIRS.append((I[k], J[k]))
+                else:
+                    pass
         else:
             DCA_PAIRS.append((I[k], J[k]))
 
@@ -980,14 +989,14 @@ def get_PDBid(ref):
     if type(ref) is str:
         ref = ref.replace('.', '/')
         ref = ref.replace('_', '/')
-        split = ref.split('/')
+        split = [i.lower() for i in ref.split('/')]
 
     else:
         try:
             ref = ref.universe.filename
             ref = ref.replace('.', '/')
             ref = ref.replace('_', '/')
-            split = ref.split('/')
+            split = [i.lower() for i in ref.split('/')]
 
         except AttributeError:
             print("get_PDBid(ref): AttributeError\
@@ -995,7 +1004,7 @@ def get_PDBid(ref):
             return
 
     PDBid = []   # list for guessed PDBids
-    split = [i for i in split if i not in ["logs", "used", "from", "with"]]   # filter guessed PDBids
+    split = [i for i in split if i not in ["logs", "used", "from", "with", "home"]]   # filter guessed PDBids
 
     # search algorithm
     for item in split:

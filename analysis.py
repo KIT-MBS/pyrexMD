@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import operator
 import os
 import glob
+import copy
 
 
 # global update for plots
@@ -623,7 +624,7 @@ def norm_and_align_universe(mobile, ref, verbose=True):
     return
 
 
-def true_select_atoms(u, sel='protein', ignh=True):
+def true_select_atoms(u, sel='protein', ignh=True, norm=True):
     """
     Create "true selection" (atomgroup copy in NEW universe) after applying
         - norm_ids()
@@ -635,6 +636,7 @@ def true_select_atoms(u, sel='protein', ignh=True):
         u (MDA universe/atomgrp): structure
         sel (str): selection string
         ignh (bool): ignore hydrogen (mass < 1.2)
+        norm (bool): apply analysis.norm_universe()
 
     Returns:
         a (<AtomGroup>): "true selection" / atomgroup copy in NEW universe
@@ -668,7 +670,8 @@ def true_select_atoms(u, sel='protein', ignh=True):
         u = mda.Universe(u)
     # case 3: input is MDA Universe -> just use it
 
-    norm_universe(u)
+    if norm:
+        norm_universe(u)
     a0 = u.select_atoms(sel)
     if ignh:
         a0 = u.select_atoms(sel + ' and prop mass > 1.2')
@@ -716,7 +719,7 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
 def shortest_RES_distances(u):
     """
     Calculates shortest RES distances (all atom level) of universe u.
-    Attention: Displayed RES ids and ATM ids start with 1, not 0!
+    Attention: Displayed RES ids always start with 1
 
     Args:
         u (str): structure path
@@ -732,24 +735,28 @@ def shortest_RES_distances(u):
             [d_min, (RES_pair), (ATM_pair), (ATM_names)]
     """
     if type(u) is str:
-        u = mda.Universe(u)
-    norm_universe(u)
-    dim = len(u.residues.resids)
+        #universe copy
+        uc = mda.Universe(u)
+    else:
+        #universe copy
+        uc = u.copy()
+    norm_resids(uc, verbose=True)
+    dim = len(uc.residues.resids)
     SD = np.zeros(shape=(dim, dim))
     SD_d = []
 
     for i in range(dim):
         for j in range(i + 1, dim):
-            DA = _distances.distance_array(u.residues[i].atoms.positions, u.residues[j].atoms.positions)
+            DA = _distances.distance_array(uc.residues[i].atoms.positions, uc.residues[j].atoms.positions)
             d_min = np.min(DA)
             d_min_index = np.unravel_index(np.argmin(DA), DA.shape)  # atom indices
 
             # write values to list
-            RES_pair = (u.residues[i].resid, u.residues[j].resid)
-            ATM_pair = (u.residues[i].atoms[d_min_index[0]].id,
-                        u.residues[j].atoms[d_min_index[1]].id)
-            ATM_names = (u.residues[i].atoms.names[d_min_index[0]],
-                         u.residues[j].atoms.names[d_min_index[1]])
+            RES_pair = (uc.residues[i].resid, uc.residues[j].resid)
+            ATM_pair = (uc.residues[i].atoms[d_min_index[0]].id,
+                        uc.residues[j].atoms[d_min_index[1]].id)
+            ATM_names = (uc.residues[i].atoms.names[d_min_index[0]],
+                         uc.residues[j].atoms.names[d_min_index[1]])
 
             SD[i][j] = d_min
             SD_d.append([d_min, RES_pair, ATM_pair, ATM_names])
@@ -763,7 +770,7 @@ def shortest_RES_distances(u):
     return(SD, SD_d)
 
 
-def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1'):
+def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=False):
     """
     Calculate native contacts.
 
@@ -780,6 +787,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1'):
             '1' or 'Contact_Matrix': mda.contact_matrix() with d_cutoff
             '2' or 'Capped_Distance': mda.lib.distances.capped_distance() with d_cutoff #TODO
             '3' or 'Shadow_Map' #TODO
+        norm (bool): apply analysis.norm_universe()
 
     Returns:
         NC (set): NCs (only unique RES pairs)
@@ -793,7 +801,8 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1'):
         u = mda.Universe(ref)
     else:
         u = ref
-    norm_universe(u)
+    if norm:
+        norm_universe(u)
     a = u.select_atoms(sel)
 
     NC = set()  # set with unique NC pairs
@@ -820,8 +829,8 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1'):
     return(NC, NC_d)
 
 
-def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="auto", filter_DCA=True, ignh=True,
-                     d_cutoff=6.0, sel='protein', pdbid='pdbid', save_plot=False, **kwargs):
+def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, d_cutoff=6.0,
+                     sel='protein', pdbid='pdbid', **kwargs):
     """
     Create contact map based on the reference pdb structure.
     If DCA file is passed, correct/wrong contacts are visualized in green/red.
@@ -831,6 +840,11 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="
         ref (MDA universe/atomgrp): reference structure
         DCA_fin (str): DCA input file (path)
         n_DCA (int): number of used DCA contacts
+        d_cutoff (float): distance cutoff for nat. contacts
+        sel (str): selection string
+        pdbid (str): pdbid which is used for plot title
+
+    Kwargs:
         DCA_cols (tuple): columns containing the RES pairs in DCA_fin
         DCA_skiprows (int): ignore header rows of DCA_fin
             -1 or "auto": auto detect
@@ -838,14 +852,21 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="
             True: ignore DCA pairs with |i-j| < 3
             False: use all DCA pairs w/o applying filter
         ignh (bool): ignore hydrogen (mass < 1.2)
-        d_cutoff (float): distance cutoff for nat. contacts
-        sel (str): selection string
-        pdbid (str): pdbid which is used for plot title
+        norm (bool): apply analysis.norm_universe()
         save_plot (bool)
-
-    Kwargs:
         # see args of misc.figure()
+
+    Returns:
+        fig (matplotlib.figure.Figure)
+        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
     """
+    default = {"DCA_cols": (0, 1),
+               "DCA_skiprows": "auto",
+               "filter_DCA": True,
+               "ignh": True,
+               "norm": False,
+               "save_plot": False}
+    cfg = _misc.CONFIG(default, **kwargs)
     # init values
     if "figsize" not in kwargs:
         kwargs = {"figsize": (7, 7)}
@@ -857,16 +878,17 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="
         u = mda.Universe(ref)
     else:
         u = ref
-    norm_universe(u)
-    if ignh:
-        a = true_select_atoms(u, sel, ignh=True)
+    if cfg.norm:
+        norm_universe(u)
+    if cfg.ignh:
+        a = true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
     res_min = min(a.resids)
     res_max = max(a.resids)
 
     # calculate nat. contacts for ref structure
-    NC, NC_details = get_Native_Contacts(a, d_cutoff, sel)
+    NC, NC_details = get_Native_Contacts(a, d_cutoff=d_cutoff, sel=sel, norm=cfg.norm)
 
     # PLOT
     fig, ax = _misc.figure(**kwargs)
@@ -882,7 +904,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="
 
     # find matching contacts ij
     if DCA_fin is not None:
-        DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=DCA_cols, skiprows=DCA_skiprows, filder_DCA=filter_DCA)
+        DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA)
 
         if res_max - res_min < 100:
             for item in DCA:     # if item is in both lists plot it green otherwise red
@@ -909,18 +931,17 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, DCA_cols=(2, 3), DCA_skiprows="
         ymin, ymax = _misc.round_down(res_min, 5), _misc.round_up(res_max + 1, 5)
     plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
-    plt.xlabel(r"Residue i")
-    plt.ylabel(r"Residue j")
+    plt.xlabel(r"Residue i", fontweight="bold")
+    plt.ylabel(r"Residue j", fontweight="bold")
     plt.title(f"Contact Map of {pdbid}", fontweight="bold")
     plt.tight_layout()
-    if save_plot:
+    if cfg.save_plot:
         _misc.savefig(filename=f"{pdbid}_Fig_Contact_Map.png", filedir="./plots")
     plt.show()
-    return
+    return fig, ax
 
 
-def plot_DCA_TPR(ref, DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows="auto", filter_DCA=True, ignh=True, d_cutoff=6.0,
-                 sel='protein', pdbid='pdbid', save_plot=False, save_log=False, figsize=(8, 4.5)):
+def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid', **kwargs):
     """
     Plots true positive rate for number of used DCA contacts.
 
@@ -934,20 +955,49 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows="auto", filt
         ref (MDA universe/atomgrp): reference structure
         DCA_fin (str): DCA input file (path)
         n_DCA (int): number of used DCA contacts
+        d_cutoff (float): distance cutoff for nat. contacts
+        sel (str): selection string
+        pdbid (str): pdbid; used for plot title and figure name
+
+    Kwargs:
         DCA_cols (tuple/list): columns containing the RES pairs in DCA_fin
         DCA_skiprows (int): ignore header rows of DCA_fin
             -1 or "auto": auto detect
         filter_DCA (bool):
             True: ignore DCA pairs with |i-j| < 4
             False: use all DCA pairs w/o applying filter
+        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids
+            None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
-        d_cutoff (float): distance cutoff for nat. contacts
-        sel (str): selection string
-        pdbid (str): pdbid; used for plot title and figure name
+        norm (bool): apply analysis.norm_universe()
+        color (str)
+        shade_area (bool): shade area between L/2 and L ranked contacts
+        shade_color (str)
+        shade_alpha (float)
+        hline_color (None/str): color of 75p threshold (horizontal line)
         save_plot (bool)
         save_log (bool)
         figsize (tuple)
+
+    Returns:
+        fig (matplotlib.figure.Figure)
+        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
     """
+    default = {"DCA_cols": (0, 1),
+               "DCA_skiprows": "auto",
+               "filter_DCA": True,
+               "RES_range": [None, None],
+               "ignh": True,
+               "norm": False,
+               "color": "blue",
+               "shade_area": True,
+               "shade_color": "orange",
+               "shade_alpha": 0.2,
+               "hline_color": "red",
+               "save_plot": False,
+               "save_log": False,
+               "figsize": (8, 4.5)}
+    cfg = _misc.CONFIG(default, **kwargs)
     # load universe
     if pdbid == 'pdbid':
         pdbid = _misc.get_PDBid(ref)
@@ -955,13 +1005,14 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows="auto", filt
         u = mda.Universe(ref)
     else:
         u = ref
-    norm_universe(u)
-    if ignh:
-        a = true_select_atoms(u, sel, ignh=True)
+    if cfg.norm:
+        norm_universe(u)
+    if cfg.ignh:
+        a = true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
     # read DCA and calculate TPR
-    DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=DCA_cols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
+    DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
     DCA_TPR = []  # List with TPR of DCA contacts with d < d_cutoff
     SD = shortest_RES_distances(a)[0]
     RES_min = min(a.residues.resids)
@@ -981,23 +1032,36 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows="auto", filt
     # x-axis: number of DCA contacts
     # y-axis: % of DCA contacts with d <= d_cuttoff
     with sns.axes_style('darkgrid'):
-        fig, ax = plt.subplots(figsize=figsize)
-        plt.plot(range(1, n_DCA + 1), DCA_TPR, "g.", ms=8, ls="None")
-        plt.plot(range(1, n_DCA + 1), DCA_TPR, "g", alpha=0.2, lw=2)
+        fig, ax = plt.subplots(figsize=cfg.figsize)
+        plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
+        plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
         # plt.legend(loc="upper right", numpoints=1)
         plt.xlim(0, n_DCA + 1)
-        if min(DCA_TPR) < 50:
-            plt.ylim(0, 105)
-        else:
-            plt.ylim(50, 105)
-        plt.xlabel("Number of DCA Contacts")
+        plt.ylim(0, 105)
+        # if min(DCA_TPR) < 50:
+        #     plt.ylim(0, 105)  # full range for TPR
+        # else:
+        #     plt.ylim(50, 105) # smaller range for very good TPR
+        if cfg.shade_area:
+            L1 = _misc.round_down(u.residues.n_residues/2, base=1)
+            L2 = u.residues.n_residues
+            plt.axvspan(L1, L2, alpha=cfg.shade_alpha, color=cfg.shade_color)
+            #plt.axvline(L1, color=cfg.shade_color)
+            #plt.axvline(L2, color=cfg.shade_color)
+            plt.text(L1-2, -5, "L/2", color=cfg.shade_color, alpha=1, fontweight="bold")
+            plt.text(L2, -5, "L", color=cfg.shade_color, alpha=1, fontweight="bold")
+        if cfg.hline_color is not None:
+            plt.axhline(75, color=cfg.hline_color)
+            plt.text(-4.1, 72, "75", color=cfg.hline_color)
+        plt.xlabel("Number of ranked contacts")
         plt.ylabel("True Positive Rate (%)")
-        plt.title(f"Protein: {pdbid}", fontweight="bold")
+        plt.title(f"TPR of {pdbid}", fontweight="bold")
         sns.despine(offset=0)
         plt.tight_layout()
-        if save_plot:
+        plt.show()
+        if cfg.save_plot:
             _misc.savefig(filename=f"{pdbid}_Fig_DCA_TPR.png", filedir="./plots")
-        if save_log:
+        if cfg.save_log:
             save_dir = _misc.mkdir("./logs")
             file_dir = save_dir + f"/{pdbid}_DCA_TPR.log"
             with open(file_dir, "w") as fout:
@@ -1015,8 +1079,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, DCA_cols=(2, 3), DCA_skiprows="auto", filt
                 for i in range(len(DCA_TPR)):
                     fout.write("{}\t{}\n".format(i + 1, DCA_TPR[i]))
                 print("Saved log as: ", file_dir)
-        plt.show()
-    return
+    return fig, ax
 
 
 def Contact_Analysis_CA(ref, top, traj, d_cutoff=6.0, sel='protein and name CA',
