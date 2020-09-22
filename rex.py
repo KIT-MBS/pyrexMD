@@ -130,7 +130,7 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="a
 
     # read files
     RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(ref_pdb, ref_skiprows)
-    DCA_PAIR = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=usecols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
+    DCA_PAIR, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=usecols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
 
     RES_PAIR = []
     ATOM_PAIR = []

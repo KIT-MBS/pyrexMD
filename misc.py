@@ -945,6 +945,7 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(0, 1), skiprows='auto', filter_DCA=Tr
 
     Returns:
         DCA_PAIRS (list): DCA pairs IJ
+        DCA_PAIRS_RES_range (list): [RES_min, RES_max] of DCA_PAIRS (not input RES_range values)
     """
     I, J = read_file(DCA_fin, usecols=usecols, skiprows=skiprows, dtype=np.int_)
     DCA_PAIRS = []
@@ -967,7 +968,8 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(0, 1), skiprows='auto', filter_DCA=Tr
         else:
             DCA_PAIRS.append((I[k], J[k]))
 
-    return DCA_PAIRS
+        DCA_PAIRS_RES_range = [min(min(I), min(J)), max(max(I), max(J))]
+    return DCA_PAIRS, DCA_PAIRS_RES_range
 
 
 def get_PDBid(ref):

@@ -734,12 +734,14 @@ def shortest_RES_distances(u):
         SD_d (np.array, dtype=object): detailed List with:
             [d_min, (RES_pair), (ATM_pair), (ATM_names)]
     """
-    if type(u) is str:
-        #universe copy
+    if isinstance(u, str):
+        # uc: universe copy
         uc = mda.Universe(u)
-    else:
-        #universe copy
+    elif isinstance(u, mda.Universe):
+        # uc: universe copy
         uc = u.copy()
+    elif isinstance(u, mda.AtomGroup):
+        uc = u.universe.copy()
     norm_resids(uc, verbose=True)
     dim = len(uc.residues.resids)
     SD = np.zeros(shape=(dim, dim))
@@ -770,7 +772,7 @@ def shortest_RES_distances(u):
     return(SD, SD_d)
 
 
-def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=False):
+def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True):
     """
     Calculate native contacts.
 
@@ -851,6 +853,8 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, d_cutoff=6.0,
         filter_DCA (bool):
             True: ignore DCA pairs with |i-j| < 3
             False: use all DCA pairs w/o applying filter
+        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids
+            None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
         norm (bool): apply analysis.norm_universe()
         save_plot (bool)
@@ -863,8 +867,9 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, d_cutoff=6.0,
     default = {"DCA_cols": (0, 1),
                "DCA_skiprows": "auto",
                "filter_DCA": True,
+               "RES_range": [None, None],
                "ignh": True,
-               "norm": False,
+               "norm": True,
                "save_plot": False}
     cfg = _misc.CONFIG(default, **kwargs)
     # init values
@@ -904,7 +909,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=0, d_cutoff=6.0,
 
     # find matching contacts ij
     if DCA_fin is not None:
-        DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA)
+        DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
 
         if res_max - res_min < 100:
             for item in DCA:     # if item is in both lists plot it green otherwise red
@@ -988,7 +993,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
                "filter_DCA": True,
                "RES_range": [None, None],
                "ignh": True,
-               "norm": False,
+               "norm": True,
                "color": "blue",
                "shade_area": True,
                "shade_color": "orange",
@@ -1001,7 +1006,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     # load universe
     if pdbid == 'pdbid':
         pdbid = _misc.get_PDBid(ref)
-    if type(ref) is str:
+    if isinstance(ref, str):
         u = mda.Universe(ref)
     else:
         u = ref
@@ -1012,7 +1017,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     else:
         a = u.select_atoms(sel)
     # read DCA and calculate TPR
-    DCA = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
+    DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
     DCA_TPR = []  # List with TPR of DCA contacts with d < d_cutoff
     SD = shortest_RES_distances(a)[0]
     RES_min = min(a.residues.resids)
