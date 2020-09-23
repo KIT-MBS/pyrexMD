@@ -666,13 +666,14 @@ def round_object(object, prec=3):
     return new_object
 
 
-def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"]):
+def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"], reverse=False):
     """
     get substrings of string by removing each seperator.
 
     Args:
         string (str)
         seperators (list)
+        reverse (bool): return substrings in reversed order
 
     Returns:
         substrings (list): list of substrings
@@ -680,10 +681,14 @@ def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"]):
     Example:
         get_substrings("split.this/string_into:parts")
         >> ['split', 'this', 'string', 'into', 'parts']
+        get_substrings("split.this/string_into:parts", reverse=True)
+        >> ['parts', 'into', 'string', 'this', 'split']
     """
     for sep in seperators:
         string = string.replace(sep, " ")
     substrings = [item for item in string.split(" ") if len(item) > 0]
+    if reverse:
+        substrings = substrings[::-1]
     return substrings
 
 

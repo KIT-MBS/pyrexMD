@@ -295,11 +295,11 @@ def _HELP_str2int(list_):
         if isinstance(str_, (int, np.integer, np.signedinteger)):
             ints_.append(str_)
         elif isinstance(str_, str):
-            substrings = _misc.get_substrings(str_)
+            substrings = _misc.get_substrings(str_, reverse=True)
             for sub in substrings:
                 try:
                     ints_.append(int(sub))
-                    break  # stop substring iteration if integer is found
+                    break  # stop substring iteration if integer is found (reversed order)
                 except ValueError:
                     pass
         else:
@@ -335,36 +335,50 @@ def abinitio_get_decoy_precission(ref, decoy_prefix="./output/2hda_", decoy_ndx_
         SCORE (list): list with corresponding scores (ref 2015)
         RMSD (list): list with corresponding RMSD values
     """
+    def __HELP_ndx_range_None2int(decoy_ndx_range):
+        """
+        converts each 'None' value of decoy_ndx_range to corresponding 'int' value.
+
+        Args:
+            decoy_ndx_range (tuple/list): [min_ndx, max_ndx]
+
+        Returns:
+            decoy_ndx_range (list): [min_ndx, max_ndx]
+        """
+        min_ndx, max_ndx = decoy_ndx_range      # copy initial values
+        decoy_ndx_range = list(decoy_ndx_range)  # create new list object (to assign new values)
+
+        if min_ndx is None:
+            decoy_ndx_range[0] = 9999999999  # min_ndx
+        if max_ndx is None:
+            decoy_ndx_range[1] = 0           # max_ndx
+
+        if min_ndx is None or max_ndx is None:
+            for file in decoy_files:
+                substrings = _misc.get_substrings(file)
+                for sub in substrings:
+                    try:
+                        integer = int(sub)
+                        if min_ndx is None and integer < decoy_ndx_range[0]:
+                            decoy_ndx_range[0] = integer
+                        if max_ndx is None and integer > decoy_ndx_range[1]:
+                            decoy_ndx_range[1] = integer
+                    except ValueError:
+                        pass
+        return decoy_ndx_range
+
     decoy_files = glob.glob(f"{decoy_prefix}*")
 
     # get decoy index range if not passed
-    decoy_ndx_range = list(decoy_ndx_range)  # make sure that new list object is created
-    search = False
-    if decoy_ndx_range[0] is None:
-        decoy_ndx_range[0] = 9999999999  # min_ndx
-        search = True
-    if decoy_ndx_range[1] is None:
-        decoy_ndx_range[1] = 0           # max_ndx
-        search = True
-    if search:
-        for file in decoy_files:
-            substrings = _misc.get_substrings(file)
-            for sub in substrings:
-                try:
-                    integer = int(sub)
-                    if integer < decoy_ndx_range[0]:
-                        decoy_ndx_range[0] = integer
-                    if integer > decoy_ndx_range[1]:
-                        decoy_ndx_range[1] = integer
-                except ValueError:
-                    pass
+    decoy_ndx_range = __HELP_ndx_range_None2int(decoy_ndx_range)
+    min_ndx, max_ndx = decoy_ndx_range
 
     scorefxn = pyrosetta.get_fa_scorefxn()
     DECOY = []  # list with decoy names
     SCORE = []  # list with corresponding scores
     RMSD = []   # list with corresponding RMSD
 
-    for i in tqdm(range(decoy_ndx_range[0], decoy_ndx_range[1]+1)):
+    for i in tqdm(range(min_ndx, max_ndx+1)):
         decoy_path = f"{decoy_prefix}{i}.pdb"
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
@@ -391,7 +405,7 @@ def abinitio_get_decoy_precission(ref, decoy_prefix="./output/2hda_", decoy_ndx_
     return DECOY, SCORE, RMSD
 
 
-def abinitio_rank_decoy_arrays(DECOY, SCORE, RMSD, rank_by="SCORE", return_decoy_ndx=True):
+def abinitio_rank_decoy_arrays(DECOY, SCORE, RMSD, rank_by="SCORE", return_decoy_ndx=True, verbose=True):
     """
     'Link' input data and then rank based on score in ascending order (low to high).
     Input data is output of abinitio_get_decoy_precission() function.
@@ -404,6 +418,7 @@ def abinitio_rank_decoy_arrays(DECOY, SCORE, RMSD, rank_by="SCORE", return_decoy
         return_decoy_ndx (bool):
             True: DECOY_ranked array contains only decoy indices
             False: DECOY_ranked array contains the full decoy names
+        verbose (bool)
 
     Return:
         DECOY_ranked (array): ranked array
@@ -411,11 +426,11 @@ def abinitio_rank_decoy_arrays(DECOY, SCORE, RMSD, rank_by="SCORE", return_decoy
         RMSD_ranked (array): ranked array
     """
     if rank_by.upper() == "SCORE":
-        SCORE_ranked, SCORE_ranked_ndx = _misc.get_ranked_array(SCORE, reverse=True)
+        SCORE_ranked, SCORE_ranked_ndx = _misc.get_ranked_array(SCORE, reverse=True, verbose=verbose)
         DECOY_ranked = np.array([DECOY[ndx] for ndx in SCORE_ranked_ndx])
         RMSD_ranked = np.array([RMSD[ndx] for ndx in SCORE_ranked_ndx])
     if rank_by.upper() == "RMSD":
-        RMSD_ranked, RMSD_ranked_ndx = _misc.get_ranked_array(RMSD, reverse=True)
+        RMSD_ranked, RMSD_ranked_ndx = _misc.get_ranked_array(RMSD, reverse=True, verbose=verbose)
         DECOY_ranked = np.array([DECOY[ndx] for ndx in RMSD_ranked_ndx])
         SCORE_ranked = np.array([SCORE[ndx] for ndx in RMSD_ranked_ndx])
 
@@ -442,4 +457,5 @@ def abinitio_scatterplot(SCORE, RMSD, **kwargs):
     plt.plot(RMSD, SCORE, ".")
     plt.xlabel(r"RMSD ($\AA$)", fontweight="bold")
     plt.ylabel("SCORE (REU)", fontweight="bold")
+    plt.tight_layout()
     return fig, ax
