@@ -975,11 +975,19 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
             None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
         norm (bool): apply analysis.norm_universe()
+        TPR_layer (str): plot TPR curve in foreground or background layer
+            "fg", "foreground", "bg", "background"
         color (str)
         shade_area (bool): shade area between L/2 and L ranked contacts
         shade_color (str)
         shade_alpha (float)
         hline_color (None/str): color of 75p threshold (horizontal line)
+        hline_ls (str): linestyle of hline (default: "-")
+        nDCA_opt_color (None/str): color of optimal/recommended nDCA threshold
+            nDCA_opt = misc.round_up(3/4*len(ref.residues), base=5))
+            (vertical line ~ nDCA_opt)
+            (horizontal line ~ TPR(nDCA_opt))
+        nDCA_opt_ls (str): linestyle of nDCA_opt (default: "--")
         save_plot (bool)
         save_log (bool)
         figsize (tuple)
@@ -994,11 +1002,15 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
                "RES_range": [None, None],
                "ignh": True,
                "norm": True,
+               "TPR_layer": "fg",
                "color": "blue",
                "shade_area": True,
                "shade_color": "orange",
                "shade_alpha": 0.2,
                "hline_color": "red",
+               "hline_ls": "-",
+               "nDCA_opt_color": "orange",
+               "nDCA_opt_ls": "--",
                "save_plot": False,
                "save_log": False,
                "figsize": (8, 4.5)}
@@ -1038,8 +1050,9 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     # y-axis: % of DCA contacts with d <= d_cuttoff
     with sns.axes_style('darkgrid'):
         fig, ax = plt.subplots(figsize=cfg.figsize)
-        plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
-        plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
+        if cfg.TPR_layer.lower() == "bg" or cfg.TPR_layer.lower() == "background":
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
         # plt.legend(loc="upper right", numpoints=1)
         plt.xlim(0, n_DCA + 1)
         plt.ylim(0, 105)
@@ -1051,19 +1064,33 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
             L1 = _misc.round_down(u.residues.n_residues/2, base=1)
             L2 = u.residues.n_residues
             plt.axvspan(L1, L2, alpha=cfg.shade_alpha, color=cfg.shade_color)
-            #plt.axvline(L1, color=cfg.shade_color)
-            #plt.axvline(L2, color=cfg.shade_color)
             plt.text(L1-2, -5, "L/2", color=cfg.shade_color, alpha=1, fontweight="bold")
             plt.text(L2, -5, "L", color=cfg.shade_color, alpha=1, fontweight="bold")
         if cfg.hline_color is not None:
-            plt.axhline(75, color=cfg.hline_color)
-            plt.text(-4.1, 72, "75", color=cfg.hline_color)
+            plt.axhline(75, color=cfg.hline_color, ls=cfg.hline_ls)
+            plt.text(-3, 73, "75", color=cfg.hline_color, fontweight="bold")
+            #_misc.set_pad(ax, xpad=None, ypad=10) # set padding after tight_layout()
+        if cfg.nDCA_opt_color is not None:
+            nDCA_opt = int(_misc.round_to_base(3/4*len(u.residues), 5))
+            nDCA_opt_TPR = int(DCA_TPR[nDCA_opt - 1])  # requires index shift by 1 to get correct value
+            plt.axhline(nDCA_opt_TPR, color=cfg.nDCA_opt_color, ls=cfg.nDCA_opt_ls)
+            plt.text(-3, nDCA_opt_TPR-2, nDCA_opt_TPR, color=cfg.nDCA_opt_color, fontweight="bold")
+            plt.axvline(nDCA_opt, color=cfg.nDCA_opt_color, ls=cfg.nDCA_opt_ls)
+            plt.text(nDCA_opt-1.3, -5, nDCA_opt, color=cfg.nDCA_opt_color, fontweight="bold")
+            #_misc.set_pad(ax, xpad=10, ypad=10)  # set padding after tight_layout()
         plt.xlabel("Number of ranked contacts")
         plt.ylabel("True Positive Rate (%)")
         plt.title(f"TPR of {pdbid}", fontweight="bold")
         sns.despine(offset=0)
+        if cfg.TPR_layer.lower() == "fg" or cfg.TPR_layer.lower() == "foreground":
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
         plt.tight_layout()
-        plt.show()
+        if cfg.hline_color is not None:
+            _misc.set_pad(ax, xpad=None, ypad=10)  # set padding after tight_layout()
+        if cfg.nDCA_opt_color is not None:
+            _misc.set_pad(ax, xpad=10, ypad=10)    # set padding after tight_layout()
+
         if cfg.save_plot:
             _misc.savefig(filename=f"{pdbid}_Fig_DCA_TPR.png", filedir="./plots")
         if cfg.save_log:

@@ -577,8 +577,8 @@ def percent(num, div, prec=2):
 def round_down(number, base=1):
     """
     Args:
-        number (int)
-        base (int)
+        number (float/int)
+        base (float/int)
 
     Example:
         for i in range(11):
@@ -601,8 +601,8 @@ def round_down(number, base=1):
 def round_up(number, base=1):
     """
     Args:
-        number (int)
-        base (int)
+        number (float/int)
+        base (float/int)
 
     Example:
         for i in range(11):
@@ -623,6 +623,22 @@ def round_up(number, base=1):
         return number
     else:
         return number + base - (number % base)
+
+
+def round_to_base(number, base=1):
+    """
+    Round up or down depending on smallest difference to base.
+
+    Args:
+        number (float/int)
+        base (float/int)
+    """
+    up = round_up(number, base)
+    down = round_down(number, base)
+    if abs(up-number) < abs(number-down):
+        return up
+    else:
+        return down
 
 
 def round_object(object, prec=3):
@@ -1475,6 +1491,41 @@ def figure(num=None, figsize=(6.5, 4), dpi=None, grid=[1, 1], hr=[], wr=[],
     if len(ax) == 1:
         ax = ax[0]
     return (fig, ax)
+
+
+def set_pad(fig_or_ax, xpad=None, ypad=None):
+    """
+    Set pad (spacing) between axis and axis labels
+
+    Args:
+        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
+        xpad (None/float): spacing between xaxis and its labels
+            None: use current settings
+        ypad (None/float): spacing between yaxis and its labels
+            None: use current settings
+    """
+    default = {"xpad": 3.5,
+               "ypad": 3.5}
+    cfg = CONFIG(default, xpad=xpad, ypad=ypad)
+    ############################################################################
+    if isinstance(fig_or_ax, matplotlib.figure.Figure):
+        if len(fig_or_ax.axes) == 1:
+            ax = [fig_or_ax.axes]
+        else:
+            ax = fig_or_ax.axes
+    elif isinstance(fig_or_ax, matplotlib.axes._subplots.Axes):
+        ax = [fig_or_ax]
+    elif isinstance(fig_or_ax, list):
+        ax = fig_or_ax
+
+    for ax in ax:
+        if xpad is not None:
+            for tick in ax.get_xaxis().get_major_ticks():
+                tick.set_pad(cfg.xpad)
+        if ypad is not None:
+            for tick in ax.get_yaxis().get_major_ticks():
+                tick.set_pad(cfg.ypad)
+    return
 
 
 def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, loc=None, **kwargs):
