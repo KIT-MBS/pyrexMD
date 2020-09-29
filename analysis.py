@@ -7,7 +7,6 @@
 from __future__ import division, print_function
 import myPKG.misc as _misc
 from tqdm import tqdm_notebook as tqdm
-#from tqdm import tqdm
 from Bio.PDB import PDBParser, Polypeptide
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align
 import MDAnalysis as mda
@@ -18,7 +17,6 @@ import matplotlib.pyplot as plt
 import operator
 import os
 import glob
-import copy
 
 
 # global update for plots
@@ -314,6 +312,59 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
     return rmsf
 
 
+def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
+    """
+    get decoy list (sorted by a numeric part at any position of the filename,
+    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+
+    Args:
+        decoy_dir (str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple/list): limit decoy index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+
+    Returns:
+        decoy_list (list)
+    """
+    if decoy_dir[-1] == "/":
+        decoy_dir = decoy_dir[:-1]
+
+    # preset stuff
+    decoy_list = glob.glob(f"{decoy_dir}/{pattern}")
+    decoy_names = [_misc.get_filename(i) for i in decoy_list]
+    decoy_names_substrings = [_misc.get_substrings(i) for i in decoy_names]
+
+    # get decoy index range
+    diff_element = list(set(decoy_names_substrings[0])-set(decoy_names_substrings[1]))
+    if len(diff_element) != 1:
+        raise ValueError('decoy_names_substrings differ in more than 1 element (i.e. differ at more than 1 position)')
+    diff_position = decoy_names_substrings[0].index(diff_element[0])
+    min_ndx = 999999999
+    max_ndx = -999999999
+    for i in decoy_names_substrings:
+        if i[diff_position].isdigit() and int(i[diff_position]) < min_ndx:
+            min_ndx = int(i[diff_position])
+        if i[diff_position].isdigit() and int(i[diff_position]) > max_ndx:
+            max_ndx = int(i[diff_position])
+
+    if ndx_range[0] is not None:
+        min_ndx = ndx_range[0]
+    if ndx_range[1] is not None:
+        max_ndx = ndx_range[1]
+
+    # get decoy filename prefix and suffix
+    template = decoy_names[0]
+    template_diff_element = _misc.get_substrings(template)[diff_position]
+    decoy_filename_prefix = template[:template.index(template_diff_element)]
+    decoy_filename_suffix = template[template.index(template_diff_element)+len(template_diff_element):]
+
+    # create sorted decoy list
+    decoy_list = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
+                  if f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" in decoy_list]
+    return decoy_list
+
+
 def get_Distance_Matrices(mobile, sss=[None, None, None],
                           sel="protein and name CA", flatten=False,
                           **kwargs):
@@ -321,7 +372,9 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     Calculate distance matrices for mobile and return them.
 
     Args:
-        mobile (MDA universe/atomgrp): structure with trajectory
+        mobile (MDA universe/list):
+            (MDA universe): structure with trajectory
+            (list): decoy list / structure file list (.pdb) ~
         sss (list): [start, stop, step]
             start (None/int): start frame
             stop (None/int): stop frame
@@ -346,16 +399,34 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     cfg = _misc.CONFIG(default, **kwargs)
     cfg = _HELP_sss_None2int(mobile, cfg)  # convert None values of they keys sss, start, stop, step to integers
     ############################################################################
-    a = mobile.select_atoms(sel)
+    # mobile is MDA universe
+    if isinstance(mobile, mda.Universe):
+        a = mobile.select_atoms(sel)
+        DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
+                       a.n_atoms*a.n_atoms), dtype=np.float32)  # tuple args: length, size (of flattened array)
 
-    DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
-                   a.n_atoms*a.n_atoms))  # tuple args: length, size (of flattened array)
-    for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
-        DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
+        for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
+            DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
+        if not flatten:
+            DM = DM.reshape((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
+                             a.n_atoms, a.n_atoms))  # tuple args: length, N_CA, N_CA
 
-    if not flatten:
-        DM = DM.reshape((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
-                         a.n_atoms, a.n_atoms))  # tuple args: length, N_CA, N_CA
+    # mobile is list with pdb files
+    elif isinstance(mobile, list):
+        for pdb_file in mobile:
+            if _misc.get_extension(pdb_file) != ".pdb":
+                print(f"Extension test of: {pdb_file}")
+                raise TypeError('<mobile> is passed as list but does not contain .pdb file paths.')
+        u = mda.Universe(mobile[0])
+        a = u.select_atoms(sel)
+        DM = np.empty((len(mobile), a.n_atoms*a.n_atoms), dtype=np.float32)  # tuple args: length, size (of flattened array)
+
+        for i, pdb_file in enumerate(mobile):
+            u = mda.Universe(pdb_file)
+            a = u.select_atoms(sel)
+            DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
+        if not flatten:
+            DM = DM.reshape((len(mobile), a.n_atoms, a.n_atoms))  # tuple args: length, N_CA, N_CA
     return DM
 ################################################################################
 ################################################################################
@@ -426,7 +497,7 @@ def align_resids(mobile, ref, norm=True, verbose=True):
         norm_resids(ref, 'reference', verbose=verbose)
 
     shift = get_resids_shift(mobile, ref)
-    if shift is not None:
+    if shift != 0:
         _misc.cprint("Aligning reference res ids...\n", "blue")
         shift_resids(ref, shift, verbose=verbose)
     return
@@ -435,14 +506,14 @@ def align_resids(mobile, ref, norm=True, verbose=True):
 True
 
 
-def get_matching_selection(mobile, ref, sel_detail="CA", verbose=True):
+def get_matching_selection(mobile, ref, sel="protein and name CA", verbose=True):
     """
     Get matching selection strings of mobile and reference after resids alignment.
 
     Args:
         mobile (MDA universe)
         ref (MDA universe)
-        sel_detail (str): add 'name <del_detail>' to matching selection strings
+        sel (str): selection string
         verbose (bool)
 
     Returns:
@@ -451,8 +522,8 @@ def get_matching_selection(mobile, ref, sel_detail="CA", verbose=True):
     """
     if get_resids_shift(mobile, ref) != 0:
         align_resids(mobile, ref, norm=True, verbose=verbose)
-    sel1 = f"resid {min(ref.residues.resids)}-{max(ref.residues.resids)} and name {sel_detail}"
-    sel2 = f"name {sel_detail}"
+    sel1 = f"{sel} and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}"
+    sel2 = f"{sel}"
 
     if np.all(ref.select_atoms(sel1).residues.resnames == ref.select_atoms(sel2).residues.resnames):
         pass
@@ -2138,7 +2209,7 @@ def get_array_percent(dist_array, cutoff):
     return(p, ndx)
 
 
-def get_PairDistances(mobile, ref, sel1="protein and name CA", sel2="protein and name CA", **kwargs):
+def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein and name CA", **kwargs):
     """
     Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).
 
@@ -2159,7 +2230,7 @@ def get_PairDistances(mobile, ref, sel1="protein and name CA", sel2="protein and
     weights = "mass"  # hard coded weights
     #################################################
 
-    # get_PairDistances function
+    # get_Pair_Distances function
     RMSD = alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
     _resids_mobile, _resids_ref, PAIR_DISTANCES = mda.analysis.distances.dist(mobile_atoms, ref_atoms)
     return(PAIR_DISTANCES, RMSD, _resids_mobile, _resids_ref)
@@ -2302,7 +2373,7 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
 
     # analyze trajectory
     for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step]):
-        PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_PairDistances(
+        PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_Pair_Distances(
             mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
         RMSD.append(_RMSD)
 
@@ -2661,7 +2732,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     FRAMES = [i+ndx_offset for i in GDT_ndx[:rank_num]]
 
     for ts in mobile.trajectory[FRAMES]:
-        PD, *_ = get_PairDistances(mobile, ref, sel1=sel1, sel2=sel2)
+        PD, *_ = get_Pair_Distances(mobile, ref, sel1=sel1, sel2=sel2)
         PAIR_DISTANCES.append(PD)
 
     if cfg.prec != None and cfg.prec != -1:

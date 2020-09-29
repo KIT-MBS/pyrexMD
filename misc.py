@@ -286,6 +286,22 @@ def dirpath(path):
     return(os.path.dirname(os.path.realpath(path)))
 
 
+def get_filename(path):
+    """
+    get filename (removes prefix of realpath)
+
+    Args:
+        path (str)
+
+    Returns
+        filename (str)
+    """
+    real_path = realpath(path)
+    dir_path = dirpath(path)
+    filename = real_path[len(dir_path)+1:]
+    return filename
+
+
 def joinpath(filedir, filename, create_dir=True):
     """
     Returns truepath of (filedir + filename).
@@ -362,7 +378,7 @@ def cd(path, verbose=True):
         realpath (str): realpath of changed directory
     """
     realpath = os.path.realpath(path)
-    os.cdir(realpath)
+    os.chdir(realpath)
     if verbose:
         print('Changed directory to:', realpath)
     return realpath
@@ -654,8 +670,8 @@ def round_object(object, prec=3):
         new_object (list/array): same structure as object, but with rounded values.
 
     """
-    # single list/array
-    if isinstance(object[0], (int, float)):
+    # single list/array (if error occurs, maybe add more np.<data types> to this case)
+    if isinstance(object[0], (int, float, np.float32, np.int32)):
         new_object = [round(item, prec) for item in object]
 
     # list of lists
@@ -682,7 +698,7 @@ def round_object(object, prec=3):
     return new_object
 
 
-def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"], reverse=False):
+def get_substrings(string, seperators=["/", "_", ".", ":", ";", " "], reverse=False):
     """
     get substrings of string by removing each seperator.
 
@@ -695,9 +711,9 @@ def get_substrings(string, seperators=[".", "/", "_", " ", ":", ";"], reverse=Fa
         substrings (list): list of substrings
 
     Example:
-        get_substrings("split.this/string_into:parts")
+        get_substrings("split/this_string.into:parts")
         >> ['split', 'this', 'string', 'into', 'parts']
-        get_substrings("split.this/string_into:parts", reverse=True)
+        get_substrings("split/this_string.into:parts", reverse=True)
         >> ['parts', 'into', 'string', 'this', 'split']
     """
     for sep in seperators:
@@ -1730,7 +1746,8 @@ def pickle_dump(obj, filename='', pickledir='./pickle',
     if overwrite:
         if os.path.exists(filepath):
             os.remove(filepath)
-    pl.dump(obj, open(filepath, 'wb'))
+    with open(filepath, 'wb') as file:
+        pl.dump(obj, file)
     if verbose:
         if isinstance(obj, matplotlib.figure.Figure):
             print(f"pickle.dumped figure as:", os.path.realpath(filepath))
@@ -1797,7 +1814,7 @@ def _pickle_get_ax_data(fig_or_ax):
 
     Returns:"""
     # NOTE 1: End this docstring with |Returns:"""| to remove trailing newline
-    # NOTE 2: Missing "Returns" part is coded right after this function.
+    # NOTE 2: Missing doc string part is coded right after this function.
     #         It will be appended once here and to other docstrings during
     #         the first initialization of the module.
     #         -> see INIT_append_docstrings()
@@ -1855,7 +1872,7 @@ def _pickle_get_line_data(fig_or_ax):
 
     Returns:"""
     # NOTE 1: End this docstring with |Returns:"""| to remove trailing newline
-    # NOTE 2: Missing "Returns" part is coded right after this function.
+    # NOTE 2: Missing doc string part is coded right after this function.
     #         It will be appended once here and to other docstrings during
     #         the first initialization of the module.
     #         -> see INIT_append_docstrings()
@@ -1902,7 +1919,7 @@ def _pickle_get_rectangle_data(fig_or_ax):
 
     Returns:"""
     # NOTE 1: End this docstring with |Returns:"""| to remove trailing newline
-    # NOTE 2: Missing "Returns" part is coded right after this function.
+    # NOTE 2: Missing doc string part is coded right after this function.
     #         It will be appended once here and to other docstrings during
     #         the first initialization of the module.
     #         -> see INIT_append_docstrings()
@@ -1986,28 +2003,28 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
             object (?)
 
     Notes:"""
-    # NOTE 1: End this docstring with |Returns:"""| to remove trailing newline
-    # NOTE 2: Missing "Returns" part is coded right after this function.
+    # NOTE 1: End this docstring with |Notes:"""| to remove trailing newline
+    # NOTE 2: Missing doc string part is coded right after this function.
     #         It will be appended once here and to other docstrings during
     #         the first initialization of the module.
     #         -> see INIT_append_docstrings()
 
     # test if filename is "fullpath" or "relative path to pickle_dir"
     filepath = joinpath(filedir=pickledir, filename=filename, create_dir=False)
-    obj = pl.load(open(filepath, "rb"))
+    with open(filepath, "rb") as file:
+        obj = pl.load(file)
+        if isinstance(obj, matplotlib.figure.Figure):
+            fig = obj
+            ax_data = _pickle_get_ax_data(fig)
+            line_data = _pickle_get_line_data(fig)
+            rect_data = _pickle_get_rectangle_data(fig)
+            if not plot:
+                fig.set_size_inches(0, 0)
+                plt.close()
+            return (ax_data, line_data, rect_data)
 
-    if isinstance(obj, matplotlib.figure.Figure):
-        fig = obj
-        ax_data = _pickle_get_ax_data(fig)
-        line_data = _pickle_get_line_data(fig)
-        rect_data = _pickle_get_rectangle_data(fig)
-        if not plot:
-            fig.set_size_inches(0, 0)
-            plt.close()
-        return (ax_data, line_data, rect_data)
-
-    else:
-        return obj
+        else:
+            return obj
 
 
 __pickle_load___example_doc__ = """

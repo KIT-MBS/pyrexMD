@@ -1,7 +1,6 @@
 import myPKG.core as core
-#from myPKG.core import iColor, iWidgets, iPlayer, iColor
-import myPKG.analysis as ana
 import myPKG.misc as misc
+import myPKG.analysis as ana
 
 
 version = 1.0
@@ -25,6 +24,8 @@ import MDAnalysis as mda
 import myPKG.core as core
 import myPKG.misc as misc
 import myPKG.analysis as ana
+import myPKG.abinitio as abi
+import myPKG.cluster as cluster
 import myPKG.gmx as gmx
 misc.apply_matplotlib_rc_settings()
     """)

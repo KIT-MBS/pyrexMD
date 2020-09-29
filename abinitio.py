@@ -1,20 +1,19 @@
 from __future__ import division, print_function
-from tqdm import tqdm
-import my.misc as _misc
-import my.analysis as _ana
+from tqdm import tqdm_notebook as tqdm
+import myPKG.misc as _misc
+import myPKG.analysis as _ana
+from myPKG.analysis import get_decoy_list
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import glob
 import multiprocessing
 import MDAnalysis as mda
 import pyrosetta
 from pyrosetta.rosetta import protocols
 pyrosetta.init("-mute core.import_pose core.pack.task core.pack.pack_rotamers protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
-#pyrosetta.init("-mute core.import_pose")  # mute all import pose messages
 
 
-def abinitio_setup_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
+def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     """
     Setup config file for abinitio functions.
 
@@ -60,16 +59,16 @@ def abinitio_setup_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     return cfg
 
 
-def abinitio_create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
-                           stream2pymol=True, fastrelax=True, save_log=True):
+def create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
+                  stream2pymol=True, fastrelax=True, save_log=True):
     """
     Create decoys within pyrosetta framework.
 
     Args:
-        abinitio_cfg (CONFIG class)
+        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
         output_dir (str): output directory for decoys
         n_cores (int): -np option for multiprocessing. Overwrites parameter
-                         in abinitio_cfg
+                       in abinitio_cfg
         stream2pymol (bool): stream decoys to pymol
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
         save_log (bool): save scores to logfile at <output_dir/scores.txt>
@@ -78,7 +77,7 @@ def abinitio_create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
     cfg.update_config(n_cores=n_cores)
 
     pool = multiprocessing.Pool()
-    pool_outputs = pool.map(_abinitio_create_decoys, range(cfg.n_cores))
+    pool_outputs = pool.map(_create_decoys, range(cfg.n_cores))
 
     # reset log for multiprocess run
     if save_log:
@@ -99,20 +98,20 @@ def abinitio_create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
         cfg = cfg.deepcopy()
         cfg.decoy_ndx_shift = worker * int(cfg.n_decoys/cfg.n_cores)
         args = [cfg, output_dir, stream2pymol, fastrelax, save_log]
-        pool.map(_abinitio_create_decoys, args)
+        pool.map(_create_decoys, args)
 
     pool.close()
     pool.join()
     return
 
 
-def _abinitio_create_decoys(abinitio_cfg, output_dir="./output",
-                            stream2pymol=True, fastrelax=True, save_log=True):
+def _create_decoys(abinitio_cfg, output_dir="./output",
+                   stream2pymol=True, fastrelax=True, save_log=True):
     """
     Create decoys within pyrosetta framework.
 
     Args:
-        abinitio_cfg (CONFIG class)
+        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
         output_dir (str): output directory for decoys
         stream2pymol (bool): stream decoys to pymol
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
@@ -234,158 +233,56 @@ Proceed? [y/n]"""
     return SCORES_low, SCORES_high
 
 
-def abinitio_align_universe(decoy, ref, print_comment=False):
+def _HELP_decoypath_to_decoyid(list_):
     """
-    ref protein is smaller than decoy:
-        -> shift resids and atomids of ref to match decoy.
-
-    Args:
-        decoy (MDA universe): pyrosetta decoy pdb path
-        ref (MDA universe): reference structure pdb path
-        print_comment (bool): print comment about this function's usage
-
-    Returns:
-        decoy (MDA atomgrp)
-    """
-    decoy = _ana.true_select_atoms(u=decoy, sel='protein', ignh=True)
-    decoy.atoms.ids = _misc.norm_array(decoy.atoms.ids, start_value=decoy.atoms.ids[0])
-    # get slice_indices by comparing resnames
-    slice_ndx1, slice_ndx2 = _misc.get_slice_indices(ref.residues.resnames, decoy.residues.resnames)
-    ref.residues.resids = decoy.residues.resids[slice_ndx1:slice_ndx2]
-
-    # get atom id shift by counting atoms with resid < (new) smallest ref resid
-    atom_id_shift = len(np.where(decoy.atoms.resids < ref.atoms.resids[0])[0])
-    ref.atoms.ids += atom_id_shift
-
-    if print_comment:
-        print("The function 'abinitio_align_universe' returns a decoy atom_grp!")
-        print("This does not affect the original decoy universe!")
-
-    return decoy
-
-
-def abinitio_select_RMSD_atomgrp(decoy, ref):
-    """
-    Args:
-        decoy (MDA atomgrp)
-        ref (MDA universe)
-
-    Returns:
-        decoy (MDA atomgrp)
-    """
-    resmin = ref.residues.resids[0]
-    resmax = ref.residues.resids[-1]
-    decoy = _ana.true_select_atoms(decoy, sel=f"protein and resid {resmin}-{resmax}")
-    return decoy
-
-
-def _HELP_str2int(list_):
-    """
-    HELP FUNCTION: convert list with strings to list with ints
+    HELP FUNCTION: convert list with decoy strings to list with decoy ids
 
     Example:
-        L = ['./output/2hda_4444.pdb', './output/2hda_4852.pdb',
-             './output/2hda_1813.pdb', './output/2hda_3177.pdb']
-        _HELP_str2int(L)
-        >> [4444, 4852, 1813, 3177]
+        decoy_list = ['./1LMB_decoys/set1_2000/1LMB_1.pdb',
+                      './1LMB_decoys/set1_2000/1LMB_2.pdb',
+                      './1LMB_decoys/set1_2000/1LMB_3.pdb']
+        _HELP_decoystr_to_decoyid(decoy_list)
+        >> [1, 2, 3]
     """
+    substrings = [_misc.get_substrings(i) for i in list_]
 
-    ints_ = []
-    for str_ in list_:
-        if isinstance(str_, (int, np.integer, np.signedinteger)):
-            ints_.append(str_)
-        elif isinstance(str_, str):
-            substrings = _misc.get_substrings(str_, reverse=True)
-            for sub in substrings:
-                try:
-                    ints_.append(int(sub))
-                    break  # stop substring iteration if integer is found (reversed order)
-                except ValueError:
-                    pass
-        else:
-            print("abinitio._HELP_str2int(list_):\nWarning:")
-            print(f"{str_} is item in <list_> and is not of integer- or string-type.")
-    return ints_
+    # get decoy index range
+    diff_element = list(set(substrings[0])-set(substrings[1]))
+    if len(diff_element) != 1:
+        raise ValueError('substrings differ in more than 1 element (i.e. differ at more than 1 position)')
+    diff_position = substrings[0].index(diff_element[0])
+    ids = [int(_misc.get_substrings(i)[diff_position]) for i in list_]
+    return ids
 
 
-def abinitio_get_decoy_precission(ref, decoy_prefix="./output/2hda_", decoy_ndx_range=(None, None),
-                                  return_decoy_ndx=True):
+def get_decoy_precission(ref, decoy_dir, pattern="*.pdb",
+                         ndx_range=(None, None), sel='backbone'):
     """
-    get arrays with
-        - Decoy(names)
-        - Score
-        - RMSD
-    to compare decoy precission.
-
     Args:
         ref (MDA universe): reference structure
-        decoy_prefix (str): prefix of decoy path.
-                            Example:
-                                decoy path: './output/decoy_0.pdb'
-                                decoy prefix: './output/decoy_'
-        decoy_ndx_range (tuple/list):
-            use only decoy with indices within [ndx_start, index_stop].
-            if (None, None): use all decoys found in decoy_prefix folder
-        return_decoy_ndx (bool):
-            True: DECOY array contains only decoy indices
-            False: DECOY array contains the full decoy names/paths
+        decoy_dir (str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple/list): limit decoy index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+        sel (str): selection string
 
     Returns:
-        DECOY (list): list with decoy names
+        DECOY_LIST (list): list with decoy paths
+        DECOY_ID   (list): list with decoy ids
         SCORE (list): list with corresponding scores (ref 2015)
-        RMSD (list): list with corresponding RMSD values
+        RMSD  (list): list with corresponding RMSD values
     """
-    def __HELP_ndx_range_None2int(decoy_ndx_range):
-        """
-        converts each 'None' value of decoy_ndx_range to corresponding 'int' value.
-
-        Args:
-            decoy_ndx_range (tuple/list): [min_ndx, max_ndx]
-
-        Returns:
-            decoy_ndx_range (list): [min_ndx, max_ndx]
-        """
-        min_ndx, max_ndx = decoy_ndx_range      # copy initial values
-        decoy_ndx_range = list(decoy_ndx_range)  # create new list object (to assign new values)
-
-        if min_ndx is None:
-            decoy_ndx_range[0] = 9999999999  # min_ndx
-        if max_ndx is None:
-            decoy_ndx_range[1] = 0           # max_ndx
-
-        if min_ndx is None or max_ndx is None:
-            for file in decoy_files:
-                substrings = _misc.get_substrings(file)
-                for sub in substrings:
-                    try:
-                        integer = int(sub)
-                        if min_ndx is None and integer < decoy_ndx_range[0]:
-                            decoy_ndx_range[0] = integer
-                        if max_ndx is None and integer > decoy_ndx_range[1]:
-                            decoy_ndx_range[1] = integer
-                    except ValueError:
-                        pass
-        return decoy_ndx_range
-
-    decoy_files = glob.glob(f"{decoy_prefix}*")
-
-    # get decoy index range if not passed
-    decoy_ndx_range = __HELP_ndx_range_None2int(decoy_ndx_range)
-    min_ndx, max_ndx = decoy_ndx_range
-
     scorefxn = pyrosetta.get_fa_scorefxn()
-    DECOY = []  # list with decoy names
+    DECOY_LIST = get_decoy_list(decoy_dir, pattern, ndx_range)
+    DECOY_ID = _HELP_decoypath_to_decoyid(DECOY_LIST)
     SCORE = []  # list with corresponding scores
     RMSD = []   # list with corresponding RMSD
 
-    for i in tqdm(range(min_ndx, max_ndx+1)):
-        decoy_path = f"{decoy_prefix}{i}.pdb"
+    for decoy_path in tqdm(DECOY_LIST):
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
             continue
-
-        # set DECOY
-        DECOY.append(decoy_path)
 
         # get SCORE
         pose = pyrosetta.pose_from_pdb(decoy_path)
@@ -393,53 +290,47 @@ def abinitio_get_decoy_precission(ref, decoy_prefix="./output/2hda_", decoy_ndx_
 
         # get RMSD
         decoy = mda.Universe(decoy_path)
-        decoy = abinitio_align_universe(decoy, ref, print_comment=False)
-        decoy_RMSD_atomgrp = abinitio_select_RMSD_atomgrp(decoy, ref)
-        ftr = _ana.get_RMSD(decoy_RMSD_atomgrp, ref, sel='backbone')
+        sel1, sel2 = _ana.get_matching_selection(decoy, ref, sel=sel)  # two sel strings -> no alignment necessary
+        ftr = _ana.get_RMSD(decoy, ref, sel1=sel1, sel2=sel2)
         RMSD.append(ftr[2])
 
     RMSD = _misc.flatten_array(RMSD)
-
-    if return_decoy_ndx:
-        DECOY = _HELP_str2int(DECOY)
-    return DECOY, SCORE, RMSD
+    return DECOY_LIST, DECOY_ID, SCORE, RMSD
 
 
-def abinitio_rank_decoy_arrays(DECOY, SCORE, RMSD, rank_by="SCORE", return_decoy_ndx=True, verbose=True):
+def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
     """
-    'Link' input data and then rank based on score in ascending order (low to high).
-    Input data is output of abinitio_get_decoy_precission() function.
-
     Args:
-        DECOY (list/array): array with decoy names
-        SCORE (list/array): array with score
-        RMSD (list/array): array with RMSD
+        data (list): output of abinitio.get_decoy_precission()
+            data[0]: DECOY_LIST
+            data[1]: DECOY_ID
+            data[2]: SCORE
+            data[3]: RMSD
         rank_by (str): "SCORE", "RMSD"
-        return_decoy_ndx (bool):
-            True: DECOY_ranked array contains only decoy indices
-            False: DECOY_ranked array contains the full decoy names
         verbose (bool)
 
-    Return:
-        DECOY_ranked (array): ranked array
-        SCORE_ranked (array): ranked array
-        RMSD_ranked (array): ranked array
+    Returns:
+        DECOY_LIST_ranked (array)
+        DECOY_ID_ranked (array)
+        SCORE_ranked (array)
+        RMSD_ranked (array)
     """
+    DECOY_LIST, DECOY_ID, SCORE, RMSD = data
     if rank_by.upper() == "SCORE":
         SCORE_ranked, SCORE_ranked_ndx = _misc.get_ranked_array(SCORE, reverse=True, verbose=verbose)
-        DECOY_ranked = np.array([DECOY[ndx] for ndx in SCORE_ranked_ndx])
+        DECOY_LIST_ranked = np.array([DECOY_LIST[ndx] for ndx in SCORE_ranked_ndx])
+        DECOY_ID_ranked = np.array([DECOY_ID[ndx] for ndx in SCORE_ranked_ndx])
         RMSD_ranked = np.array([RMSD[ndx] for ndx in SCORE_ranked_ndx])
     if rank_by.upper() == "RMSD":
         RMSD_ranked, RMSD_ranked_ndx = _misc.get_ranked_array(RMSD, reverse=True, verbose=verbose)
-        DECOY_ranked = np.array([DECOY[ndx] for ndx in RMSD_ranked_ndx])
+        DECOY_LIST_ranked = np.array([DECOY_LIST[ndx] for ndx in RMSD_ranked_ndx])
+        DECOY_ID_ranked = np.array([DECOY_ID[ndx] for ndx in RMSD_ranked_ndx])
         SCORE_ranked = np.array([SCORE[ndx] for ndx in RMSD_ranked_ndx])
 
-    if return_decoy_ndx:
-        DECOY_ranked = _HELP_str2int(DECOY_ranked)
-    return DECOY_ranked, SCORE_ranked, RMSD_ranked
+    return DECOY_LIST_ranked, DECOY_ID_ranked, SCORE_ranked, RMSD_ranked
 
 
-def abinitio_scatterplot(SCORE, RMSD, **kwargs):
+def precission_scatterplot(SCORE, RMSD, **kwargs):
     """
     Args:
         SCORE (list/array)

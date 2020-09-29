@@ -1,6 +1,5 @@
 from __future__ import division, print_function
 from tqdm import tqdm_notebook as tqdm
-#from tqdm import tqdm
 import numpy as np
 import heat as ht
 import h5py
@@ -8,7 +7,7 @@ import distruct
 import Bio
 import myPKG.misc as _misc
 from myPKG.misc import HiddenPrints
-from myPKG.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+from myPKG.analysis import get_decoy_list, get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
@@ -114,7 +113,7 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
     return data
 
 
-def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20,
+def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_type='medoid',
                 sss=[None, None, None], verbose=True, **kwargs):
     """
     Use heat's KMeans Clustering
@@ -123,6 +122,9 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20,
         data (str): path to h5 file containing data
         HDF_group (str): Hierarchical Data Format group
         n_clusters (int): number of clusters
+        center_type (str):
+            'centroid': use heat.cluster.KMeans() with centroids as cluster centers
+            'medoid': use heat.cluster.KMedoids() with medoids as cluster centers
         verbose (bool)
         sss (list): [start, stop, step] indices of <h5_file> data
             start (None/int): start index
@@ -136,10 +138,10 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20,
             step (None/int): step size
 
     Returns:
-        kmeans (heat.cluster.kmeans.KMeans): KMeans class fitted to data set
-        labels (np.array): data point cluster labels
+        kmeans (heat.cluster.kmeans.KMeans or heat.cluster.kmedoids.KMedoids): class with fitted data set
+        centers (np.array): cluster centers
         counts (np.array): counts per cluster
-        centroids (np.array): cluster centroids
+        labels (np.array): data point cluster labels
     """
     if isinstance(h5_file, str):
         if verbose:
@@ -153,18 +155,23 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20,
         _misc.timeit(timer)  # start timer
 
     length, size = np.shape(data)
-    kmeans = ht.cluster.KMeans(n_clusters=n_clusters)
+    if center_type.lower() == "centroid":
+        kmeans = ht.cluster.KMeans(n_clusters=n_clusters)
+    elif center_type.lower() == "medoid":
+        kmeans = ht.cluster.KMedoids(n_clusters=n_clusters)
+    else:
+        raise ValueError("""center_type must be either 'centroid' or 'medoid'.""")
     kmeans.fit(data)
 
     labels = kmeans.labels_.numpy()
     counts = np.bincount(labels.flatten())
-    centroids = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
+    centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
     # medoids = <unsupported by heat>
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
 
-    return kmeans, labels, counts, centroids
+    return kmeans, centers, counts, labels
 
 
 def _distruct_generate_dist_file(u, DM, DM_ndx,
