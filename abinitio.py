@@ -290,7 +290,7 @@ def get_decoy_precission(ref, decoy_dir, pattern="*.pdb",
 
         # get RMSD
         decoy = mda.Universe(decoy_path)
-        sel1, sel2 = _ana.get_matching_selection(decoy, ref, sel=sel)  # two sel strings -> no alignment necessary
+        sel1, sel2 = _ana.get_matching_selection(decoy, ref, sel=sel, norm=True, verbose=False)
         ftr = _ana.get_RMSD(decoy, ref, sel1=sel1, sel2=sel2)
         RMSD.append(ftr[2])
 

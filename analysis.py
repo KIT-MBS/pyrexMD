@@ -444,6 +444,7 @@ def get_resids_shift(mobile, ref):
     Returns:
         shift (int): shift value of ref residues to match mobile residues
     """
+    # compare resnames to get start_ndx
     start_ndx = _misc.get_sub_array_start_ndx(mobile.residues.resnames, ref.residues.resnames)
 
     # start_ndx is static, but shift value should be either start_ndx or 0 (after previous shift)
@@ -452,6 +453,13 @@ def get_resids_shift(mobile, ref):
         shift = start_ndx
     else:
         shift = 0
+
+    # test if resnames match (due to same length) but resids are shifted
+    if len(mobile.residues.resids) == len(ref.residues.resids):
+        diff = min(mobile.residues.resids)-min(ref.residues.resids)
+        if diff != shift:
+            shift = diff
+
     return shift
 
 
@@ -489,7 +497,7 @@ def align_resids(mobile, ref, norm=True, verbose=True):
     Args:
         mobile (MDA universe)
         ref (MDA universe)
-        norm (bool): norm resids before alignment
+        norm (bool): apply analysis.norm_resids()
         verbose (bool)
     """
     if norm:
@@ -503,10 +511,7 @@ def align_resids(mobile, ref, norm=True, verbose=True):
     return
 
 
-True
-
-
-def get_matching_selection(mobile, ref, sel="protein and name CA", verbose=True):
+def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, verbose=True):
     """
     Get matching selection strings of mobile and reference after resids alignment.
 
@@ -514,6 +519,7 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", verbose=True)
         mobile (MDA universe)
         ref (MDA universe)
         sel (str): selection string
+        norm (bool): apply analysis.norm_resids()
         verbose (bool)
 
     Returns:
@@ -521,7 +527,7 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", verbose=True)
         sel2 (str): matching selection string (ref)
     """
     if get_resids_shift(mobile, ref) != 0:
-        align_resids(mobile, ref, norm=True, verbose=verbose)
+        align_resids(mobile, ref, norm=norm, verbose=verbose)
     sel1 = f"{sel} and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}"
     sel2 = f"{sel}"
 
