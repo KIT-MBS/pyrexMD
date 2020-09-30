@@ -374,7 +374,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     Args:
         mobile (MDA universe/list):
             (MDA universe): structure with trajectory
-            (list): decoy list / structure file list (.pdb) ~
+            (list): decoy list / structure file list (.pdb)
         sss (list): [start, stop, step]
             start (None/int): start frame
             stop (None/int): stop frame
@@ -383,6 +383,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         flatten (bool): returns flattened distance matrices
 
     Kwargs:
+            dtype (dtype): np.float64 (default), np.float32, etc
         aliases for sss items:
             start (None/int): start frame
             stop (None/int): stop frame
@@ -392,7 +393,8 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         DM (np.array): array of distance matrices
     """
     ############################################################################
-    default = {"start": sss[0],
+    default = {"dtype": np.float64,
+               "start": sss[0],
                "stop": sss[1],
                "step": sss[2]
                }
@@ -403,7 +405,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     if isinstance(mobile, mda.Universe):
         a = mobile.select_atoms(sel)
         DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
-                       a.n_atoms*a.n_atoms), dtype=np.float32)  # tuple args: length, size (of flattened array)
+                       a.n_atoms*a.n_atoms), dtype=cfg.dtype)  # tuple args: length, size (of flattened array)
 
         for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
             DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
@@ -419,7 +421,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
                 raise TypeError('<mobile> is passed as list but does not contain .pdb file paths.')
         u = mda.Universe(mobile[0])
         a = u.select_atoms(sel)
-        DM = np.empty((len(mobile), a.n_atoms*a.n_atoms), dtype=np.float32)  # tuple args: length, size (of flattened array)
+        DM = np.empty((len(mobile), a.n_atoms*a.n_atoms), dtype=cfg.dtype)  # tuple args: length, size (of flattened array)
 
         for i, pdb_file in enumerate(mobile):
             u = mda.Universe(pdb_file)

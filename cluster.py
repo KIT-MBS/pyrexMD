@@ -132,6 +132,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
             step (None/int): step size
 
     Kwargs:
+            dtype (dtype): heat.float64 (default), heat.float32, etc.
         aliases for sss items:
             start (None/int): start index
             stop (None/int): stop index
@@ -143,12 +144,18 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         counts (np.array): counts per cluster
         labels (np.array): data point cluster labels
     """
+    default = {"dtype": ht.float64,
+               "start": sss[0],
+               "stop": sss[1],
+               "step": sss[2]}
+    cfg = _misc.CONFIG(default, **kwargs)
+
     if isinstance(h5_file, str):
         if verbose:
             print("loading data...")
-        data = ht.load(h5_file, HDF_group, split=0)
+        data = ht.load(h5_file, HDF_group, split=0, dtype=cfg.dtype)
     if np.shape(data) != 2:
-        data = reshape_data(data, dim_out=2, sss=sss, verbose=True)
+        data = reshape_data(data, dim_out=2, sss=[cfg.start, cfg.stop, cfg.step], verbose=True)
     if verbose:
         print("clustering data...")
         timer = _misc.TIMER()
