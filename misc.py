@@ -43,9 +43,48 @@ def apply_matplotlib_rc_settings():
     matplotlib.rcParams['mathtext.it'] = 'sans:italic'
     matplotlib.rcParams['mathtext.default'] = 'it'
     return
+
+
+def update_alias_docstring(f1, f2):
+    """
+    Use an existing docstring as template and replace 'Alias function of <alias>' part:
+        - determine docstring template based on length
+        - test if docstring template contains "Alias function of <alias>"
+        - copy and replace alias such that:
+            f1 docstring contains: Alias function of <f2.__name__>
+            f2 docstring contains: Alias function of <f1.__name__>
+    Args:
+        f1 (function): function with docstring (template)
+        f2 (function): function with no/short docstring (replace with updated template)
+    """
+    if not hasattr(f1, '__call__') or not hasattr(f2, '__call__'):
+        raise Error("f1 and f2 must be functions.")
+        return
+    if f1.__doc__ is None:
+        f1, f2 = f2, f1
+    if f1.__doc__ is None:
+        raise Error("f1 and f2 are both without docstring.")
+    try:
+        if len(f1.__doc__) < len(f2.__doc__):
+            f1, f2 = f2, f1
+    except TypeError:
+        pass
+
+    f2.__doc__ = f1.__doc__.replace(f"Alias function of {f2.__name__}", f"Alias function of {f1.__name__}")
+    if f"Alias function of {f2.__name__}" not in f1.__doc__:
+        raise Warning(f"{f1.__name__} docstring does not contain 'Alias function of {f2.__name__}'.")
+    if f"Alias function of {f1.__name__}" not in f2.__doc__:
+        raise Warning(f"{f2.__name__} docstring does not contain 'Alias function of {f1.__name__}'.")
+    return
+
+
 ################################################################################
 ################################################################################
-### HiddenPrints CLASS
+### CUSTOM CLASSES
+
+class Error(Exception):
+    """Base class for exceptions"""
+    pass
 
 
 class HiddenPrints:
@@ -55,19 +94,24 @@ class HiddenPrints:
     Example:
         with HiddenPrints():
             print("This print is hidden")
-        print("This print is shown")
+        with HiddenPrints(verbose=True):
+            print("This print is shown")
     """
 
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+
     def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
+        if not self.verbose:
+            self._original_stdout = sys.stdout
+            sys.stdout = open(os.devnull, 'w')
+        return
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
-################################################################################
-################################################################################
-### CONFIG CLASS
+        if not self.verbose:
+            sys.stdout.close()
+            sys.stdout = self._original_stdout
+        return
 
 
 class CONFIG(object):
@@ -86,7 +130,7 @@ class CONFIG(object):
 
     def __call__(self):
         """
-        Alias for print_config() method.
+        Alias of print_config() method.
         """
         self.print_config()
         return
@@ -275,6 +319,7 @@ def realpath(path):
 
 def dirpath(path):
     """
+    Alias function of get_filedir().
     Get realpath of the last directory of <path>.
 
     Args:
@@ -284,6 +329,14 @@ def dirpath(path):
         realpath (str)
     """
     return(os.path.dirname(os.path.realpath(path)))
+
+
+### Alias function of dirpath
+def get_filedir(path):
+    return(dirpath(path))
+
+
+update_alias_docstring(dirpath, get_filedir)
 
 
 def get_filename(path):
@@ -386,6 +439,7 @@ def cd(path, verbose=True):
 
 def rm(path, pattern=None, verbose=True):
     """
+    Alias function of remove().
     Remove file(s) from path.
 
     Note: pattern can be implemented into path variable directly.
@@ -410,8 +464,12 @@ def rm(path, pattern=None, verbose=True):
     return
 
 
-# Alias function
-remove = rm
+### Alias function of rm()
+def remove(path, pattern=None, verbose=True):
+    return rm(path, pattern, verbose)
+
+
+update_alias_docstring(rm, remove)
 
 
 def bash_cmd(cmd, verbose=False):
@@ -511,7 +569,8 @@ def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
 
 def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
     """
-    Colored print (alias function of termcolor.cprint())
+    Alias function of termcolor.cprint().
+    Apply colored print.
 
     Args:
         msg (str)
@@ -535,7 +594,7 @@ def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
 
 def unzip(iterable):
     """
-    alias function for zip(*iterable)
+    alias function of zip(*iterable)
 
     Args:
         iterable
@@ -1158,7 +1217,7 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, **
             (int):  rounding on
 
     Kwargs:
-        save_as (str): alias to filename
+        save_as (str): alias of filename
 
     Return:
         realpath (str): path to log file
@@ -1546,7 +1605,7 @@ def set_pad(fig_or_ax, xpad=None, ypad=None):
 
 def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, loc=None, **kwargs):
     """
-    Alias function for plt.legend() with most used parameter.
+    Alias function of plt.legend() with most frequently used parameters.
 
     Args:
         labels (sequence of strings)
@@ -1729,7 +1788,7 @@ def pickle_dump(obj, filename='', pickledir='./pickle',
         verbose (bool)
 
     Kwargs:
-        save_as (str): alias to filename
+        save_as (str): alias of filename
 
     Returns:
         filepath (str): realpath of dumped .pickle file
@@ -2170,10 +2229,9 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
 
 def hide_figure(fig_or_ax=None, num=None, close=True):
     """
+    Alias function of hide_plot()
     "Hide" figure by setting its size to (0, 0) inches.
     If number is passed, apply
-
-    Note: hide_figure() and hide_plot() are aliases.
 
     Args:
         fig_or_ax (None/matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
@@ -2196,8 +2254,12 @@ def hide_figure(fig_or_ax=None, num=None, close=True):
     return
 
 
-# alias function of hide_figure()
-hide_plot = hide_figure
+# alias function of hide_figure
+def hide_plot(fig_or_ax=None, num=None, close=True):
+    return(hide_figure(fig_or_ax=fig_or_ax, num=num, close=close))
+
+
+update_alias_docstring(hide_plot, hide_figure)
 
 
 #################################################################################

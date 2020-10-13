@@ -17,6 +17,10 @@ import matplotlib.pyplot as plt
 import operator
 import os
 import glob
+import logging
+import warnings
+logging.getLogger('matplotlib.font_manager').disabled = True
+warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 
 
 # global update for plots
@@ -312,59 +316,6 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
     return rmsf
 
 
-def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
-    """
-    get decoy list (sorted by a numeric part at any position of the filename,
-    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
-
-    Args:
-        decoy_dir (str): decoy directory
-        pattern (str): pattern of decoy filenames
-        ndx_range (tuple/list): limit decoy index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
-
-    Returns:
-        decoy_list (list)
-    """
-    if decoy_dir[-1] == "/":
-        decoy_dir = decoy_dir[:-1]
-
-    # preset stuff
-    decoy_list = glob.glob(f"{decoy_dir}/{pattern}")
-    decoy_names = [_misc.get_filename(i) for i in decoy_list]
-    decoy_names_substrings = [_misc.get_substrings(i) for i in decoy_names]
-
-    # get decoy index range
-    diff_element = list(set(decoy_names_substrings[0])-set(decoy_names_substrings[1]))
-    if len(diff_element) != 1:
-        raise ValueError('decoy_names_substrings differ in more than 1 element (i.e. differ at more than 1 position)')
-    diff_position = decoy_names_substrings[0].index(diff_element[0])
-    min_ndx = 999999999
-    max_ndx = -999999999
-    for i in decoy_names_substrings:
-        if i[diff_position].isdigit() and int(i[diff_position]) < min_ndx:
-            min_ndx = int(i[diff_position])
-        if i[diff_position].isdigit() and int(i[diff_position]) > max_ndx:
-            max_ndx = int(i[diff_position])
-
-    if ndx_range[0] is not None:
-        min_ndx = ndx_range[0]
-    if ndx_range[1] is not None:
-        max_ndx = ndx_range[1]
-
-    # get decoy filename prefix and suffix
-    template = decoy_names[0]
-    template_diff_element = _misc.get_substrings(template)[diff_position]
-    decoy_filename_prefix = template[:template.index(template_diff_element)]
-    decoy_filename_suffix = template[template.index(template_diff_element)+len(template_diff_element):]
-
-    # create sorted decoy list
-    decoy_list = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
-                  if f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" in decoy_list]
-    return decoy_list
-
-
 def get_Distance_Matrices(mobile, sss=[None, None, None],
                           sel="protein and name CA", flatten=False,
                           **kwargs):
@@ -374,7 +325,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     Args:
         mobile (MDA universe/list):
             (MDA universe): structure with trajectory
-            (list): decoy list / structure file list (.pdb)
+            (list): list with paths to structure files (.pdb)
         sss (list): [start, stop, step]
             start (None/int): start frame
             stop (None/int): stop frame
@@ -383,7 +334,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         flatten (bool): returns flattened distance matrices
 
     Kwargs:
-            dtype (dtype): np.float64 (default), np.float32, etc
+        dtype (dtype): np.float64 (default), np.float32, etc
         aliases for sss items:
             start (None/int): start frame
             stop (None/int): stop frame

@@ -2,15 +2,16 @@ from __future__ import division, print_function
 from tqdm import tqdm_notebook as tqdm
 import myPKG.misc as _misc
 import myPKG.analysis as _ana
-from myPKG.analysis import get_decoy_list
+from myPKG.analysis import get_Distance_Matrices
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import glob
 import multiprocessing
 import MDAnalysis as mda
 import pyrosetta
 from pyrosetta.rosetta import protocols
-pyrosetta.init("-mute core.import_pose core.pack.task core.pack.pack_rotamers protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
+pyrosetta.init("-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
 
 
 def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
@@ -255,8 +256,158 @@ def _HELP_decoypath_to_decoyid(list_):
     return ids
 
 
-def get_decoy_precission(ref, decoy_dir, pattern="*.pdb",
-                         ndx_range=(None, None), sel='backbone'):
+def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
+    """
+    Alias function of get_structure_list().
+    get decoy list (sorted by a numeric part at any position of the filename,
+    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+
+    Args:
+        decoy_dir (str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple/list): limit decoy index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+
+    Returns:
+        decoy_list (list)
+    """
+    if decoy_dir is None:
+        raise TypeError("decoy_dir was None Type.")
+    if decoy_dir[-1] == "/":
+        decoy_dir = decoy_dir[:-1]
+
+    # preset stuff
+    decoy_list = glob.glob(f"{decoy_dir}/{pattern}")
+    decoy_names = [_misc.get_filename(i) for i in decoy_list]
+    decoy_names_substrings = [_misc.get_substrings(i) for i in decoy_names]
+
+    # get decoy index range
+    diff_element = list(set(decoy_names_substrings[0])-set(decoy_names_substrings[1]))
+    if len(diff_element) != 1:
+        raise ValueError('decoy_names_substrings differ in more than 1 element (i.e. differ at more than 1 position)')
+    diff_position = decoy_names_substrings[0].index(diff_element[0])
+    min_ndx = 999999999
+    max_ndx = -999999999
+    for i in decoy_names_substrings:
+        if i[diff_position].isdigit() and int(i[diff_position]) < min_ndx:
+            min_ndx = int(i[diff_position])
+        if i[diff_position].isdigit() and int(i[diff_position]) > max_ndx:
+            max_ndx = int(i[diff_position])
+
+    if ndx_range[0] is not None:
+        min_ndx = ndx_range[0]
+    if ndx_range[1] is not None:
+        max_ndx = ndx_range[1]
+
+    # get decoy filename prefix and suffix
+    template = decoy_names[0]
+    template_diff_element = _misc.get_substrings(template)[diff_position]
+    decoy_filename_prefix = template[:template.index(template_diff_element)]
+    decoy_filename_suffix = template[template.index(template_diff_element)+len(template_diff_element):]
+
+    # create sorted decoy list
+    decoy_list = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
+                  if f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" in decoy_list]
+    return decoy_list
+
+
+### Alias function of get_decoy_list()
+def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
+    """
+    Alias function of get_decoy_list().
+    get structure list (sorted by a numeric part at any position of the filename,
+    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+
+    Args:
+        structure_dir (str): structure directory
+        pattern (str): pattern of structure filenames
+        ndx_range (tuple/list): limit structure index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+
+    Returns:
+        structure_list (list)
+    """
+    return(get_decoy_list(decoy_dir=structure_dir, pattern=pattern, ndx_range=ndx_range))
+
+
+def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
+                     ndx_range=(None, None), verbose=False):
+    """
+    Args:
+        decoy_list (None/list): list with decoy paths
+        decoy_dir (None/str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple/list): limit decoy index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+        verbose (bool)
+
+    Returns:
+        DECOY_LIST (list): list with decoy paths
+        DECOY_ID   (list): list with decoy ids
+        SCORE (list): list with corresponding scores (ref 2015)
+    """
+    scorefxn = pyrosetta.get_fa_scorefxn()
+    if decoy_list is None and decoy_dir is None:
+        raise TypeError("Specify either decoy_list or decoy_dir.")
+    elif isinstance(decoy_list, list):
+        DECOY_LIST = decoy_list
+    elif isinstance(decoy_dir, str):
+        DECOY_LIST = get_decoy_list(decoy_dir, pattern, ndx_range)
+    else:
+        raise TypeError("Specify either decoy_list or decoy_dir.")
+    DECOY_ID = _HELP_decoypath_to_decoyid(DECOY_LIST)
+    SCORE = []  # list with corresponding scores
+
+    if verbose:
+        _misc.cprint("Calculating scores...", "blue")
+    for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
+        if not os.path.exists(decoy_path):
+            print(f"The decoy path '{decoy_path}' does not exist!")
+            continue
+
+        # get SCORE
+        pose = pyrosetta.pose_from_pdb(decoy_path)
+        SCORE.append(scorefxn(pose))
+    return DECOY_LIST, DECOY_ID, SCORE
+
+
+def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
+                   ndx_range=(None, None), sel='backbone', verbose=False):
+    """
+    """
+    if decoy_list is None and decoy_dir is None:
+        raise TypeError("Specify either decoy_list or decoy_dir.")
+    elif isinstance(decoy_list, list):
+        DECOY_LIST = decoy_list
+    elif isinstance(decoy_dir, str):
+        DECOY_LIST = get_decoy_list(decoy_dir, pattern, ndx_range)
+    else:
+        raise TypeError("Specify either decoy_list or decoy_dir.")
+    DECOY_ID = _HELP_decoypath_to_decoyid(DECOY_LIST)
+    RMSD = []  # list with corresponding RMSD values
+
+    if verbose:
+        _misc.cprint("Calculating RMSD...", "blue")
+    for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
+        if not os.path.exists(decoy_path):
+            print(f"The decoy path '{decoy_path}' does not exist!")
+            continue
+
+        # get RMSD
+        decoy = mda.Universe(decoy_path, dt=0)  # dt=0 fixes warnings.warn("Reader has no dt information, set to 1.0 ps") of MDAnalysis/coordinates/base.py
+        sel1, sel2 = _ana.get_matching_selection(decoy, ref, sel=sel, norm=True, verbose=False)
+        ftr = _ana.get_RMSD(decoy, ref, sel1=sel1, sel2=sel2)
+        RMSD.append(ftr[2])
+
+    RMSD = _misc.flatten_array(RMSD)
+    return DECOY_LIST, DECOY_ID, RMSD
+
+
+def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb", ndx_range=(None, None),
+                         sel='backbone', verbose=True):
     """
     Args:
         ref (MDA universe): reference structure
@@ -265,7 +416,8 @@ def get_decoy_precission(ref, decoy_dir, pattern="*.pdb",
         ndx_range (tuple/list): limit decoy index range
             ndx_range[0]: ndx_min
             ndx_range[1]: ndx_max
-        sel (str): selection string
+        sel (str): selection string (for RMSD)
+        verbose (bool)
 
     Returns:
         DECOY_LIST (list): list with decoy paths
@@ -273,28 +425,8 @@ def get_decoy_precission(ref, decoy_dir, pattern="*.pdb",
         SCORE (list): list with corresponding scores (ref 2015)
         RMSD  (list): list with corresponding RMSD values
     """
-    scorefxn = pyrosetta.get_fa_scorefxn()
-    DECOY_LIST = get_decoy_list(decoy_dir, pattern, ndx_range)
-    DECOY_ID = _HELP_decoypath_to_decoyid(DECOY_LIST)
-    SCORE = []  # list with corresponding scores
-    RMSD = []   # list with corresponding RMSD
-
-    for decoy_path in tqdm(DECOY_LIST):
-        if not os.path.exists(decoy_path):
-            print(f"The decoy path '{decoy_path}' does not exist!")
-            continue
-
-        # get SCORE
-        pose = pyrosetta.pose_from_pdb(decoy_path)
-        SCORE.append(scorefxn(pose))
-
-        # get RMSD
-        decoy = mda.Universe(decoy_path)
-        sel1, sel2 = _ana.get_matching_selection(decoy, ref, sel=sel, norm=True, verbose=False)
-        ftr = _ana.get_RMSD(decoy, ref, sel1=sel1, sel2=sel2)
-        RMSD.append(ftr[2])
-
-    RMSD = _misc.flatten_array(RMSD)
+    DECOY_LIST, DECOY_ID, SCORE = get_decoy_scores(decoy_dir=decoy_dir, pattern=pattern, ndx_range=ndx_range, verbose=verbose)
+    DECOY_LIST, DECOY_ID, RMSD = get_decoy_RMSD(ref=ref, decoy_list=decoy_list, decoy_dir=decoy_dir, pattern=pattern, ndx_range=ndx_range, verbose=verbose)
     return DECOY_LIST, DECOY_ID, SCORE, RMSD
 
 

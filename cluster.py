@@ -7,7 +7,7 @@ import distruct
 import Bio
 import myPKG.misc as _misc
 from myPKG.misc import HiddenPrints
-from myPKG.analysis import get_decoy_list, get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+from myPKG.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
@@ -304,7 +304,6 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq,
             (c1, r1, a1, c2, r2, a2, distance, weight) = line.split()
             c = (((c1, int(r1), a1), (c2, int(r2), a2)), float(distance), float(weight))
             contacts.append(c)
-        f.close()
 
     # generate structure
     if verbose_distruct:

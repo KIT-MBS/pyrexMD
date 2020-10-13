@@ -4,6 +4,40 @@ import gromacs
 import MDAnalysis as mda
 import myPKG.misc as _misc
 from myPKG.misc import HiddenPrints
+import logging
+logging.getLogger('gromacs.config').disabled = True
+
+################################################################################
+################################################################################
+
+
+def __fix_ResourceWarning__():
+    """
+    Fix 'ResourceWarning: unclosed file' of GromacsWrapper's config.py module
+    """
+    module_path = f"{_misc.get_filedir(gromacs.__file__)}/config.py"
+    old_str = "import sys"
+    new_str = "import sys       ### fixed warning\n"
+    new_str += "import warnings  ### fixed warning\n"
+    new_str += "warnings.simplefilter('ignore', ResourceWarning)  ### fixed warning\n"
+
+    needs_fix = True
+    with open(module_path, "r") as f:
+        old_text = f.read()
+        if "### fixed warning" in old_text:
+            needs_fix = False
+        else:
+            new_text = old_text.replace(old_str, new_str)
+    if needs_fix:
+        with open(module_path, "w") as f:
+            f.write(new_text)
+    return
+
+
+### execute fix
+__fix_ResourceWarning__()
+################################################################################
+################################################################################
 
 
 def clean_up(path="./", pattern="gmx_pattern", verbose=True):
