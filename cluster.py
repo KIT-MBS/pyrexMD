@@ -189,8 +189,8 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True):
         scores (list): output of get_decoy_scores()
         labels (array/list): output of heat_KMeans()
         reverse (bool):
-            True: descending ranking order
-            False: ascending ranking order
+            True:  ascending ranking order (low to high)
+            False: decending ranking order (high to low)
 
     Returns:
         BEST_DECOYS (list): best ranked decoys (only one per cluster)

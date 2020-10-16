@@ -1403,8 +1403,8 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
     Args:
         array (array/list): array-like object
         reverse (bool):
-            True: ranked array in increasing order (low to high)
-            False: ranked array in decreasing order (high to low)
+            True:  ascending ranking order (low to high)
+            False: decending ranking order (high to low)
         verbose (bool): print table with RANKED_VALUES, RANKED_NDX
 
     Kwargs:

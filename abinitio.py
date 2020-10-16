@@ -333,8 +333,13 @@ def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
 
 
 def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                     ndx_range=(None, None), verbose=True):
+                     ndx_range=(None, None), n_rank=None, reverse=True, verbose=True):
     """
+    Get decoy scores of <decoy_list> or <decoy_dir>.
+
+    If <n_rank> is None: return unranked decoys, ids and scores.
+    If <n_rank> is int: return ranked decoys, ids and scores for best <n_rank> decoys.
+
     Args:
         decoy_list (None/list): list with decoy paths
         decoy_dir (None/str): decoy directory
@@ -342,6 +347,12 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
         ndx_range (tuple/list): limit decoy index range
             ndx_range[0]: ndx_min
             ndx_range[1]: ndx_max
+        n_rank (None/int):
+            (None): return unranked decoys, ids and scores.
+            (int): return ranked decoys, ids and scores for best <n_rank> decoys.
+        reverse (bool):
+            True: descending ranking order
+            False: ascending ranking order
         verbose (bool)
 
     Returns:
@@ -371,12 +382,39 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
         # get SCORE
         pose = pyrosetta.pose_from_pdb(decoy_path)
         SCORE.append(scorefxn(pose))
+
+    if n_rank is not None:
+        DECOY_LIST = [DECOY_LIST[i] for i in _misc.get_ranked_array(SCORE, reverse=reverse, verbose=False)[1][:n_rank]]
+        DECOY_ID = [DECOY_ID[i] for i in _misc.get_ranked_array(SCORE, reverse=reverse, verbose=False)[1][:n_rank]]
+        SCORE = [SCORE[i] for i in _misc.get_ranked_array(SCORE, reverse=reverse, verbose=False)[1][:n_rank]]
     return DECOY_LIST, DECOY_ID, SCORE
 
 
 def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                   ndx_range=(None, None), sel='backbone', verbose=True):
+                   ndx_range=(None, None), n_rank=None, reverse=True,
+                   sel='backbone', verbose=True):
     """
+    Get decoy RMSD of <decoy_list> or <decoy_dir>.
+
+    If <n_rank> is None: return unranked decoys, ids and RMSD.
+    If <n_rank> is int: return ranked decoys, ids and RMSD for best <n_rank> decoys.
+
+    Args:
+        ref (MDA universe): reference structure
+        decoy_list (None/list): list with decoy paths
+        decoy_dir (None/str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple/list): limit decoy index range
+            ndx_range[0]: ndx_min
+            ndx_range[1]: ndx_max
+        n_rank (None/int):
+            (None): return unranked decoys, ids and scores.
+            (int): return ranked decoys, ids and scores for best <n_rank> decoys.
+        reverse (bool):
+            True: descending ranking order
+            False: ascending ranking order
+        verbose (bool)
+
     """
     if decoy_list is None and decoy_dir is None:
         raise TypeError("Specify either decoy_list or decoy_dir.")
@@ -403,6 +441,11 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
         RMSD.append(ftr[2])
 
     RMSD = _misc.flatten_array(RMSD)
+
+    if n_rank is not None:
+        DECOY_LIST = [DECOY_LIST[i] for i in _misc.get_ranked_array(RMSD, reverse=reverse, verbose=False)[1][:n_rank]]
+        DECOY_ID = [DECOY_ID[i] for i in _misc.get_ranked_array(RMSD, reverse=reverse, verbose=False)[1][:n_rank]]
+        RMSD = [RMSD[i] for i in _misc.get_ranked_array(RMSD, reverse=reverse, verbose=False)[1][:n_rank]]
     return DECOY_LIST, DECOY_ID, RMSD
 
 

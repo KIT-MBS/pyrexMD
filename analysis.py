@@ -2458,6 +2458,7 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
         prec (None/int):
             (None) or -1: rounding off
             (int):  rounding on to <prec> decimals
+        verbose (bool)
 
     Returns:
         GDT_TS_ranked (array): ranked array with GDT_TS scores
@@ -2503,6 +2504,7 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
         prec (None/int):
             (None) or -1: rounding off
             (int): rounding to <prec> decimals
+        verbose (bool)
 
     Returns:
         GDT_TS_ranked (array): ranked array with GDT_TS values
@@ -2522,13 +2524,14 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
     return(GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked)
 
 
-def GDT_rank_percent(GDT_percent):
+def GDT_rank_percent(GDT_percent, verbose=False):
     """
     Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.
     (Higher sum means better accuracy during protein alignment)
 
     Args:
-        GDT_percent: output of analysis.GDT()
+        GDT_percent (list): output of analysis.GDT()
+        verbose (bool)
 
     Returns:
         RANKED_Psum (list): ranked percent sum
