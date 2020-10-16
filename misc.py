@@ -91,6 +91,11 @@ class HiddenPrints:
     """
     Class to hide print commands.
 
+    Args:
+        verbose (bool):
+             True: show prints
+            False: hide prints (default)
+
     Example:
         with HiddenPrints():
             print("This print is hidden")
@@ -278,8 +283,8 @@ def timeit(timer=None, msg="elapsed time:"):
         timer.t1 = timer._get_time()
 
     if timer.t1 != 0:
-        t_diff = timer.t1 - timer.t0
-        print(f"{msg} {t_diff}s")
+        t_diff = round(timer.t1 - timer.t0, 3)
+        print(f"{msg} {t_diff} s")
 
     return timer
 

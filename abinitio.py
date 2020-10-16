@@ -1,5 +1,5 @@
 from __future__ import division, print_function
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm
 import myPKG.misc as _misc
 import myPKG.analysis as _ana
 from myPKG.analysis import get_Distance_Matrices
@@ -333,7 +333,7 @@ def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
 
 
 def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                     ndx_range=(None, None), verbose=False):
+                     ndx_range=(None, None), verbose=True):
     """
     Args:
         decoy_list (None/list): list with decoy paths
@@ -362,7 +362,7 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
     SCORE = []  # list with corresponding scores
 
     if verbose:
-        _misc.cprint("Calculating scores...", "blue")
+        _misc.cprint("Getting scores...", "blue")
     for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
@@ -375,7 +375,7 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
 
 
 def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                   ndx_range=(None, None), sel='backbone', verbose=False):
+                   ndx_range=(None, None), sel='backbone', verbose=True):
     """
     """
     if decoy_list is None and decoy_dir is None:
@@ -390,7 +390,7 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     RMSD = []  # list with corresponding RMSD values
 
     if verbose:
-        _misc.cprint("Calculating RMSD...", "blue")
+        _misc.cprint("Getting RMSDs...", "blue")
     for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
@@ -406,8 +406,8 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     return DECOY_LIST, DECOY_ID, RMSD
 
 
-def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb", ndx_range=(None, None),
-                         sel='backbone', verbose=True):
+def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
+                         ndx_range=(None, None), sel='backbone', verbose=True):
     """
     Args:
         ref (MDA universe): reference structure

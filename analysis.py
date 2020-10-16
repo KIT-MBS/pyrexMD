@@ -6,7 +6,7 @@
 
 from __future__ import division, print_function
 import myPKG.misc as _misc
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align
 import MDAnalysis as mda
@@ -317,7 +317,7 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
 
 
 def get_Distance_Matrices(mobile, sss=[None, None, None],
-                          sel="protein and name CA", flatten=False,
+                          sel="protein and name CA", flatten=False, verbose=True,
                           **kwargs):
     """
     Calculate distance matrices for mobile and return them.
@@ -332,6 +332,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
             step (None/int): step size
         sel (str): selection string
         flatten (bool): returns flattened distance matrices
+        verbose (bool): show progress bar
 
     Kwargs:
         dtype (dtype): np.float64 (default), np.float32, etc
@@ -374,7 +375,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         a = u.select_atoms(sel)
         DM = np.empty((len(mobile), a.n_atoms*a.n_atoms), dtype=cfg.dtype)  # tuple args: length, size (of flattened array)
 
-        for i, pdb_file in enumerate(mobile):
+        for i, pdb_file in enumerate(tqdm(mobile, disable=not verbose)):
             u = mda.Universe(pdb_file)
             a = u.select_atoms(sel)
             DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()

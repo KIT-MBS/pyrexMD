@@ -16,7 +16,7 @@ copy&paste in jupyter notebook:
 
 %matplotlib notebook
 
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns

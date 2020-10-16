@@ -1,13 +1,12 @@
 from __future__ import division, print_function
-from tqdm import tqdm_notebook as tqdm
 import numpy as np
 import heat as ht
 import h5py
 import distruct
 import Bio
 import myPKG.misc as _misc
-from myPKG.misc import HiddenPrints
 from myPKG.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+from myPKG.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
@@ -74,7 +73,7 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
             start (None/int): start index
             stop (None/int): stop index
             step (None/int): step size
-        verbose (bool): print messages ('reshaped data: ...')
+        verbose (bool): print messages ('reshaping data: ...')
 
     Kwargs:
         aliases for sss items:
@@ -102,14 +101,14 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
             new_size = int(np.sqrt(size))
             data = data.reshape((length, new_size, new_size))
             if verbose:
-                print(f"reshaped data: ({length}, {size}) -> ({length}, {new_size}, {new_size})")
+                print(f"reshaping data: ({length}, {size}) -> ({length}, {new_size}, {new_size})")
 
         elif len(np.shape(data)) == 3:
             length, sizeD1, sizeD2 = np.shape(data)
             new_size = sizeD1*sizeD2
             data = data.reshape((length, new_size))
             if verbose:
-                print(f"reshaped data: ({length}, {sizeD1}, {sizeD2}) -> ({length}, {new_size})")
+                print(f"reshaping data: ({length}, {sizeD1}, {sizeD2}) -> ({length}, {new_size})")
     return data
 
 
@@ -132,11 +131,11 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
             step (None/int): step size
 
     Kwargs:
-            dtype (dtype): heat.float64 (default), heat.float32, etc.
         aliases for sss items:
             start (None/int): start index
             stop (None/int): stop index
             step (None/int): step size
+        dtype (dtype): heat.float64 (default), heat.float32, etc.
 
     Returns:
         kmeans (heat.cluster.kmeans.KMeans or heat.cluster.kmedoids.KMedoids): class with fitted data set
@@ -168,17 +167,62 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         kmeans = ht.cluster.KMedoids(n_clusters=n_clusters)
     else:
         raise ValueError("""center_type must be either 'centroid' or 'medoid'.""")
-    kmeans.fit(data)
 
+    kmeans.fit(data)
     labels = kmeans.labels_.numpy()
     counts = np.bincount(labels.flatten())
     centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
-    # medoids = <unsupported by heat>
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
 
     return kmeans, centers, counts, labels
+
+
+def rank_cluster_decoys(decoy_list, decoy_scores, labels, reverse=True):
+    """
+    Rank cluster decoys based on rosetta scores.
+
+    Args:
+        decoy_list (list): output of get_decoy_list()
+        decoy_scores (list): output of get_decoy_scores()
+        labels (array/list): output of heat_KMeans()
+        reverse (bool):
+            True: descending ranking order
+            False: ascending ranking order
+
+    Returns:
+        best_decoys (list): best ranked decoys (only one per cluster)
+        best_scores (list): best ranked scores (only one per cluster)
+        cluster_decoys (list):
+            cluster_decoys[k]: ranked decoys of cluster k
+        cluster_scores (list):
+            cluster_scores[k]: ranked scores of cluster k
+    """
+    n_labels = np.max(labels) + 1
+    cluster_decoys = [[] for i in range(n_labels)]
+    cluster_scores = [[] for i in range(n_labels)]
+
+    # link decoys and scores
+    for i in range(len(decoy_list)):
+        k = labels[i].item()
+        cluster_decoys[k].append(decoy_list[i])
+        cluster_scores[k].append(decoy_scores[i])
+
+    # rank by score
+    for k in range(len(cluster_decoys)):
+        cluster_decoys[k] = [cluster_decoys[k][i] for i in _misc.get_ranked_array(cluster_scores[k], reverse=reverse, verbose=False)[1]]
+        cluster_scores[k] = [cluster_scores[k][i] for i in _misc.get_ranked_array(cluster_scores[k], reverse=reverse, verbose=False)[1]]
+
+    # best per cluster
+    best_decoys = [cluster_decoys[k][0] for k in range(len(cluster_decoys))]
+    best_scores = [cluster_scores[k][0] for k in range(len(cluster_scores))]
+
+    # rank by score
+    for k in range(len(best_decoys)):
+        best_decoys = [best_decoys[i] for i in _misc.get_ranked_array(best_scores, reverse=reverse, verbose=False)[1]]
+        best_scores = [best_scores[i] for i in _misc.get_ranked_array(best_scores, reverse=reverse, verbose=False)[1]]
+    return best_decoys, best_scores, cluster_decoys, cluster_scores
 
 
 def _distruct_generate_dist_file(u, DM, DM_ndx,
@@ -306,17 +350,11 @@ def distruct_generate_structure(u, DM, DM_ndx, pdbid, seq,
             contacts.append(c)
 
     # generate structure
-    if verbose_distruct:
+    with _misc.HiddenPrints(verbose=verbose_distruct):
         s = distruct.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
         s.generate_primary_contacts()
         s.set_tertiary_contacts(contacts)
         s.run()
-    else:
-        with HiddenPrints():
-            s = distruct.Distructure(pdbid, seqs)  # "identifier/name", list of sequences (in case of protein complex)
-            s.generate_primary_contacts()
-            s.set_tertiary_contacts(contacts)
-            s.run()
 
     # save structure as .pdb or .cif
     if save_as == "default":

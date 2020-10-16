@@ -3,7 +3,6 @@ import glob
 import gromacs
 import MDAnalysis as mda
 import myPKG.misc as _misc
-from myPKG.misc import HiddenPrints
 import logging
 logging.getLogger('gromacs.config').disabled = True
 
@@ -134,11 +133,8 @@ def editconf(f, o="default", odir="./", verbose=True, **kwargs):
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.editconf(f=f, o=o, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.editconf(f=f, o=o, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -176,11 +172,8 @@ def convert_TPR2PDB(tpr, o="default", odir="./", verbose=True, **kwargs):
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.editconf(f=tpr, o=o, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.editconf(f=tpr, o=o, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -225,11 +218,8 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.convert_tpr(s=s, o=o, input=sel_code, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.convert_tpr(s=s, o=o, input=sel_code, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -294,11 +284,8 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.trjconv(s=s, f=f, o=o, input=sel_code, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.trjconv(s=s, f=f, o=o, input=sel_code, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -432,11 +419,8 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.rms(s=ref, f=xtc, o=o, tu=tu, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.rms(s=ref, f=xtc, o=o, tu=tu, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -470,11 +454,8 @@ def get_ref_structure(s, o="default", odir="./", water="tip3p", input="6",
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
-    if verbose:
+    with _misc.HiddenPrints(verbose=verbose):
         gromacs.pdb2gmx(f=s, o=o, water=water, input=input, **kwargs)
-    else:
-        with HiddenPrints():
-            gromacs.pdb2gmx(f=s, o=o, water=water, input=input, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
