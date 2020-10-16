@@ -118,7 +118,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
     Use heat's KMeans Clustering
 
     Args:
-        data (str): path to h5 file containing data
+        h5_file (str): path to h5 file containing data
         HDF_group (str): Hierarchical Data Format group
         n_clusters (int): number of clusters
         center_type (str):
@@ -153,6 +153,8 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         if verbose:
             print("loading data...")
         data = ht.load(h5_file, HDF_group, split=0, dtype=cfg.dtype)
+    else:
+        raise _misc.Error("wrong datatype: <h5_file> must be str (path to h5 file containing data).")
     if np.shape(data) != 2:
         data = reshape_data(data, dim_out=2, sss=[cfg.start, cfg.stop, cfg.step], verbose=True)
     if verbose:
@@ -175,54 +177,53 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
-
     return kmeans, centers, counts, labels
 
 
-def rank_cluster_decoys(decoy_list, decoy_scores, labels, reverse=True):
+def rank_cluster_decoys(decoy_list, scores, labels, reverse=True):
     """
     Rank cluster decoys based on rosetta scores.
 
     Args:
         decoy_list (list): output of get_decoy_list()
-        decoy_scores (list): output of get_decoy_scores()
+        scores (list): output of get_decoy_scores()
         labels (array/list): output of heat_KMeans()
         reverse (bool):
             True: descending ranking order
             False: ascending ranking order
 
     Returns:
-        best_decoys (list): best ranked decoys (only one per cluster)
-        best_scores (list): best ranked scores (only one per cluster)
-        cluster_decoys (list):
-            cluster_decoys[k]: ranked decoys of cluster k
-        cluster_scores (list):
-            cluster_scores[k]: ranked scores of cluster k
+        BEST_DECOYS (list): best ranked decoys (only one per cluster)
+        BEST_SCORES (list): best ranked scores (only one per cluster)
+        CLUSTER_DECOYS (list):
+            CLUSTER_DECOYS[k]: ranked decoys of cluster k
+        CLUSTER_SCORES (list):
+            CLUSTER_SCORES[k]: ranked scores of cluster k
     """
     n_labels = np.max(labels) + 1
-    cluster_decoys = [[] for i in range(n_labels)]
-    cluster_scores = [[] for i in range(n_labels)]
 
-    # link decoys and scores
+    ### link decoys and scores
+    CLUSTER_DECOYS = [[] for i in range(n_labels)]
+    CLUSTER_SCORES = [[] for i in range(n_labels)]
     for i in range(len(decoy_list)):
         k = labels[i].item()
-        cluster_decoys[k].append(decoy_list[i])
-        cluster_scores[k].append(decoy_scores[i])
+        CLUSTER_DECOYS[k].append(decoy_list[i])
+        CLUSTER_SCORES[k].append(scores[i])
 
     # rank by score
-    for k in range(len(cluster_decoys)):
-        cluster_decoys[k] = [cluster_decoys[k][i] for i in _misc.get_ranked_array(cluster_scores[k], reverse=reverse, verbose=False)[1]]
-        cluster_scores[k] = [cluster_scores[k][i] for i in _misc.get_ranked_array(cluster_scores[k], reverse=reverse, verbose=False)[1]]
+    for k in range(len(CLUSTER_DECOYS)):
+        CLUSTER_DECOYS[k] = [CLUSTER_DECOYS[k][i] for i in _misc.get_ranked_array(CLUSTER_SCORES[k], reverse=reverse, verbose=False)[1]]
+        CLUSTER_SCORES[k] = [CLUSTER_SCORES[k][i] for i in _misc.get_ranked_array(CLUSTER_SCORES[k], reverse=reverse, verbose=False)[1]]
 
-    # best per cluster
-    best_decoys = [cluster_decoys[k][0] for k in range(len(cluster_decoys))]
-    best_scores = [cluster_scores[k][0] for k in range(len(cluster_scores))]
+    ### best per cluster
+    BEST_DECOYS = [CLUSTER_DECOYS[k][0] for k in range(len(CLUSTER_DECOYS))]
+    BEST_SCORES = [CLUSTER_SCORES[k][0] for k in range(len(CLUSTER_SCORES))]
 
     # rank by score
-    for k in range(len(best_decoys)):
-        best_decoys = [best_decoys[i] for i in _misc.get_ranked_array(best_scores, reverse=reverse, verbose=False)[1]]
-        best_scores = [best_scores[i] for i in _misc.get_ranked_array(best_scores, reverse=reverse, verbose=False)[1]]
-    return best_decoys, best_scores, cluster_decoys, cluster_scores
+    for k in range(len(BEST_DECOYS)):
+        BEST_DECOYS = [BEST_DECOYS[i] for i in _misc.get_ranked_array(BEST_SCORES, reverse=reverse, verbose=False)[1]]
+        BEST_SCORES = [BEST_SCORES[i] for i in _misc.get_ranked_array(BEST_SCORES, reverse=reverse, verbose=False)[1]]
+    return BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES
 
 
 def _distruct_generate_dist_file(u, DM, DM_ndx,

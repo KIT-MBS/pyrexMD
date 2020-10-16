@@ -270,7 +270,7 @@ def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
             ndx_range[1]: ndx_max
 
     Returns:
-        decoy_list (list)
+        DECOY_LIST (list)
     """
     if decoy_dir is None:
         raise TypeError("decoy_dir was None Type.")
@@ -307,9 +307,9 @@ def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
     decoy_filename_suffix = template[template.index(template_diff_element)+len(template_diff_element):]
 
     # create sorted decoy list
-    decoy_list = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
+    DECOY_LIST = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
                   if f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" in decoy_list]
-    return decoy_list
+    return DECOY_LIST
 
 
 ### Alias function of get_decoy_list()
@@ -327,7 +327,7 @@ def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
             ndx_range[1]: ndx_max
 
     Returns:
-        structure_list (list)
+        STRUCTURE_LIST (list)
     """
     return(get_decoy_list(decoy_dir=structure_dir, pattern=pattern, ndx_range=ndx_range))
 
