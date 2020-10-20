@@ -87,6 +87,26 @@ class Error(Exception):
     pass
 
 
+class dtypeError(Exception):
+    """
+    Base class for dtype exceptions
+
+    Example:
+        misc.dtypeError("source", "str")
+        >> TypeError: <source> must be str
+
+    """
+
+    def __init__(self, arg, dtype):
+        if not isinstance(arg, str):
+            raise Warning(f"dtypeError class usage: <arg> must be str")
+        if not isinstance(dtype, str):
+            raise Warning(f"dtypeError class usage: <dtype> must be str")
+
+        raise TypeError(f"<{arg}> must be {dtype}")
+    pass
+
+
 class HiddenPrints:
     """
     Class to hide print commands.
@@ -420,7 +440,7 @@ def mkdir(path, verbose=True):
     if not os.path.exists(realpath):
         os.makedirs(realpath)
         if verbose:
-            print('New folder created: ', realpath)
+            cprint(f"New folder created: {realpath}", "blue")
     return realpath
 
 
@@ -440,6 +460,40 @@ def cd(path, verbose=True):
     if verbose:
         print('Changed directory to:', realpath)
     return realpath
+
+
+def cp(source, target, mode="-rp", create_dir=True, verbose=True):
+    """
+    Copy file(s) from <source> to <target>.
+
+    Args:
+        source (str/list/array): source path or list of source paths
+        target (str): target path
+        mode (str): copy mode flags (see cp --help in linux OS)
+        create_dir (bool)
+        verbose (bool)
+
+    Returns:
+        target (str): target realpath
+    """
+    if not isinstance(target, str):
+        raise dtypeError("Wrong datatype: <target> must be str (path/realpath).")
+    target = realpath(target)
+
+    if isinstance(source, str):
+        os.popen(f"cp {mode} {source} {target}")
+        if verbose:
+            cprint(f"Copied source file to: {target}", "blue")
+    elif isinstance(source, list):
+        if create_dir:
+            mkdir(target, verbose=False)
+        for item in source:
+            os.popen(f"cp {mode} {item} {target}")
+        if verbose:
+            cprint(f"Copied source files to: {target}", "blue")
+    else:
+        raise dtypeError("source", "str or list of str")
+    return target
 
 
 def rm(path, pattern=None, verbose=True):
@@ -996,10 +1050,15 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
         usecols (int or sequence): data columns
         skiprows ('auto'/int): ignore header rows of fin
             'auto' or -1: auto detect
-        dtype (np.dtype cls): data type of returned np.array
-            np.int_, np.int32, np.int64
-            np.float_, np.float32, np.float64
-            np.complex_, np.complex64, np.comples128
+        dtype (dtype cls/list/tuple): data type of returned np.array
+            (dtype cls): all data types are same
+            (list/tuple of dtype cls): specify dtype of each data column
+
+            valid dtypes:
+                str, int, float
+                np.int_, np.int32, np.int64
+                np.float_, np.float32, np.float64
+                np.complex_, np.complex64, np.comples128
 
     Returns:
         if usecols==int:
@@ -1023,7 +1082,10 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
     else:
         DATA = []
         for i in range(len(usecols)):
-            col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols[i], dtype=dtype)
+            if isinstance(dtype, (list, tuple)):
+                col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols[i], dtype=dtype[i])
+            else:
+                col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols[i], dtype=dtype)
             DATA.append(col)
         return DATA
 
@@ -1203,12 +1265,13 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
     if verbose:
         for item in table_str.splitlines()[:verbose_stop]:
             print(item)
-        if (len(table_str.splitlines()) >= verbose_stop):
-            cprint(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue")
+        if verbose_stop is not None:
+            if (len(table_str.splitlines()) >= verbose_stop):
+                cprint(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue")
     return table_str
 
 
-def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, **kwargs):
+def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, verbose=True, **kwargs):
     """
     Executes misc.print_table() and saves the returned table string as a log file.
 
@@ -1220,6 +1283,7 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, **
         prec (None/int):
             (None): rounding off
             (int):  rounding on
+        verbose (bool)
 
     Kwargs:
         save_as (str): alias of filename
@@ -1249,6 +1313,8 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, **
         table_str = print_table(data, prec, verbose=False)
         fout.write(table_str)
 
+    if verbose:
+        cprint(f"Saved logfile as: {realpath}", "blue")
     return realpath
 
 

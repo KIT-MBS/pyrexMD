@@ -351,8 +351,8 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
             (None): return unranked decoys, ids and scores.
             (int): return ranked decoys, ids and scores for best <n_rank> decoys.
         reverse (bool):
-            True: descending ranking order
-            False: ascending ranking order
+            True:  ascending ranking order (low to high)
+            False: decending ranking order (high to low)
         verbose (bool)
 
     Returns:
@@ -411,8 +411,8 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
             (None): return unranked decoys, ids and scores.
             (int): return ranked decoys, ids and scores for best <n_rank> decoys.
         reverse (bool):
-            True: descending ranking order
-            False: ascending ranking order
+            True:  ascending ranking order (low to high)
+            False: decending ranking order (high to low)
         verbose (bool)
 
     """

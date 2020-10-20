@@ -138,7 +138,6 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         dtype (dtype): heat.float64 (default), heat.float32, etc.
 
     Returns:
-        kmeans (heat.cluster.kmeans.KMeans or heat.cluster.kmedoids.KMedoids): class with fitted data set
         centers (np.array): cluster centers
         counts (np.array): counts per cluster
         labels (np.array): data point cluster labels
@@ -177,7 +176,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
-    return kmeans, centers, counts, labels
+    return centers, counts, labels
 
 
 def rank_cluster_decoys(decoy_list, scores, labels, reverse=True):
@@ -224,6 +223,55 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True):
         BEST_DECOYS = [BEST_DECOYS[i] for i in _misc.get_ranked_array(BEST_SCORES, reverse=reverse, verbose=False)[1]]
         BEST_SCORES = [BEST_SCORES[i] for i in _misc.get_ranked_array(BEST_SCORES, reverse=reverse, verbose=False)[1]]
     return BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES
+
+
+def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
+    """
+    Args:
+        decoy_list (list): output of abinitio.get_decoy_list() or cluster.get_decoy_list()
+        target_dir (str): target directory
+        create_dir (bool)
+        verbose (bool)
+
+    Returns:
+        target_dir (str): realpath of target directory
+    """
+    if not isinstance(decoy_list, list):
+        raise _misc.dtypeError("decoy_list", "list")
+    for item in decoy_list:
+        if not isinstance(item, str):
+            raise TypeError("<decoy_list> must be list of str (source paths)")
+    if not (isinstance(target_dir, str)):
+        raise _misc.dtypeError("target_dir", "str")
+
+    # copy decoys if no Error occurred
+    target_dir = _misc.cp(source=decoy_list, target=target_dir,
+                          create_dir=create_dir, verbose=False)
+    if verbose:
+        _misc.cprint(f"Copied decoys to: {target_dir}", "blue")
+
+    return target_dir
+
+
+def log_cluster_decoys(best_decoys, best_scores, save_as, verbose=True):
+    """
+    Args:
+        best_decoys (list): output of cluster.rank_cluster_decoys()
+        best_scores (list): output of cluster.rank_cluster_decoys()
+        save_as (str)
+        verbose (bool)
+
+    Returns:
+        realpath (str): realpath of log file
+    """
+    if not isinstance(best_decoys, list):
+        _misc.dtypeError("best_decoys", "list")
+    if not isinstance(best_scores, list):
+        _misc.dtypeError("best_scores", "list")
+
+    NAMES = [_misc.get_filename(item) for item in best_decoys]
+    realpath = _misc.save_table(save_as=save_as, data=[NAMES, best_scores], header="decoy name      score", verbose=verbose)
+    return realpath
 
 
 def _distruct_generate_dist_file(u, DM, DM_ndx,
