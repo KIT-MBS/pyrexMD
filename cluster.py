@@ -227,6 +227,8 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True):
 
 def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
     """
+    Copy cluster decoys specified in <decoy_list> to <target_dir>.
+
     Args:
         decoy_list (list): output of abinitio.get_decoy_list() or cluster.get_decoy_list()
         target_dir (str): target directory
@@ -255,6 +257,8 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
 
 def log_cluster_decoys(best_decoys, best_scores, save_as, verbose=True):
     """
+    Create logfile with <best_decoys> and <best_scores>.
+
     Args:
         best_decoys (list): output of cluster.rank_cluster_decoys()
         best_scores (list): output of cluster.rank_cluster_decoys()
