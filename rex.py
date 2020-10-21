@@ -85,7 +85,7 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
 
 
 def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
-                    filter_DCA=True, save_log=True, logFileName="PDBID_DCA_used.txt"):
+                    filter_DCA=True, save_log=True, logFileName="PDBID_DCA_used.txt", **kwargs):
     """
     Return lists of matching RES pairs and ATOM pairs for "DCA REX Workflow"
 
@@ -122,11 +122,18 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="a
         save_log (bool)
         logFileName (str):
             if "PDBID" in logFileName: detect PDBID based on ref_PDB path
+
+    Kwargs:
+        cprint_color (None/str): colored print color
+
     Returns:
         RES_PAIR (list)
         ATOM_PAIR (list)
     """
-    print('ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added hyrogen atoms will shift the atom numbers.\n')
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    _misc.cprint('ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added hyrogen atoms will shift the atom numbers.\n', cfg.cprint_color)
 
     # read files
     RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(ref_pdb, ref_skiprows)
@@ -435,4 +442,26 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
                         l = [int(item) for item in l]
                         fout.write("{:5d} {:5d} {:5d} {:13d} {:13.3f}\n".format(l[0], l[1], l[2], l[3], force))
 
+    return
+
+
+def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=True):
+    """
+    Args:
+        best_decoys_dir (str): directory with
+            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
+            - decoys_score.log (output of cluster.log_cluster.decoys())
+        rex_dir (str): rex directory with folders rex_1, rex_2, ...
+        create_dir (bool)
+        verbose (bool)
+    """
+    DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
+                   _misc.read_file(f"{best_decoys_dir}/decoy_scores.log",
+                                   usecols=0, skiprows=1, dtype=str)]
+
+    for ndx, item in enumerate(DECOY_PATHS, start=1):
+        target = _misc.joinpath(rex_dir, f"rex_{ndx}")
+        if create_dir:
+            _misc.mkdir(target, verbose=verbose)
+        _misc.cp(item, target, verbose=verbose)
     return

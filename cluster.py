@@ -231,7 +231,7 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=Tr
     return BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES
 
 
-def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
+def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True, **kwargs):
     """
     Copy cluster decoys specified in <decoy_list> to <target_dir>.
 
@@ -243,9 +243,15 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
         create_dir (bool)
         verbose (bool)
 
+    Kwargs:
+        cprint_color (str): colored print color
+
     Returns:
         target_dir (str): realpath of target directory
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if not isinstance(decoy_list, list):
         raise _misc.dtypeError("decoy_list", "list")
     for item in decoy_list:
@@ -258,7 +264,7 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True):
     target_dir = _misc.cp(source=decoy_list, target=target_dir,
                           create_dir=create_dir, verbose=False)
     if verbose:
-        _misc.cprint(f"Copied decoys to: {target_dir}", "blue")
+        _misc.cprint(f"Copied decoys to: {target_dir}", cfg.cprint_color)
 
     return target_dir
 

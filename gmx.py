@@ -55,7 +55,7 @@ def clean_up(path="./", pattern="gmx_pattern", verbose=True):
     """
     if pattern == "gmx_pattern":
         # iterate itself with gmx patterns
-        clean_up(path=path, pattern="*#*", verbose=True)
+        clean_up(path=path, pattern="*#*", verbose=verbose)
         clean_up(path=path, pattern=".*offsets.npz", verbose=False)
         return
 

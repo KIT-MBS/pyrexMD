@@ -273,11 +273,10 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
         #PLOT(xdata=frame, ydata=rmsd, xlabel='Frame', ylabel=f'RMSD ($\AA$)', **kwargs)
         PLOT(xdata=time, ydata=rmsd, xlabel='Time (ps)', ylabel=f'RMSD ($\AA$)', **kwargs)
 
-    if alt_return is False:
-        return ftr_array
-
-    elif alt_return is True:
+    if alt_return:
         return frame, time, rmsd
+    else:
+        return ftr_array
 
 
 def get_RMSF(mobile, sel='protein and name CA', plot=False):
@@ -443,7 +442,7 @@ def shift_resids(u, shift=None, verbose=True):
     return
 
 
-def align_resids(mobile, ref, norm=True, verbose=True):
+def align_resids(mobile, ref, norm=True, verbose=True, **kwargs):
     """
     Align resids of mobile and ref by comparing universe.residues.resnames and
     shifting the resids of reference (usually smaller than mobile).
@@ -453,14 +452,20 @@ def align_resids(mobile, ref, norm=True, verbose=True):
         ref (MDA universe)
         norm (bool): apply analysis.norm_resids()
         verbose (bool)
+
+    Kwargs:
+        cprint_color (None/str): colored print color
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if norm:
         norm_resids(mobile, 'mobile', verbose=verbose)
         norm_resids(ref, 'reference', verbose=verbose)
 
     shift = get_resids_shift(mobile, ref)
     if shift != 0:
-        _misc.cprint("Aligning reference res ids...\n", "blue")
+        _misc.cprint("Aligning reference res ids...\n", cfg.cprint_color)
         shift_resids(ref, shift, verbose=verbose)
     return
 

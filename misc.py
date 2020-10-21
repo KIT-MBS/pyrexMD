@@ -641,12 +641,16 @@ def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
             bold, dark, underline, blink, reverse, concealed
 
     Kwargs:
+        cprint_color (None/str): alias for color (with higher priority)
         # see help(print)
         sep: string inserted between values, default a space.
         end: string appended after the last value, default a newline.
         file: a file-like object (stream); defaults to the current sys.stdout.
         flush: whether to forcibly flush the stream.
     """
+    if "cprint_color" in kwargs:
+        color = kwargs["cprint_color"]
+        del kwargs["cprint_color"]
     termcolor.cprint(msg, color, on_color, attrs=attr, **kwargs)
     return
 

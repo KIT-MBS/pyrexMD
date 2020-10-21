@@ -108,7 +108,7 @@ def create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
 
 
 def _create_decoys(abinitio_cfg, output_dir="./output",
-                   stream2pymol=True, fastrelax=True, save_log=True):
+                   stream2pymol=True, fastrelax=True, save_log=True, **kwargs):
     """
     Create decoys within pyrosetta framework.
 
@@ -119,11 +119,16 @@ def _create_decoys(abinitio_cfg, output_dir="./output",
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
         save_log (bool): save scores to logfile at <output_dir/scores.txt>
 
+    Kwargs:
+        cprint_color (None/str): colored print color
+
     Returns:
         SCORES_low (list): centroid scores ~ score 3
         SCORES_high (list): fa scores ~ ref2015
     """
-    cfg = abinitio_cfg
+    default = {"cprint_color": "blue"}
+    default_cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _misc.CONFIG(abinitio_cfg, **default_cfg)
 
     ### create output directory
     if output_dir[-1] == "/":
@@ -198,7 +203,7 @@ Proceed? [y/n]"""
     SCORES_low = []
     SCORES_high = []
     for i in range(1, worker_jobs+1):
-        _misc.cprint(f">>> Working on decoy: {output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb", "blue")
+        _misc.cprint(f">>> Working on decoy: {output_dir}/{cfg.job_name}_{cfg.decoy_ndx_shift+i}.pdb", cfg.cprint_color)
         DECOYS.append(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
         pose.assign(pose_0)
         pose.pdb_info().name(f"{cfg.job_name}_{cfg.decoy_ndx_shift+i}")
@@ -334,7 +339,8 @@ def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
 
 
 def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                     ndx_range=(None, None), n_rank=None, reverse=True, verbose=True):
+                     ndx_range=(None, None), n_rank=None, reverse=True,
+                     verbose=True, **kwargs):
     """
     Get decoy scores of <decoy_list> or <decoy_dir>.
 
@@ -356,11 +362,17 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
             False: decending ranking order (high to low)
         verbose (bool)
 
+    Kwargs:
+        cprint_color (None/str): colored print color
+
     Returns:
         DECOY_LIST (list): list with decoy paths
         DECOY_ID   (list): list with decoy ids
         SCORE (list): list with corresponding scores (ref 2015)
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     scorefxn = pyrosetta.get_fa_scorefxn()
     if decoy_list is None and decoy_dir is None:
         raise TypeError("Specify either decoy_list or decoy_dir.")
@@ -374,7 +386,7 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
     SCORE = []  # list with corresponding scores
 
     if verbose:
-        _misc.cprint("Getting scores...", "blue")
+        _misc.cprint("Getting scores...", cfg.cprint_color)
     for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
@@ -393,7 +405,7 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
 
 def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
                    ndx_range=(None, None), n_rank=None, reverse=True,
-                   sel='backbone', verbose=True):
+                   sel='backbone', verbose=True, **kwargs):
     """
     Get decoy RMSD of <decoy_list> or <decoy_dir>.
 
@@ -416,7 +428,17 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
             False: decending ranking order (high to low)
         verbose (bool)
 
+    Kwargs:
+        cprint_color (None/str): colored print color
+
+    Returns:
+        DECOY_LIST (list)
+        DECOY_ID (list)
+        RMSD (list)
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if decoy_list is None and decoy_dir is None:
         raise TypeError("Specify either decoy_list or decoy_dir.")
     elif isinstance(decoy_list, list):
@@ -429,7 +451,7 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     RMSD = []  # list with corresponding RMSD values
 
     if verbose:
-        _misc.cprint("Getting RMSDs...", "blue")
+        _misc.cprint("Getting RMSDs...", cfg.cprint_color)
     for decoy_path in tqdm(DECOY_LIST, disable=not verbose):
         if not os.path.exists(decoy_path):
             print(f"The decoy path '{decoy_path}' does not exist!")
