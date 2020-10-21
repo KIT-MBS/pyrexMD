@@ -78,7 +78,8 @@ def create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
     cfg.update_config(n_cores=n_cores)
 
     pool = multiprocessing.Pool()
-    pool_outputs = pool.map(_create_decoys, range(cfg.n_cores))
+    pool.map(_create_decoys, range(cfg.n_cores))
+    #pool_outputs = pool.map(_create_decoys, range(cfg.n_cores))
 
     # reset log for multiprocess run
     if save_log:
