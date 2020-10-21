@@ -2299,6 +2299,7 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
             min_cutoff (float)
             max_cutoff (float)
             step_cutoff (float)
+        disable (bool): disable progress bar
 
     Returns:
         GDT_percent (list): GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes
@@ -2337,7 +2338,7 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
     RMSD = []  # list: tuples with (RMSD before alignment, RMSD after alignment)
 
     # analyze trajectory
-    for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step]):
+    for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step], **kwargs):
         PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_Pair_Distances(
             mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
         RMSD.append(_RMSD)
