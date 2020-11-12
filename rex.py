@@ -1,8 +1,100 @@
 from __future__ import division, print_function
 from builtins import next
 import myPKG.misc as _misc
-import myPKG.analysis as _ana
 import numpy as np
+import glob
+
+
+def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=True):
+    """
+    Args:
+        best_decoys_dir (str): directory with
+            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
+            - decoys_score.log (output of cluster.log_cluster.decoys())
+        rex_dir (str): rex directory with folders rex_1, rex_2, ...
+        create_dir (bool)
+        verbose (bool)
+    """
+    DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
+                   _misc.read_file(f"{best_decoys_dir}/decoy_scores.log",
+                                   usecols=0, skiprows=1, dtype=str)]
+
+    for ndx, item in enumerate(DECOY_PATHS, start=1):
+        target = _misc.joinpath(rex_dir, f"rex_{ndx}")
+        if create_dir:
+            _misc.mkdir(target, verbose=verbose)
+        _misc.cp(item, target, verbose=verbose)
+    return
+
+
+def get_REX_DIRS(main_dir="./", realpath=True):
+    """
+    get list with REX DIRS.
+
+    Args:
+        main_dir (str): directory with folders rex_1, rex_2, etc.
+        realpath (bool): return realpath
+
+    Returns:
+        REX_DIRS (list): list with REX directory paths
+    """
+    n_REX = 300   # hardcoded but will be filtered automatically
+    REX_DIRS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))
+                                    for i in range(0, n_REX + 1)
+                                    if len(glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))) != 0])
+
+    REX_DIRS = [item for item in REX_DIRS if _misc.isdir(item)]
+    return REX_DIRS
+
+
+def get_REX_PDBS(main_dir="./", realpath=True):
+    """
+    get list with REX PDBS.
+
+    Args:
+        main_dir (str): directory with folders rex_1, rex_2, etc.
+        realpath (bool): return realpath
+
+    Returns:
+        REX_PDBS (list): list with PDB paths within folders rex_1, rex_2, etc.
+    """
+    n_REX = 300   # hardcoded but will be filtered automatically
+    REX_PDBS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}/*.pdb", realpath=realpath))
+                                    for i in range(0, n_REX + 1)
+                                    if len(glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))) != 0])
+
+    REX_PDBS = [item for item in REX_PDBS if _misc.isfile(item)]
+    return REX_PDBS
+
+
+def test_REX_PDBS(REX_PDBS, ignh=True, verbose=True, **kwargs):
+    """
+    Test if all REX PDBS have equal RES, ATOM, NAME arrays.
+    Uses first PDB as "template PDB".
+
+    Args:
+        REX_PDBS (list): output of get_REX_PDBS()
+        ignh (bool): ignore hydrogen
+        verbose (bool)
+
+    Kwargs:
+        cprint_color (None/str)
+    """
+    default = {"cprint_color": "green"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    # treat first pdb as "template pdb" with target array lengths
+    template_pdb = REX_PDBS[0]
+    template_RES, template_ATOM, template_NAME = parsePDB_RES_ATOM_NAME(template_pdb, ignh=ignh)
+
+    for pdb_file in REX_PDBS:
+        RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(pdb_file, ignh=ignh)
+
+        if template_RES != RES or template_ATOM != ATOM or template_NAME != NAME:
+            raise _misc.ERROR(f"Parsed arrays of {template_pdb} do not match with {pdb_file}.")
+    if verbose:
+        _misc.cprint("All tested PDBs have equal RES, ATOM, NAME arrays.", cfg.cprint_color)
+    return
 
 
 def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
@@ -22,25 +114,21 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
         NAME (list): name column of PDB
     """
     # help function to ignh
-    def HELP_func_ignh(line):
+    def HELP_atom_is_hydrogen(line):
         """
-        help function: ignore hydrogen
+        help function: atom is hydrogen
 
-        If last char of line is numeric: return False  -> atom is hydrogen
-        If last char of line is  letter: return True   -> atom is heavy atom (C,N,O,S,...)
+        If first char of last line entry is "H":     return True  -> atom is hydrogen
+        If first char of last line entry is not "H": return False -> atom is heavy atom (C,N,O,S,...)
         """
-        # ignore new line entries
-        if line[-1] != "\n":
-            test_char = line[-1]
+        if line[:4] == "ATOM":
+            first_char = line[-5:].split()[0][0]
+            if first_char == "H":
+                return True
+            else:
+                return False
         else:
-            test_char = line[-2]
-
-        if test_char.isnumeric():
-            # last char is numeric -> atom is hydrogen
             return False
-        else:
-            # last char is letter -> atom is heavy
-            return True
 
     with open(fin, "r") as f:
 
@@ -54,29 +142,27 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
         for i in range(skiprows):
             next(f)
         for line in f:
-            chars = list(line)
+            if line[:4] == "ATOM":  # parse only ATOM entries
+                line_RES = line[22:26]
+                line_ATOM = line[6:11]
+                line_NAME = line[12:16]
+                # remove all whitespace (empty colums ~ PDB format)
+                line_RES = line_RES.replace(" ", "")
+                line_ATOM = line_ATOM.replace(" ", "")
+                line_NAME = line_NAME.replace(" ", "")
+                # append to list
+                if ignh == False:
+                    # append all
+                    RES.append(line_RES)
+                    ATOM.append(line_ATOM)
+                    NAME.append(line_NAME)
+                elif not HELP_atom_is_hydrogen(line):
+                    # append only heavy atoms
+                    RES.append(line_RES)
+                    ATOM.append(line_ATOM)
+                    NAME.append(line_NAME)
 
-            # concatenate single chars to string
-            concat_RES = ''.join(chars[22:26])
-            concat_ATOM = ''.join(chars[6:11])
-            concat_NAME = ''.join(chars[12:16])
-            # remove all whitespace (empty colums ~ PDB format)
-            concat_RES = concat_RES.replace(" ", "")
-            concat_ATOM = concat_ATOM.replace(" ", "")
-            concat_NAME = concat_NAME.replace(" ", "")
-            # append to list
-            if ignh == False:
-                # append all
-                RES.append(concat_RES)
-                ATOM.append(concat_ATOM)
-                NAME.append(concat_NAME)
-            elif HELP_func_ignh(chars):
-                # append only heavy atoms
-                RES.append(concat_RES)
-                ATOM.append(concat_ATOM)
-                NAME.append(concat_NAME)
-
-        # remove empty entries (might occur at beginning/ending of structures)
+        # double check: remove empty entries (might occur at beginning/ending of structures)
         RES = [int(item) for item in RES if item.isalnum()]
         ATOM = [int(item) for item in ATOM if item.isalnum()]
         NAME = [item for item in NAME if item.isalnum()]
@@ -84,9 +170,11 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
     return RES, ATOM, NAME
 
 
-def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
-                    filter_DCA=True, save_log=True, logFileName="PDBID_DCA_used.txt", **kwargs):
+def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
+                            ref_skiprows="auto", DCA_skiprows="auto",
+                            filter_DCA=True, save_log=True, **kwargs):
     """
+    Get DCA contact mapping:
     Return lists of matching RES pairs and ATOM pairs for "DCA REX Workflow"
 
     Algorithm:
@@ -120,17 +208,24 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="a
             True: ignore DCA pairs with |i-j| < 3
             False: use all DCA pairs w/o applying filter
         save_log (bool)
-        logFileName (str):
-            if "PDBID" in logFileName: detect PDBID based on ref_PDB path
 
     Kwargs:
         cprint_color (None/str): colored print color
+        pdbid (str):
+            "auto" (default): detect PDBID based on ref_PDB path
+        default_dir (str): "./"
+        save_as (str): "PDBID_DCA_used.txt"
+            detect and replace PDBID in kwarg <save_as> based on ref_PDB path
+            if kwarg <pdbid> is "auto" (default).
 
     Returns:
         RES_PAIR (list)
         ATOM_PAIR (list)
     """
-    default = {"cprint_color": "blue"}
+    default = {"cprint_color": "blue",
+               "pdbid": "auto",
+               "default_dir": "./",
+               "save_as": "PDBID_DCA_used.txt"}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     _misc.cprint('ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added hyrogen atoms will shift the atom numbers.\n', cfg.cprint_color)
@@ -247,13 +342,13 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="a
                               (ATOM[CB1_index], ATOM[CB2_index]),
                               (ATOM[CG1_index], ATOM[CG2_index])])
     if save_log:
-        new_dir = _misc.mkdir('logs')
-        if "PDBID" in logFileName:
-            pdbid = _misc.get_PDBid(ref_pdb)
-            logFileName = pdbid + "_DCA_used.txt"
-            logfile = new_dir + "/" + logFileName
-        print("Saved log as:", logfile)
-        with open(logfile, "w") as fout:
+        if "PDBID" in cfg.save_as:
+            if cfg.pdbid == "auto":
+                cfg.pdbid = _misc.get_PDBid(ref_pdb)
+            new_dir = _misc.mkdir(cfg.default_dir)
+            cfg.save_as = f"{new_dir}/{cfg.pdbid.upper()}_DCA_used.txt"
+        print("Saved log as:", _misc.realpath(cfg.save_as))
+        with open(cfg.save_as, "w") as fout:
             if n_bonds in [1, 2, 3]:
                 fout.write("#DCA contacts top{} ({} bonds per contact)\n".format(n_DCA, n_bonds))
             else:
@@ -268,7 +363,7 @@ def DCAREX_res2atom(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1, ref_skiprows="a
     return RES_PAIR, ATOM_PAIR
 
 
-def DCAREX_modify_scoreFile(score_fin, shift_res, outputFileName="PDBID_mod.score", res_cols=(2, 3), score_col=(5)):
+def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(2, 3), score_col=(5), **kwargs):
     """
     Modify score file (MSA scores) by shifting residues.
 
@@ -281,9 +376,17 @@ def DCAREX_modify_scoreFile(score_fin, shift_res, outputFileName="PDBID_mod.scor
         res_cols (tuple/list): columns with residue numbers
         score_col (tuple/list): column with score/confidence
 
+    Kwargs:
+        save_as (str): "PDBID_mod.score"
+            if "PDBID_mod.score" (default): try to automatically detect pattern
+            based on score_fin and insert the "_mod" part into filename.
+
     Returns:
-        outputFileName (str): realpath to modified score file
+        save_as (str): realpath to modified score file
     """
+    default = {"save_as": "PDBID_mod.score"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     resi, resj = _misc.read_file(score_fin, usecols=res_cols, skiprows='auto', dtype=np.int_)
     score = _misc.read_file(score_fin, usecols=score_col, skiprows='auto', dtype=np.float_)
 
@@ -292,37 +395,49 @@ def DCAREX_modify_scoreFile(score_fin, shift_res, outputFileName="PDBID_mod.scor
     resi += shift_res
     resj += shift_res
 
-    if outputFileName == "PDBID_mod.score":
+    if cfg.save_as == "PDBID_mod.score":
         dirpath = _misc.dirpath(score_fin)
         base = _misc.get_base(score_fin)
         ext = _misc.get_extension(score_fin)
-        outputFileName = f"{dirpath}/{base}_mod{ext}"
+        cfg.save_as = f"{dirpath}/{base}_mod{ext}"
 
-    with open(outputFileName, "w") as fout:
+    cfg.save_as = _misc.realpath(cfg.save_as)
+    with open(cfg.save_as, "w") as fout:
         for i in range(len(resi)):
             fout.write(f"{resi[i]}\t{resj[i]}\t{score[i]}\n")
 
-    outputFileName = _misc.realpath(outputFileName)
-    print(f"Saved file as: {outputFileName}")
-    return outputFileName
+    print(f"Saved file as: {cfg.save_as}")
+    return cfg.save_as
 
 
-def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto", outputFileName="PDBID_topol_mod.top"):
+def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto", **kwargs):
     """
     Modify topology:
-        - topology file: use as template
-        - used_DCA.txt: use all contacts as restraints
-        - add all contacts with force constant force_k into bonds section of new topology
+        - top_fin (topol.top file): use as template
+        - DCA_used_fin (DCA_used.txt): use all contacts as restraints
+        - modify bond section of new topology by adding contacts with constant force constant
 
     Args:
         top_fin (str): topology file (path)
         DCA_used_fin (str): DCA used file (path)
-        force_k (int/float): force constant in topology
+        force_k (int/float): force constant of DCA pairs
         DCA_skiprows (int): ignore header rows of DCA_used_fin
             -1 or "auto": auto detect
-        outputFileName (str):
-            if "PDBID" in outputFileName: detect PDBID based on DCA_used_fin path
+
+    Kwargs:
+        pdbid (str):
+            "auto" (default): detect PDBID based on ref_PDB path
+        default_dir (str): "./"
+        save_as (str): "PDBID_topol_mod.top"
+            detect and replace PDBID in save_as based on ref_PDB path
+            if kwarg <pdbid> is "auto" (default).
     """
+    default = {"pdbid": "auto",
+               "default_dir": "./",
+               "save_as": "PDBID_topol_mod.top"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    # DCA_used_fin has 4 cols with RESi, RESj, ATOMi, ATOMj -> usecols=(2,3)
     ATOM_I, ATOM_J = _misc.read_file(fin=DCA_used_fin, usecols=(2, 3), skiprows=DCA_skiprows, dtype=np.int_)
 
     # get n_DCA from DCA_used_fin
@@ -332,17 +447,18 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
             if "top" in item:
                 n_DCA = item[3:]
 
-    # lstrip ./ or / from outputFileName
-    if "/" in outputFileName:
-        outputFileName = outputFileName.lstrip("/")
-        outputFileName = outputFileName.lstrip("./")
-    if "PDBID" in outputFileName:
-        pdbid = _misc.get_PDBid(DCA_used_fin)
-        outputFileName = pdbid + "_topol_mod.top"
+    # lstrip ./ or / from save_as
+    if "/" in cfg.save_as:
+        cfg.save_as = cfg.save_as.lstrip("/")
+        cfg.save_as = cfg.save_as.lstrip("./")
+    if cfg.pdbid == "auto":
+        cfg.pdbid = _misc.get_PDBid(DCA_used_fin)
+    if "PDBID" in cfg.save_as:
+        cfg.save_as = f"{cfg.pdbid}_topol_mod.top"
 
     # read and write files
-    new_dir = _misc.mkdir('logs')
-    output = new_dir + "/" + outputFileName
+    new_dir = _misc.mkdir(cfg.default_dir)
+    output = f"{new_dir}/{cfg.save_as}"
     with open(top_fin, "r") as fin, open(output, "w") as fout:
 
         for line in fin:
@@ -369,7 +485,7 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
     return
 
 
-def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_scaling="T", outputFileName="PDBID_topol_mod.top"):
+def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_scaling="T", **kwargs):
     """
     TODO
 
@@ -381,7 +497,18 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
         lambda_scaling:
             T: prop. to T
           1/T: prop to 1/T
+
+    Kwargs:
+        pdbid (str):
+            "auto" (default): detect PDBID based on ref_PDB path
+        default_dir (str): "./"
+        save_as (str) : "PDBID_topol_mod.top"
     """
+    default = {"pdbid": "auto",
+               "default_dir": "./",
+               "save_as": "PDBID_topol_mod.top"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     # 1) calculate lambdas prop/antiprop to temperatures
     with open(temp_fin, "r") as fin:
         for line in fin:
@@ -407,20 +534,21 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
             FORCE.append(force_min + lambda_i*force_delta)
 
     # 2) write modified topology for each replica with scaling lambda
-    # lstrip ./ or / from outputFileName
-    if "/" in outputFileName:
-        outputFileName = outputFileName.lstrip("/")
-        outputFileName = outputFileName.lstrip("./")
-    if "PDBID" in outputFileName:
-        pdbid = _misc.get_PDBid(top_fin)
-        new_dir = _misc.mkdir('logs')
+    # lstrip ./ or / from save_as
+    if "/" in cfg.save_as:
+        cfg.save_as = cfg.save_as.lstrip("/")
+        cfg.save_as = cfg.save_as.lstrip("./")
+    if "PDBID" in cfg.save_as:
+        if cfg.pdbid == "auto":
+            cfg.pdbid = _misc.get_PDBid(top_fin)
+        new_dir = _misc.mkdir(cfg.default_dir)
 
     rex_label = 0
     for force in FORCE:
         rex_label += 1
         # read and write files
-        outputFileName = pdbid + f"_topol_mod_rex{rex_label}.top"
-        output = new_dir + "/" + outputFileName
+        cfg.save_as = f"{cfg.pdbid}_topol_mod_rex{rex_label}.top"
+        output = f"{new_dir}/{cfg.save_as}"
         with open(top_fin, "r") as fin, open(output, "w") as fout:
 
             modify_section = False
@@ -442,26 +570,4 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
                         l = [int(item) for item in l]
                         fout.write("{:5d} {:5d} {:5d} {:13d} {:13.3f}\n".format(l[0], l[1], l[2], l[3], force))
 
-    return
-
-
-def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=True):
-    """
-    Args:
-        best_decoys_dir (str): directory with
-            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
-            - decoys_score.log (output of cluster.log_cluster.decoys())
-        rex_dir (str): rex directory with folders rex_1, rex_2, ...
-        create_dir (bool)
-        verbose (bool)
-    """
-    DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
-                   _misc.read_file(f"{best_decoys_dir}/decoy_scores.log",
-                                   usecols=0, skiprows=1, dtype=str)]
-
-    for ndx, item in enumerate(DECOY_PATHS, start=1):
-        target = _misc.joinpath(rex_dir, f"rex_{ndx}")
-        if create_dir:
-            _misc.mkdir(target, verbose=verbose)
-        _misc.cp(item, target, verbose=verbose)
     return

@@ -313,10 +313,10 @@ def timeit(timer=None, msg="elapsed time:"):
 ################################################################################
 ### linux-like cmds ~ os package
 
-
-def pwd(verbose=True):
+def cwd(verbose=True):
     """
-    Print working directory
+    Alias function of pwd().
+    Get/Print current working directory
 
     Args:
         verbose (bool): print cwd
@@ -329,36 +329,68 @@ def pwd(verbose=True):
     return os.getcwd()
 
 
+def pwd(verbose=True):
+    return cwd(verbose=verbose)
+
+
+update_alias_docstring(cwd, pwd)
+
+
+def isdir(path):
+    """
+    Return true if the path refers to an existing directory.
+    """
+    return os.path.isdir(path)
+
+
+def isfile(path):
+    """
+    Return true if the path refers to an existing file.
+    """
+    return os.path.isfile(path)
+
+
+def pathexists(path):
+    """
+    Return true if path exists.
+    """
+    return os.path.exists(path)
+
+
 def realpath(path):
     """
-    Get realpath
-
-    Args:
-        path (str)
-
-    Returns:
-        realpath (str)
+    Return realpath.
     """
     return os.path.realpath(path)
 
 
-def dirpath(path):
+def relpath(path):
+    """
+    Return relative path.
+    """
+    return os.path.relpath(path)
+
+
+def dirpath(path, realpath=True):
     """
     Alias function of get_filedir().
-    Get realpath of the last directory of <path>.
+    Get realpath or relpath of the last directory of <path>.
 
     Args:
         path (str)
 
     Returns:
-        realpath (str)
+        dirpath (str)
     """
-    return(os.path.dirname(os.path.realpath(path)))
+    if realpath:
+        return os.path.dirname(os.path.realpath(path))
+    else:
+        return os.path.dirname(os.path.relpath(path))
 
 
 ### Alias function of dirpath
-def get_filedir(path):
-    return(dirpath(path))
+def get_filedir(path, realpath=True):
+    return dirpath(path, realpath=realpath)
 
 
 update_alias_docstring(dirpath, get_filedir)
@@ -366,7 +398,7 @@ update_alias_docstring(dirpath, get_filedir)
 
 def get_filename(path):
     """
-    get filename (removes prefix of realpath)
+    get filename (removes prefix of realpath of <path>).
 
     Args:
         path (str)
@@ -380,47 +412,48 @@ def get_filename(path):
     return filename
 
 
-def joinpath(filedir, filename, create_dir=True):
+def joinpath(filedir, filename, create_dir=True, realpath=True):
     """
-    Returns truepath of (filedir + filename).
+    Returns joined path of (filedir + filename).
 
-    Special cases:
-        filename contains relative path: ignores filedir input
-        filename contains absolute path: ignores filedir input
-
+    Special case:
+        filename contains relative or absolute path: ignore filedir input
     Reason: intention is to save/load file under the path "filename"
+
 
     Args:
         filedir (str): relative or absolute path of file directory
-        filename (str):
-            filename
-            relative/absolute path of file: ignores filedir input
+        filename (str): filename or relative/absolute filepath
         create_dir (bool): create filedir (w/o creating parent directories)
+        realpath (bool): return realpath
 
     Returns:
-        file_realpath (str)
+        file_path (str)
     """
-    file_realpath = os.path.realpath(filename)
-
     if "/" in filename:
-        file_realpath = os.path.join(os.path.realpath(filedir), os.path.realpath(filename))
+        if realpath:
+            file_path = os.path.realpath(os.path.join(filedir, os.path.realpath(filename)))
+        else:
+            file_path = os.path.relpath(os.path.join(filedir, os.path.realpath(filename)))
     else:
-        file_realpath = os.path.join(os.path.realpath(filedir), filename)
-
+        if realpath:
+            file_path = os.path.realpath(os.path.join(filedir, filename))
+        else:
+            file_path = os.path.relpath(os.path.join(filedir, filename))
     if create_dir:
         # filedir: passed file directory
-        # dirname: dirname of file_realpath after joining paths
-        #          NOTE: ignores filedir if it contains rel. or abs. path
-        #          -> filedir != dirname
-        dirname = os.path.dirname(file_realpath)
+        # dirname: dirname of file_path after joining (filedir + filename)
+        #          SPECIAL CASE: filedir ignored if filename contains rel. or abs. path
+        #          -> dirname is not always equal to filedir
+        dirname = os.path.dirname(os.path.realpath(file_path))
         mkdir(dirname)
 
-    return file_realpath
+    return file_path
 
 
 def mkdir(path, verbose=True):
     """
-    Create a new folder/directory
+    Make directory.
 
     Args:
         path (str): directory path
@@ -446,7 +479,7 @@ def mkdir(path, verbose=True):
 
 def cd(path, verbose=True):
     """
-    Change directory
+    Change directory.
 
     Args:
         path (str): directory path
