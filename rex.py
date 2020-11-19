@@ -1,12 +1,87 @@
 from __future__ import division, print_function
 from builtins import next
+from tqdm.notebook import tqdm
 import myPKG.misc as _misc
+import myPKG.gmx as _gmx
 import numpy as np
 import glob
 
 
-def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=True):
+def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
+                         create_dir=True, verbose=False, **kwargs):
     """
+    Apply forcefield on best decoys and save as <filename>_ref.pdb.
+
+    Args:
+        best_decoys_dir (str): directory with
+            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
+            - decoy_scores.log (output of cluster.log_cluster.decoys())
+        odir (str): output directory
+            Note: if "PDBID" in <odir> and no <pdbid> kwarg is passed
+                  -> find and replace "PDBID" in <odir> automatically based on filenames
+        create_dir (bool)
+        verbose (bool)
+
+    Kwargs:
+        pdbid (str)
+        logfile (str): logfile name (default: "decoy_scores.log")
+        water (str): water model (default: "tip3p")
+        input (str): forcefield number (default: "6")
+        cprint_color (str)
+
+    Returns:
+        odir (str): output directory with ref pdb files (forcefield is applied)
+    """
+    default = {"pdbid": "PDBID",
+               "logfile": "decoy_scores.log",
+               "water": "tip3p",
+               "input": "6",
+               "cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+
+    # replace PDBID if passed
+    if "PDBID" in odir and cfg.pdbid != "PDBID":
+        odir = odir.replace("PDBID", cfg.pdbid)
+    # find and replace PDBID if not passed
+    if "PDBID" in odir and cfg.pdbid == "PDBID":
+        min_length = 999999
+        for item in glob.glob(f"{best_decoys_dir}/*pdb"):
+            filename = _misc.get_base(item)
+            if len(filename) < min_length:
+                min_filename = filename
+                min_length = len(filename)
+        cfg.pdbid = _misc.get_PDBid(min_filename).upper()
+        odir = odir.replace("PDBID", cfg.pdbid)
+
+    if create_dir:
+        odir = _misc.mkdir(odir)
+
+    # apply ff
+    DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
+                   _misc.read_file(f"{best_decoys_dir}/{cfg.logfile}",
+                                   usecols=0, skiprows=1, dtype=str)]
+    for item in tqdm(DECOY_PATHS):
+        with _misc.HiddenPrints(verbose=verbose):
+            _gmx.get_ref_structure(item, odir=odir, water=cfg.water,
+                                   input=cfg.input, verbose=verbose)
+    _gmx.clean_up("./", verbose=False)
+    _gmx.clean_up(odir, verbose=False)
+
+    # copy and fix log
+    with open(f"{best_decoys_dir}/{cfg.logfile}", "r") as old_log, open(f"{odir}/{cfg.logfile}", "w") as new_log:
+        for line in old_log:
+            new_log.write(line.replace(".pdb", "_ref.pdb"))
+
+    if verbose:
+        _misc.cprint(f"Saved files to: {odir}", cfg.cprint_color)
+    return odir
+
+
+def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=False, **kwargs):
+    """
+    Assigns decoys based on ranking taken from <best_decoys_dir>/decoy_scores.log
+    to each rex subdirectory rex_1, rex_2, ...
+
     Args:
         best_decoys_dir (str): directory with
             - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
@@ -14,16 +89,24 @@ def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=T
         rex_dir (str): rex directory with folders rex_1, rex_2, ...
         create_dir (bool)
         verbose (bool)
+
+    Kwargs:
+        cprint_color (str)
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+
     DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
                    _misc.read_file(f"{best_decoys_dir}/decoy_scores.log",
                                    usecols=0, skiprows=1, dtype=str)]
-
     for ndx, item in enumerate(DECOY_PATHS, start=1):
         target = _misc.joinpath(rex_dir, f"rex_{ndx}")
         if create_dir:
             _misc.mkdir(target, verbose=verbose)
         _misc.cp(item, target, verbose=verbose)
+
+    if not verbose:
+        _misc.cprint(f"Copied source files to directories: {_misc.realpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
     return
 
 
@@ -67,13 +150,16 @@ def get_REX_PDBS(main_dir="./", realpath=True):
     return REX_PDBS
 
 
-def test_REX_PDBS(REX_PDBS, ignh=True, verbose=True, **kwargs):
+def test_REX_PDBS(REX_PDBS, ref_pdb, ignh=True, verbose=True, **kwargs):
     """
     Test if all REX PDBS have equal RES, ATOM, NAME arrays.
-    Uses first PDB as "template PDB".
+    Uses ref as "template PDB".
 
     Args:
         REX_PDBS (list): output of get_REX_PDBS()
+        ref_pdb (str): reference pdb
+            if target is known: apply ff -> save as ref -> use as ref
+            if target is unknown: use one of REX_PDBS -> apply ff -> use as ref
         ignh (bool): ignore hydrogen
         verbose (bool)
 
@@ -84,14 +170,14 @@ def test_REX_PDBS(REX_PDBS, ignh=True, verbose=True, **kwargs):
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     # treat first pdb as "template pdb" with target array lengths
-    template_pdb = REX_PDBS[0]
+    template_pdb = ref_pdb
     template_RES, template_ATOM, template_NAME = parsePDB_RES_ATOM_NAME(template_pdb, ignh=ignh)
 
     for pdb_file in REX_PDBS:
         RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(pdb_file, ignh=ignh)
 
         if template_RES != RES or template_ATOM != ATOM or template_NAME != NAME:
-            raise _misc.ERROR(f"Parsed arrays of {template_pdb} do not match with {pdb_file}.")
+            raise _misc.Error(f"Parsed arrays of {template_pdb} do not match with {pdb_file}.")
     if verbose:
         _misc.cprint("All tested PDBs have equal RES, ATOM, NAME arrays.", cfg.cprint_color)
     return
@@ -122,11 +208,16 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
         If first char of last line entry is not "H": return False -> atom is heavy atom (C,N,O,S,...)
         """
         if line[:4] == "ATOM":
-            first_char = line[-5:].split()[0][0]
-            if first_char == "H":
+            try:
+                first_char = line[-5:].split()[0][0]
+                if first_char == "H":
+                    return True
+                else:
+                    return False
+            except IndexError:  # some pdbs only write letters of heavy atoms in last column -> H atoms have blank columns
                 return True
-            else:
-                return False
+
+        #ignore lines without "ATOM" at start
         else:
             return False
 

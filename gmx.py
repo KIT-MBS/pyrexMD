@@ -5,6 +5,7 @@ import MDAnalysis as mda
 import myPKG.misc as _misc
 import logging
 logging.getLogger('gromacs.config').disabled = True
+gromacs.environment.flags['capture_output'] = True  # print gromacs output
 
 ################################################################################
 ################################################################################
@@ -103,10 +104,75 @@ def _get_sel_code(sel, **kwargs):
     return sel_code
 
 
-# same function as TPR2PDB()
-def editconf(f, o="default", odir="./", verbose=True, **kwargs):
+def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", log=True, verbose=True, **kwargs):
     """
-    Alias function to
+    Alias function of gromacs.pdb2gmx().
+
+    Gromacs info:
+        'pdb2gmx' reads a .pdb (or .gro) file, reads some database files, adds
+        hydrogens to the molecules and generates coordinates in GROMACS (GROMOS),
+        or optionally .pdb, format and a topology in GROMACS format. These files
+        can subsequently be processed to generate a run input file.
+
+    Args:
+        f (str): input structure file: pdb gro tpr (g96 brk ent esp)
+        o (str): output structure file: pdb gro (g96 brk ent esp)
+        odir (str): output directory
+            special case: odir is ignored when o is relative/absolute path
+        ff (str): force field
+        water (str): water model
+        log (bool): save log file
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        # see python  -> gromacs.pdb2gmx.help()
+        # or terminal -> gmx pdb2gmx -h
+        p (str): topology file: topol.top
+        i (str): include file for topology: posre.itp
+        n (str): index file: index.ndx
+
+        cprint_color (str)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    o = _misc.joinpath(odir, o)  # special case for joinpath
+
+    # GromacsWrapper
+    with _misc.HiddenPrints(verbose=verbose):
+        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff.lower(), water=water.lower(), v=verbose)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
+
+    # save message
+    o_file = _misc.realpath(o)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/pdb2gmx.log"
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+
+    return o_file
+
+
+# same function as TPR2PDB()
+def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
+    """
+    Alias function of:
         TPR2PDB()
         gromacs.editconf()
 
@@ -117,35 +183,67 @@ def editconf(f, o="default", odir="./", verbose=True, **kwargs):
         f (str): tpr (gro g96 pdb brk ent esp)
         o (str): pdb (gro g96)
             "default": <f>.tpr -> <f>.pdb
+                       <f>.gro -> box.gro
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
+        log (bool): save log file
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.editconf.help()
+        # see python  -> gromacs.editconf.help()
+        # or terminal -> gmx editconf -h
+        bt (str): box type: cubic triclinic dodecahedron octahedron
+        c (bool): center molecule in box
+        d (str): distance between the solute and the box
+
+        cprint_color (str)
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if o == "default":
-        o = _misc.joinpath(odir, f"{_misc.get_base(f)}.pdb")
+        if _misc.get_extension(f) == ".tpr":
+            o = _misc.joinpath(odir, f"{_misc.get_base(f)}.pdb")
+        elif _misc.get_extension(f) == ".gro":
+            o = _misc.joinpath(odir, "box.gro")
     else:
-        o = _misc.joinpath(odir, o)
+        o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.editconf(f=f, o=o, **kwargs)
+        stdin, stdout, stderr = gromacs.editconf(f=f, o=o, **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/editconf.log"
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+
     return o_file
 
 
 # same function as editconf()
-def convert_TPR2PDB(tpr, o="default", odir="./", verbose=True, **kwargs):
+def convert_TPR2PDB(tpr, o="default", odir="./", log=True, verbose=True, **kwargs):
     """
-    Alias function to
+    Alias function of:
         editconf()
         gromacs.editconf()
 
@@ -156,34 +254,64 @@ def convert_TPR2PDB(tpr, o="default", odir="./", verbose=True, **kwargs):
         tpr (str): tpr (gro g96 pdb brk ent esp)
         o (str): pdb (gro g96)
             "default": <filename>.tpr -> <filename>.pdb
+                       <filename>.gro -> box.gro
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
+        log (bool): save log file
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.editconf.help()
+        # see python  -> gromacs.editconf.help()
+        # or terminal -> gmx editconf -h
+        bt (str): box type: cubic triclinic dodecahedron octahedron
+        c (bool): center molecule in box
+        d (str): distance between the solute and the box
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if o == "default":
-        o = _misc.join_path(odir, f"{_misc.get_base(tpr)}.pdb")
+        if _misc.get_extension(tpr) == ".tpr":
+            o = _misc.joinpath(odir, f"{_misc.get_base(tpr)}.pdb")
+        elif _misc.get_extension(tpr) == ".gro":
+            o = _misc.joinpath(odir, "box.gro")
     else:
-        o = _misc.joinpath(odir, o)
+        o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.editconf(f=tpr, o=o, **kwargs)
+        stdin, stdout, stderr = gromacs.editconf(f=tpr, o=o, **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/editconf_TPR2PDB.log"
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+
     return o_file
 
 
 def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
-    Alias function gromacs.convert_tpr().
+    Alias function of gromacs.convert_tpr().
 
     Gromacs info:
         'gmx convert-tpr' can edit run input files in three ways:
@@ -206,16 +334,22 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.convert_tpr.help()
+        # see python  -> gromacs.convert_tpr.help()
+        # or terminal -> gmx convert_tpr -h
+
+        cprint_color (str)
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     sel_code = _get_sel_code(sel)
     if o == "default":
         o = _misc.joinoath(odir, f"{_misc.get_base(s)}_{sel.lower()}.tpr")
     else:
-        o = _misc.joinpath(odir, o)
+        o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
@@ -223,7 +357,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint("Saved file as: {o_file}", cfg.cprint_color)
 
     #clean up
     clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
@@ -231,9 +365,69 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     return o_file
 
 
+def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
+            log=True, verbose=True, **kwargs):
+    """
+    Alias function of gromacs.solvate().
+
+    cp is usually "box.gro"
+
+    Args:
+        cp (str): structure file ~ solute:  gro pdb tpr (g96 brk ent esp)
+        cs (str): structure file ~ solvent: gro pdb tpr (g96 brk ent esp)
+            Note: "spc216.gro" is used for all 3-point water models
+        o (str): gro pdb (g96 brk ent esp)
+            default case: save in same directory as cp
+            special case: if o is relative/absolute path -> save there
+        p (str): topology file: topol.top
+        log (bool): save log file
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        # see python  -> gromacs.solvate.help()
+        # or terminal -> gmx solvate -h
+
+        cprint_color (str)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    odir = _misc.realpath(_misc.dirpath(cp))
+    o = _misc.joinpath(odir, o)  # special case for joinpath
+
+    # GromacsWrapper
+    with _misc.HiddenPrints(verbose=verbose):
+        stdin, stdout, stderr = gromacs.solvate(cp=cp, cs=cs, o=o, p=p, **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
+
+    # save message
+    o_file = _misc.realpath(o)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/solvate.log"
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+    return o_file
+
+
 def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
-    Alias function to gromacs.trjconv().
+    Alias function of gromacs.trjconv().
 
     Gromacs info:
         gmx trjconv can convert trajectory files in many ways
@@ -260,11 +454,17 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.trjconv.help()
+        # see python  -> gromacs.trjconv.help()
+        # or terminal -> gmx trjconf -h
+
+        cprint_color (str)
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     # check input files for same atom count
     u1 = mda.Universe(s)
     u2 = mda.Universe(f)
@@ -281,7 +481,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
     if o == "default":
         o = _misc.joinpath(odir, f"{_misc.get_base(f)}_{sel.lower()}.xtc")
     else:
-        o = _misc.joinpath(odir, o)
+        o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
@@ -289,7 +489,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
 
     #clean up
     clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
@@ -339,7 +539,8 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.trjconv.help()
+        # see python  -> gromacs.trjconv.help()
+        # or terminal -> gmx trjconv -h
 
     Returns:
         tpr_file (str): realpath of new tpr file (selection only)
@@ -380,7 +581,7 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
 
 def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, **kwargs):
     """
-    Alias function to gromacs.rms().
+    Alias function of gromacs.rms().
     Calculate backbone RMSD.
 
     Args:
@@ -399,11 +600,17 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.rms.help()
+        # see python  -> gromacs.rms.help()
+        # or terminal -> gmx rms -h
+
+        cprint_color (str)
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     # check input files for same atom count
     u1 = mda.Universe(ref)
     u2 = mda.Universe(xtc)
@@ -424,30 +631,37 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
     return o_file
 
 
-def get_ref_structure(s, o="default", odir="./", water="tip3p", input="6",
+def get_ref_structure(s, o="default", odir="./", ff="amber99sb-ildn", water="tip3p",
                       verbose=True, **kwargs):
     """
-    Creates ref structure of input structure via pdb2gmx to fix atom count.
+    Creates ref structure of input structure via pdb2gmx to fix atom count by
+    applying force field.
 
     Args:
         s (str): input structure file: pdb gro tpr (g96 brk ent esp)
         o (str): output structure file: pdb gro trp (g96 brk ent esp)
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
+        ff (str): force field
         water (str): water model
-        input (str): force field number
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
-        see gromacs.pdb2gmx.help()
+        # see python  -> gromacs.pdb2gmx.help()
+        # or terminal -> gmx pdb2gmx -h
+
+        cprint_color (str)
 
     Returns:
         o_file (str): realpath of output file
     """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if o == "default":
         o = _misc.joinpath(odir, f"{_misc.get_base(s)}_ref.pdb")
     else:
@@ -455,16 +669,17 @@ def get_ref_structure(s, o="default", odir="./", water="tip3p", input="6",
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.pdb2gmx(f=s, o=o, water=water, input=input, **kwargs)
+        gromacs.pdb2gmx(f=s, o=o, ff=ff.lower(), water=water.lower(), **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
-    print("Saved file as:", o_file)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
     return o_file
+################################################################################
+################################################################################
 
 ################################################################################
 ### WORKFLOW FUNCTIONS
-
 
 # def WF_get_RMSD(cfg, verbose=True, **kwargs):
 #     """
