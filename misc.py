@@ -572,6 +572,7 @@ def bash_cmd(cmd, verbose=False):
 
     Args:
         cmd (str): bash cmd
+        verbose (bool): print executed shell command
 
     Example:
     bash_cmd("ls")
@@ -590,7 +591,7 @@ def bash_cmd(cmd, verbose=False):
         p.poll()
         if p.returncode is not None:
             break
-    return
+    return p.returncode
 
 
 ################################################################################

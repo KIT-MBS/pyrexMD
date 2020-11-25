@@ -56,7 +56,7 @@ def clean_up(path="./", pattern="gmx_pattern", verbose=True):
     """
     if pattern == "gmx_pattern":
         # iterate itself with gmx patterns
-        clean_up(path=path, pattern="*#*", verbose=verbose)
+        clean_up(path=path, pattern="#*#", verbose=verbose)
         clean_up(path=path, pattern=".*offsets.npz", verbose=False)
         return
 
@@ -365,6 +365,75 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     return o_file
 
 
+def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, **kwargs):
+    """
+    Alias function of gromacs.grompp().
+
+    Args:
+        f (str): input file: mdp
+        o (str): output file: tpr
+        c (str): structure file: gro tpr pdb (g96 brk ent esp)
+        p (str): topology file: top
+        log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/gromp.log>
+            False: save log file as <logs/gromp_{i}.log> for i=1,...,200
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        # see python  -> gromacs.grompp.help()
+        # or terminal -> gmx grompp -h
+        maxwarn (int): Number of allowed warnings during input processing.
+                       Not for normal use and may generate unstable systems.
+
+        cprint_color (str)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    default = {"maxwarn": 10,
+               "cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    odir = _misc.realpath(_misc.dirpath(o))
+    o = _misc.joinpath(odir, o)  # special case for joinpath
+
+    # GromacsWrapper
+    with _misc.HiddenPrints(verbose=verbose):
+        stdin, stdout, stderr = gromacs.grompp(f=f, o=o, c=c, p=p, v=verbose,
+                                               maxwarn=cfg.maxwarn, **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
+
+    # save message
+    o_file = _misc.realpath(o)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/grompp.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/grompp_{i}.log" for i in range(1, 201)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+    return o_file
+
+
 def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
             log=True, verbose=True, **kwargs):
     """
@@ -417,6 +486,76 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/solvate.log"
+        with open(logfile, "w") as fout:
+            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            fout.write(f"STDERR:\n\n{stderr}\n")
+            fout.write(f"STDOUT:\n\n{stdout}\n")
+            clean_up(logdir, verbose=False)
+    return o_file
+
+
+def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
+           neutral=True, log=True, verbose=True, **kwargs):
+    """
+    Alias fuction of gromacs.genion().
+
+    Note: input 13 (=SOL group) seems to be the only selection group that works
+          with genion.
+
+    Gromacs info:
+        gmx genion randomly replaces solvent molecules with monoatomic ions.
+        The group of solvent molecules should be continuous and all molecules
+        should have the same number of atoms.
+
+    Args:
+        s (str): structure file: tpr
+        o (str): output file: gro pdb (g96 brk ent esp)
+        p (str): topology file: topol.top
+        input (str): selection grp
+            default: 13 (SOL)
+        pname (str): positive ion name
+        nname (str): negative ion name
+        neutral (bool): add enough ions to neutralize the system. These ions are
+                        added on top of those specified with -np/-nn or -conc.
+        log (bool): save log file
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        # see python  -> gromacs.genion.help()
+        # or terminal -> gmx genion -h
+
+        cprint_color (str)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    default = {"cprint_color": "blue"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    odir = _misc.realpath(_misc.dirpath(o))
+    o = _misc.joinpath(odir, o)  # special case for joinpath
+
+    # GromacsWrapper
+    with _misc.HiddenPrints(verbose=verbose):
+        stdin, stdout, stderr = gromacs.genion(s=s, o=o, p=p, pname=pname,
+                                               nname=nname, neutral=neutral,
+                                               input=str(input), **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
+
+    # clean up
+    odir = _misc.dirpath(_misc.realpath(o))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
+
+    # save message
+    o_file = _misc.realpath(o)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
+
+    if log:
+        logdir = _misc.mkdir(f"{odir}/logs")
+        logfile = f"{logdir}/genion.log"
         with open(logfile, "w") as fout:
             _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
@@ -675,57 +814,76 @@ def get_ref_structure(s, o="default", odir="./", ff="amber99sb-ildn", water="tip
     o_file = _misc.realpath(o)
     _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
     return o_file
-################################################################################
-################################################################################
+
 
 ################################################################################
-### WORKFLOW FUNCTIONS
+################################################################################
+### TEMPLATES
 
-# def WF_get_RMSD(cfg, verbose=True, **kwargs):
-#     """
-#     1) convert TPR:
-#         - select protein atoms
-#         - save as < filename > _protein.tpr
-#     2) fix trajectory:
-#         - select protein atoms
-#         - tu ns
-#         - pbc mol
-#         - center
-#         - save as < filename > _protein.xtc
-#     3) get backbone RMSD:
-#         - tu ns
-#         - save as rmsd.xvg
-#
-#     Args:
-#         files_cfg(misc.CONFIG): config class with (real)paths to input files
-#             KEYWORDS: ARGUMENTS
-#             ref(str): (real)path to reference pdb(protein atoms)
-#             tpr(str): (real)path to .trp file(all atoms/protein atoms)
-#             xtc(str): (real)path to .xtc file(protein atoms)
-#         verbose(bool): print/mute gromacs messages
-#
-#     Kwargs:
-#         see KWARGS from gmx.fix_TRAJ() and gmx.get_RMSD().
-#
-#     Returns:
-#         cfg(misc.CONFIG): config class with (real)paths to input and output files
-#             KEYWORDS: ARGUMENTS
-#             ref(str): (real)path to reference pdb(protein atoms)
-#             tpr(str): (real)path to .trp file(all atoms/protein atoms)
-#             tpr_protein(str): (real)path to .trp file(all atoms/protein atoms)
-#             xtc(str): (real)path to .xtc file(protein atoms)
-#             xtc_protein(str): realpath to fixed trajectory file
-#             rmsd_file(str): realpath to RMSD file
-#     """
-#     cfg = _misc.CONFIG(cfg, **kwargs)
-#
-#     ## TODO
-#
-#     # fix trajectory
-#     #tpr_protein, xtc_protein = fix_TRAJ(s=cfg.tpr_protein, f=cfg.xtc, **kwargs)
-#     #cfg.update_config(tpr_protein=tpr_protein, xtc_protein=xtc_protein)
-#
-#     # get backbone RMSD
-#     #rmsd_file = get_RMSD(ref=cfg.ref, xtc=cfg.xtc_protein, verbose=verbose)
-#     #cfg.update_config(rmsd_file=rmsd_file)
-#     return cfg
+
+def get_template_1_EM(gmx_mpi=True):
+    """
+    Args:
+        gmx_mpi (bool): use gmx_mpi instead of gmx
+    """
+    print("Energy Minimization Template:")
+    if gmx_mpi:
+        template = "!gmx_mpi grompp -f min.mdp -o em.tpr -c ions.gro -p topol.top\n"
+        template += "!gmx_mpi mdrun -v -deffnm em"
+    else:
+        template = "!gmx grompp -f min.mdp -o em.tpr -c ions.gro -p topol.top\n"
+        template += "!gmx mdrun -v -deffnm em"
+    print(template)
+    return
+
+
+def get_template_2_NVT(gmx_mpi=True):
+    """
+    Args:
+        gmx_mpi (bool): use gmx_mpi instead of gmx
+    """
+    print("NVT Template:")
+    if gmx_mpi:
+        template = "!gmx_mpi grompp -f nvt.mdp -o nvt.tpr -c em.gro -r em.gro -p topol.top\n"
+        template += "!gmx_mpi mdrun -v -deffnm nvt"
+    else:
+        template = "!gmx grompp -f nvt.mdp -o nvt.tpr -c em.gro -r em.gro -p topol.top\n"
+        template += "!gmx mdrun -v -deffnm nvt"
+    print(template)
+    return
+
+
+def get_template_3_NPT(gmx_mpi=True):
+    """
+    Args:
+        gmx_mpi (bool): use gmx_mpi instead of gmx
+    """
+    print("NPT Template:")
+    if gmx_mpi:
+        template = "!gmx_mpi grompp -f npt.mdp -o npt.tpr -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top\n"
+        template += "!gmx_mpi mdrun -v -deffnm npt"
+    else:
+        template = "!gmx grompp -f npt.mdp -o npt.tpr -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top\n"
+        template += "!gmx mdrun -v -deffnm npt"
+    print(template)
+    return
+
+
+def get_template_4_MD(gmx_mpi=True):
+    """
+    Args:
+        gmx_mpi (bool): use gmx_mpi instead of gmx
+    """
+    print("MD Template:")
+    if gmx_mpi:
+        template = "!gmx_mpi grompp -f md.mdp -o traj.tpr -c npt.gro -t npt.cpt -p topol.top\n"
+        template += "!gmx_mpi mdrun -v -deffnm traj\n\n"
+        template += "# with tabulated bonds add: -tableb table_b0.xvg\n"
+        template += "# to append add: -cpi -append"
+    else:
+        template = "!gmx grompp -f md.mdp -o traj.tpr -c npt.gro -t npt.cpt -p topol.top\n"
+        template += "!gmx mdrun -v -deffnm traj\n"
+        template += "# with tabulated bonds add: -tableb table_b0.xvg\n"
+        template += "# to append add: -cpi -append"
+    print(template)
+    return
