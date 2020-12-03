@@ -21,8 +21,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import MDAnalysis as mda
-import myPKG.core as core
 import myPKG.misc as misc
+import myPKG.core as core
 import myPKG.analysis as ana
 import myPKG.abinitio as abi
 import myPKG.cluster as cluster
