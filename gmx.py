@@ -119,7 +119,9 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", l
         o (str): output structure file: pdb gro (g96 brk ent esp)
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
-        ff (str): force field
+        ff (str): force field (see <gromacs_path>/top/<ff> for valid inputs)
+            Protein: e.g.: amber99sb-ildn
+            RNA: e.g.: amber14sb_OL15
         water (str): water model
         log (bool): save log file
         verbose (bool): print/mute gromacs messages
@@ -143,7 +145,7 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", l
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff.lower(), water=water.lower(), v=verbose)
+        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), v=verbose)
         print(stderr)
         print()
         print(stdout)
@@ -774,18 +776,20 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
     return o_file
 
 
-def get_ref_structure(s, o="default", odir="./", ff="amber99sb-ildn", water="tip3p",
+def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip3p",
                       verbose=True, **kwargs):
     """
     Creates ref structure of input structure via pdb2gmx to fix atom count by
     applying force field.
 
     Args:
-        s (str): input structure file: pdb gro tpr (g96 brk ent esp)
+        f (str): input structure file: pdb gro tpr (g96 brk ent esp)
         o (str): output structure file: pdb gro trp (g96 brk ent esp)
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
-        ff (str): force field
+        ff (str): force field (see <gromacs_path>/top/<ff> for valid inputs)
+            Protein: e.g.: amber99sb-ildn
+            RNA: e.g.: amber14sb_OL15
         water (str): water model
         verbose (bool): print/mute gromacs messages
 
@@ -802,13 +806,13 @@ def get_ref_structure(s, o="default", odir="./", ff="amber99sb-ildn", water="tip
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     if o == "default":
-        o = _misc.joinpath(odir, f"{_misc.get_base(s)}_ref.pdb")
+        o = _misc.joinpath(odir, f"{_misc.get_base(f)}_ref.pdb")
     else:
         o = _misc.joinpath(odir, o)
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.pdb2gmx(f=s, o=o, ff=ff.lower(), water=water.lower(), **kwargs)
+        gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), **kwargs)
 
     # save message
     o_file = _misc.realpath(o)

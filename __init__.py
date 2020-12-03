@@ -1,5 +1,5 @@
-import myPKG.core as core
 import myPKG.misc as misc
+import myPKG.core as core
 import myPKG.analysis as ana
 
 
