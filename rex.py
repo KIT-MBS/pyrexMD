@@ -576,6 +576,7 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
     return
 
 
+### TODO
 def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_scaling="T", **kwargs):
     """
     TODO
@@ -660,5 +661,155 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
                         l = line.split()
                         l = [int(item) for item in l]
                         fout.write("{:5d} {:5d} {:5d} {:13d} {:13.3f}\n".format(l[0], l[1], l[2], l[3], force))
+
+    return
+
+
+def prep_REX_temps(T_0=None, n_REX=None, k=None):
+    """
+    Prepare REX temperatures.
+
+    Args:
+        T_0 (None/float): starting temperature (Kelvin)
+        n_REX (None/int): number of replica
+        k (None/float): temperature distrubtion scaling factor
+    """
+    T1 = []		# list with temperatures for method 1
+    T2 = []		# list with temperatures for method 2
+
+    if T_0 is None:
+        T_0 = int(input("Enter starting temperature T_0 (Kelvin): "))
+    else:
+        print("Enter starting temperature T_0 (Kelvin): ", T_0)
+    if n_REX is None:
+        n_REX = int(input("Enter replica number n_REX: "))
+    else:
+        print("Enter replica number n_REX: ", n_REX)
+    if k is None:
+        k = float(input("Enter scaling factor k: "))
+    else:
+        print("Enter scaling factor k: ", k)
+
+    # method 1: same function for all replica
+    print("\nMethod 1:")
+    print("REX Temperature Distribution: T_i = T_0*exp(k*i)")
+
+    with open("rex_temps.log", "w") as fout:
+        _misc.cprint(f"Saved log as: {_misc.realpath('rex_temps.log')}", "blue")
+        fout.write("Function: T_i = {}*exp({}*i)\n".format(T_0, k))
+        fout.write("Temperatures:\n")
+        for i in range(0, n_REX):
+            T_i = format(1.00*T_0*np.exp(k*i), ".2f")
+            T1.append(T_i)
+            fout.write("{}, ".format(T_i))
+
+    # method 2: same as method 1 but with adjusting the coefficients ai
+    # (ai increase spacing of higher temperatures to get lower exchange probabilities)
+
+    a = []  # lin. stretching factors
+    delta_a = 0.04
+
+    # increase a by delta_a every 10 replica
+    if n_REX % 10 == 0:
+        for i in range(n_REX//10):
+            if i == 0:
+                a.append(1.00)
+            else:
+                a.append(round(a[-1]+delta_a, 2))
+    else:
+        for i in range((n_REX//10)+1):
+            if i == 0:
+                a.append(1.00)
+            else:
+                a.append(round(a[-1]+delta_a, 2))
+
+    print("\nMethod 2")
+    print("REX Temperature Distribution:")
+    print("T_0 = {} K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))".format(T_0))
+    print("T_i = T_(i-1) + a_i * DELTA")
+
+    with open("rex_temps.log", "w") as fout:    # same fout name as method 1 -> will overwrite
+        _misc.cprint(f"Saved log as: {_misc.realpath('rex_temps.log')}", "blue")
+        fout.write("REX Temperature Distribution:\n")
+        fout.write("T_0 = {} K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))\n".format(T_0))
+        fout.write("T_i = T_(i-1) + a_j * DELTA\n")
+        fout.write("\nChosen Parameter:\n")
+        fout.write("k = {}\n".format(k))
+        for i in range(len(a)):
+            fout.write("a_{} = {:.2f} for i = {}..{} \n".format(i, a[i], i*10, i*10+9))
+
+        fout.write("\nTemperatures:\n")
+        for i in range(0, n_REX):
+            if i == 0:
+                T2.append(T_0)  # start value 300 K
+            else:
+                index = i//10  # find out which a[index] to use
+                delta = T_0*(np.exp(k*i) - np.exp(k*(i-1)))
+                T2.append(T2[i-1] + a[index]*delta)
+
+        T2 = [format(x, ".2f") for x in T2]
+        for i in range(len(T2)):
+            fout.write("{}, ".format(T2[i]))
+
+    # comparison of method 1 and 2
+    print("\nTemperatures Method 1:")
+    print(T1)
+    print("\nTemperatures Method 2:")
+    print(T2)
+
+    # DELTA TEST
+    DELTA1 = []
+    DELTA2 = []
+    DELTA_DELTA = []
+
+    for i in range(len(T1)-1):
+        DELTA1.append(format(float(T1[i+1])-float(T1[i]), ".2f"))
+    print("\nDelta Temps Method 1 (DTM1):")
+    print(DELTA1)
+
+    for i in range(len(T2)-1):
+        DELTA2.append(format(float(T2[i+1])-float(T2[i]), ".2f"))
+    print("\nDelta Temps Method 2 (DTM2):")
+    print(DELTA2)
+
+    for i in range(len(DELTA1)):
+        DELTA_DELTA.append(format(float(DELTA2[i])-float(DELTA1[i]), ".2f"))
+    print("\nDelta_Delta (DTM2-DTM1):")
+    print(DELTA_DELTA)
+
+
+def prep_REX_mdp(main_dir="./", n_REX=None):
+    """
+    Prepare REX mdp.
+
+    Args:
+        main_dir (str): main directory with rex_1, rex_2, etc.
+        n_REX (None/int): number of replica
+    """
+    with open("rex_temps.log", "r") as fin:
+        for line in fin:
+            # search for REX temperatures (should be last entry)
+            s = line.split(",")
+            REX_TEMPS = [x.lstrip() for x in s if "." in x and x.lstrip().replace(".", "", 1).isdigit()]
+
+    # create N rex.mdp files and edit the ref_t line
+    if n_REX is None:
+        n_REX = int(input("Enter n_REX:"))
+    else:
+        print("Enter n_REX:", n_REX)
+    print("Using rex.mdp as template and changing temperatures according to rex_temps.log...")
+
+    for i in range(1, n_REX+1):
+        file_path = _misc.mkdir("rex_" + str(i))
+        with open(_misc.joinpath(main_dir, "rex.mdp"), "r") as fin, open(file_path + "/rex.mdp", "w") as fout:
+            print("Saved mdp file as: " + file_path + "/rex.mdp")
+
+            for line in fin:
+                if "ref_t" in line:
+                    fout.write("ref_t   = %s       %s         ; reference temperature, one for each group, in K\n" % (REX_TEMPS[i-1], REX_TEMPS[i-1]))
+                elif "gen_temp" in line:
+                    fout.write("gen_temp = %s  ; temperature for Maxwell distribution\n" % (REX_TEMPS[i-1]))
+                else:
+                    fout.write(line)
 
     return

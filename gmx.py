@@ -194,6 +194,8 @@ def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
     Kwargs:
         # see python  -> gromacs.editconf.help()
         # or terminal -> gmx editconf -h
+        box (int): box vector lengths xyz (only 1 value for bt="cubic").
+                   requires center=False to work.
         bt (str): box type: cubic triclinic dodecahedron octahedron
         c (bool): center molecule in box
         d (str): distance between the solute and the box
@@ -457,6 +459,9 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
     Kwargs:
         # see python  -> gromacs.solvate.help()
         # or terminal -> gmx solvate -h
+        maxsol (int): maximum number of solvent molecules to add if they fit in
+                      the box.
+            0 (default): ignore this setting
 
         cprint_color (str)
 
@@ -564,6 +569,30 @@ def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
     return o_file
+
+
+def mdrun(verbose=True, **kwargs):
+    """
+    Alias fuction of gromacs.mdrun().
+
+    Note:
+        output can be printed only after mdrun has finished.
+        To see realtime updates invoke the command using "!gmx_mpi mdrun <parameters>"
+
+    Args:
+        verbose (bool): print/mute gromacs messages
+
+    Kwargs:
+        # see python  -> gromacs.mdrun.help()
+        # or terminal -> gmx mdrun -h
+        deffnm (str): default filename
+        nsteps (int): maximum number of steps (used instead of mdp setting)
+    """
+    # GromacsWrapper
+    with _misc.HiddenPrints(verbose=verbose):
+        stdin, stdout, stderr = gromacs.mdrun(v=True, **kwargs)
+
+    return
 
 
 def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs):
@@ -820,6 +849,147 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
     return o_file
 
 
+################################################################################
+################################################################################
+### DCA REX setup functions
+### -> allow different start conformations with fixed boxsize and solution number
+def WF_getParameter_boxsize(logfile="./logs/editconf.log", base=0.2, verbose=True):
+    """
+    Read <logfile> and suggest a 'fixed boxsize' parameter for REX simulations.
+
+    Args:
+        logfile (str): path to <editconf.log> containing the line 'system size: X Y Z'
+        base (float): round up base for highest box dimension taken from <logfile>
+        verbose (bool)
+
+    Returns:
+        boxsize (float): suggested boxsize parameter
+    """
+    boxsize = None
+
+    with _misc.HiddenPrints(verbose=verbose):
+        with open(logfile, "r") as fin:
+            _misc.cprint(f"Reading logfile: {logfile}")
+            for line in fin:
+
+                if "new box vectors" in line:
+                    s = line.split()
+                    dims = [float(x) for x in s if x.replace(".", "", 1).isdigit()]
+                    boxsize = round(_misc.round_up(max(dims), base=base), 2)
+                    _misc.cprint(line, "blue", end='')
+
+                elif "system size" in line or "diameter" in line or "box volume" in line:
+                    _misc.cprint(line, "blue", end='')
+
+        if boxsize is None:
+            raise _misc.Error("No boxsize parameters found.")
+        else:
+            _misc.cprint(f"suggested box size: {boxsize}", "green", end='')
+    return boxsize
+
+
+def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verbose=True):
+    """
+    Read <logfile> and suggest a 'max solution' parameter for REX simulations.
+
+    Args:
+        logfile (str): path to <editconf.log> containing the line 'system size: X Y Z'
+        maxsol_reduce (int): reduce max solution number taken from <logfile>
+                          -> guarantees fixed solution number for different
+                             rstart configurations
+        verbose (bool)
+
+    Returns:
+        maxsol (int): suggested max solution parameter
+    """
+    with open(logfile, "r") as fin:
+        for line in fin:
+            if "Number of solvent molecules" in line:
+                s = line.split()
+                maxsol = [int(x)-maxsol_reduce for x in s if x.isdigit()][0]
+
+                if verbose:
+                    _misc.cprint(f"Reading logfile: {logfile}")
+                    _misc.cprint(line, "blue", end="")
+                    _misc.cprint(f"suggested max solution: {maxsol}", "green", end="")
+                return maxsol
+
+    _misc.Error("No solution parameter found.")
+    return
+
+
+def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
+    """
+    Workflow: REX setup (without energy minimization)
+
+    Args:
+        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
+        boxsize (float): suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())
+        maxsol (int): suggested max solution parameter (output of gmx.WF_getParameter_max_solution())
+        verbose (bool): show blue log messages (saved file as, saved log as)
+        verbose_gmx (bool): show gmx module messages (requires verbose=True)
+    """
+    for rex_dir in rex_dirs:
+        _misc.cprint("#######################################################################################")
+        _misc.cd(rex_dir)
+        decoy_pdb = _misc.get_filename("*_ref.pdb")
+        _misc.cprint(f"Using decoy pdb: {decoy_pdb}")
+
+        # 1) generate topology
+        _misc.cprint(f"\nGenerating topology...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            protein_gro = pdb2gmx(f=decoy_pdb, verbose=False)
+
+        # 2) generate box
+        _misc.cprint(f"Generating box with fixed size ({boxsize}) ...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            editconf(f=protein_gro, o="box.gro", bt="cubic", box=boxsize, c=True, verbose=verbose_gmx)
+
+        # 3) generate solvent
+        _misc.cprint(f"Generating solvent with fixed solvent molecules ({maxsol})...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            solvate(cp="box.gro", maxsol=maxsol, verbose=verbose_gmx)
+
+        # 4) generate ions
+        _misc.cprint(f"Generating ions...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            grompp(f="../ions.mdp", o="ions.tpr", c="solvent.gro", p="topol.top", verbose=verbose_gmx)
+            genion(s="ions.tpr", o="ions.gro", p="topol.top", verbose=False)
+
+    _misc.cprint("#######################################################################################")
+    _misc.cd("..")
+    _misc.cprint("Finished setup of all REX DIRS (skipped energy minimization).", "green")
+    return
+
+
+def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
+    """
+    Workflow: REX energy minimization
+
+    Args:
+        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
+        nsteps (None/int): maximum number of steps
+            None: use .mdp option
+            int: use instead of .mdp option
+        verbose (bool): show/hide gromacs output
+    """
+    for rex_dir in rex_dirs:
+        _misc.cprint("#######################################################################################")
+        _misc.cd(rex_dir)
+
+        # 5) energy minimization
+        _misc.cprint(f"Performing energy minimization...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            _ = grompp(f="../min.mdp", o="em.tpr", c="ions.gro", p="topol.top")
+            if nsteps is None:
+                mdrun(deffnm="em", verbose=verbose)
+            else:
+                mdrun(deffnm="em", nsteps=nsteps, verbose=verbose)
+            clean_up("./", verbose=False)
+
+    _misc.cprint("#######################################################################################")
+    _misc.cd("..")
+    _misc.cprint("Finished energy minimization of all REX DIRS.", "green")
 ################################################################################
 ################################################################################
 ### TEMPLATES

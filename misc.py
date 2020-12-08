@@ -396,16 +396,25 @@ def get_filedir(path, realpath=True):
 update_alias_docstring(dirpath, get_filedir)
 
 
-def get_filename(path):
+def get_filename(path, search_file=True):
     """
     get filename (removes prefix of realpath of <path>).
 
     Args:
         path (str)
+        search_file (bool):
+            True: use <path> as search pattern to search for existing file
+               -> remove prefix if only 1 match found to obtain existing filename
+            False: just remove prefix of given <path>
 
     Returns
         filename (str)
     """
+    if search_file:
+        file_list = glob.glob(path)
+        if len(file_list) >= 1:
+            path = glob.glob(path)[0]
+
     real_path = realpath(path)
     dir_path = dirpath(path)
     filename = real_path[len(dir_path)+1:]
