@@ -440,7 +440,9 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
             cfg.save_as = f"{new_dir}/{cfg.pdbid.upper()}_DCA_used.txt"
         print("Saved log as:", _misc.realpath(cfg.save_as))
         with open(cfg.save_as, "w") as fout:
-            if n_bonds in [1, 2, 3]:
+            if n_bonds == 1:
+                fout.write("#DCA contacts top{} ({} bond per contact)\n".format(n_DCA, n_bonds))
+            elif n_bonds in [2, 3]:
                 fout.write("#DCA contacts top{} ({} bonds per contact)\n".format(n_DCA, n_bonds))
             else:
                 fout.write("#DCA contacts top{} (all heavy atom bonds per conact)\n".format(n_DCA))

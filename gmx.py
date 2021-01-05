@@ -104,7 +104,8 @@ def _get_sel_code(sel, **kwargs):
     return sel_code
 
 
-def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", log=True, verbose=True, **kwargs):
+def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
+            ignh=True, log=True, verbose=True, **kwargs):
     """
     Alias function of gromacs.pdb2gmx().
 
@@ -123,6 +124,7 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", l
             Protein: e.g.: amber99sb-ildn
             RNA: e.g.: amber14sb_OL15
         water (str): water model
+        ignh (bool): ignore hydrogen
         log (bool): save log file
         verbose (bool): print/mute gromacs messages
 
@@ -145,7 +147,7 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p", l
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), v=verbose)
+        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), ignh=ignh, v=verbose)
         print(stderr)
         print()
         print(stdout)
@@ -806,7 +808,7 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
 
 
 def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip3p",
-                      verbose=True, **kwargs):
+                      ignh=True, verbose=True, **kwargs):
     """
     Creates ref structure of input structure via pdb2gmx to fix atom count by
     applying force field.
@@ -820,6 +822,7 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
             Protein: e.g.: amber99sb-ildn
             RNA: e.g.: amber14sb_OL15
         water (str): water model
+        ignh (bool): ignore hydrogen
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -841,7 +844,7 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), **kwargs)
+        gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), ignh=ignh, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
