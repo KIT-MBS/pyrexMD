@@ -456,7 +456,7 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
     return RES_PAIR, ATOM_PAIR
 
 
-def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(2, 3), score_col=(5), **kwargs):
+def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(1, 2), score_col=(5), **kwargs):
     """
     Modify score file (MSA scores) by shifting residues.
 
