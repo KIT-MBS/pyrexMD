@@ -183,6 +183,154 @@ def test_REX_PDBS(REX_PDBS, ref_pdb, ignh=True, verbose=True, **kwargs):
     return
 
 
+################################################################################
+################################################################################
+### DCA REX setup functions
+### -> allow different start conformations with fixed boxsize and solution number
+def WF_getParameter_boxsize(logfile="./logs/editconf.log", base=0.2, verbose=True):
+    """
+    Read <logfile> and suggest a 'fixed boxsize' parameter for REX simulations.
+
+    Args:
+        logfile (str): path to <editconf.log> containing the line 'system size: X Y Z'
+        base (float): round up base for highest box dimension taken from <logfile>
+        verbose (bool)prep_REX_tpr
+
+    Returns:
+        boxsize (float): suggested boxsize parameter
+    """
+    boxsize = None
+
+    with _misc.HiddenPrints(verbose=verbose):
+        with open(logfile, "r") as fin:
+            _misc.cprint(f"Reading logfile: {logfile}")
+            for line in fin:
+
+                if "new box vectors" in line:
+                    s = line.split()
+                    dims = [float(x) for x in s if x.replace(".", "", 1).isdigit()]
+                    boxsize = round(_misc.round_up(max(dims), base=base), 2)
+                    _misc.cprint(line, "blue", end='')
+
+                elif "system size" in line or "diameter" in line or "box volume" in line:
+                    _misc.cprint(line, "blue", end='')
+
+        if boxsize is None:
+            raise _misc.Error("No boxsize parameters found.")
+        else:
+            _misc.cprint(f"suggested box size: {boxsize}", "green", end='')
+    return boxsize
+
+
+def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verbose=True):
+    """
+    Read <logfile> and suggest a 'max solution' parameter for REX simulations.
+
+    Args:
+        logfile (str): path to <editconf.log> containing the line 'system size: X Y Z'
+        maxsol_reduce (int): reduce max solution number taken from <logfile>
+                          -> guarantees fixed solution number for different
+                             rstart configurations
+        verbose (bool)
+
+    Returns:
+        maxsol (int): suggested max solution parameter
+    """
+    with open(logfile, "r") as fin:
+        for line in fin:
+            if "Number of solvent molecules" in line:
+                s = line.split()
+                maxsol = [int(x)-maxsol_reduce for x in s if x.isdigit()][0]
+
+                if verbose:
+                    _misc.cprint(f"Reading logfile: {logfile}")
+                    _misc.cprint(line, "blue", end="")
+                    _misc.cprint(f"suggested max solution: {maxsol}", "green", end="")
+                return maxsol
+
+    _misc.Error("No solution parameter found.")
+    return
+
+
+def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
+    """
+    Workflow: REX setup (without energy minimization)
+
+    Args:
+        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
+        boxsize (float): suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())
+        maxsol (int): suggested max solution parameter (output of gmx.WF_getParameter_max_solution())
+        verbose (bool): show blue log messages (saved file as, saved log as)
+        verbose_gmx (bool): show gmx module messages (requires verbose=True)
+    """
+    for rex_dir in rex_dirs:
+        _misc.cprint("#######################################################################################")
+        _misc.cd(rex_dir)
+        decoy_pdb = _misc.get_filename("*_ref.pdb")
+        _misc.cprint(f"Using decoy pdb: {decoy_pdb}")
+
+        # 1) generate topology
+        _misc.cprint(f"\nGenerating topology...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            protein_gro = _gmx.pdb2gmx(f=decoy_pdb, verbose=False)
+
+        # 2) generate box
+        _misc.cprint(f"Generating box with fixed size ({boxsize}) ...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            _gmx.editconf(f=protein_gro, o="box.gro", bt="cubic", box=boxsize, c=True, verbose=verbose_gmx)
+
+        # 3) generate solvent
+        _misc.cprint(f"Generating solvent with fixed solvent molecules ({maxsol})...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            _gmx.solvate(cp="box.gro", maxsol=maxsol, verbose=verbose_gmx)
+
+        # 4) generate ions
+        _misc.cprint(f"Generating ions...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            _gmx.grompp(f="../ions.mdp", o="ions.tpr", c="solvent.gro", p="topol.top", verbose=verbose_gmx)
+            _gmx.genion(s="ions.tpr", o="ions.gro", p="topol.top", verbose=False)
+
+    _misc.cprint("#######################################################################################")
+    _misc.cd("..")
+    _misc.cprint("Finished setup of all REX DIRS (skipped energy minimization).", "green")
+    return
+
+
+def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
+    """
+    Workflow: REX energy minimization
+
+    Args:
+        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
+        nsteps (None/int): maximum number of steps
+            None: use .mdp option
+            int: use instead of .mdp option
+        verbose (bool): show/hide gromacs output
+    """
+    for rex_dir in rex_dirs:
+        _misc.cprint("#######################################################################################")
+        _misc.cd(rex_dir)
+
+        # 5) energy minimization
+        _misc.cprint(f"Performing energy minimization...", "red")
+        with _misc.HiddenPrints(verbose=verbose):
+            _ = _gmx.grompp(f="../min.mdp", o="em.tpr", c="ions.gro", p="topol.top")
+            if nsteps is None:
+                _gmx.mdrun(deffnm="em", verbose=verbose)
+            else:
+                _gmx.mdrun(deffnm="em", nsteps=nsteps, verbose=verbose)
+            _gmx.clean_up("./", verbose=False)
+
+    _misc.cprint("#######################################################################################")
+    _misc.cd("..")
+    _misc.cprint("Finished energy minimization of all REX DIRS.", "green")
+
+
+################################################################################
+################################################################################
+### Modify topology functions
+
+
 def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
     """
     Reads PDB file and returns the columns for residue, atom-number and atom-name as lists.
@@ -667,6 +815,11 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
     return
 
 
+################################################################################
+################################################################################
+### prep REX run files functions
+
+
 def prep_REX_temps(T_0=None, n_REX=None, k=None):
     """
     Prepare REX temperatures.
@@ -814,4 +967,31 @@ def prep_REX_mdp(main_dir="./", n_REX=None):
                 else:
                     fout.write(line)
 
+    return
+
+
+def prep_REX_tpr(main_dir="./", n_REX=None, verbose=False):
+    """
+    Prepare REX mdp.
+
+    Args:
+        main_dir (str): main directory with rex_1, rex_2, etc.
+        n_REX (None/int): number of replica
+        verbose (bool)
+    """
+    rex_dirs = get_REX_DIRS(main_dir)
+
+    if n_REX is None:
+        n_REX = int(input("Enter n_REX:"))
+    else:
+        print("Enter n_REX:", n_REX)
+    _misc.cprint(f"preparing rex.tpr for {n_REX} replica.", "green")
+
+    for ndx, rex_dir in enumerate(rex_dirs[:n_REX], start=1):
+        _misc.cprint("#######################################################################################")
+        _gmx.grompp(f=f"{rex_dir}/rex.mdp", o=f"{rex_dir}/rex.tpr",
+                    c=f"{rex_dir}/em.gro", p=f"{rex_dir}/topol_mod.top",
+                    verbose=verbose)
+
+    _misc.cprint(f"Finished REX tpr creation for REX DIRS (i=1..{n_REX}).", "green")
     return
