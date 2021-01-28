@@ -40,7 +40,7 @@ __fix_ResourceWarning__()
 ################################################################################
 
 
-def clean_up(path="./", pattern="gmx_pattern", verbose=True):
+def clean_up(path="./", pattern="gmx_pattern", ignore=None, verbose=True):
     """
     Clean up gromacs backup files with the patterns #*# and .*offsets.npz
 
@@ -52,12 +52,16 @@ def clean_up(path="./", pattern="gmx_pattern", verbose=True):
             (None): check for files with path only
             (str):  check for files with joined path of path + pattern
             "gmx_pattern": remove files with the patterns #*# and .*offsets.npz
+        ignore (None/str/list of str/tuple of str): one or multiple ignore pattern
+            (None): no ignore pattern
+            (str): single ignore pattern
+            (list of str/tuple of str): list/tuple with multiple ignore patterns
         verbose (bool): print message ('removed file: ... ')
     """
     if pattern == "gmx_pattern":
         # iterate itself with gmx patterns
-        clean_up(path=path, pattern="#*#", verbose=verbose)
-        clean_up(path=path, pattern=".*offsets.npz", verbose=False)
+        clean_up(path=path, pattern="#*#", ignore=ignore, verbose=verbose)
+        clean_up(path=path, pattern=".*offsets.npz", ignore=ignore, verbose=False)
         return
 
     elif pattern is None:
@@ -67,6 +71,13 @@ def clean_up(path="./", pattern="gmx_pattern", verbose=True):
 
     # remove files
     for item in glob.glob(realpath):
+        if isinstance(ignore, str):
+            if ignore in item:
+                continue
+        if isinstance(ignore, (list, tuple)):
+            for ign in ignore:
+                if ign in item:
+                    continue
         os.remove(item)
         if verbose:
             print('removed file:', item)
@@ -504,7 +515,7 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
 
 
 def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
-           neutral=True, log=True, verbose=True, **kwargs):
+           conc=0.15, neutral=True, log=True, verbose=True, **kwargs):
     """
     Alias fuction of gromacs.genion().
 
@@ -524,8 +535,9 @@ def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
             default: 13 (SOL)
         pname (str): positive ion name
         nname (str): negative ion name
+        conc (float): add salt concentration (mol/liter) and rescale to box size
         neutral (bool): add enough ions to neutralize the system. These ions are
-                        added on top of those specified with -np/-nn or -conc.
+                        added on top of those specified with -np/-nn or -conc
         log (bool): save log file
         verbose (bool): print/mute gromacs messages
 
