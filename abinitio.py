@@ -14,6 +14,119 @@ from pyrosetta.rosetta import protocols
 pyrosetta.init("-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
 
 
+def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, verbose_stop=None):
+    """
+    Args:
+        obj (pose or pdb): object to read
+            (pose): pyrosetta pose object
+            (pdb): str path to pdb
+        mol_type (str): molecule type
+            "auto": detect "protein" or "rna" by checking if pose.phi(1) exists.
+            "protein": protein molecule with torsion angles (PHI, PSI)
+            "rna": rna molecule with torsion angles (ALPHA, BETA, GAMMA, DELTA)
+        prec (int): rounding precission
+        verbose (bool): print table with torsion angles
+
+    Returns:
+        TORSION_ANGLES (tuple): tuple containing lists with torsion angles of each residue
+            if mol_type == "protein":
+                TORSION_ANGLES = (PSI, PHI)
+            if mol_type == "rna":
+                TORSION_ANGLES = (ALPHA, BETA, GAMMA, DELTA)
+    """
+    if isinstance(obj, str):
+        pose = pyrosetta.pose_from_pdb(obj)
+    else:
+        pose = obj
+
+    if mol_type.lower() == "auto":
+        try:
+            pose.phi(1)
+            mol_type = "protein"
+        except RuntimeError:
+            mol_type = "rna"
+
+    if mol_type.lower() == "protein":
+        PHI, PSI, = [], []
+
+        for i in range(1, 1+pose.total_residue()):
+            PHI.append(round(pose.phi(i), prec))
+            PSI.append(round(pose.psi(i), prec))
+
+        TORSION_ANGLES = (PHI, PSI)
+        if verbose:
+            _misc.cprint("resid \tphi \tpsi".expandtabs(spacing), "blue")
+            RESID = list(range(1, 1+pose.total_residue()))
+            _misc.print_table([RESID, PHI, PSI],
+                              prec=prec, spacing=spacing, verbose_stop=verbose_stop)
+
+    if mol_type.lower() == "rna":
+        ALPHA, BETA, GAMMA, DELTA = [], [], [], []
+
+        for i in range(1, 1+pose.total_residue()):
+            ALPHA.append(round(pose.alpha(i), prec))
+            BETA.append(round(pose.beta(i), prec))
+            GAMMA.append(round(pose.gamma(i), prec))
+            DELTA.append(round(pose.delta(i), prec))
+
+        TORSION_ANGLES = (ALPHA, BETA, GAMMA, DELTA)
+        if verbose:
+            _misc.cprint("resid  \talpha \tbeta \tgamma \tdelta".expandtabs(spacing), "blue")
+            RESID = list(range(1, 1+pose.total_residue()))
+            _misc.print_table([RESID, ALPHA, BETA, GAMMA, DELTA],
+                              prec=prec, spacing=spacing, verbose_stop=verbose_stop)
+
+    return TORSION_ANGLES
+
+
+def apply_relative_torsion_angle(pose_ref, pose, resid=1, angle="alpha", shift=0, verbose=True):
+    """
+    Apply relative torsion angle (use pose_ref angle and apply relative shift).
+
+    Args:
+        pose_ref (pose)
+        pose (pose):
+        resid (int):
+        angle (str):
+            protein: "phi", "psi"
+                rna:  "alpha", "beta", "gamma", "delta"
+        shift (float): relative shift value
+        verbose (bool): print applied changes to torsion angle.
+    """
+    with _misc.HiddenPrints(verbose=verbose):
+        if angle.lower() == "phi":
+            set_angle = pose.set_phi
+            vref = pose_ref.phi(resid)
+            v1 = pose.phi(resid)
+        elif angle.lower() == "psi":
+            set_angle = pose.set_psi
+            vref = pose_ref.psi(resid)
+            v1 = pose.psi(resid)
+        elif angle.lower() == "alpha":
+            set_angle = pose.set_alpha
+            vref = pose_ref.alpha(resid)
+            v1 = pose.alpha(resid)
+        elif angle.lower() == "beta":
+            set_angle = pose.set_beta
+            vref = pose_ref.beta(resid)
+            v1 = pose.beta(resid)
+        elif angle.lower() == "gamma":
+            set_angle = pose.set_gamma
+            vref = pose_ref.gamma(resid)
+            v1 = pose.gamma(resid)
+        elif angle.lower() == "delta":
+            set_angle = pose.set_delta
+            vref = pose_ref.delta(resid)
+            v1 = pose.delta(resid)
+
+        v2 = vref + shift
+        set_angle(resid, v2)
+        print(f"resid {resid} {angle:>5}: {v1:>8.2f}  --> {v2:>8.2f}  (ref:{vref:>8.2f})")
+    return
+################################################################################
+################################################################################
+
+
 def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     """
     Setup config file for abinitio functions.

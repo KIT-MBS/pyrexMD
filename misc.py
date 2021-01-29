@@ -1307,6 +1307,23 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
                                                                    data[2][ndx], data[3][ndx],
                                                                    data[4][ndx], data[5][ndx],
                                                                    data[6][ndx], data[7][ndx])
+    elif len(data) == 9:
+        for ndx, item in enumerate(data[0]):
+            table_str += "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(data[0][ndx], data[1][ndx],
+                                                                       data[2][ndx], data[3][ndx],
+                                                                       data[4][ndx], data[5][ndx],
+                                                                       data[6][ndx], data[7][ndx],
+                                                                       data[8][ndx])
+    elif len(data) == 10:
+        for ndx, item in enumerate(data[0]):
+            table_str += "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(data[0][ndx], data[1][ndx],
+                                                                       data[2][ndx], data[3][ndx],
+                                                                       data[4][ndx], data[5][ndx],
+                                                                       data[6][ndx], data[7][ndx],
+                                                                       data[8][ndx], data[9][ndx])
+    elif len(data) > 10:
+        raise Error(f"Extend code of {__name__}.{print_table.__name__}() to work with more than 10 elements.")
+
     table_str = table_str.expandtabs(spacing)
 
     if verbose:
