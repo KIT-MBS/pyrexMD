@@ -3,8 +3,6 @@
 #       if universe: use universe
 # TODO: class Universe(object) -> Inherit mda.Universe class and make ana.functions accessible as properties.
 
-
-from __future__ import division, print_function
 import myPKG.misc as _misc
 from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide

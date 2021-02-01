@@ -1,5 +1,4 @@
 # core module
-from __future__ import division, print_function
 from builtins import super
 from IPython.display import display
 import ipywidgets as wg

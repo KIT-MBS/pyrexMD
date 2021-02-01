@@ -1,5 +1,4 @@
 # miscellaneous
-from __future__ import division, print_function
 import PIL  # pillow/PIL (Pyhon Imaging Library)
 import pdf2image
 import pickle as pl
