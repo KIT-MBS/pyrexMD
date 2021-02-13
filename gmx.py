@@ -116,7 +116,7 @@ def _get_sel_code(sel, **kwargs):
 
 
 def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
-            ignh=True, log=True, verbose=True, **kwargs):
+            ignh=True, log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Alias function of gromacs.pdb2gmx().
 
@@ -137,6 +137,9 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
         water (str): water model
         ignh (bool): ignore hydrogen
         log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/pdb2gmx.log>
+            False: save log file as <logs/pdb2gmx_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -175,8 +178,16 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/pdb2gmx.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/pdb2gmx_{i}.log" for i in range(1, 1000)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
@@ -185,7 +196,7 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
 
 
 # same function as TPR2PDB()
-def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
+def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Alias function of:
         TPR2PDB()
@@ -202,6 +213,9 @@ def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
         log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/editconf.log>
+            False: save log file as <logs/editconf_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -248,8 +262,16 @@ def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/editconf.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/editconf_{i}.log" for i in range(1, 1000)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
@@ -258,7 +280,7 @@ def editconf(f, o="default", odir="./", log=True, verbose=True, **kwargs):
 
 
 # same function as editconf()
-def convert_TPR2PDB(tpr, o="default", odir="./", log=True, verbose=True, **kwargs):
+def convert_TPR2PDB(tpr, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Alias function of:
         editconf()
@@ -275,6 +297,9 @@ def convert_TPR2PDB(tpr, o="default", odir="./", log=True, verbose=True, **kwarg
         odir (str): output directory
             special case: odir is ignored when o is relative/absolute path
         log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/editconf.log>
+            False: save log file as <logs/editconf_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -317,8 +342,16 @@ def convert_TPR2PDB(tpr, o="default", odir="./", log=True, verbose=True, **kwarg
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/editconf_TPR2PDB.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/editconf_{i}.log" for i in range(1, 1000)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
@@ -393,8 +426,8 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
         p (str): topology file: top
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/gromp.log>
-            False: save log file as <logs/gromp_{i}.log> for i=1,...,200
+            True: save log file as <logs/grompp.log>
+            False: save log file as <logs/grompp_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -436,7 +469,7 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/grompp.log"
         if not log_overwrite:
-            log_names = [f"{logdir}/grompp_{i}.log" for i in range(1, 201)]
+            log_names = [f"{logdir}/grompp_{i}.log" for i in range(1, 1000)]
             for name in log_names:
                 if name in glob.glob(f"{logdir}/*.log"):
                     continue  # skip existing log_name
@@ -444,7 +477,7 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
                     logfile = name
                     break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
@@ -452,7 +485,7 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
 
 
 def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
-            log=True, verbose=True, **kwargs):
+            log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Alias function of gromacs.solvate().
 
@@ -467,6 +500,9 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
             special case: if o is relative/absolute path -> save there
         p (str): topology file: topol.top
         log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/solvate.log>
+            False: save log file as <logs/solvate_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -506,16 +542,24 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/solvate.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/solvate_{i}.log" for i in range(1, 1000)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
     return o_file
 
 
-def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
-           conc=0.15, neutral=True, log=True, verbose=True, **kwargs):
+def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL", conc=0.15,
+           neutral=True, log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Alias fuction of gromacs.genion().
 
@@ -539,6 +583,9 @@ def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
         neutral (bool): add enough ions to neutralize the system. These ions are
                         added on top of those specified with -np/-nn or -conc
         log (bool): save log file
+        log_overwrite (bool):
+            True: save log file as <logs/genion.log>
+            False: save log file as <logs/genion_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Kwargs:
@@ -577,8 +624,16 @@ def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL",
     if log:
         logdir = _misc.mkdir(f"{odir}/logs")
         logfile = f"{logdir}/genion.log"
+        if not log_overwrite:
+            log_names = [f"{logdir}/genion_{i}.log" for i in range(1, 1000)]
+            for name in log_names:
+                if name in glob.glob(f"{logdir}/*.log"):
+                    continue  # skip existing log_name
+                else:
+                    logfile = name
+                    break  # stop at first new log_name
         with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved  log as: {logfile}", cfg.cprint_color)
+            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
             fout.write(f"STDERR:\n\n{stderr}\n")
             fout.write(f"STDOUT:\n\n{stdout}\n")
             clean_up(logdir, verbose=False)
