@@ -3,6 +3,7 @@ import glob
 import gromacs
 import MDAnalysis as mda
 import myPKG.misc as _misc
+import numpy as np
 import logging
 logging.getLogger('gromacs.config').disabled = True
 gromacs.environment.flags['capture_output'] = True  # print gromacs output
@@ -918,6 +919,140 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
     _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
     return o_file
 
+################################################################################
+################################################################################
+### COMPLEX BUILDER
+
+
+def create_complex(f=[], o="complex.gro", verbose=True):
+    """
+    Create complex using multiple .gro files.
+    First .gro file in <f> must have largest box.
+
+    Args:
+        f (list): list of gro files
+        o (str): output structure file: gro
+        verbose (bool)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+    if not isinstance(f, list):
+        raise _misc.Error("Wrong data type: f must be list.")
+    if len(f) < 2:
+        raise _misc.Error("Not enough input files: f must contain atleast 2 .gro files.")
+    for gro in f:
+        if _misc.get_extension(gro) != ".gro":
+            raise _misc.Error("Wrong extension: f does not contain .gro files.")
+
+    for ndx, file in enumerate(f):
+        with open(file, "r") as handle:
+            read = handle.readlines()
+
+        if ndx == 0:
+            data = list(read)
+
+        if ndx != 0:
+            temp = f"{int(data[1]) + int(read[1])}\n"           # fix atom count
+            if len(temp) < max(len(data[1]), len(read[1])):     # fix atom count position (gro has fixed format)
+                temp = f" {temp}"
+            data[1] = temp
+            box = data.pop(-1)
+
+            # test if 2nd box is smaller
+            box_size_1 = [float(x) for x in box.split()[:3]]
+            box_size_2 = [float(x) for x in read[-1].split()[:3]]
+            box_size_1 = np.prod(box_size_1)  # get box volume via a*b*c
+            box_size_2 = np.prod(box_size_2)
+            if box_size_1 < box_size_2:
+                raise _misc.Error(f"Wrong order of .gro files: box size of {f[0]} is smaller than {f[ndx]}. Type help({create_complex.__module__}.{create_complex.__name__})")
+
+            # append data
+            for line in read[2:-1]:
+                data.append(line)
+
+            #append box size of f[0]
+            data.append(box)
+
+    with open(o, "w") as handle:
+        for line in data:
+            handle.write(line)
+
+    o_file = _misc.realpath(o)
+    if verbose:
+        _misc.cprint(f"Saved complex as: {o_file}", "blue")
+
+    return o_file
+
+
+def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, top="topol.top", top_out="topol_complex.top", verbose=True):
+    """
+    Extend an existing .top file.
+
+    Args:
+        ligand_name (str): ligand name
+        ligand_itp (str): ligand .itp file
+        ligand_prm (str): ligand .prm file
+        ligand_nmol (int): number of ligand molecules
+        top (str): topology input file (will be extended)
+        top_out (str): topology output file
+        verbose (bool)
+
+    Returns:
+        o_file (str): realpath of output file
+    """
+
+    with open(top, "r") as handle:
+        data = handle.readlines()
+
+    with open(top_out, "w") as handle:
+        # add very first ligand entry
+        if "; Include ligand topology\n" not in data:
+            for ndx, line in enumerate(data):
+                # insert itp
+                if "; Include water topology\n" in line:
+                    handle.write(f'''; Include ligand topology\n#include "{ligand_itp}"\n''')
+                    handle.write("\n")
+                # insert prm
+                if "forcefield.itp" in line:
+                    handle.write(line)
+                    handle.write(f'''\n; Include ligand parameters\n#include "{ligand_prm}"\n''')
+                    continue
+                handle.write(line)
+
+        # add additional ligand entry
+        else:
+            itp_loc = False
+            prm_loc = False
+            for ndx, line in enumerate(data):
+                # insert itp
+                if "; Include ligand topology\n" in line:
+                    itp_loc = True
+                elif itp_loc and line == "\n":
+                    handle.write(f'''#include "{ligand_itp}"\n''')
+                    itp_loc = False
+                # insert prm
+                if "; Include ligand parameters\n" in line:
+                    prm_loc = True
+                if prm_loc and line == "\n":
+                    handle.write(f'''#include "{ligand_prm}"\n''')
+                    prm_loc = False
+                handle.write(line)
+
+        # insert last line (ligand name, ligand_nmol) with correct width
+        len_last_line = len(data[-1])
+        whitespace = " "
+        temp = f"{ligand_name}{whitespace}{ligand_nmol}\n"
+        while len_last_line != len(temp):
+            whitespace += " "
+            temp = f"{ligand_name}{whitespace}{ligand_nmol}\n"
+        handle.write(temp)
+
+    o_file = _misc.realpath(top_out)
+    if verbose:
+        _misc.cprint(f"Saved extended complex topology as: {o_file}", "blue")
+
+    return o_file
 
 ################################################################################
 ################################################################################
