@@ -1054,6 +1054,35 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
 
     return o_file
 
+
+def create_positions_dat(box_vec=[30, 30, 30],
+                         nmol=range(100, 1100, 100),
+                         verbose=True):
+    """
+    Create folder with position.dat files. Each file contains <nmol> copies of
+    the box center. Use in combination with "gmx insert-molecule module"
+
+    Ex:
+    gmx insert-molecules -f "box_30.gro" -ci "../model_ATP/atp_ini.pdb"
+    -o "complex.gro" -ip "positions_dat/positions_200.dat" -dr 3 3 3 -try 1000
+
+    Args:
+        box_vec (list): box vectors
+        nmol (list/range): number of molecules to add (replaces -nmol from
+                           insert-molecule cmd)
+        verbose (bool)
+
+    Returns:
+        file_dir (str): realpath of folder containing positions.dat files
+    """
+    file_dir = _misc.mkdir("./positions_dat")
+    for n in nmol:
+        with open(f"{file_dir}/positions_{n}.dat", "w") as handle:
+            for i in range(n):
+                handle.write(f"{box_vec[0]/2}\t{box_vec[1]/2}\t{box_vec[2]/2}\t\n")
+    if verbose:
+        _misc.cprint(f"Dumped positions.dat files into folder: {file_dir}", "blue")
+    return file_dir
 ################################################################################
 ################################################################################
 ### TEMPLATES
