@@ -445,6 +445,10 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
     default = {"maxwarn": 10,
                "cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
+    if "maxwarn" in kwargs:
+        del kwargs["maxwarn"]
+    if "cprint_color" in kwargs:
+        del kwargs["cprint_color"]
     ############################################################################
     odir = _misc.realpath(_misc.dirpath(o))
     o = _misc.joinpath(odir, o)  # special case for joinpath
@@ -1055,27 +1059,33 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
     return o_file
 
 
-def create_positions_dat(box_vec=[30, 30, 30],
-                         nmol=range(100, 1100, 100),
+def create_positions_dat(box_vec=[25, 25, 25],
+                         nmol=range(100, 110, 10),
                          verbose=True):
     """
     Create folder with position.dat files. Each file contains <nmol> copies of
     the box center. Use in combination with "gmx insert-molecule module"
 
     Ex:
-    gmx insert-molecules -f "box_30.gro" -ci "../model_ATP/atp_ini.pdb"
-    -o "complex.gro" -ip "positions_dat/positions_200.dat" -dr 3 3 3 -try 1000
+    gmx insert-molecules -f "box_25.gro" -ci "../model_ATP/atp_ini.pdb"
+    -o "complex.gro" -ip "positions_dat/positions_100.dat" -dr 5 5 5 -try 100
 
     Args:
         box_vec (list): box vectors
-        nmol (list/range): number of molecules to add (replaces -nmol from
-                           insert-molecule cmd)
+        nmol (int/tuple/list/range): number of molecules to add (replaces -nmol from
+                                     insert-molecule cmd)
         verbose (bool)
 
     Returns:
         file_dir (str): realpath of folder containing positions.dat files
     """
     file_dir = _misc.mkdir("./positions_dat")
+    if isinstance(nmol, int):
+        nmol = [nmol]
+    elif isinstance(nmol, (list, tuple, range)):
+        pass
+    else:
+        raise _misc.Error("<nmol> must be int, tuple, list or range object.")
     for n in nmol:
         with open(f"{file_dir}/positions_{n}.dat", "w") as handle:
             for i in range(n):

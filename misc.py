@@ -323,8 +323,8 @@ def cwd(verbose=True):
     Returns:
         cwd (str): current working directory
     """
-    if print:
-        print("cwd:", os.getcwd())
+    if verbose:
+        cprint(f"cwd: {os.getcwd()}", "blue")
     return os.getcwd()
 
 
@@ -499,7 +499,7 @@ def cd(path, verbose=True):
     realpath = os.path.realpath(path)
     os.chdir(realpath)
     if verbose:
-        print('Changed directory to:', realpath)
+        cprint(f"Changed directory to: {realpath}", "blue")
     return realpath
 
 
@@ -560,7 +560,7 @@ def rm(path, pattern=None, verbose=True):
     for item in glob.glob(realpath):
         os.remove(item)
         if verbose:
-            print('removed file:', item)
+            cprint(f"removed file: {item}", "red")
     return
 
 
