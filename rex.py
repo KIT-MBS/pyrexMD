@@ -933,13 +933,16 @@ def prep_REX_temps(T_0=None, n_REX=None, k=None):
     print(DELTA_DELTA)
 
 
-def prep_REX_mdp(main_dir="./", n_REX=None):
+def prep_REX_mdp(main_dir="./", template="rex.mdp", n_REX=None, verbose=True):
     """
-    Prepare REX mdp.
+    Prepare REX mdp:
+    copy template and change tempereratures according to rex_temps.log
 
     Args:
         main_dir (str): main directory with rex_1, rex_2, etc.
+        template (str): template file
         n_REX (None/int): number of replica
+        verbose (bool)
     """
     with open("rex_temps.log", "r") as fin:
         for line in fin:
@@ -952,12 +955,13 @@ def prep_REX_mdp(main_dir="./", n_REX=None):
         n_REX = int(input("Enter n_REX:"))
     else:
         print("Enter n_REX:", n_REX)
-    print("Using rex.mdp as template and changing temperatures according to rex_temps.log...")
+    print(f"Using {template} as template and changing temperatures according to rex_temps.log...")
 
     for i in range(1, n_REX+1):
         file_path = _misc.mkdir("rex_" + str(i))
-        with open(_misc.joinpath(main_dir, "rex.mdp"), "r") as fin, open(file_path + "/rex.mdp", "w") as fout:
-            print("Saved mdp file as: " + file_path + "/rex.mdp")
+        with open(_misc.joinpath(main_dir, template), "r") as fin, open(file_path + f"/{template}", "w") as fout:
+            if verbose:
+                print("Saved mdp file as: " + file_path + f"/{template}")
 
             for line in fin:
                 if "ref_t" in line:
@@ -970,15 +974,29 @@ def prep_REX_mdp(main_dir="./", n_REX=None):
     return
 
 
-def prep_REX_tpr(main_dir="./", n_REX=None, verbose=False):
+def prep_REX_tpr(main_dir="./", n_REX=None, verbose=False, **kwargs):
     """
-    Prepare REX mdp.
+    Prepare REX tpr.
 
     Args:
         main_dir (str): main directory with rex_1, rex_2, etc.
         n_REX (None/int): number of replica
         verbose (bool)
+
+    Kwargs:
+        parameter of gmx.grompp(f,o,c,r,p)
+        f (str)
+        o (str)
+        c (str)
+        p (str)
+
     """
+    default = {"f": "rex.mdp",
+               "o": "rex.tpr",
+               "c": "em.gro",
+               "p": "topol_mod.top"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     rex_dirs = get_REX_DIRS(main_dir)
 
     if n_REX is None:
@@ -989,8 +1007,8 @@ def prep_REX_tpr(main_dir="./", n_REX=None, verbose=False):
 
     for ndx, rex_dir in enumerate(rex_dirs[:n_REX], start=1):
         _misc.cprint("#######################################################################################")
-        _gmx.grompp(f=f"{rex_dir}/rex.mdp", o=f"{rex_dir}/rex.tpr",
-                    c=f"{rex_dir}/em.gro", p=f"{rex_dir}/topol_mod.top",
+        _gmx.grompp(f=f"{rex_dir}/{cfg.f}", o=f"{rex_dir}/{cfg.o}",
+                    c=f"{rex_dir}/{cfg.c}", p=f"{rex_dir}/{cfg.p}",
                     verbose=verbose)
 
     _misc.cprint(f"Finished REX tpr creation for REX DIRS (i=1..{n_REX}).", "green")
