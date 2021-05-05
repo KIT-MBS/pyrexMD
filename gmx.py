@@ -408,7 +408,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
 
     # save message
     o_file = _misc.realpath(o)
-    _misc.cprint("Saved file as: {o_file}", cfg.cprint_color)
+    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
 
     #clean up
     clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
