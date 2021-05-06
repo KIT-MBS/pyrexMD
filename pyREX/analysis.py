@@ -3,7 +3,7 @@
 #       if universe: use universe
 # TODO: class Universe(object) -> Inherit mda.Universe class and make ana.functions accessible as properties.
 
-import myPKG.misc as _misc
+import pyREX.misc as _misc
 from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align

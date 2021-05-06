@@ -2,7 +2,7 @@ import os
 import glob
 import gromacs
 import MDAnalysis as mda
-import myPKG.misc as _misc
+import pyREX.misc as _misc
 import numpy as np
 import logging
 logging.getLogger('gromacs.config').disabled = True

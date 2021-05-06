@@ -1,10 +1,10 @@
-from __future__ import division, print_function
+#from __future__ import division, print_function
 import numpy as np
 import heat as ht
 import h5py
-import myPKG.misc as _misc
-from myPKG.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
-from myPKG.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+import pyREX.misc as _misc
+from pyREX.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+from pyREX.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):

@@ -1,8 +1,8 @@
-from __future__ import division, print_function
+#from __future__ import division, print_function
 from builtins import next
 from tqdm.notebook import tqdm
-import myPKG.misc as _misc
-import myPKG.gmx as _gmx
+import pyREX.misc as _misc
+import pyREX.gmx as _gmx
 import numpy as np
 import glob
 

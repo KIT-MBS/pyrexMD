@@ -1,7 +1,7 @@
 from tqdm.notebook import tqdm
-import myPKG.misc as _misc
-import myPKG.analysis as _ana
-from myPKG.analysis import get_Distance_Matrices
+import pyREX.misc as _misc
+import pyREX.analysis as _ana
+from pyREX.analysis import get_Distance_Matrices
 import numpy as np
 import matplotlib.pyplot as plt
 import os
