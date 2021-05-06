@@ -3,7 +3,7 @@ import pyREX.core as core
 import pyREX.analysis as ana
 
 
-version = 1.0
+version = 0.8
 
 
 def init():
