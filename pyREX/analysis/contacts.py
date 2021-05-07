@@ -4,6 +4,13 @@
 # @Last modified by:   arthur
 # @Last modified time: 07.05.2021
 
+# TODO: test if all functions work properly, then remove duplicate from analysis.py
+
+
+################################################################################
+################################################################################
+# Native Contacts & Bias Contacts Analyses
+
 
 def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True):
     """
