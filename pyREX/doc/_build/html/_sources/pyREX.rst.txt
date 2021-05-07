@@ -8,25 +8,10 @@ Subpackages
    :maxdepth: 4
 
    pyREX.analysis
+   pyREX.decoy
 
 Submodules
 ----------
-
-pyREX.abinitio module
----------------------
-
-.. automodule:: pyREX.abinitio
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyREX.cluster module
---------------------
-
-.. automodule:: pyREX.cluster
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 pyREX.core module
 -----------------

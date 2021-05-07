@@ -7,8 +7,8 @@
 
 from tqdm.notebook import tqdm
 import pyREX.misc as _misc
-import pyREX.analysis as _ana
-from pyREX.analysis import get_Distance_Matrices
+import pyREX.analysis.analysis as _ana
+from pyREX.analysis.analysis import get_Distance_Matrices
 import numpy as np
 import matplotlib.pyplot as plt
 import os

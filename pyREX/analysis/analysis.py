@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: analysis.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 # TODO: instead of creating new universes in each function: check if input is str or universe
 #       if str: create new universe
 #       if universe: use universe

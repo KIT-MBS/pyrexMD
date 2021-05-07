@@ -10,8 +10,8 @@ import numpy as np
 import heat as ht
 import h5py
 import pyREX.misc as _misc
-from pyREX.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
-from pyREX.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+from pyREX.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+from pyREX.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
