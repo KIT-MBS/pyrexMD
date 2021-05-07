@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: cluster.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 #from __future__ import division, print_function
 import numpy as np
 import heat as ht

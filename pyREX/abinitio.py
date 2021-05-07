@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: abinitio.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 from tqdm.notebook import tqdm
 import pyREX.misc as _misc
 import pyREX.analysis as _ana

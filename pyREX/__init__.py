@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: __init__.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 import pyREX.misc as misc
 import pyREX.core as core
 import pyREX.analysis as ana

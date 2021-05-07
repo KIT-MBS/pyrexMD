@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: core.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 # core module
 from builtins import super
 from IPython.display import display

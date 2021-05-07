@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: gmx.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 import os
 import glob
 import gromacs

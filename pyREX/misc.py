@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   17.04.2021
+# @Filename: misc.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 # miscellaneous
 import PIL  # pillow/PIL (Pyhon Imaging Library)
 import pdf2image
@@ -1104,7 +1111,7 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
                 str, int, float
                 np.int_, np.int32, np.int64
                 np.float_, np.float32, np.float64
-                np.complex_, np.complex64, np.comples128
+                np.complex_, np.complex64, np.complex128
 
     Returns:
         if usecols==int:

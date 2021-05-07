@@ -1,3 +1,10 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   05.05.2021
+# @Filename: rex.py
+# @Last modified by:   arthur
+# @Last modified time: 07.05.2021
+
+
 #from __future__ import division, print_function
 from builtins import next
 from tqdm.notebook import tqdm
@@ -553,7 +560,7 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
             elif "CG2" in NAME[_temp_min:_temp_max]:
                 _temp_index = NAME[_temp_min:_temp_max].index('CG2')
                 CG1_index = _temp_min + _temp_index
-            elif "C"in NAME[_temp_min:_temp_max]:
+            elif "C" in NAME[_temp_min:_temp_max]:
                 _temp_index = NAME[_temp_min:_temp_max].index('C')
                 CG1_index = _temp_min + _temp_index
 
