@@ -1,0 +1,17 @@
+@Author: Arthur Voronin <arthur>
+@Date:   07.05.2021
+@Filename: 1vii_nonnative_contacts.txt
+@Last modified by:   arthur
+@Last modified time: 07.05.2021
+
+#some random nonnative contacts
+15 16
+15 21
+16 21
+17 22
+18 31
+18 32
+18 33
+21 34
+22 33
+22 29

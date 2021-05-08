@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 07.05.2021
+# @Last modified time: 08.05.2021
 
 
 # miscellaneous
@@ -1092,7 +1092,7 @@ def autodetect_header(fin):
     return header_rows
 
 
-def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
+def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=float):
     """
     Read file and return tuple of np.arrays with data for specified columns.
 
@@ -1108,7 +1108,7 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=np.float_):
             (list/tuple of dtype cls): specify dtype of each data column
 
             valid dtypes:
-                str, int, float
+                str, int, float, complex
                 np.int_, np.int32, np.int64
                 np.float_, np.float32, np.float64
                 np.complex_, np.complex64, np.complex128

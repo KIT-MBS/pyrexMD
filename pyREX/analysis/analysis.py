@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 07.05.2021
+# @Last modified time: 08.05.2021
 
 
 # TODO: instead of creating new universes in each function: check if input is str or universe
@@ -25,7 +25,6 @@ import glob
 import logging
 import warnings
 logging.getLogger('matplotlib.font_manager').disabled = True
-warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 
 
 # global update for plots
@@ -339,17 +338,17 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         verbose (bool): show progress bar
 
     Kwargs:
-        dtype (dtype): np.float64 (default), np.float32, etc
+        dtype (dtype): float (default)
         aliases for sss items:
             start (None/int): start frame
             stop (None/int): stop frame
             step (None/int): step size
 
     Returns:
-        DM (np.array): array of distance matrices
+        DM (array): array of distance matrices
     """
     ############################################################################
-    default = {"dtype": np.float64,
+    default = {"dtype": float,
                "start": sss[0],
                "stop": sss[1],
                "step": sss[2]

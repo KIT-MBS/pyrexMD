@@ -1,9 +1,15 @@
+# @Author: Arthur Voronin <arthur>
+# @Date:   06.05.2021
+# @Filename: dihedrals.py
+# @Last modified by:   arthur
+# @Last modified time: 08.05.2021
+
+
 import pyREX.misc as _misc
 from MDAnalysis.analysis import dihedrals
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore", message="Cannot determine phi and psi angles for the first")
-warnings.filterwarnings("ignore", message="`np.bool` is a deprecated")
 warnings.filterwarnings("ignore", message="All ALA, CYS, GLY, PRO, SER, THR, and VAL residues")
 
 
