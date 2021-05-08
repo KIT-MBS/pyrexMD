@@ -1,11 +1,17 @@
 # @Author: Arthur Voronin <arthur>
 # @Date:   07.05.2021
-# @Filename: GDT.py
+# @Filename: gdt.py
 # @Last modified by:   arthur
 # @Last modified time: 08.05.2021
 
-# TODO: test if all functions work properly, then remove duplicate from analysis.py
 
+import pyREX.misc as _misc
+import pyREX.analysis.analysis as _ana
+import MDAnalysis as mda
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from tqdm.notebook import tqdm
 
 ################################################################################
 ################################################################################
@@ -54,7 +60,7 @@ def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein an
     #################################################
 
     # get_Pair_Distances function
-    RMSD = alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
+    RMSD = _ana.alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
     _resids_mobile, _resids_ref, PAIR_DISTANCES = mda.analysis.distances.dist(mobile_atoms, ref_atoms)
     return(PAIR_DISTANCES, RMSD, _resids_mobile, _resids_ref)
 
@@ -228,8 +234,8 @@ def GDT_match_cutoff_dim(GDT_percent, GDT_cutoff):
     Used in combination with analysis.PLOT() function to plot multiple curves on one canvas.
 
     Args:
-        GDT_percent (list/array): output of analysis.GDT()
-        GDT_cutoff  (list/array): output of analysis.GDT()
+        GDT_percent (list/array): output of gdt.GDT()
+        GDT_cutoff  (list/array): output of gdt.GDT()
 
     Returns:
         GDT_cutoff (list/array): GDT_cutoff with same dimension as GDT_percent
@@ -243,12 +249,16 @@ def plot_GDT(GDT_percent, GDT_cutoff, **kwargs):
     Create a GDT_PLOT.
 
     Args:
-        GDT_percent (list/array): output of analysis.GDT()
-        GDT_cutoff (list/array): output of analysis.GDT()
+        GDT_percent (list/array): output of gdt.GDT()
+        GDT_cutoff (list/array): output of gdt.GDT()
         title (str)
 
     Kwargs:
         # see args of misc.figure()
+
+    Returns:
+        fig (matplotlib.figure.Figure)
+        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"figsize": (7.5, 5),
@@ -257,9 +267,9 @@ def plot_GDT(GDT_percent, GDT_cutoff, **kwargs):
     cfg = _misc.CONFIG(default, **kwargs)
 
     plt_cutoff = GDT_match_cutoff_dim(GDT_percent, GDT_cutoff)
-    fig, ax = PLOT(GDT_percent, plt_cutoff,
-                   xlabel="Percent of residues", ylabel=r"Distance Cutoff ($\AA$)",
-                   xlim=[0, 100], ylim=[0, 10], **cfg)
+    fig, ax = _ana.PLOT(GDT_percent, plt_cutoff,
+                        xlabel="Percent of residues", ylabel=r"Distance Cutoff ($\AA$)",
+                        xlim=[0, 100], ylim=[0, 10], **cfg)
     return(fig, ax)
 
 
@@ -273,7 +283,7 @@ def get_GDT_TS(GDT_percent):
     where GDT_Px denotes the percentage of residues with distance cutoff <= x Angstrom
 
     Args:
-        GDT_percent (list/array): output of analysis.GDT()
+        GDT_percent (list/array): output of gdt.GDT()
 
     Returns:
         GDT_TS (array)
@@ -378,8 +388,8 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
     Example:
         u = mda.Universe(<top>, <traj>)
         r = mda.universe(<ref> )
-        GDT_cutoff, GDT_percent, GDT_resids, FRAME = analysis.GDT(u, r)
-        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = analysis.GDT_rank_scores(GDT_percent, ranking_order="GDT_TS")
+        GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(u, r)
+        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_TS")
     """
     GDT_TS = get_GDT_TS(GDT_percent)
     GDT_HA = get_GDT_HA(GDT_percent)
@@ -394,7 +404,7 @@ def GDT_rank_percent(GDT_percent, verbose=False):
     (Higher sum means better accuracy during protein alignment)
 
     Args:
-        GDT_percent (list): output of analysis.GDT()
+        GDT_percent (list): output of gdt.GDT()
         verbose (bool)
 
     Returns:
@@ -516,11 +526,11 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
 
     Example:
         # obtain data
-        GDT = analysis.GDT(u, r, sss=[None,None,None])
+        GDT = gdt.GDT(u, r, sss=[None,None,None])
         GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT
 
         # rank data
-        SCORES = analysis.GDT_rank_scores(GDT_percent, ranking_order="GDT_HA")
+        SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_HA")
         GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
 
         # edit text box positions of labels "Frame", "TS", "HA"
@@ -529,7 +539,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
                         "text_pos_HA": [-1.9, -0.3]}
 
         # plot
-        analysis.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)
+        gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"figsize": (7.5, 6),

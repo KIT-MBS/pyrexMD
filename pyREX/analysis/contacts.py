@@ -4,8 +4,6 @@
 # @Last modified by:   arthur
 # @Last modified time: 08.05.2021
 
-# TODO: test if all functions work properly, then remove duplicate from analysis.py
-
 
 ################################################################################
 ################################################################################
