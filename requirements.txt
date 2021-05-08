@@ -1,19 +1,26 @@
+@Author: Arthur Voronin <arthur>
+@Date:   17.04.2021
+@Filename: requirements.txt
+@Last modified by:   arthur
+@Last modified time: 08.05.2021
+
 #nglview==2.0 required
-biopython==1.73
-duecredit==0.7.0
-future==0.17.1
+
+biopython==1.78
+duecredit==0.9.1
+future=0.18.2
 GromacsWrapper==0.8.0
 h5py==2.10.0
 heat==1.0.0
 ipywidgets==7.4.2
 jupyter==1.0.0
-MDAnalysis==1.0.0
+MDAnalysis==1.1.1
 nglview==2.0
 numpy==1.18.2
 pdf2image==1.10.0
-Pillow==7.2.0
-pyperclip==1.7.0
-seaborn==0.10.1
+Pillow==8.2.0
+pyperclip==1.8.2
+seaborn==0.11.1
 termcolor==1.1.0
-tqdm==4.49.0
-widgetsnbextension==3.4.2
+tqdm==4.60.0
+widgetsnbextension==3.5.1

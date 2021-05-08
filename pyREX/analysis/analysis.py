@@ -5,11 +5,6 @@
 # @Last modified time: 08.05.2021
 
 
-# TODO: instead of creating new universes in each function: check if input is str or universe
-#       if str: create new universe
-#       if universe: use universe
-# TODO: class Universe(object) -> Inherit mda.Universe class and make ana.functions accessible as properties.
-
 import pyREX.misc as _misc
 from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide
