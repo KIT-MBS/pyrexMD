@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 08.05.2021
+# @Last modified time: 09.05.2021
 
 
 import pyREX.misc as _misc
@@ -398,13 +398,17 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
     return(GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked)
 
 
-def GDT_rank_percent(GDT_percent, verbose=False):
+def GDT_rank_percent(GDT_percent, norm=True, verbose=False):
     """
     Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.
     (Higher sum means better accuracy during protein alignment)
 
+    (Ranked) Psum can be view analogous to GDT scores but using all cutoffs
+    instead of specific ones
+
     Args:
         GDT_percent (list): output of gdt.GDT()
+        norm (bool): norms Psum during sum of GDT_Px
         verbose (bool)
 
     Returns:
@@ -413,7 +417,10 @@ def GDT_rank_percent(GDT_percent, verbose=False):
     """
     Psum = []
     for item in GDT_percent:
-        Psum.append(sum(item))
+        if norm:
+            Psum.append(sum(item)/len(item))
+        else:
+            Psum.append(sum(item))
     RANKED_Psum, RANKED_Psum_ndx = _misc.get_ranked_array(Psum, verbose=verbose)
 
     return(RANKED_Psum, RANKED_Psum_ndx)
@@ -429,6 +436,10 @@ def get_continuous_segments(array):
 
     Returns:
         SEGMENTS (list): list of continuous segments
+
+    Example:
+        >> gdt.get_continuous_segments([1,2,3,22,23,50,51,52])
+        [[1, 2, 3], [22, 23], [50, 51, 52]]
     """
     SEGMENTS = []
     temp = []

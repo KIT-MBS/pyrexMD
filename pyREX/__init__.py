@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 08.05.2021
+# @Last modified time: 09.05.2021
 
 
 import pyREX.misc as misc
@@ -21,6 +21,13 @@ warnings.filterwarnings("ignore", message="Found no information for attr:")
 version = 0.8
 
 
+def Universe(top, traj=None, tpr_resid_from_one=True, **kwargs):
+    """
+    returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, **kwargs)
+    """
+    return mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, **kwargs)
+
+
 def init():
     """
     Init important modules of pyREX and other packages
@@ -37,7 +44,7 @@ import seaborn as sns
 import MDAnalysis as mda
 import pyREX.misc as misc
 import pyREX.core as core
-import pyREX.analysis.analsis as ana
+import pyREX.analysis.analysis as ana
 #import pyREX.analysis.contacts as con
 #import pyREX.analysis.dihedrals as dih
 #import pyREX.analysis.GDT as gdt

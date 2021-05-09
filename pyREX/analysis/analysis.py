@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 08.05.2021
+# @Last modified time: 09.05.2021
 
 
 import pyREX.misc as _misc
@@ -249,6 +249,65 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
     return rmsf
 
 
+def _HELP_sss_None2int(obj, cfg):
+    """
+    Note: this function is (probably) required when a custom function uses
+    either a MDA universe or (distance)matrix and a misc.CONFIG class with
+    the keys "sss", "start", "stop", "step".
+
+    Reason:
+        slicing: aList[None:None:None] is equal to aList[::]
+        get item: aList[None] does not exist
+
+    Converts None entries of the config keys to integers:
+        sss = [None, None, None] -> [0, max frame of MDA universe, 1]
+        start = None ->  0
+        stop = None ->  max frame of u
+        step = None ->  1
+
+    Args:
+        obj (MDA universe / matrix): MDA universe or distane(matrix)
+        cfg (misc.CONFIG class)
+
+    Returns:
+        cfg (misc.CONFIG class)
+    """
+    if isinstance(obj, mda.core.universe.Universe):
+        if "sss" in cfg.keys():
+            if cfg.sss[0] == None:
+                cfg.sss[0] = 0
+            if cfg.sss[1] == None:
+                cfg.sss[1] = obj.trajectory.n_frames
+            if cfg.sss[2] == None:
+                cfg.sss[2] = 1
+
+        if "start" in cfg.keys() or "stop" in cfg.keys() or "step" in cfg.keys():
+            if cfg.start == None:
+                cfg.start = 0
+            if cfg.stop == None:
+                cfg.stop = obj.trajectory.n_frames
+            if cfg.step == None:
+                cfg.step = 1
+
+    elif isinstance(obj, (np.ndarray, list)):
+        if "sss" in cfg.keys():
+            if cfg.sss[0] == None:
+                cfg.sss[0] = 0
+            if cfg.sss[1] == None:
+                cfg.sss[1] = len(obj)
+            if cfg.sss[2] == None:
+                cfg.sss[2] = 1
+
+        if "start" in cfg.keys() or "stop" in cfg.keys() or "step" in cfg.keys():
+            if cfg.start == None:
+                cfg.start = 0
+            if cfg.stop == None:
+                cfg.stop = len(obj)
+            if cfg.step == None:
+                cfg.step = 1
+    return cfg
+
+
 def get_Distance_Matrices(mobile, sss=[None, None, None],
                           sel="protein and name CA", flatten=False, verbose=True,
                           **kwargs):
@@ -444,15 +503,15 @@ def norm_ids(u, info='', verbose=True):
         verbose (bool)
 
     Example:
-        ref = mda.Universe(<top>)
-        print(ref.atoms.ids)
-        >> [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
+        >> ref = mda.Universe(<top>)
+        >> print(ref.atoms.ids)
+        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
 
-        norm_ids(ref, 'reference')
-        >> Norming atom ids of reference...
+        >> norm_ids(ref, 'reference')
+        Norming atom ids of reference...
 
-        print(ref.atoms.ids)
-        >> [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
+        >> print(ref.atoms.ids)
+        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
     def __HELP_print(info='', verbose=True):
         if verbose:
@@ -487,15 +546,15 @@ def norm_resids(u, info='', verbose=True):
             - 'topology'
 
     Example:
-        ref = mda.Universe(<top>)
-        print(ref.residues.resids)
-        >> [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
+        >> ref = mda.Universe(<top>)
+        >> print(ref.residues.resids)
+        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
 
-        norm_resids(u, 'reference')
-        >> Norming resids of reference...
+        >> norm_resids(u, 'reference')
+        Norming resids of reference...
 
-        print(ref.residues.resids)
-        >> [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
+        >> print(ref.residues.resids)
+        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
     def __HELP_print(info='', verbose=True):
         if verbose:
@@ -619,17 +678,17 @@ def true_select_atoms(u, sel='protein', ignh=True, norm=True):
     u = mda.Universe(<top>)
 
     # select_atoms() behaviour
-    a = u.select_atoms("protein and type C")
-    a
-    >> <AtomGroup with 72 atoms>
-    a.residues.atoms
-    >> <AtomGroup with 964 atoms>
+    >> a = u.select_atoms("protein and type C")
+    >> a
+    <AtomGroup with 72 atoms>
+    >> a.residues.atoms
+    <AtomGroup with 964 atoms>
 
     # true_select_atoms() behaviour
-    a = ana.true_select_atoms(u, sel="protein and type C")
-    a
-    >> <Universe with 72 atoms>
-    a.residue.atoms
+    >> a = ana.true_select_atoms(u, sel="protein and type C")
+    >> a
+    <Universe with 72 atoms>
+    >> a.residue.atoms
     <AtomGroup with 72 atoms>
     """
     # case 1: input is PDB ID -> fetch online
