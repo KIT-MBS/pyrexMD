@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 09.05.2021
+# @Last modified time: 10.05.2021
 
 
 import pyREX.misc as _misc
@@ -391,7 +391,7 @@ def get_resids_shift(mobile, ref):
         shift (int): shift value of ref residues to match mobile residues
     """
     # compare resnames to get start_ndx
-    start_ndx = _misc.get_sub_array_start_ndx(mobile.residues.resnames, ref.residues.resnames)
+    start_ndx = _misc.get_subarray_start_ndx(mobile.residues.resnames, ref.residues.resnames)
 
     # start_ndx is static, but shift value should be either start_ndx or 0 (after previous shift)
     # test if shift already performed
@@ -1048,7 +1048,7 @@ def plot_RMSD(RMSD_file, sss=[None, None, 10], verbose=None, save_as="", **kwarg
     # apply cutoff and force same dimensions by tracking indices
     if cfg.cut_min is not None or cfg.cut_max is not None:
         RMSD, RMSD_ndx = _misc.get_cutoff_array(RMSD, cfg.cut_min, cfg.cut_max)
-        TIME = _misc.get_sub_array(TIME, RMSD_ndx)
+        TIME = _misc.get_subarray(TIME, RMSD_ndx)
 
     # plot
     fig, ax = _misc.figure(**cfg)

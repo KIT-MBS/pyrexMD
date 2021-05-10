@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 08.05.2021
+# @Last modified time: 10.05.2021
 
 
 # miscellaneous
@@ -882,10 +882,10 @@ def get_substrings(string, seperators=["/", "_", ".", ":", ";", " "], reverse=Fa
         substrings (list): list of substrings
 
     Example:
-        get_substrings("split/this_string.into:parts")
-        >> ['split', 'this', 'string', 'into', 'parts']
-        get_substrings("split/this_string.into:parts", reverse=True)
-        >> ['parts', 'into', 'string', 'this', 'split']
+        >> get_substrings("split/this_string.into:parts")
+        ['split', 'this', 'string', 'into', 'parts']
+        >> get_substrings("split/this_string.into:parts", reverse=True)
+        ['parts', 'into', 'string', 'this', 'split']
     """
     for sep in seperators:
         string = string.replace(sep, " ")
@@ -983,10 +983,10 @@ def get_precision(number):
         precission (int)
 
     Example:
-        get_precission(5.00000)
-        >> 1
-        get_precission(5.12300)
-        >> 3
+        >> get_precission(5.00000)
+        1
+        >> get_precission(5.12300)
+        3
     """
     if type(number) is str:
         number = number.rstrip("0")
@@ -1006,8 +1006,8 @@ def get_base(str_):
         base (str): base of str_
 
     Example:
-        get_base("random_plot.png")
-        >> "random_plot"
+        >>get_base("random_plot.png")
+        "random_plot"
     """
     str_ = str(str_).rsplit("/", 1)[-1]
     base = str_.rsplit(".", 1)[0]
@@ -1025,44 +1025,41 @@ def get_extension(str_):
         ext (str): extension of str_
 
     Example:
-        get_extension("random_plot.png")
-        >> ".png"
+        >> get_extension("random_plot.png")
+        ".png"
     """
     str_ = str(str_).rsplit("/", 1)[-1]
     ext = "."+str_.rsplit(".", 1)[-1]
     return ext
 
 
-def append_str(str1, str2, sep):
+def insert_str(str1, str2, sep, loc="after"):
     """
+    Insert str2 in str1.
+
     Args:
         str1 (str): base string
         str2 (str): append string
         sep (str): seperator
+        loc (str): insert location: 'before' or 'after' first seperator in str1
 
     Returns:
         str_ (str): new string
     """
-    str_ = str1.split(sep)[0] + sep + str2 + str1.split(sep)[1]
-    return str_
-
-
-def prepend_str(str1, str2, sep):
-    """
-    Args:
-        str1 (str): base string
-        str2 (str): append string
-        sep (str): seperator
-
-    Returns:
-        str_ (str): new string
-    """
-    str_ = str1.split(sep)[0] + str2 + sep + str1.split(sep)[1]
+    if loc == "after":
+        str_ = str1.split(sep)[0] + sep + str2 + f"{sep}".join(str1.split(sep)[1:])
+    elif loc == "before":
+        str_ = str1.split(sep)[0] + str2 + sep + f"{sep}".join(str1.split(sep)[1:])
+    else:
+        raise _misc.Error("loc argument must be either 'before' or 'after'.")
     return str_
 
 
 def autodetect_header(fin):
     """
+    Autodetects header. Header ends when line start with one of following characters:
+    {'\t', '\n', ' ', ',', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
+
     Args:
         fin (str): input file (path)
     Returns:
@@ -1390,7 +1387,8 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, ve
 
 def get_slice_indices(list1, list2):
     """
-    Get slice indices of two lists (mainlist and sublist) where sublist is a slice of mainlist, e.g:
+    Get slice indices of two lists (mainlist and sublist) where sublist is a
+    slice of mainlist, e.g:
     sublist = mainlist[slice_ndx1:slice_ndx2]
 
     Args:
@@ -1408,15 +1406,18 @@ def get_slice_indices(list1, list2):
         mainlist = list2
         sublist = list1
 
-    slice_ndx1 = 0
-    for i in range(len(sublist)):
-        if sublist[i] != mainlist[i]:
-            mainlist = np.append(mainlist[1:], mainlist[:1])
-            slice_ndx1 += 1
-        else:
-            break
-    slice_ndx2 = slice_ndx1 + len(sublist)
-    return (slice_ndx1, slice_ndx2)
+    # find potential starting indices
+    test = np.array(mainlist)
+    test_ndx = np.where(test == sublist[0])[0]
+    print(test_ndx)
+
+    for ndx in test_ndx:
+        if sublist == mainlist[ndx:ndx+len(sublist)]:
+            slice_ndx1 = ndx
+            slice_ndx2 = ndx+len(sublist)
+            return (slice_ndx1, slice_ndx2)
+    raise Error("There is no sublist between list1 and list2. Slicing is not possible.")
+    return
 
 
 def get_cutoff_array(array, cut_min=None, cut_max=None):
@@ -1462,27 +1463,27 @@ def get_cutoff_array(array, cut_min=None, cut_max=None):
     return (cutoff_array, cutoff_array_ndx)
 
 
-def get_sub_array_start_ndx(array, sub_array):
+def get_subarray_start_ndx(array, subarray):
     """
-    Returns start index of <array> at which <sub_array> matches.
+    Returns start index of <array> at which <subarray> matches.
 
     Args:
         array (list/array)
-        sub_array (list/arr)
+        subarray (list/arr)
 
     Returns:
         start_ndx (None/int):
             None: arrays do not match
-            int: starting index of <array> at which <sub_array> matches
+            int: starting index of <array> at which <subarray> matches
     """
-    if len(array) < len(sub_array):
-        raise ValueError("get_sub_array_start(array, sub_array): lenght(array) < length(sub_array).")
+    if len(array) < len(subarray):
+        raise ValueError("get_subarray_start(array, subarray): lenght(array) < length(subarray).")
     if isinstance(array, np.ndarray):
         array = array.tolist()
-    if isinstance(sub_array, np.ndarray):
-        sub_array = sub_array.tolist()
+    if isinstance(subarray, np.ndarray):
+        subarray = subarray.tolist()
 
-    ndx_list = [x for x in range(len(array)) if array[x:x+len(sub_array)] == sub_array]
+    ndx_list = [x for x in range(len(array)) if array[x:x+len(subarray)] == subarray]
     if len(ndx_list) == 0:
         start_ndx = None
     else:
@@ -1490,7 +1491,7 @@ def get_sub_array_start_ndx(array, sub_array):
     return start_ndx
 
 
-def get_sub_array(array, ndx_sel):
+def get_subarray(array, ndx_sel):
     """
     Returns sub array of <array> for items with indices <ndx_sel>.
 
@@ -1499,12 +1500,12 @@ def get_sub_array(array, ndx_sel):
         ndx_sel (array/list): index selection
 
     Returns:
-        sub_array (array): sub array of array
+        subarray (array): sub array of array
     """
-    sub_array = []
+    subarray = []
     for ndx in ndx_sel:
-        sub_array.append(array[ndx])
-    return np.array(sub_array)
+        subarray.append(array[ndx])
+    return np.array(subarray)
 
 
 def get_sorted_array(array):
@@ -1519,9 +1520,9 @@ def get_sorted_array(array):
         SORTED_NDX (array)
 
     Example:
-        A = np.array([1, 3, 2, 4])
-        get_sorted_array(A)
-        >> (array([1, 2, 3, 4]), array([0, 2, 1, 3]))
+        >> A = np.array([1, 3, 2, 4])
+        >> get_sorted_array(A)
+        (array([1, 2, 3, 4]), array([0, 2, 1, 3]))
     """
     if not isinstance(array, np.ndarray):
         array = np.array(array)
@@ -1557,9 +1558,9 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
         RANKED_NDX (array)
 
     Example:
-        A = np.array([1, 3, 2, 4])
-        get_ranked_array(A, verbose=False)
-        >> > (array([4, 3, 2, 1]), array([3, 1, 2, 0]))
+        >> A = np.array([1, 3, 2, 4])
+        >> get_ranked_array(A, verbose=False)
+        (array([4, 3, 2, 1]), array([3, 1, 2, 0]))
     """
     if not isinstance(array, np.ndarray):
         array = np.array(array)

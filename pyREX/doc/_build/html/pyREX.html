@@ -40,10 +40,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pyREX.analysis.html">pyREX.analysis package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis.GDT">pyREX.analysis.GDT module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis.analysis">pyREX.analysis.analysis module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis.contacts">pyREX.analysis.contacts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis.dihedrals">pyREX.analysis.dihedrals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis.gdt">pyREX.analysis.gdt module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyREX.analysis.html#module-pyREX.analysis">Module contents</a></li>
 </ul>
 </li>
@@ -1160,26 +1160,6 @@ cbar_orientation/orientation (str): “vertical”, “horizontal”</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyREX.misc.append_str">
-<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">append_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.append_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>str1</strong> (<em>str</em>) – base string</p></li>
-<li><p><strong>str2</strong> (<em>str</em>) – append string</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – seperator</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>new string</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a href="#id17"><span class="problematic" id="id18">str_</span></a> (str)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="pyREX.misc.apply_matplotlib_rc_settings">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">apply_matplotlib_rc_settings</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.apply_matplotlib_rc_settings" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
@@ -1263,14 +1243,19 @@ autoapply_limits(fig, margin=0.05)
 <dl class="py function">
 <dt id="pyREX.misc.autodetect_header">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">autodetect_header</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.autodetect_header" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fin</strong> (<em>str</em>) – input file (path)</p>
+<dd><blockquote>
+<div><p>Autodetects header. Header ends when line start with one of following characters:
+{‘  ‘, ‘</p>
+</div></blockquote>
+<p>‘, ‘ ‘, ‘,’, ‘.’, ‘0’, ‘1’, ‘2’, ‘3’, ‘4’, ‘5’, ‘6’, ‘7’, ‘8’, ‘9’}</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><p>fin (str): input file (path)</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>header_rows (int)</p>
+<dt>Returns:</dt><dd><p>header_rows (int)</p>
 </dd>
 </dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -1607,8 +1592,8 @@ if ref path contains multiple unique alnum strings with length 4:</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>get_base(“random_plot.png”)
-&gt;&gt; “random_plot”</p>
+<p>&gt;&gt;get_base(“random_plot.png”)
+“random_plot”</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1654,8 +1639,8 @@ print(cutoff_array_ndx)
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>get_extension(“random_plot.png”)
-&gt;&gt; “.png”</p>
+<p>&gt;&gt; get_extension(“random_plot.png”)
+“.png”</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1735,10 +1720,10 @@ Get value (or score) below which p% of the observations may be found.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>get_precission(5.00000)
-&gt;&gt; 1
-get_precission(5.12300)
-&gt;&gt; 3</p>
+<p>&gt;&gt; get_precission(5.00000)
+1
+&gt;&gt; get_precission(5.12300)
+3</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1801,15 +1786,16 @@ RANKED_NDX (array)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>A = np.array([1, 3, 2, 4])
-get_ranked_array(A, verbose=False)
-&gt;&gt; &gt; (array([4, 3, 2, 1]), array([3, 1, 2, 0]))</p>
+<p>&gt;&gt; A = np.array([1, 3, 2, 4])
+&gt;&gt; get_ranked_array(A, verbose=False)
+(array([4, 3, 2, 1]), array([3, 1, 2, 0]))</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pyREX.misc.get_slice_indices">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">get_slice_indices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.get_slice_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get slice indices of two lists (mainlist and sublist) where sublist is a slice of mainlist, e.g:
+<dd><p>Get slice indices of two lists (mainlist and sublist) where sublist is a
+slice of mainlist, e.g:
 sublist = mainlist[slice_ndx1:slice_ndx2]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1842,14 +1828,14 @@ SORTED_NDX (array)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>A = np.array([1, 3, 2, 4])
-get_sorted_array(A)
-&gt;&gt; (array([1, 2, 3, 4]), array([0, 2, 1, 3]))</p>
+<p>&gt;&gt; A = np.array([1, 3, 2, 4])
+&gt;&gt; get_sorted_array(A)
+(array([1, 2, 3, 4]), array([0, 2, 1, 3]))</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyREX.misc.get_sub_array">
-<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">get_sub_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_sel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.get_sub_array" title="Permalink to this definition">¶</a></dt>
+<dt id="pyREX.misc.get_subarray">
+<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">get_subarray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_sel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.get_subarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns sub array of &lt;array&gt; for items with indices &lt;ndx_sel&gt;.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1862,25 +1848,25 @@ get_sorted_array(A)
 <dd class="field-even"><p>sub array of array</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>sub_array (array)</p>
+<dd class="field-odd"><p>subarray (array)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyREX.misc.get_sub_array_start_ndx">
-<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">get_sub_array_start_ndx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.get_sub_array_start_ndx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns start index of &lt;array&gt; at which &lt;sub_array&gt; matches.</p>
+<dt id="pyREX.misc.get_subarray_start_ndx">
+<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">get_subarray_start_ndx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.get_subarray_start_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns start index of &lt;array&gt; at which &lt;subarray&gt; matches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>array</strong> (<em>list/array</em>) – </p></li>
-<li><p><strong>sub_array</strong> (<em>list/arr</em>) – </p></li>
+<li><p><strong>subarray</strong> (<em>list/arr</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None: arrays do not match
-int: starting index of &lt;array&gt; at which &lt;sub_array&gt; matches</p>
+int: starting index of &lt;array&gt; at which &lt;subarray&gt; matches</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>start_ndx (None/int)</p>
@@ -1908,10 +1894,10 @@ int: starting index of &lt;array&gt; at which &lt;sub_array&gt; matches</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>get_substrings(“split/this_string.into:parts”)
-&gt;&gt; [‘split’, ‘this’, ‘string’, ‘into’, ‘parts’]
-get_substrings(“split/this_string.into:parts”, reverse=True)
-&gt;&gt; [‘parts’, ‘into’, ‘string’, ‘this’, ‘split’]</p>
+<p>&gt;&gt; get_substrings(“split/this_string.into:parts”)
+[‘split’, ‘this’, ‘string’, ‘into’, ‘parts’]
+&gt;&gt; get_substrings(“split/this_string.into:parts”, reverse=True)
+[‘parts’, ‘into’, ‘string’, ‘this’, ‘split’]</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1961,6 +1947,28 @@ If number is passed, apply</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>msg (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.misc.insert_str">
+<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">insert_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'after'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.insert_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert str2 in str1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str1</strong> (<em>str</em>) – base string</p></li>
+<li><p><strong>str2</strong> (<em>str</em>) – append string</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – seperator</p></li>
+<li><p><strong>loc</strong> (<em>str</em>) – insert location: ‘before’ or ‘after’ first seperator in str1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a href="#id27"><span class="problematic" id="id28">str_</span></a> (str)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2281,26 +2289,6 @@ ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyREX.misc.prepend_str">
-<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">prepend_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.prepend_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>str1</strong> (<em>str</em>) – base string</p></li>
-<li><p><strong>str2</strong> (<em>str</em>) – append string</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – seperator</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>new string</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a href="#id27"><span class="problematic" id="id28">str_</span></a> (str)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="pyREX.misc.print_table">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">print_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.print_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints each item of “data” elementwise next to each other as a table.</p>
@@ -2369,7 +2357,7 @@ Get/Print current working directory</p>
 <li><p><strong>usecols</strong> (<em>tuple/list</em>) – columns containing the RES pairs in DCA_fin</p></li>
 <li><p><strong>skiprows</strong> (<em>'auto'/int</em>) – ignore header rows of DCA_fin
 ‘auto’ or -1: auto detect</p></li>
-<li><p><strong>filter_DCA</strong> (<em>bool</em>) – True: ignore DCA pairs with <a href="#id13"><span class="problematic" id="id14">|i-j|</span></a> &lt; 4
+<li><p><strong>filter_DCA</strong> (<em>bool</em>) – True: ignore DCA pairs with <a href="#id15"><span class="problematic" id="id16">|i-j|</span></a> &lt; 4
 False: use all DCA pairs w/o applying filter</p></li>
 <li><p><strong>RES_range</strong> (<em>None</em>) – [RES_min, RES_max] range. Ignore invalid RES ids
 None: do not narrow down RES range</p></li>
@@ -2387,7 +2375,7 @@ DCA_PAIRS_RES_range (list): [RES_min, RES_max] of DCA_PAIRS (not input RES_range
 
 <dl class="py function">
 <dt id="pyREX.misc.read_file">
-<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">read_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fin</span></em>, <em class="sig-param"><span class="pre">sep=None</span></em>, <em class="sig-param"><span class="pre">usecols=(0</span></em>, <em class="sig-param"><span class="pre">1)</span></em>, <em class="sig-param"><span class="pre">skiprows='auto'</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.float64'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.read_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">read_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fin</span></em>, <em class="sig-param"><span class="pre">sep=None</span></em>, <em class="sig-param"><span class="pre">usecols=(0</span></em>, <em class="sig-param"><span class="pre">1)</span></em>, <em class="sig-param"><span class="pre">skiprows='auto'</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.read_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read file and return tuple of np.arrays with data for specified columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2402,7 +2390,7 @@ None: whitespace</p></li>
 (dtype cls): all data types are same
 (list/tuple of dtype cls): specify dtype of each data column</p>
 <dl class="simple">
-<dt>valid dtypes:</dt><dd><p>str, int, float
+<dt>valid dtypes:</dt><dd><p>str, int, float, complex
 <a href="#id29"><span class="problematic" id="id30">np.int_</span></a>, np.int32, np.int64
 <a href="#id31"><span class="problematic" id="id32">np.float_</span></a>, np.float32, np.float64
 <a href="#id33"><span class="problematic" id="id34">np.complex_</span></a>, np.complex64, np.complex128</p>
@@ -2956,7 +2944,7 @@ Return lists of matching RES pairs and ATOM pairs for “DCA REX Workflow”</p>
 </p></li>
 <li><p><strong>DCA_skiprows</strong> (<em>int</em>) – ignore header rows of DCA_fin
 -1 or “auto”: auto detect</p></li>
-<li><p><strong>filter_DCA</strong> (<em>bool</em>) – True: ignore DCA pairs with <a href="#id15"><span class="problematic" id="id16">|i-j|</span></a> &lt; 3
+<li><p><strong>filter_DCA</strong> (<em>bool</em>) – True: ignore DCA pairs with <a href="#id17"><span class="problematic" id="id18">|i-j|</span></a> &lt; 3
 False: use all DCA pairs w/o applying filter</p></li>
 <li><p><strong>save_log</strong> (<em>bool</em>) – </p></li>
 </ul>
@@ -3273,6 +3261,12 @@ if target is unknown: use one of REX_PDBS -&gt; apply ff -&gt; use as ref</p></l
 </div>
 <div class="section" id="module-pyREX">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyREX" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyREX.Universe">
+<code class="sig-prename descclassname"><span class="pre">pyREX.</span></code><code class="sig-name descname"><span class="pre">Universe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tpr_resid_from_one</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.Universe" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs)</p>
+</dd></dl>
+
 <dl class="py function">
 <dt id="pyREX.init">
 <code class="sig-prename descclassname"><span class="pre">pyREX.</span></code><code class="sig-name descname"><span class="pre">init</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.init" title="Permalink to this definition">¶</a></dt>

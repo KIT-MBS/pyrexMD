@@ -4,14 +4,6 @@ pyREX.analysis package
 Submodules
 ----------
 
-pyREX.analysis.GDT module
--------------------------
-
-.. automodule:: pyREX.analysis.GDT
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pyREX.analysis.analysis module
 ------------------------------
 
@@ -32,6 +24,14 @@ pyREX.analysis.dihedrals module
 -------------------------------
 
 .. automodule:: pyREX.analysis.dihedrals
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyREX.analysis.gdt module
+-------------------------
+
+.. automodule:: pyREX.analysis.gdt
    :members:
    :undoc-members:
    :show-inheritance:

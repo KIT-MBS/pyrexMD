@@ -37,211 +37,8 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-pyREX.analysis.GDT">
-<span id="pyrex-analysis-gdt-module"></span><h2>pyREX.analysis.GDT module<a class="headerlink" href="#module-pyREX.analysis.GDT" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-pyREX.analysis.analysis">
 <span id="pyrex-analysis-analysis-module"></span><h2>pyREX.analysis.analysis module<a class="headerlink" href="#module-pyREX.analysis.analysis" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.Contact_Analysis_CA">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">Contact_Analysis_CA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.Contact_Analysis_CA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Works currently only for CA level. All atom version is very slow.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
-<li><p><strong>ref</strong> – reference structure</p></li>
-<li><p><strong>top</strong> (<em>MDA universe/atomgrp</em>) – topology path</p></li>
-<li><p><strong>top</strong> – topology</p></li>
-<li><p><strong>traj</strong> (<em>MDA universe/atomgrp</em>) – trajectory path</p></li>
-<li><p><strong>traj</strong> – trajectory</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid; used for plot title and figure name</p></li>
-<li><p><strong>plot</strong> (<em>bool</em>) – create plot</p></li>
-<li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Kwargs:</dt><dd><p># see args of misc.figure()</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>time in ps
-QValues (list): fraction of nat. contacts
-C (list): unique contact pairs IJ
-C_NperRes (list): contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>TIME (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.GDT">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">GDT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">10,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_resids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.GDT" title="Permalink to this definition">¶</a></dt>
-<dd><p>GDT: Global Distance Test</p>
-<p>Algorithm to identify how good “mobile” matches to “reference” by calculating the sets
-of residues which do not deviate more than a specified (pairwise) CA distance cutoff.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>sel1 = mobile.select_atoms(sel1)
-sel2 = ref.select_atoms(sel2)
-weights=”mass”  # hardcoded weights for alignment</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
-<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
-<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
-<li><p><strong>sss</strong> (<em>list</em>) – [start, stop, step]
-start (None/int): start frame
-stop (None/int): stop frame
-step (None/int): step size</p></li>
-<li><p><strong>cutoff</strong> (<em>list</em>) – parameters describing GDT
-cutoff[0]: min_cutoff (float)
-cutoff[1]: max_cutoff (float)
-cutoff[2]: step_cutoff (float)</p></li>
-<li><p><strong>true_resids</strong> (<em>bool</em>) – offset resids of “GDT_resids” to correct codestyle resids into real resids
-True: return true resids in output “GDT_resids”
-False: return codestyle resids in output “GDT_resids”</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Kwargs:</dt><dd><dl class="simple">
-<dt>aliases for sss items:</dt><dd><p>start (None/int): start frame
-stop (None/int): stop frame
-step (None/int): step size</p>
-</dd>
-<dt>aliases for cutoff items:</dt><dd><p>min_cutoff (float)
-max_cutoff (float)
-step_cutoff (float)</p>
-</dd>
-</dl>
-<p>disable (bool): disable progress bar</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes</dt><dd><p>percent of residues under distance cutoff &lt;= x Angstrom</p>
-</dd>
-<dt>GDT_resids (list): resids within cutoff</dt><dd><dl class="simple">
-<dt>if true_resids == True:</dt><dd><p>true resids; possible values are: minRES &lt;= value &lt;= maxRES</p>
-</dd>
-<dt>if true_resids == False:</dt><dd><p>codestyle resids; possible values are 0 &lt;= value &lt;= len(mobile.select_atoms(sel)))</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>GDT_cutoff (list): cutoff distances in Angstrom
-RMSD (list): (RMSD before alignment, RMSD after elignment)
-FRAME (list): analyzed frames</p>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>GDT_percent (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.GDT_continuous_segments">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">GDT_continuous_segments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_resids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.GDT_continuous_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Note: multiple frame function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>GDT_resids</strong> (<em>array</em>) – output of analysis.GDT()</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of continuous segments for each frame</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SEGMENTS (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.GDT_match_cutoff_dim">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">GDT_match_cutoff_dim</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_cutoff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.GDT_match_cutoff_dim" title="Permalink to this definition">¶</a></dt>
-<dd><p>Match GDT_cutoff array to the dimension of GDT_percent.
-Used in combination with analysis.PLOT() function to plot multiple curves on one canvas.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of analysis.GDT()</p></li>
-<li><p><strong>GDT_cutoff</strong> (<em>list/array</em>) – output of analysis.GDT()</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>GDT_cutoff with same dimension as GDT_percent</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>GDT_cutoff (list/array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.GDT_rank_percent">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">GDT_rank_percent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.GDT_rank_percent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.
-(Higher sum means better accuracy during protein alignment)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>GDT_percent</strong> (<em>list</em>) – output of analysis.GDT()</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ranked percent sum
-RANKED_Psum_ndx (list): related indices of ranked percent sum</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>RANKED_Psum (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.GDT_rank_scores">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">GDT_rank_scores</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.GDT_rank_scores" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>GDT_percent</strong> (<em>list</em>) – output of analysis.GDT()</p></li>
-<li><p><strong>ranking_order</strong> (<em>None/str</em>) – (None): output ranking orded by frame number
-“Frame”: output ranking ordered by frame number
-“GDT_TS”: output ranking ordered by GDT_TS
-“GDT_HA”: output ranking ordered by GDT_HA</p></li>
-<li><p><strong>prec</strong> (<em>None/int</em>) – (None) or -1: rounding off
-(int): rounding to &lt;prec&gt; decimals</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ranked array with GDT_TS values
-GDT_HA_ranked (array): ranked array with GDT_HA values
-GDT_ndx_ranked (array): array with corresponding index values</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>GDT_TS_ranked (array)</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<p>u = mda.Universe(&lt;top&gt;, &lt;traj&gt;)
-r = mda.universe(&lt;ref&gt; )
-GDT_cutoff, GDT_percent, GDT_resids, FRAME = analysis.GDT(u, r)
-GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = analysis.GDT_rank_scores(GDT_percent, ranking_order=”GDT_TS”)</p>
-</dd></dl>
-
 <dl class="py function">
 <dt id="pyREX.analysis.analysis.PLOT">
 <code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">PLOT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.PLOT" title="Permalink to this definition">¶</a></dt>
@@ -279,18 +76,6 @@ ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
 <dt>&gt;&gt; PLOT(TIME, RMSD, xlabel=”time (ns)”, ylabel=r”RMSD ($AA$)”, title=”RMSD plot”,</dt><dd><p>xlim=[50, 500], ylim=[0, 20])</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
-<dt id="pyREX.analysis.analysis.Universe">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">Universe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.Universe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>TODO</p>
-<p>Inherit mda.Universe class and make ana.functions accessible as properties.</p>
-<p>Example:
-u = ana.Universe(“topol.top”)
-u.get_Native_Contacts
-u.plot_Contact_Map</p>
 </dd></dl>
 
 <dl class="py function">
@@ -419,7 +204,7 @@ step (None/int): step size</p></li>
 </dd>
 </dl>
 <dl>
-<dt>Kwargs:</dt><dd><p>dtype (dtype): np.float64 (default), np.float32, etc
+<dt>Kwargs:</dt><dd><p>dtype (dtype): float (default)
 aliases for sss items:</p>
 <blockquote>
 <div><p>start (None/int): start frame
@@ -433,7 +218,7 @@ step (None/int): step size</p>
 <dd class="field-odd"><p>array of distance matrices</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>DM (np.array)</p>
+<dd class="field-even"><p>DM (array)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,100 +239,6 @@ step (None/int): step size</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>FASTA (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_GDT_HA">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_GDT_HA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_GDT_HA" title="Permalink to this definition">¶</a></dt>
-<dd><p>GDT_HA: GlobalDistanceTest_HighAccuracy
-Possible values: 0 &lt;= GDT_HA &lt;= 100</p>
-<dl class="simple">
-<dt>Calculate GDT_HA for any given GDT_percent array according to:</dt><dd><p>GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,</p>
-</dd>
-</dl>
-<p>where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of analysis.GDT()</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>GDT_HA (array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_GDT_TS">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_GDT_TS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_GDT_TS" title="Permalink to this definition">¶</a></dt>
-<dd><p>GDT_TS: GlobalDistanceTest_TotalScore
-Possible values: 0 &lt;= GDT_TS &lt;= 100</p>
-<dl class="simple">
-<dt>Calculate GDT_TS for any given GDT_percent array according to:</dt><dd><p>GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,</p>
-</dd>
-</dl>
-<p>where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of analysis.GDT()</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>GDT_TS (array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_Native_Contacts">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_Native_Contacts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate native contacts.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>len(NC) &lt; len(NC_d) because NC contains only unique RES pairs
-whereas NC_d contains each ATOM pair.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
-<li><p><strong>ref</strong> – reference structure</p></li>
-<li><p><strong>d_cutoff</strong> (<em>float</em>) – distance cutoff for nat. contacts</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>method</strong> (<em>str</em>) – ‘1’ or ‘Contact_Matrix’: mda.contact_matrix() with d_cutoff
-‘2’ or ‘Capped_Distance’: mda.lib.distances.capped_distance() with d_cutoff #TODO
-‘3’ or ‘Shadow_Map’ #TODO</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>NCs (only unique RES pairs)
-NC_d (list): detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>NC (set)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_Pair_Distances">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_Pair_Distances</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_Pair_Distances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
-<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
-<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>PAIR_DISTANCES
-RMSD (tuple): (RMSD before alignment, RMSD after alignment)
-_resids_mobile (array)
-_resids_ref (array)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -634,49 +325,6 @@ See help(MDAnalysis.analysis.rms.get_RMSF) for more information.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>RMSF (array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_array_percent">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_array_percent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_array_percent" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Get percentage and indices of dist_array that fulfil the condition:</dt><dd><p>dist_array &lt;= cutoff</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dist_array</strong> (<em>array</em>) – distance array</p></li>
-<li><p><strong>cutoff</strong> (<em>int/float</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>percent of dist_array (condition: dist_array &lt;= cutoff)
-ndx (array): indices of dist_array (condition:
-dist_array &lt;= cutoff)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>p (float)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.get_continuous_segments">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">get_continuous_segments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.get_continuous_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Note: single frame function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>array</em>) – ordered array with integers representing resids ~ single frame
-e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of continuous segments</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SEGMENTS (list)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -804,13 +452,13 @@ min(universe.atoms.ids) = 1</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>ref = mda.Universe(&lt;top&gt;)
-print(ref.atoms.ids)
-&gt;&gt; [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</p>
-<p>norm_ids(ref, ‘reference’)
-&gt;&gt; Norming atom ids of reference…</p>
-<p>print(ref.atoms.ids)
-&gt;&gt; [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</p>
+<p>&gt;&gt; ref = mda.Universe(&lt;top&gt;)
+&gt;&gt; print(ref.atoms.ids)
+[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</p>
+<p>&gt;&gt; norm_ids(ref, ‘reference’)
+Norming atom ids of reference…</p>
+<p>&gt;&gt; print(ref.atoms.ids)
+[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</p>
 </dd></dl>
 
 <dl class="py function">
@@ -829,13 +477,13 @@ min(universe.residues.resids) = 1</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>ref = mda.Universe(&lt;top&gt;)
-print(ref.residues.resids)
-&gt;&gt; [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</p>
-<p>norm_resids(u, ‘reference’)
-&gt;&gt; Norming resids of reference…</p>
-<p>print(ref.residues.resids)
-&gt;&gt; [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</p>
+<p>&gt;&gt; ref = mda.Universe(&lt;top&gt;)
+&gt;&gt; print(ref.residues.resids)
+[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</p>
+<p>&gt;&gt; norm_resids(u, ‘reference’)
+Norming resids of reference…</p>
+<p>&gt;&gt; print(ref.residues.resids)
+[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</p>
 </dd></dl>
 
 <dl class="py function">
@@ -862,140 +510,6 @@ print(ref.residues.resids)
 - ‘mobile’</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.plot_Contact_Map">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">plot_Contact_Map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.plot_Contact_Map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create contact map based on the reference pdb structure.
-If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
-<li><p><strong>ref</strong> – reference structure</p></li>
-<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA input file (path)</p></li>
-<li><p><strong>n_DCA</strong> (<em>int</em>) – number of used DCA contacts</p></li>
-<li><p><strong>d_cutoff</strong> (<em>float</em>) – distance cutoff for nat. contacts</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid which is used for plot title</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Kwargs:</dt><dd><p>DCA_cols (tuple): columns containing the RES pairs in DCA_fin
-DCA_skiprows (int): ignore header rows of DCA_fin</p>
-<blockquote>
-<div><p>-1 or “auto”: auto detect</p>
-</div></blockquote>
-<dl class="simple">
-<dt>filter_DCA (bool):</dt><dd><p>True: ignore DCA pairs with <a href="#id3"><span class="problematic" id="id4">|i-j|</span></a> &lt; 3
-False: use all DCA pairs w/o applying filter</p>
-</dd>
-<dt>RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids</dt><dd><p>None: do not narrow down RES range</p>
-</dd>
-</dl>
-<p>ignh (bool): ignore hydrogen (mass &lt; 1.2)
-norm (bool): apply analysis.norm_universe()
-save_plot (bool)
-# see args of misc.figure()</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>fig (matplotlib.figure.Figure)
-ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.plot_DCA_TPR">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">plot_DCA_TPR</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.plot_DCA_TPR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots true positive rate for number of used DCA contacts.</p>
-<dl class="simple">
-<dt>Method:</dt><dd><ul class="simple">
-<li><p>calculates shortest RES distance of the selection
-(only heavy atoms if ignh is True)</p></li>
-<li><p>if distance is below threshold: DCA contact is true</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
-<li><p><strong>ref</strong> – reference structure</p></li>
-<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA input file (path)</p></li>
-<li><p><strong>n_DCA</strong> (<em>int</em>) – number of used DCA contacts</p></li>
-<li><p><strong>d_cutoff</strong> (<em>float</em>) – distance cutoff for nat. contacts</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid; used for plot title and figure name</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Kwargs:</dt><dd><p>DCA_cols (tuple/list): columns containing the RES pairs in DCA_fin
-DCA_skiprows (int): ignore header rows of DCA_fin</p>
-<blockquote>
-<div><p>-1 or “auto”: auto detect</p>
-</div></blockquote>
-<dl class="simple">
-<dt>filter_DCA (bool):</dt><dd><p>True: ignore DCA pairs with <a href="#id5"><span class="problematic" id="id6">|i-j|</span></a> &lt; 4
-False: use all DCA pairs w/o applying filter</p>
-</dd>
-<dt>RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids</dt><dd><p>None: do not narrow down RES range</p>
-</dd>
-</dl>
-<p>ignh (bool): ignore hydrogen (mass &lt; 1.2)
-norm (bool): apply analysis.norm_universe()
-TPR_layer (str): plot TPR curve in foreground or background layer</p>
-<blockquote>
-<div><p>“fg”, “foreground”, “bg”, “background”</p>
-</div></blockquote>
-<p>color (str)
-shade_area (bool): shade area between L/2 and L ranked contacts
-shade_color (str)
-shade_alpha (float)
-hline_color (None/str): color of 75p threshold (horizontal line)
-hline_ls (str): linestyle of hline (default: “-“)
-nDCA_opt_color (None/str): color of optimal/recommended nDCA threshold</p>
-<blockquote>
-<div><p>nDCA_opt = misc.round_up(3/4*len(ref.residues), base=5))
-(vertical line ~ nDCA_opt)
-(horizontal line ~ TPR(nDCA_opt))</p>
-</div></blockquote>
-<p>nDCA_opt_ls (str): linestyle of nDCA_opt (default: “–”)
-save_plot (bool)
-save_log (bool)
-figsize (tuple)</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>fig (matplotlib.figure.Figure)
-ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.plot_GDT">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">plot_GDT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_cutoff</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.plot_GDT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a GDT_PLOT.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of analysis.GDT()</p></li>
-<li><p><strong>GDT_cutoff</strong> (<em>list/array</em>) – output of analysis.GDT()</p></li>
-<li><p><strong>title</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Kwargs:</dt><dd><p># see args of misc.figure()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1083,93 +597,6 @@ RMSD (list of arrays): RMSD values of each REX_RMSD file</p>
 <dd class="field-even"><p>TIME (list)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyREX.analysis.analysis.plot_LA">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">plot_LA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.plot_LA" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Create LocalAccuracy Plot (heatmap) with:</dt><dd><p>xdata = Residue ID
-ydata = Frame Number
-color = color-coded Pair Distance</p>
-</dd>
-<dt>Note: be sure that you pass not too many data points otherwise this</dt><dd><p>function will just squeeze them in.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
-<li><p><strong>GDT_TS</strong> (<em>array</em>) – array with GDT_TS values</p></li>
-<li><p><strong>GDT_HA</strong> (<em>array</em>) – array with GDT_HA values</p></li>
-<li><p><strong>GTD_ndx</strong> (<em>array</em>) – array with corresponding index values (representative for frame numbers)</p></li>
-<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure (calculation of PairDistances)</p></li>
-<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure (calculation of PairDistances)</p></li>
-<li><p><strong>ndx_offset</strong> (<em>int</em>) – offset/shift of GDT_ndx to match real “mobile” frames.
-Look up “start” parameter during execution of analysis.GDT()</p></li>
-<li><p><strong>rank_num</strong> (<em>int</em>) – plot only &lt;rank_num&gt; best ranked frames</p></li>
-<li><p><strong>cmap</strong> (<em>str</em>) – <dl class="simple">
-<dt>“GDT_TS” or “TS”: color map with new colors at values (0,  1, 2, 4, 8)</dt><dd><p>and vmin, vmax = (0, 10).</p>
-</dd>
-<dt>”GDT_HA” or “HA”: color map with new colors at values (0, .5, 1, 2, 4)</dt><dd><p>and vmin, vmax = (0, 5).</p>
-</dd>
-<dt>other cmap names: see help(plt.colormaps) or alternatively</dt><dd><p><a class="reference external" href="https://matplotlib.org/examples/color/colormaps_reference.html">https://matplotlib.org/examples/color/colormaps_reference.html</a></p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>show_cbar</strong> (<em>bool</em>) – show/hide colorbar</p></li>
-<li><p><strong>show_scores</strong> (<em>bool</em>) – show/hide frames</p></li>
-<li><p><strong>show_scores</strong> – show/hide GDT_TS and GDT_HA scores</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file</p></li>
-</ul>
-</dd>
-</dl>
-<dl>
-<dt>Kwargs:</dt><dd><p># see args of misc.figure()
-prec (None/int): rounding of scores</p>
-<blockquote>
-<div><p>(None): rounding off
-(int):  rounding on</p>
-</div></blockquote>
-<p>cbar_label/label (str)
-cbar_fontweight/fontweight (str): “normal”, “bold”
-cbar_location/location (str): “right”, “bottom”, “left”, “top”
-cbar_orientation/orientation (str): “horizontal”, “vertical”
-cbar_min / vmin (None/int): min value of colorbar and heatmap
-cbar_max / vmax (None/int): max value of colorbar and heatmap
-text_pos_Frame (list): [x0, y0] position of the “Frame” text box (label)
-text_pos_TS (list): [x0, y0] position of the “TS” text box (label)
-text_pos_HA (list): [x0, y0] position of the “HA” text box (label)</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p>fig (matplotlib.figure.Figure)
-ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
-LA_data (tuple):</p>
-<blockquote>
-<div><p>LA_data[0]: PairDistances (list)
-LA_data[1]: Frames (list)</p>
-</div></blockquote>
-</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<p># obtain data
-GDT = analysis.GDT(u, r, sss=[None,None,None])
-GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT</p>
-<p># rank data
-SCORES = analysis.GDT_rank_scores(GDT_percent, ranking_order=”GDT_HA”)
-GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES</p>
-<p># edit text box positions of labels “Frame”, “TS”, “HA”
-text_pos_kws = {“text_pos_Frame”: [-8.8, -0.3],</p>
-<blockquote>
-<div><p>“text_pos_TS”: [-4.2, -0.3],
-“text_pos_HA”: [-1.9, -0.3]}</p>
-</div></blockquote>
-<p># plot
-analysis.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], <a href="#id1"><span class="problematic" id="id2">**</span></a>text_pos_kws)</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1366,34 +793,6 @@ Remove trendline via trendline.remove()</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyREX.analysis.analysis.rank_scores">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">rank_scores</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.rank_scores" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>GDT_TS</strong> (<em>array</em>) – GlobalDistanceTest_TotalScore</p></li>
-<li><p><strong>GDT_HA</strong> (<em>array</em>) – GlobalDistanceTest_HighAccuracy</p></li>
-<li><p><strong>ranking_order</strong> (<em>None/str</em>) – (None): output ranking ordered by frame number
-“FRAME”: output ranking ordered by frame number
-“GDT_TS”: output ranking ordered by GDT_TS
-“GDT_HA”: output ranking ordered by GDT_HA</p></li>
-<li><p><strong>prec</strong> (<em>None/int</em>) – (None) or -1: rounding off
-(int):  rounding on to &lt;prec&gt; decimals</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ranked array with GDT_TS scores
-GDT_HA_ranked (array): ranked array with GDT_HA scores
-GDT_ndx_ranked (array): corresponding element indices of scores</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>GDT_TS_ranked (array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="pyREX.analysis.analysis.remove_trendline">
 <code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">remove_trendline</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trendline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.remove_trendline" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1479,16 +878,16 @@ mda.select_atoms() remembers information about the original configuration which 
 # Init universe
 u = mda.Universe(&lt;top&gt;)</p>
 <p># select_atoms() behaviour
-a = u.select_atoms(“protein and type C”)
-a
-&gt;&gt; &lt;AtomGroup with 72 atoms&gt;
-a.residues.atoms
-&gt;&gt; &lt;AtomGroup with 964 atoms&gt;</p>
+&gt;&gt; a = u.select_atoms(“protein and type C”)
+&gt;&gt; a
+&lt;AtomGroup with 72 atoms&gt;
+&gt;&gt; a.residues.atoms
+&lt;AtomGroup with 964 atoms&gt;</p>
 <p># true_select_atoms() behaviour
-a = ana.true_select_atoms(u, sel=”protein and type C”)
-a
-&gt;&gt; &lt;Universe with 72 atoms&gt;
-a.residue.atoms
+&gt;&gt; a = ana.true_select_atoms(u, sel=”protein and type C”)
+&gt;&gt; a
+&lt;Universe with 72 atoms&gt;
+&gt;&gt; a.residue.atoms
 &lt;AtomGroup with 72 atoms&gt;</p>
 </dd></dl>
 
@@ -1496,46 +895,9 @@ a.residue.atoms
 <div class="section" id="module-pyREX.analysis.contacts">
 <span id="pyrex-analysis-contacts-module"></span><h2>pyREX.analysis.contacts module<a class="headerlink" href="#module-pyREX.analysis.contacts" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="pyREX.analysis.contacts.Contact_Analysis_CA">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">Contact_Analysis_CA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.Contact_Analysis_CA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Works currently only for CA level. All atom version is very slow.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
-<li><p><strong>ref</strong> – reference structure</p></li>
-<li><p><strong>top</strong> (<em>MDA universe/atomgrp</em>) – topology path</p></li>
-<li><p><strong>top</strong> – topology</p></li>
-<li><p><strong>traj</strong> (<em>MDA universe/atomgrp</em>) – trajectory path</p></li>
-<li><p><strong>traj</strong> – trajectory</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid; used for plot title and figure name</p></li>
-<li><p><strong>plot</strong> (<em>bool</em>) – create plot</p></li>
-<li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Kwargs:</dt><dd><p># see args of misc.figure()</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>time in ps
-QValues (list): fraction of nat. contacts
-C (list): unique contact pairs IJ
-C_NperRes (list): contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>TIME (list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="pyREX.analysis.contacts.get_Native_Contacts">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">get_Native_Contacts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate native contacts.</p>
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">get_Native_Contacts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get set (unique RES pairs) and list (detailed RES pairs) with native contacts.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>len(NC) &lt; len(NC_d) because NC contains only unique RES pairs
@@ -1552,6 +914,8 @@ whereas NC_d contains each ATOM pair.</p>
 ‘2’ or ‘Capped_Distance’: mda.lib.distances.capped_distance() with d_cutoff #TODO
 ‘3’ or ‘Shadow_Map’ #TODO</p></li>
 <li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print “Note: Please verify that your selection is</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1559,7 +923,192 @@ whereas NC_d contains each ATOM pair.</p>
 NC_d (list): detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>NC (set)</p>
+<dd class="field-odd"><p>NC (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.contacts.get_Qbias">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">get_Qbias</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.get_Qbias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get QValue for formed biased contacts.</p>
+<p>Note 1: selection of get_Qbias() is hardcoded to sel=’protein and name CA’.
+Reason: bias contacts are unique RES PAIRS and grow ‘slowly’, but going from</p>
+<blockquote>
+<div><p>sel=’protein and name CA’ to sel=’protein’ increases the atom count
+significantly. Most of them will count as non-native and thus make
+the Qbias value very low.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Note 2: MDAnalysis’ qvalue algorithm includes selfcontacts. Comparison of both methods</dt><dd><p>yields better results when include_selfcontacts (bool, see kwargs) is set to
+True. However this improves the calculated Qbias value artificially (e.g. even
+when all used bias contacts are never formed, Qbias will not be zero due to the
+selfcontact counts)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>MDA universe</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>bc</strong> (<em>list</em>) – list with bias contacts to analyze</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – [start, stop, step]
+start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size</p></li>
+<li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – norm universe before calculation.</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>warn</strong> (<em>bool</em>) – print important warnings about usage of this function.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Kwargs:</dt><dd><p>dtype (dtype): data type of returned contact matrix CM
+include_selfcontacts (bool): sets norm of QBIAS. Default is False.</p>
+<blockquote>
+<div><p>True: includes selfcontacts on main diagonal of CM (max count &gt; len(bc))
+False: ignores selfcontacts on main diagonal of CM (max count == len(bc))</p>
+</div></blockquote>
+<p>start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size
+color (str)
+save_plot (bool)
+save_as (str): “Qbias.png”</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>FRAMES (np.array)
+QBIAS (np.array): fraction of formed bias contacts
+CM (np.array): array of distance matrices</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.contacts.get_Qnative">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">get_Qnative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.get_Qnative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get QValue for native contacts.</p>
+<ol class="arabic simple">
+<li><p>norms and aligns mobile to ref so that atomgroups have same resids</p></li>
+<li><p>performs native contact analysis</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>MDA universe</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>ref</strong> (<em>MDA universe</em>) – reference structure</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – [start, stop, step]
+start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size</p></li>
+<li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Kwargs:</dt><dd><p>sel1 (str): selection string for contacting group (1 to 1 mapping)
+sel2 (str): selection string for contacting group (1 to 1 mapping)</p>
+<blockquote>
+<div><p>Note: ignores sel (arg) if sel1 or sel2 (kwargs) are passed</p>
+</div></blockquote>
+<dl class="simple">
+<dt>method (str): method for QValues calculation</dt><dd><p>‘radius_cut’: native if d &lt; d_cutoff
+‘soft_cut’: see help(MDAnalysis.analysis.contacts.soft_cut_q)
+‘hardcut’: native if d &lt; d_ref</p>
+</dd>
+</dl>
+<p>start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size
+color (str)
+save_plot (bool)
+save_as (str): “Qnative.png”</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>FRAMES (list)
+QNATIVE (list): fraction of native contacts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.contacts.get_formed_contactpairs">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">get_formed_contactpairs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.get_formed_contactpairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>get formed contact pairs by converting a contact matrix cm into a list with
+tuples (RESi,RESj).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>mda.Universe</em>) – used to obtain topology information</p></li>
+<li><p><strong>cm</strong> (<em>np.array</em>) – single contact matrix of size (n_atoms, n_atoms)</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – norm universe before obtaining topology information</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>include_selfcontacts (bool): include contacts on main diagonal of cm. Default is False.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list with contact pairs (RESi,RESj)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>CP (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.contacts.plot_Contact_Map">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.contacts.</span></code><code class="sig-name descname"><span class="pre">plot_Contact_Map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.contacts.plot_Contact_Map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create contact map based on the reference pdb structure.
+If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference path</p></li>
+<li><p><strong>ref</strong> – reference structure</p></li>
+<li><p><strong>DCA_fin</strong> (<em>None/str</em>) – DCA input file (path)</p></li>
+<li><p><strong>n_DCA</strong> (<em>None/int</em>) – number of used DCA contacts</p></li>
+<li><p><strong>d_cutoff</strong> (<em>float</em>) – distance cutoff for nat. contacts</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid which is used for plot title</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Kwargs:</dt><dd><p>DCA_cols (tuple): columns containing the RES pairs in DCA_fin
+DCA_skiprows (int): ignore header rows of DCA_fin</p>
+<blockquote>
+<div><p>-1 or “auto”: auto detect</p>
+</div></blockquote>
+<dl class="simple">
+<dt>filter_DCA (bool):</dt><dd><p>True: ignore DCA pairs with <a href="#id3"><span class="problematic" id="id4">|i-j|</span></a> &lt; 3
+False: use all DCA pairs w/o applying filter</p>
+</dd>
+<dt>RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids</dt><dd><p>None: do not narrow down RES range</p>
+</dd>
+</dl>
+<p>ignh (bool): ignore hydrogen (mass &lt; 1.2)
+norm (bool): apply analysis.norm_universe()
+save_plot (bool)
+# see args of misc.figure()</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>fig (matplotlib.figure.Figure)
+ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1596,7 +1145,7 @@ DCA_skiprows (int): ignore header rows of DCA_fin</p>
 <div><p>-1 or “auto”: auto detect</p>
 </div></blockquote>
 <dl class="simple">
-<dt>filter_DCA (bool):</dt><dd><p>True: ignore DCA pairs with <a href="#id7"><span class="problematic" id="id8">|i-j|</span></a> &lt; 4
+<dt>filter_DCA (bool):</dt><dd><p>True: ignore DCA pairs with <a href="#id5"><span class="problematic" id="id6">|i-j|</span></a> &lt; 4
 False: use all DCA pairs w/o applying filter</p>
 </dd>
 <dt>RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids</dt><dd><p>None: do not narrow down RES range</p>
@@ -1890,6 +1439,423 @@ blue ~ 99% data points).
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>rama (MDAnalysis.analysis.dihedrals.Ramachandran)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyREX.analysis.gdt">
+<span id="pyrex-analysis-gdt-module"></span><h2>pyREX.analysis.gdt module<a class="headerlink" href="#module-pyREX.analysis.gdt" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.GDT">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">GDT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">10,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_resids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.GDT" title="Permalink to this definition">¶</a></dt>
+<dd><p>GDT: Global Distance Test</p>
+<p>Algorithm to identify how good “mobile” matches to “reference” by calculating the sets
+of residues which do not deviate more than a specified (pairwise) CA distance cutoff.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>sel1 = mobile.select_atoms(sel1)
+sel2 = ref.select_atoms(sel2)
+weights=”mass”  # hardcoded weights for alignment</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
+<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
+<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – [start, stop, step]
+start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size</p></li>
+<li><p><strong>cutoff</strong> (<em>list</em>) – parameters describing GDT
+cutoff[0]: min_cutoff (float)
+cutoff[1]: max_cutoff (float)
+cutoff[2]: step_cutoff (float)</p></li>
+<li><p><strong>true_resids</strong> (<em>bool</em>) – offset resids of “GDT_resids” to correct codestyle resids into real resids
+True: return true resids in output “GDT_resids”
+False: return codestyle resids in output “GDT_resids”</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>aliases for sss items:</dt><dd><p>start (None/int): start frame
+stop (None/int): stop frame
+step (None/int): step size</p>
+</dd>
+<dt>aliases for cutoff items:</dt><dd><p>min_cutoff (float)
+max_cutoff (float)
+step_cutoff (float)</p>
+</dd>
+</dl>
+<p>disable (bool): disable progress bar</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes</dt><dd><p>percent of residues under distance cutoff &lt;= x Angstrom</p>
+</dd>
+<dt>GDT_resids (list): resids within cutoff</dt><dd><dl class="simple">
+<dt>if true_resids == True:</dt><dd><p>true resids; possible values are: minRES &lt;= value &lt;= maxRES</p>
+</dd>
+<dt>if true_resids == False:</dt><dd><p>codestyle resids; possible values are 0 &lt;= value &lt;= len(mobile.select_atoms(sel)))</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>GDT_cutoff (list): cutoff distances in Angstrom
+RMSD (list): (RMSD before alignment, RMSD after elignment)
+FRAME (list): analyzed frames</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>GDT_percent (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.GDT_continuous_segments">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">GDT_continuous_segments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_resids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.GDT_continuous_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note: multiple frame function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>GDT_resids</strong> (<em>array</em>) – output of analysis.GDT()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of continuous segments for each frame</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SEGMENTS (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.GDT_match_cutoff_dim">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">GDT_match_cutoff_dim</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_cutoff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.GDT_match_cutoff_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match GDT_cutoff array to the dimension of GDT_percent.
+Used in combination with analysis.PLOT() function to plot multiple curves on one canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>GDT_cutoff</strong> (<em>list/array</em>) – output of gdt.GDT()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GDT_cutoff with same dimension as GDT_percent</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>GDT_cutoff (list/array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.GDT_rank_percent">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">GDT_rank_percent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.GDT_rank_percent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.
+(Higher sum means better accuracy during protein alignment)</p>
+<p>(Ranked) Psum can be view analogous to GDT scores but using all cutoffs
+instead of specific ones</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – norms Psum during sum of GDT_Px</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ranked percent sum
+RANKED_Psum_ndx (list): related indices of ranked percent sum</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RANKED_Psum (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.GDT_rank_scores">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">GDT_rank_scores</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.GDT_rank_scores" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list</em>) – output of analysis.GDT()</p></li>
+<li><p><strong>ranking_order</strong> (<em>None/str</em>) – (None): output ranking orded by frame number
+“Frame”: output ranking ordered by frame number
+“GDT_TS”: output ranking ordered by GDT_TS
+“GDT_HA”: output ranking ordered by GDT_HA</p></li>
+<li><p><strong>prec</strong> (<em>None/int</em>) – (None) or -1: rounding off
+(int): rounding to &lt;prec&gt; decimals</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ranked array with GDT_TS values
+GDT_HA_ranked (array): ranked array with GDT_HA values
+GDT_ndx_ranked (array): array with corresponding index values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>GDT_TS_ranked (array)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>u = mda.Universe(&lt;top&gt;, &lt;traj&gt;)
+r = mda.universe(&lt;ref&gt; )
+GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(u, r)
+GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order=”GDT_TS”)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.get_GDT_HA">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">get_GDT_HA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.get_GDT_HA" title="Permalink to this definition">¶</a></dt>
+<dd><p>GDT_HA: GlobalDistanceTest_HighAccuracy
+Possible values: 0 &lt;= GDT_HA &lt;= 100</p>
+<dl class="simple">
+<dt>Calculate GDT_HA for any given GDT_percent array according to:</dt><dd><p>GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,</p>
+</dd>
+</dl>
+<p>where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of analysis.GDT()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GDT_HA (array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.get_GDT_TS">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">get_GDT_TS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.get_GDT_TS" title="Permalink to this definition">¶</a></dt>
+<dd><p>GDT_TS: GlobalDistanceTest_TotalScore
+Possible values: 0 &lt;= GDT_TS &lt;= 100</p>
+<dl class="simple">
+<dt>Calculate GDT_TS for any given GDT_percent array according to:</dt><dd><p>GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,</p>
+</dd>
+</dl>
+<p>where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of gdt.GDT()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GDT_TS (array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.get_Pair_Distances">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">get_Pair_Distances</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.get_Pair_Distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
+<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
+<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>PAIR_DISTANCES
+RMSD (tuple): (RMSD before alignment, RMSD after alignment)
+_resids_mobile (array)
+_resids_ref (array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.get_array_percent">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">get_array_percent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.get_array_percent" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Get percentage and indices of dist_array that fulfil the condition:</dt><dd><p>dist_array &lt;= cutoff</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dist_array</strong> (<em>array</em>) – distance array</p></li>
+<li><p><strong>cutoff</strong> (<em>int/float</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>percent of dist_array (condition: dist_array &lt;= cutoff)
+ndx (array): indices of dist_array (condition:
+dist_array &lt;= cutoff)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>p (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.get_continuous_segments">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">get_continuous_segments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.get_continuous_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note: single frame function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>array</em>) – ordered array with integers representing resids ~ single frame
+e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of continuous segments</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SEGMENTS (list)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>&gt;&gt; gdt.get_continuous_segments([1,2,3,22,23,50,51,52])
+[[1, 2, 3], [22, 23], [50, 51, 52]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.plot_GDT">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">plot_GDT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_cutoff</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.plot_GDT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a GDT_PLOT.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list/array</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>GDT_cutoff</strong> (<em>list/array</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p># see args of misc.figure()</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>fig (matplotlib.figure.Figure)
+ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.plot_LA">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">plot_LA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.plot_LA" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Create LocalAccuracy Plot (heatmap) with:</dt><dd><p>xdata = Residue ID
+ydata = Frame Number
+color = color-coded Pair Distance</p>
+</dd>
+<dt>Note: be sure that you pass not too many data points otherwise this</dt><dd><p>function will just squeeze them in.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>MDA universe/atomgrp</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>ref</strong> (<em>MDA universe/atomgrp</em>) – reference structure</p></li>
+<li><p><strong>GDT_TS</strong> (<em>array</em>) – array with GDT_TS values</p></li>
+<li><p><strong>GDT_HA</strong> (<em>array</em>) – array with GDT_HA values</p></li>
+<li><p><strong>GTD_ndx</strong> (<em>array</em>) – array with corresponding index values (representative for frame numbers)</p></li>
+<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure (calculation of PairDistances)</p></li>
+<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure (calculation of PairDistances)</p></li>
+<li><p><strong>ndx_offset</strong> (<em>int</em>) – offset/shift of GDT_ndx to match real “mobile” frames.
+Look up “start” parameter during execution of analysis.GDT()</p></li>
+<li><p><strong>rank_num</strong> (<em>int</em>) – plot only &lt;rank_num&gt; best ranked frames</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – <dl class="simple">
+<dt>“GDT_TS” or “TS”: color map with new colors at values (0,  1, 2, 4, 8)</dt><dd><p>and vmin, vmax = (0, 10).</p>
+</dd>
+<dt>”GDT_HA” or “HA”: color map with new colors at values (0, .5, 1, 2, 4)</dt><dd><p>and vmin, vmax = (0, 5).</p>
+</dd>
+<dt>other cmap names: see help(plt.colormaps) or alternatively</dt><dd><p><a class="reference external" href="https://matplotlib.org/examples/color/colormaps_reference.html">https://matplotlib.org/examples/color/colormaps_reference.html</a></p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>show_cbar</strong> (<em>bool</em>) – show/hide colorbar</p></li>
+<li><p><strong>show_scores</strong> (<em>bool</em>) – show/hide frames</p></li>
+<li><p><strong>show_scores</strong> – show/hide GDT_TS and GDT_HA scores</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Kwargs:</dt><dd><p># see args of misc.figure()
+prec (None/int): rounding of scores</p>
+<blockquote>
+<div><p>(None): rounding off
+(int):  rounding on</p>
+</div></blockquote>
+<p>cbar_label/label (str)
+cbar_fontweight/fontweight (str): “normal”, “bold”
+cbar_location/location (str): “right”, “bottom”, “left”, “top”
+cbar_orientation/orientation (str): “horizontal”, “vertical”
+cbar_min / vmin (None/int): min value of colorbar and heatmap
+cbar_max / vmax (None/int): max value of colorbar and heatmap
+text_pos_Frame (list): [x0, y0] position of the “Frame” text box (label)
+text_pos_TS (list): [x0, y0] position of the “TS” text box (label)
+text_pos_HA (list): [x0, y0] position of the “HA” text box (label)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>fig (matplotlib.figure.Figure)
+ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+LA_data (tuple):</p>
+<blockquote>
+<div><p>LA_data[0]: PairDistances (list)
+LA_data[1]: Frames (list)</p>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p># obtain data
+GDT = gdt.GDT(u, r, sss=[None,None,None])
+GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT</p>
+<p># rank data
+SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order=”GDT_HA”)
+GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES</p>
+<p># edit text box positions of labels “Frame”, “TS”, “HA”
+text_pos_kws = {“text_pos_Frame”: [-8.8, -0.3],</p>
+<blockquote>
+<div><p>“text_pos_TS”: [-4.2, -0.3],
+“text_pos_HA”: [-1.9, -0.3]}</p>
+</div></blockquote>
+<p># plot
+gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], <a href="#id1"><span class="problematic" id="id2">**</span></a>text_pos_kws)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.analysis.gdt.rank_scores">
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.gdt.</span></code><code class="sig-name descname"><span class="pre">rank_scores</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.gdt.rank_scores" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_TS</strong> (<em>array</em>) – GlobalDistanceTest_TotalScore</p></li>
+<li><p><strong>GDT_HA</strong> (<em>array</em>) – GlobalDistanceTest_HighAccuracy</p></li>
+<li><p><strong>ranking_order</strong> (<em>None/str</em>) – (None): output ranking ordered by frame number
+“FRAME”: output ranking ordered by frame number
+“GDT_TS”: output ranking ordered by GDT_TS
+“GDT_HA”: output ranking ordered by GDT_HA</p></li>
+<li><p><strong>prec</strong> (<em>None/int</em>) – (None) or -1: rounding off
+(int):  rounding on to &lt;prec&gt; decimals</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ranked array with GDT_TS scores
+GDT_HA_ranked (array): ranked array with GDT_HA scores
+GDT_ndx_ranked (array): corresponding element indices of scores</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>GDT_TS_ranked (array)</p>
 </dd>
 </dl>
 </dd></dl>

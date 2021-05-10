@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 09.05.2021
+# @Last modified time: 10.05.2021
 
 import pyREX.analysis.gdt as gdt
 from pyREX.misc import flatten_array
