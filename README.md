@@ -1,19 +1,10 @@
->>TODO setup.py
->>TODO setup.py
->>TODO setup.py
->>TODO setup.py
->>TODO setup.py
->>TODO setup.py
-
 (1) download and install GROAMCS:
 https://manual.gromacs.org/documentation/current/index.html
 
-(2) install requirement dependencies:
-
-pip3 install -r requirements.txt
+(2) install package:
+pip3 install .
 
 (3) enable nglview for jupyter:
-
 jupyter nbextension enable --py widgetsnbextension
 jupyter nbextension enable --py nglview
 

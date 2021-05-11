@@ -62,15 +62,14 @@
 
 <dl class="py function">
 <dt id="pyREX.decoy.abinitio.create_decoys">
-<code class="sig-prename descclassname"><span class="pre">pyREX.decoy.abinitio.</span></code><code class="sig-name descname"><span class="pre">create_decoys</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abinitio_cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream2pymol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastrelax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.decoy.abinitio.create_decoys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create decoys within pyrosetta framework.</p>
+<code class="sig-prename descclassname"><span class="pre">pyREX.decoy.abinitio.</span></code><code class="sig-name descname"><span class="pre">create_decoys</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abinitio_cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream2pymol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastrelax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.decoy.abinitio.create_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: this function is broken (but _create_decoys() is working with 1 core)</p>
+<p>Create decoys within pyrosetta framework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abinitio_cfg</strong> (<em>CONFIG class</em>) – output of abinitio.setup_abinitio_cfg()</p></li>
 <li><p><strong>output_dir</strong> (<em>str</em>) – output directory for decoys</p></li>
-<li><p><strong>n_cores</strong> (<em>int</em>) – -np option for multiprocessing. Overwrites parameter
-in abinitio_cfg</p></li>
 <li><p><strong>stream2pymol</strong> (<em>bool</em>) – stream decoys to pymol</p></li>
 <li><p><strong>fastrelax</strong> (<em>bool</em>) – apply fastrelax protocol on decoys before dumping them as pdb</p></li>
 <li><p><strong>save_log</strong> (<em>bool</em>) – save scores to logfile at &lt;output_dir/scores.txt&gt;</p></li>

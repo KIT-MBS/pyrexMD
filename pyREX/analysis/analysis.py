@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 11.05.2021
+# @Last modified time: 12.05.2021
 
 
 import pyREX.misc as _misc

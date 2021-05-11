@@ -2186,8 +2186,12 @@ Can be relative or absolute path including the filename.</p></li>
 <dt id="pyREX.misc.pickle_load">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">pickle_load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickledir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./pickle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.pickle_load" title="Permalink to this definition">¶</a></dt>
 <dd><p>pickle.load figure from “&lt;pickledir&gt;/&lt;filename&gt;.pickle”. If the pickle file
-contains figure data, auto detects the figure type (i.e. if created using
+contains figure data, auto detects the figure type (i.e. it created using
 plt.plot(), plt.bar() or plt.barh()).</p>
+<dl class="simple">
+<dt>Bug: %matplotlib notebook backend leaves empty space below when closing figs</dt><dd><p>which were loaded via pickle.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2258,8 +2262,12 @@ line_data[0][“color”]</p>
 <dl class="py function">
 <dt id="pyREX.misc.pickle_plot">
 <code class="sig-prename descclassname"><span class="pre">pyREX.misc.</span></code><code class="sig-name descname"><span class="pre">pickle_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickle_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hist_minorticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.misc.pickle_plot" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Note: Code for “align” parameter is currently only intended for figures with</dt><dd><p>grid = [&lt;any&gt;, 2], i.e. width of 2 figures.</p>
+<dd><p>Creates multifigure from loading pickle_files</p>
+<dl class="simple">
+<dt>Bug: data is first loaded -&gt; creates a figure -&gt; closed. However in jupyter</dt><dd><p>%matplotlib notebook backend leaves empty space below when closing figs
+which were loaded via pickle.</p>
+</dd>
+<dt>Note2: Code for “align” parameter is currently only intended for figures with</dt><dd><p>grid = [&lt;any&gt;, 2], i.e. width of 2 figures.</p>
 </dd>
 </dl>
 <dl class="field-list simple">

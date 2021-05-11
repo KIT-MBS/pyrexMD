@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 10.05.2021
+# @Last modified time: 12.05.2021
 
 
 ################################################################################
@@ -245,6 +245,10 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
         save_plot (bool)
         save_log (bool)
         figsize (tuple)
+        marker (None/str): marker
+        ms (int): markersize
+        ls (str): linestyle
+        alpha (float): alpha value
 
     Returns:
         fig (matplotlib.figure.Figure)
@@ -267,7 +271,11 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
                "nDCA_opt_ls": "--",
                "save_plot": False,
                "save_log": False,
-               "figsize": (8, 4.5)}
+               "figsize": (8, 4.5),
+               "marker": None,
+               "ms": 1,
+               "ls": "-",
+               "alpha": 1.0}
     cfg = _misc.CONFIG(default, **kwargs)
     # load universe
     if pdbid == 'pdbid':
@@ -305,7 +313,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     with sns.axes_style('darkgrid'):
         fig, ax = plt.subplots(figsize=cfg.figsize)
         if cfg.TPR_layer.lower() == "bg" or cfg.TPR_layer.lower() == "background":
-            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker=cfg.marker, ms=cfg.ms, ls=cfg.ls)
             plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
         # plt.legend(loc="upper right", numpoints=1)
         plt.xlim(0, n_DCA + 1)
@@ -337,7 +345,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
         plt.title(f"TPR of {pdbid}", fontweight="bold")
         sns.despine(offset=0)
         if cfg.TPR_layer.lower() == "fg" or cfg.TPR_layer.lower() == "foreground":
-            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker="o", ms=4, ls="None")
+            plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, marker=cfg.marker, ms=cfg.ms, ls=cfg.ls)
             plt.plot(range(1, n_DCA + 1), DCA_TPR, color=cfg.color, alpha=0.2, lw=2)
         plt.tight_layout()
         if cfg.hline_color is not None:

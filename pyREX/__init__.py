@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 09.05.2021
+# @Last modified time: 11.05.2021
 
 
 import pyREX.misc as misc
@@ -16,9 +16,6 @@ warnings.filterwarnings("ignore", message="Failed to guess the mass for the foll
 warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 warnings.filterwarnings("ignore", message="1 A\^3 CRYST1 record,")
 warnings.filterwarnings("ignore", message="Found no information for attr:")
-
-
-version = 0.8
 
 
 def Universe(top, traj=None, tpr_resid_from_one=True, **kwargs):

@@ -2,13 +2,13 @@
 @Date:   17.04.2021
 @Filename: requirements.txt
 @Last modified by:   arthur
-@Last modified time: 08.05.2021
+@Last modified time: 11.05.2021
 
 #nglview==2.0 required
 
 biopython==1.78
 duecredit==0.9.1
-future=0.18.2
+future==0.18.2
 GromacsWrapper==0.8.0
 h5py==2.10.0
 heat==1.0.0
