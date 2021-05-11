@@ -1,0 +1,10 @@
+REX Temperature Distribution:
+T_0 = 280 K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))
+T_i = T_(i-1) + a_j * DELTA
+
+Chosen Parameter:
+k = 0.006
+a_0 = 1.00 for i = 0..9 
+
+Temperatures:
+280.00, 281.69, 283.38, 285.09, 286.80, 288.53, 290.26, 292.01, 293.77, 295.54, 

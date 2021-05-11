@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 10.05.2021
+# @Last modified time: 11.05.2021
 
 
 # miscellaneous
@@ -2186,8 +2186,11 @@ __pickle_get_rectangle_data___bugs_doc__ = """
 def pickle_load(filename, pickledir="./pickle", plot=False):
     """
     pickle.load figure from "<pickledir>/<filename>.pickle". If the pickle file
-    contains figure data, auto detects the figure type (i.e. if created using
+    contains figure data, auto detects the figure type (i.e. it created using
     plt.plot(), plt.bar() or plt.barh()).
+
+    Bug: %matplotlib notebook backend leaves empty space below when closing figs
+         which were loaded via pickle.
 
     Args:
         filename (str): realpath to .pickle file or filename within pickledir
@@ -2219,7 +2222,7 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
             ax_data = _pickle_get_ax_data(fig)
             line_data = _pickle_get_line_data(fig)
             rect_data = _pickle_get_rectangle_data(fig)
-            if not plot:
+            if plot == False:
                 fig.set_size_inches(0, 0)
                 plt.close()
             return (ax_data, line_data, rect_data)
@@ -2240,8 +2243,14 @@ __pickle_load___example_doc__ = """
 def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='auto',
                 align_ylim=True, hist_minorticks=False, **kwargs):
     """
-    Note: Code for "align" parameter is currently only intended for figures with
-          grid = [<any>, 2], i.e. width of 2 figures.
+    Creates multifigure from loading pickle_files
+
+    Bug: data is first loaded -> creates a figure -> closed. However in jupyter
+         %matplotlib notebook backend leaves empty space below when closing figs
+         which were loaded via pickle.
+
+    Note2: Code for "align" parameter is currently only intended for figures with
+           grid = [<any>, 2], i.e. width of 2 figures.
 
     Args:
         pickle_files (str/list of str): path to pickle file(s) containing the (sub)figure data
@@ -2347,17 +2356,17 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
                 target_ax = ax[ndx]
             if ndx > 0:
                 align_limits(ref_ax=ref_ax, target_ax=target_ax, apply_on='y')
-        """
-        if "grid" in kwargs:
-            for ndx in range(kwargs["grid"][0]*kwargs["grid"][1]):
-                i = ndx//kwargs["grid"][1]
-                j = i + ndx % kwargs["grid"][1]
-                if i != j:
-                    align_limits(ref_ax=ax[i], target_ax=ax[j], apply_on='y')
-        else:
-            for i in range(0, len(ax), 2):
-                align_limits(ref_ax=ax[i], target_ax=ax[i+1], apply_on='y')
-        """
+        # """
+        # if "grid" in kwargs:
+        #     for ndx in range(kwargs["grid"][0]*kwargs["grid"][1]):
+        #         i = ndx//kwargs["grid"][1]
+        #         j = i + ndx % kwargs["grid"][1]
+        #         if i != j:
+        #             align_limits(ref_ax=ax[i], target_ax=ax[j], apply_on='y')
+        # else:
+        #     for i in range(0, len(ax), 2):
+        #         align_limits(ref_ax=ax[i], target_ax=ax[i+1], apply_on='y')
+        # """
     if not hist_minorticks:
         plt.minorticks_off()
 

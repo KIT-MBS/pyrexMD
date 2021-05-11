@@ -2,10 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 10.05.2021
+# @Last modified time: 11.05.2021
 
 
 import pyREX.misc as _misc
+from pyREX.misc import get_PDBid
 from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide
 from MDAnalysis.analysis import distances as _distances, rms as _rms, align as _align
@@ -951,11 +952,11 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
                 xlim=[50, 500], ylim=[0, 20])
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
-    default = {"alpha": 0.3,
+    default = {"alpha": 1.0,
                "color": "r",
                "lw": 1.5,
                "ms": 1,
-               "marker": "."}
+               "marker": None}
     cfg = _misc.CONFIG(default, **kwargs)
     #####################################
     fig, ax = _misc.figure(**kwargs)

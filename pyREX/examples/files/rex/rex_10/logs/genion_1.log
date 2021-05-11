@@ -1,0 +1,73 @@
+STDERR:
+
+                      :-) GROMACS - gmx genion, 2020.5 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx genion, version 2020.5
+Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
+Data prefix:  /usr/local/gromacs_2020
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_10
+Command line:
+  gmx_mpi genion -s ions.tpr -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_10/ions.gro -p topol.top -pname NA -nname CL -neutral
+
+Reading file ions.tpr, VERSION 2020.5 (single precision)
+Reading file ions.tpr, VERSION 2020.5 (single precision)
+Group     0 (         System) has 79569 elements
+Group     1 (        Protein) has  1443 elements
+Group     2 (      Protein-H) has   710 elements
+Group     3 (        C-alpha) has    92 elements
+Group     4 (       Backbone) has   276 elements
+Group     5 (      MainChain) has   369 elements
+Group     6 (   MainChain+Cb) has   455 elements
+Group     7 (    MainChain+H) has   461 elements
+Group     8 (      SideChain) has   982 elements
+Group     9 (    SideChain-H) has   341 elements
+Group    10 (    Prot-Masses) has  1443 elements
+Group    11 (    non-Protein) has 78126 elements
+Group    12 (          Water) has 78126 elements
+Group    13 (            SOL) has 78126 elements
+Group    14 (      non-Water) has  1443 elements
+Select a group: Number of (3-atomic) solvent molecules: 26042
+
+Back Off! I just backed up topol.top to ./#topol.top.1#
+Using random seed -335751701.
+Replacing solvent molecule 11092 (atom 34719) with CL
+
+
+GROMACS reminds you: "In the Meantime, Take Care of Yourself aaand Eachother" (J. Springer)
+
+
+STDOUT:
+
+Will try to add 0 NA ions and 1 CL ions.
+Select a continuous group of solvent molecules
+Selected 13: 'SOL'
+
+Processing topology
+Replacing 1 solute molecules in topology file (topol.top)  by 0 NA and 1 CL ions.
+

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 07.05.2021
+# @Last modified time: 11.05.2021
 
 
 from tqdm.notebook import tqdm
@@ -179,26 +179,23 @@ def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     return cfg
 
 
-def create_decoys(abinitio_cfg, output_dir="./output", n_cores=10,
+def create_decoys(abinitio_cfg, output_dir="./output",
                   stream2pymol=True, fastrelax=True, save_log=True):
     """
+    NOTE: this function is broken (but _create_decoys() is working with 1 core)
+
     Create decoys within pyrosetta framework.
 
     Args:
         abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
         output_dir (str): output directory for decoys
-        n_cores (int): -np option for multiprocessing. Overwrites parameter
-                       in abinitio_cfg
         stream2pymol (bool): stream decoys to pymol
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
         save_log (bool): save scores to logfile at <output_dir/scores.txt>
     """
     cfg = abinitio_cfg
-    cfg.update_config(n_cores=n_cores)
 
     pool = multiprocessing.Pool()
-    pool.map(_create_decoys, range(cfg.n_cores))
-    #pool_outputs = pool.map(_create_decoys, range(cfg.n_cores))
 
     # reset log for multiprocess run
     if save_log:

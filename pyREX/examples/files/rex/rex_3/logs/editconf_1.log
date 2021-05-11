@@ -1,0 +1,59 @@
+STDERR:
+
+                     :-) GROMACS - gmx editconf, 2020.5 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx editconf, version 2020.5
+Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
+Data prefix:  /usr/local/gromacs_2020
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_3
+Command line:
+  gmx_mpi editconf -f /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_3/protein.gro -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_3/box.gro -bt cubic -box 9.4 -c
+
+
+GROMACS reminds you: "The future still looks good, and you've got time to rectify all the things that you should" (G. Harrison)
+
+
+STDOUT:
+
+Note that major changes are planned in future for editconf, to improve usability and utility.
+Read 1443 atoms
+Volume: 55.5277 nm^3, corresponds to roughly 24900 electrons
+No velocities found
+    system size :  3.919  3.787  3.743 (nm)
+    diameter    :  4.780               (nm)
+    center      :  1.954 -0.284 -1.591 (nm)
+    box vectors :  3.918  3.786  3.743 (nm)
+    box angles  :  90.00  90.00  90.00 (degrees)
+    box volume  :  55.53               (nm^3)
+    shift       :  2.746  4.984  6.291 (nm)
+new center      :  4.700  4.700  4.700 (nm)
+new box vectors :  9.400  9.400  9.400 (nm)
+new box angles  :  90.00  90.00  90.00 (degrees)
+new box volume  : 830.58               (nm^3)
+
