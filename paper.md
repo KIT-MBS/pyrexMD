@@ -1,5 +1,5 @@
 ---
-title: 'pyREX: Workflow-Oriented Python Package for Replica-Exchange Molecular Dynamics'
+title: 'pyREX: Workflow-Orientated Python Package for Replica-Exchange Molecular Dynamics'
 tags:
   - Python
   - Gromacs

@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 07.05.2021
+# @Last modified time: 12.05.2021
 
 
 #from __future__ import division, print_function
@@ -338,13 +338,16 @@ def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
 ### Modify topology functions
 
 
-def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
+def parsePDB_RES_ATOM_NAME(fin, parse="all", skiprows="auto", ignh=True):
     """
     Reads PDB file and returns the columns for residue, atom-number and atom-name as lists.
     Removes column entries which consist only of whitespace or newlines.
 
     Args:
         fin (str): PDB file
+        parse (str): select which atoms should be parsed. ("all" or "<atom name>")
+            "all": parse all atoms
+            "CA": parse only CA atoms (any atom name works)
         skiprows (int): ignore header rows of fin
             -1 or "auto": auto detect
         ignh (bool): ignore hydrogen
@@ -397,13 +400,17 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
                 line_ATOM = line_ATOM.replace(" ", "")
                 line_NAME = line_NAME.replace(" ", "")
                 # append to list
-                if ignh == False:
+                if parse == "all" and ignh == False:
                     # append all
                     RES.append(line_RES)
                     ATOM.append(line_ATOM)
                     NAME.append(line_NAME)
-                elif not HELP_atom_is_hydrogen(line):
+                elif parse == "all" and not HELP_atom_is_hydrogen(line):
                     # append only heavy atoms
+                    RES.append(line_RES)
+                    ATOM.append(line_ATOM)
+                    NAME.append(line_NAME)
+                elif parse == line_NAME:
                     RES.append(line_RES)
                     ATOM.append(line_ATOM)
                     NAME.append(line_NAME)
@@ -411,9 +418,50 @@ def parsePDB_RES_ATOM_NAME(fin, skiprows="auto", ignh=True):
         # double check: remove empty entries (might occur at beginning/ending of structures)
         RES = [int(item) for item in RES if item.isalnum()]
         ATOM = [int(item) for item in ATOM if item.isalnum()]
-        NAME = [item for item in NAME if item.isalnum()]
+        NAME = [item for item in NAME if item.isalnum() or "'" in item]
 
     return RES, ATOM, NAME
+
+
+def create_special_group_ndx(fin, parse="CA", save_as="special_group.ndx"):
+    """
+    Create index file for special group.
+
+    Args:
+        fin (str): PDB ref file (after applying force field)
+        parse (str): select which atoms should be parsed.
+            "CA": parse only CA atoms (any atom name works)
+        save_as (str)
+    """
+    RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(fin=fin, parse=parse)
+    with open(save_as, "w") as fout:
+        fout.write(f"[ {parse}_atoms ]\n")
+        for i in range(len(ATOM)):
+            fout.write(f"\t{ATOM[i]}")
+        fout.write("\n")
+        realpath = _misc.realpath(save_as)
+        _misc.cprint(f"Saved file as: {realpath}")
+    return
+
+
+def create_pull_groups_ndx(fin, parse="CA", save_as="pull_groups.ndx"):
+    """
+    Create index file for pull groups.
+
+    Args:
+        fin (str): PDB ref file (after applying force field)
+        parse (str): select which atoms should be parsed.
+            "CA": parse only CA atoms (any atom name works)
+        save_as (str)
+    """
+    RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(fin=fin, parse=parse)
+    with open(save_as, "w") as fout:
+        for i in range(len(RES)):
+            fout.write(f"[ pull_res{RES[i]} ]\n")
+            fout.write(f"\t{ATOM[i]}\n")
+        realpath = _misc.realpath(save_as)
+        _misc.cprint(f"Saved file as: {realpath}")
+    return
 
 
 def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,

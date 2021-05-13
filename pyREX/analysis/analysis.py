@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 12.05.2021
+# @Last modified time: 13.05.2021
 
 
 import pyREX.misc as _misc
@@ -746,14 +746,15 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
     return dirpath
 
 
-def shortest_RES_distances(u):
+def shortest_RES_distances(u, sel):
     """
-    Calculates shortest RES distances (all atom level) of universe u.
+    Calculates shortest RES distances for selection of universe u.
     Attention: Displayed RES ids always start with 1
 
     Args:
         u (str): structure path
         u (MDA universe/atomgrp): structure
+        sel (str): selection string
 
     Returns:
         SD (np.arrray): NxN Matrix with shortest RES distances
@@ -773,22 +774,23 @@ def shortest_RES_distances(u):
     elif isinstance(u, mda.AtomGroup):
         uc = u.universe.copy()
     norm_resids(uc, verbose=True)
-    dim = len(uc.residues.resids)
+    a = true_select_atoms(uc, sel)
+    dim = len(a.residues.resids)
     SD = np.zeros(shape=(dim, dim))
     SD_d = []
 
     for i in range(dim):
         for j in range(i + 1, dim):
-            DA = _distances.distance_array(uc.residues[i].atoms.positions, uc.residues[j].atoms.positions)
+            DA = _distances.distance_array(a.residues[i].atoms.positions, a.residues[j].atoms.positions)
             d_min = np.min(DA)
             d_min_index = np.unravel_index(np.argmin(DA), DA.shape)  # atom indices
 
             # write values to list
-            RES_pair = (uc.residues[i].resid, uc.residues[j].resid)
-            ATM_pair = (uc.residues[i].atoms[d_min_index[0]].id,
-                        uc.residues[j].atoms[d_min_index[1]].id)
-            ATM_names = (uc.residues[i].atoms.names[d_min_index[0]],
-                         uc.residues[j].atoms.names[d_min_index[1]])
+            RES_pair = (a.residues[i].resid, a.residues[j].resid)
+            ATM_pair = (a.residues[i].atoms[d_min_index[0]].id,
+                        a.residues[j].atoms[d_min_index[1]].id)
+            ATM_names = (a.residues[i].atoms.names[d_min_index[0]],
+                         a.residues[j].atoms.names[d_min_index[1]])
 
             SD[i][j] = d_min
             SD_d.append([d_min, RES_pair, ATM_pair, ATM_names])
