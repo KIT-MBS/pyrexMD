@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 12.05.2021
+# @Last modified time: 13.05.2021
 
 
 #from __future__ import division, print_function
@@ -464,10 +464,12 @@ def create_pull_groups_ndx(fin, parse="CA", save_as="pull_groups.ndx"):
     return
 
 
-def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
-                            ref_skiprows="auto", DCA_skiprows="auto",
+def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, parse="CA",
+                            n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
                             filter_DCA=True, save_log=True, **kwargs):
     """
+    NOTE: all n_bonds options are currently disabled except n_bonds=1
+
     Get DCA contact mapping:
     Return lists of matching RES pairs and ATOM pairs for "DCA REX Workflow"
 
@@ -487,6 +489,7 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
         DCA_fin (str): DCA file (path)
         n_DCA (int): number of DCA contacts which should be used
         usecols (tuple/list): columns containing the RES pairs in DCA_fin
+        parse (str): select which atom(names) should be parsed. Default "CA"
         n_bonds (int/str): number of restraints per DCA contact
             "all", 0 or -1: bonds between all heavy atoms of RES pair ij
                     -> all permutations of heavy atoms per DCA pair
@@ -525,116 +528,121 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
     _misc.cprint('ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added hyrogen atoms will shift the atom numbers.\n', cfg.cprint_color)
 
     # read files
-    RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(ref_pdb, ref_skiprows)
+    RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(ref_pdb, parse=parse, skiprows=ref_skiprows)
     DCA_PAIR, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=usecols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
 
     RES_PAIR = []
     ATOM_PAIR = []
 
     # warning
-    if n_bonds not in ["all", -1, 0, 1, 2, 3]:
-        print("""DCAREX_res2atom warning: invalid n_bonds parameter. Valid values are ["all",-1,0,1,2,3]. Set n_bonds to 1.""")
-        n_bonds = 1
+    #if n_bonds not in ["all", -1, 0, 1, 2, 3]:
+    #print("""DCAREX_res2atom warning: invalid n_bonds parameter. Valid values are ["all",-1,0,1,2,3]. Set n_bonds to 1.""")
+    n_bonds = 1
 
-    # case1: all atoms
-    if n_bonds == "all" or n_bonds == 0 or n_bonds == -1:
-        for IJ in DCA_PAIR:
-            _temp_min = RES.index(IJ[0])
-            _temp_max = RES.index(IJ[0]+1)
-            ATOM1 = ATOM[_temp_min:_temp_max]
-
-            _temp_min = RES.index(IJ[1])
-            _temp_max = RES.index(IJ[1]+1)
-            ATOM2 = ATOM[_temp_min:_temp_max]
-            RES_PAIR.append((IJ[0], IJ[1]))
-
-            TEMP = []
-            for item1 in ATOM1:
-                for item2 in ATOM2:
-                    TEMP.append((item1, item2))
-                ATOM_PAIR.append(TEMP)
+    # # case1: all atoms
+    # if n_bonds == "all" or n_bonds == 0 or n_bonds == -1:
+    #     for IJ in DCA_PAIR:
+    #         _temp_min = RES.index(IJ[0])
+    #         _temp_max = RES.index(IJ[0]+1)
+    #         ATOM1 = ATOM[_temp_min:_temp_max]
+    #
+    #         _temp_min = RES.index(IJ[1])
+    #         _temp_max = RES.index(IJ[1]+1)
+    #         ATOM2 = ATOM[_temp_min:_temp_max]
+    #         RES_PAIR.append((IJ[0], IJ[1]))
+    #
+    #         TEMP = []
+    #         for item1 in ATOM1:
+    #             for item2 in ATOM2:
+    #                 TEMP.append((item1, item2))
+    #             ATOM_PAIR.append(TEMP)
 
     # case2: CA atoms
-    elif n_bonds == 1:
+    if n_bonds == 1:
         for IJ in DCA_PAIR:
+            # find real index for first CA atom
             _temp_min = RES.index(IJ[0])
             _temp_max = RES.index(IJ[0]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
+            _temp_index = NAME[_temp_min:_temp_max].index(parse)
             CA1_index = _temp_min + _temp_index
 
+            # find real index for second CA atom
             _temp_min = RES.index(IJ[1])
-            _temp_max = RES.index(IJ[1]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
+            try:
+                _temp_max = RES.index(IJ[1]+1)
+                _temp_index = NAME[_temp_min:_temp_max].index(parse)
+            except ValueError:
+                _temp_index = NAME[_temp_min:].index(parse)   # fix out of range if IJ[1] is already highest RES possible
             CA2_index = _temp_min + _temp_index
 
             RES_PAIR.append((RES[CA1_index], RES[CA2_index]))
             ATOM_PAIR.append((ATOM[CA1_index], ATOM[CA2_index]))
 
-    # case3: CA and CB atoms
-    elif n_bonds == 2:
-        for IJ in DCA_PAIR:
-            _temp_min = RES.index(IJ[0])
-            _temp_max = RES.index(IJ[0]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
-            CA1_index = _temp_min + _temp_index
-            _temp_index = NAME[_temp_min:_temp_max].index('CB')
-            CB1_index = _temp_min + _temp_index
-
-            _temp_min = RES.index(IJ[1])
-            _temp_max = RES.index(IJ[1]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
-            CA2_index = _temp_min + _temp_index
-            _temp_index = NAME[_temp_min:_temp_max].index('CB')
-            CB2_index = _temp_min + _temp_index
-
-            RES_PAIR.append((RES[CA1_index], RES[CA2_index]))
-            ATOM_PAIR.append([(ATOM[CA1_index], ATOM[CA2_index]),
-                              (ATOM[CB1_index], ATOM[CB2_index])])
-    # case4: CA, CB and CG atoms
-    elif n_bonds == 3:
-        for IJ in DCA_PAIR:
-            _temp_min = RES.index(IJ[0])
-            _temp_max = RES.index(IJ[0]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
-            CA1_index = _temp_min + _temp_index
-            _temp_index = NAME[_temp_min:_temp_max].index('CB')
-            CB1_index = _temp_min + _temp_index
-            if "CG" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG')
-                CG1_index = _temp_min + _temp_index
-            elif "CG1" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG1')
-                CG1_index = _temp_min + _temp_index
-            elif "CG2" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG2')
-                CG1_index = _temp_min + _temp_index
-            elif "C" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('C')
-                CG1_index = _temp_min + _temp_index
-
-            _temp_min = RES.index(IJ[1])
-            _temp_max = RES.index(IJ[1]+1)
-            _temp_index = NAME[_temp_min:_temp_max].index('CA')
-            CA2_index = _temp_min + _temp_index
-            _temp_index = NAME[_temp_min:_temp_max].index('CB')
-            CB2_index = _temp_min + _temp_index
-            if "CG" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG')
-                CG2_index = _temp_min + _temp_index
-            elif "CG1" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG1')
-                CG2_index = _temp_min + _temp_index
-            elif "CG2" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('CG2')
-                CG2_index = _temp_min + _temp_index
-            elif "C" in NAME[_temp_min:_temp_max]:
-                _temp_index = NAME[_temp_min:_temp_max].index('C')
-                CG2_index = _temp_min + _temp_index
-
-            RES_PAIR.append((RES[CA1_index], RES[CA2_index]))
-            ATOM_PAIR.append([(ATOM[CA1_index], ATOM[CA2_index]),
-                              (ATOM[CB1_index], ATOM[CB2_index]),
-                              (ATOM[CG1_index], ATOM[CG2_index])])
+    # # case3: CA and CB atoms
+    # if n_bonds == 2:
+    #     for IJ in DCA_PAIR:
+    #         _temp_min = RES.index(IJ[0])
+    #         _temp_max = RES.index(IJ[0]+1)
+    #         _temp_index = NAME[_temp_min:_temp_max].index(parse)
+    #         CA1_index = _temp_min + _temp_index
+    #         _temp_index = NAME[_temp_min:_temp_max].index('CB')
+    #         CB1_index = _temp_min + _temp_index
+    #
+    #         _temp_min = RES.index(IJ[1])
+    #         _temp_max = RES.index(IJ[1]+1)
+    #         _temp_index = NAME[_temp_min:_temp_max].index(parse)
+    #         CA2_index = _temp_min + _temp_index
+    #         _temp_index = NAME[_temp_min:_temp_max].index('CB')
+    #         CB2_index = _temp_min + _temp_index
+    #
+    #         RES_PAIR.append((RES[CA1_index], RES[CA2_index]))
+    #         ATOM_PAIR.append([(ATOM[CA1_index], ATOM[CA2_index]),
+    #                           (ATOM[CB1_index], ATOM[CB2_index])])
+    # # case4: CA, CB and CG atoms
+    # if n_bonds == 3:
+    #     for IJ in DCA_PAIR:
+    #         _temp_min = RES.index(IJ[0])
+    #         _temp_max = RES.index(IJ[0]+1)
+    #         _temp_index = NAME[_temp_min:_temp_max].index(parse)
+    #         CA1_index = _temp_min + _temp_index
+    #         _temp_index = NAME[_temp_min:_temp_max].index('CB')
+    #         CB1_index = _temp_min + _temp_index
+    #         if "CG" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG')
+    #             CG1_index = _temp_min + _temp_index
+    #         elif "CG1" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG1')
+    #             CG1_index = _temp_min + _temp_index
+    #         elif "CG2" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG2')
+    #             CG1_index = _temp_min + _temp_index
+    #         elif "C" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('C')
+    #             CG1_index = _temp_min + _temp_index
+    #
+    #         _temp_min = RES.index(IJ[1])
+    #         _temp_max = RES.index(IJ[1]+1)
+    #         _temp_index = NAME[_temp_min:_temp_max].index(parse)
+    #         CA2_index = _temp_min + _temp_index
+    #         _temp_index = NAME[_temp_min:_temp_max].index('CB')
+    #         CB2_index = _temp_min + _temp_index
+    #         if "CG" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG')
+    #             CG2_index = _temp_min + _temp_index
+    #         elif "CG1" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG1')
+    #             CG2_index = _temp_min + _temp_index
+    #         elif "CG2" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('CG2')
+    #             CG2_index = _temp_min + _temp_index
+    #         elif "C" in NAME[_temp_min:_temp_max]:
+    #             _temp_index = NAME[_temp_min:_temp_max].index('C')
+    #             CG2_index = _temp_min + _temp_index
+    #
+    #         RES_PAIR.append((RES[CA1_index], RES[CA2_index]))
+    #         ATOM_PAIR.append([(ATOM[CA1_index], ATOM[CA2_index]),
+    #                           (ATOM[CB1_index], ATOM[CB2_index]),
+    #                           (ATOM[CG1_index], ATOM[CG2_index])])
     if save_log:
         if "PDBID" in cfg.save_as:
             if cfg.pdbid == "auto":
@@ -659,7 +667,7 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, n_bonds=1,
     return RES_PAIR, ATOM_PAIR
 
 
-def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(1, 2), score_col=(5), **kwargs):
+def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(0, 1), score_col=(2), **kwargs):
     """
     Modify score file (MSA scores) by shifting residues.
 
@@ -669,8 +677,8 @@ def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(1, 2), score_col=(5)
         outputFileName (str): realpath to modified score file
             if "PDBID_mod.score" is left as default: try to automatically detect
             pattern based on score_fin and add the "_mod" part into filename.
-        res_cols (tuple/list): columns with residue numbers
-        score_col (tuple/list): column with score/confidence
+        res_cols (tuple/list): score_fin columns with residue numbers
+        score_col (tuple/list): score_fin column with score/confidence
 
     Kwargs:
         save_as (str): "PDBID_mod.score"
@@ -708,6 +716,9 @@ def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(1, 2), score_col=(5)
 
 def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto", **kwargs):
     """
+    Modifies topology by using the contacts written in "DCA_used.txt" file.
+    "DCA_used.txt" is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.
+
     Modify topology:
         - top_fin (topol.top file): use as template
         - DCA_used_fin (DCA_used.txt): use all contacts as restraints
