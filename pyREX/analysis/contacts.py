@@ -292,7 +292,6 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
         a = u.select_atoms(sel)
     # read DCA and calculate TPR
     DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
-    print(DCA)
     DCA_TPR = []  # List with TPR of DCA contacts with d < d_cutoff
     SD = _ana.shortest_RES_distances(u=a, sel=sel)[0]
     RES_min = min(a.residues.resids)
