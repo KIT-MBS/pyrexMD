@@ -43,15 +43,12 @@ experiments. Replica-Exchange (REX [@sugita1999replica:1991,
 protein conformations which generates large amounts of data. `pyREX` is designed
 as an interactive "all-purpose" toolkit for research projects which rely on
 (contact-guided) Replica-Exchange Molecular Dynamics using GROMACS
-[@van2005gromacs:2005]. Its workflow-orientated design and existing templates
-significantly enhance productivity and reduce the time spend at various stages
-of the project.
+[@van2005gromacs:2005]. Due to its workflow-orientated design it is possible to
+quickly create whole setup or analyses workflows which significantly enhances
+productivity and reduces the time spend at various stages of the project.
 
-
- - ref to PLOS ONE paper ?
 
 # Statement of need
-
 
 Timescales of various biomolecular interactions of interest, such as protein
 folding, conformation transitions or ligand bonding, are typically in the order
@@ -62,8 +59,8 @@ proteins can get trapped in certain conformations. One possibility to overcome
 this problem is to utilize one of the many enhanced sampling techiques, such as
 REX. Depending on the research goal it is also possible to integrate additional
 theoretically-derived [@morcos2011direct:2011] or experimentally-derived
-[@perilla2017cryoem:2017] bias into MD simulations and reduce the search space to
-effectively lower the computational costs.
+[@perilla2017cryoem:2017] bias into MD simulations and reduce the search space
+to effectively lower the computational costs.
 
 Research studies relying on REX, however, can become very ardous and time
 consuming. REX simulations usually require not only knowledge of various program
@@ -93,22 +90,27 @@ reproduce research results or transfer the work on other target structures of
 interest. Furthermore, it lowers the technical boundaries for newcomers who want
 to do research using REX for enhanced sampling.
 
-# show some figures
--rex setup
+# Applications
 
--global rmsd heatmap
+`pyREX` was initially developed during the work of [@voronin2020including,
+2020]. It is currently applied on two ongoing REX studies about protein and RNA
+structure refinement. Fig. 1 exemplarily shows the invesigation of the true
+positive rate for used bias contacts. Fig. 2 shows the local accuracy based on a
+global distance test for models generated during a REX study.
 
--local accuracy
+![Analysis of the true positive rate (TPR) for bias contacts using 'pyREX'. The
+figure shows many important factors when analysing the TPR and an estimated
+ideal number of contacts based on selection rules from [@voronin2020including,
+2020]](paper_figs/fig1.png)
 
+![Local accuracy of REX-generated models based on "Global Distance Test" scores.](paper_figs/fig2.png)
 
-# Citations
 
 
 # Acknowledgements
 
 We want to thank all developers and contributors of MDAnalysis, which is the
 backbone of pyREX as it allows us to parse and analyze MD-related data files.
-
 
 This work is supported by the Helmholtz Association Initiative and Networking
 Fund under project number ZT-I-0003.

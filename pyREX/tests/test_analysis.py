@@ -60,12 +60,9 @@ def test_get_Distance_Matrices():
 
 
 def test_get_resids_shift():
-    mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=False)
     ref = mda.Universe(pdb)
-    assert ana.get_resids_shift(mobile, ref) == -1
-    mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
-    ref = mda.Universe(pdb)
-    assert ana.get_resids_shift(mobile, ref) == 0
+    ref_shifted = mda.Universe(pre + "1l2y_ref_shifted.pdb", tpr_resid_from_one=False)
+    assert ana.get_resids_shift(ref_shifted, ref) == 4
     return
 
 
