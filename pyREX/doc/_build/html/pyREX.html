@@ -2808,7 +2808,7 @@ f2 docstring contains: Alias function of &lt;f1.__name__&gt;</p>
 <span id="pyrex-rex-module"></span><h2>pyREX.rex module<a class="headerlink" href="#module-pyREX.rex" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyREX.rex.DCAREX_modify_scoreFile">
-<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">DCAREX_modify_scoreFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">2)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.DCAREX_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">DCAREX_modify_scoreFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.DCAREX_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify score file (MSA scores) by shifting residues.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2818,8 +2818,8 @@ f2 docstring contains: Alias function of &lt;f1.__name__&gt;</p>
 <li><p><strong>outputFileName</strong> (<em>str</em>) – realpath to modified score file
 if “PDBID_mod.score” is left as default: try to automatically detect
 pattern based on score_fin and add the “_mod” part into filename.</p></li>
-<li><p><strong>res_cols</strong> (<em>tuple/list</em>) – columns with residue numbers</p></li>
-<li><p><strong>score_col</strong> (<em>tuple/list</em>) – column with score/confidence</p></li>
+<li><p><strong>res_cols</strong> (<em>tuple/list</em>) – score_fin columns with residue numbers</p></li>
+<li><p><strong>score_col</strong> (<em>tuple/list</em>) – score_fin column with score/confidence</p></li>
 </ul>
 </dd>
 </dl>
@@ -2844,7 +2844,9 @@ based on score_fin and insert the “_mod” part into filename.</p>
 <dl class="py function">
 <dt id="pyREX.rex.DCAREX_modify_topology">
 <code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">DCAREX_modify_topology</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.DCAREX_modify_topology" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
+“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
+<dl class="simple">
 <dt>Modify topology:</dt><dd><ul class="simple">
 <li><p>top_fin (topol.top file): use as template</p></li>
 <li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
@@ -2906,8 +2908,9 @@ save_as (str) : “PDBID_topol_mod.top”</p>
 
 <dl class="py function">
 <dt id="pyREX.rex.DCAREX_res2atom_mapping">
-<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">DCAREX_res2atom_mapping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bonds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.DCAREX_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get DCA contact mapping:
+<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">DCAREX_res2atom_mapping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bonds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.DCAREX_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: all n_bonds options are currently disabled except n_bonds=1</p>
+<p>Get DCA contact mapping:
 Return lists of matching RES pairs and ATOM pairs for “DCA REX Workflow”</p>
 <dl class="simple">
 <dt>Algorithm:</dt><dd><ul class="simple">
@@ -2936,6 +2939,7 @@ Return lists of matching RES pairs and ATOM pairs for “DCA REX Workflow”</p>
 <li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
 <li><p><strong>n_DCA</strong> (<em>int</em>) – number of DCA contacts which should be used</p></li>
 <li><p><strong>usecols</strong> (<em>tuple/list</em>) – columns containing the RES pairs in DCA_fin</p></li>
+<li><p><strong>parse</strong> (<em>str</em>) – select which atom(names) should be parsed. Default “CA”</p></li>
 <li><p><strong>n_bonds</strong> (<em>int/str</em>) – <p>number of restraints per DCA contact
 “all”, 0 or -1: bonds between all heavy atoms of RES pair ij</p>
 <blockquote>
@@ -3124,6 +3128,38 @@ to each rex subdirectory rex_1, rex_2, …</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="pyREX.rex.create_pull_groups_ndx">
+<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">create_pull_groups_ndx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_groups.ndx'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.create_pull_groups_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index file for pull groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fin</strong> (<em>str</em>) – PDB ref file (after applying force field)</p></li>
+<li><p><strong>parse</strong> (<em>str</em>) – select which atoms should be parsed.
+“CA”: parse only CA atoms (any atom name works)</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyREX.rex.create_special_group_ndx">
+<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">create_special_group_ndx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'special_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.create_special_group_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index file for special group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fin</strong> (<em>str</em>) – PDB ref file (after applying force field)</p></li>
+<li><p><strong>parse</strong> (<em>str</em>) – select which atoms should be parsed.
+“CA”: parse only CA atoms (any atom name works)</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pyREX.rex.get_REX_DIRS">
 <code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">get_REX_DIRS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.get_REX_DIRS" title="Permalink to this definition">¶</a></dt>
 <dd><p>get list with REX DIRS.</p>
@@ -3165,13 +3201,16 @@ to each rex subdirectory rex_1, rex_2, …</p>
 
 <dl class="py function">
 <dt id="pyREX.rex.parsePDB_RES_ATOM_NAME">
-<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">parsePDB_RES_ATOM_NAME</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.parsePDB_RES_ATOM_NAME" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyREX.rex.</span></code><code class="sig-name descname"><span class="pre">parsePDB_RES_ATOM_NAME</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.rex.parsePDB_RES_ATOM_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads PDB file and returns the columns for residue, atom-number and atom-name as lists.
 Removes column entries which consist only of whitespace or newlines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
+<li><p><strong>parse</strong> (<em>str</em>) – select which atoms should be parsed. (“all” or “&lt;atom name&gt;”)
+“all”: parse all atoms
+“CA”: parse only CA atoms (any atom name works)</p></li>
 <li><p><strong>skiprows</strong> (<em>int</em>) – ignore header rows of fin
 -1 or “auto”: auto detect</p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>

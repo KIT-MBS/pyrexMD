@@ -814,14 +814,15 @@ Remove trendline via trendline.remove()</p>
 
 <dl class="py function">
 <dt id="pyREX.analysis.analysis.shortest_RES_distances">
-<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">shortest_RES_distances</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.shortest_RES_distances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates shortest RES distances (all atom level) of universe u.
+<code class="sig-prename descclassname"><span class="pre">pyREX.analysis.analysis.</span></code><code class="sig-name descname"><span class="pre">shortest_RES_distances</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyREX.analysis.analysis.shortest_RES_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates shortest RES distances for selection of universe u.
 Attention: Displayed RES ids always start with 1</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u</strong> (<em>MDA universe/atomgrp</em>) – structure path</p></li>
 <li><p><strong>u</strong> – structure</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1172,7 +1173,11 @@ nDCA_opt_color (None/str): color of optimal/recommended nDCA threshold</p>
 <p>nDCA_opt_ls (str): linestyle of nDCA_opt (default: “–”)
 save_plot (bool)
 save_log (bool)
-figsize (tuple)</p>
+figsize (tuple)
+marker (None/str): marker
+ms (int): markersize
+ls (str): linestyle
+alpha (float): alpha value</p>
 </dd>
 </dl>
 <dl class="field-list simple">

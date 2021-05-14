@@ -1,5 +1,5 @@
 ---
-title: 'pyREX: Workflow-Orientated Python Package for Replica-Exchange Molecular Dynamics'
+title: 'pyrexMD: Workflow-Orientated Python Package for Replica Exchange Molecular Dynamics'
 tags:
   - Python
   - Gromacs
@@ -12,7 +12,7 @@ authors:
   - name: Arthur Voronin
     orcid: 0000-0002-5804-5151
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Alexander Schug^[*]
+  - name: Alexander Schug^[al.schug\@fz-juelich.de]
     orcid: 0000-0002-0534-502X
     affiliation: "3, 4" # (Multiple affiliations must be quoted)
 affiliations:
@@ -31,86 +31,99 @@ bibliography: paper.bib
 
 # Summary
 
-Proteins are complex biomolecules which fulfil important and diverse tasks in
-living organism. Studying and understanding their structure, function and
-dynamics is essential for life sciences and can, for instance, be applied for
-disease control or to improve drug design. Molecular dynamics (MD) is a
-computational method which relies on phyisical models to simulate biomolecular
-systems. The movements of all atoms can be "viewed" like a movie and analyzed to
-improve the understanding of specific interactions or complement conducted
-experiments. Replica-Exchange (REX [@sugita1999replica:1991,
-@zhang2005convergence:2005]) is a powerful method used to enhance sampling of
-protein conformations which generates large amounts of data. `pyREX` is designed
-as an interactive "all-purpose" toolkit for research projects which rely on
-(contact-guided) Replica-Exchange Molecular Dynamics using GROMACS
-[@van2005gromacs:2005]. Due to its workflow-orientated design it is possible to
-quickly create whole setup or analyses workflows which significantly enhances
-productivity and reduces the time spend at various stages of the project.
+Proteins are complex biomolecules which fulfill important and diverse tasks in
+living organisms. Studying and understanding their structure, function, and
+dynamics is essential for life sciences and can be applied for, e.g., disease
+control or advanced drug design. Molecular dynamics (MD) is a computational
+method relying on physical models to simulate biomolecular systems. The
+movements of all atoms can be 'viewed' like a movie and analyzed to improve the
+understanding of specific interactions or complement experimental measurements.
+Replica Exchange (REX) [@sugita1999replica; @zhang2005convergence] is a powerful
+method used to enhance the sampling of protein conformations and generates large
+amounts of data. `pyREX` is designed as an interactive 'all-purpose' toolkit for
+research projects which rely on (contact-guided) Replica Exchange Molecular
+Dynamics using `GROMACS` [@van2005gromacs]. Due to its workflow-orientated
+design, it is possible to rapidly create whole setup or analysis workflows,
+thereby significantly enhancing productivity and reducing the time spent at
+various stages of the project.
 
 
 # Statement of need
 
 Timescales of various biomolecular interactions of interest, such as protein
-folding, conformation transitions or ligand bonding, are typically in the order
+folding, conformation transitions, or ligand binding, are typically in the order
 of µs to s. MD simulations, however, operate in 1-2 fs steps, which makes
-in-silico studies of proteins computational demanding. Besides, observations of
-native state configurations during MD simulations are often not guaranteed and
-proteins can get trapped in certain conformations. One possibility to overcome
-this problem is to utilize one of the many enhanced sampling techiques, such as
-REX. Depending on the research goal it is also possible to integrate additional
-theoretically-derived [@morcos2011direct:2011] or experimentally-derived
-[@perilla2017cryoem:2017] bias into MD simulations and reduce the search space
-to effectively lower the computational costs.
+in-silico studies of proteins computationally demanding. Besides, observations
+of native configurations during MD simulations are often not guaranteed and
+proteins can become trapped in certain conformations. One possibility to
+overcome this problem is utilizing an enhanced sampling technique such as REX.
+Depending on the research goal, it is also possible to integrate an additional
+theoretically [@morcos2011direct] or experimentally derived [@perilla2017cryoem]
+bias into MD simulations to restrict the search space and thus effectively lower
+computational costs.
 
-Research studies relying on REX, however, can become very ardous and time
-consuming. REX simulations usually require not only knowledge of various program
-tools but also consist of many individual steps ranging from simulation setup,
-pre-processing, testing, monitoring the simulations, post-processing to data
-analyses. Furthermore, REX generates large amounts of data and requires a good
-structure when handling I/O.
+Research studies relying on REX, however, can become very arduous and time
+consuming. REX simulations usually not only require knowledge of various program
+tools but also consist of many individual steps ranging from simulation setup
+and pre-processing over testing and simulation-monitoring to post-processing and
+data analyses. Furthermore, REX generates large amounts of data and requires in
+particular a systematic handling of I/O.
 
-`pyREX` is designed as an interactive "all-purpose" toolkit specifically for
-(contact-guided) REX projects using GROMACS and is meant to be used in
-jupyter notebooks. It integrates some popular MD-related python packages, e.g.:
-- MDAnalysis [@gowers2019mdanalysis:2019 ; @michaud2011mdanalysis:2011],
-- nglview [@nguyen2018nglview:2018],
-- GromacsWrapper [@oliver_beckstein_2019_2654393:2019].
+`pyREX` is designed as an interactive 'all-purpose' toolkit specifically for
+(contact-guided) REX projects using `GROMACS` and is intended to be used in
+jupyter notebooks. It efficiently integrates the following popular MD-related
+python packages:
 
-By covering all important aspects, `pyREX` eliminates the need of switching to
-additional programs which unnecesary interrupts the workflow and often requires
-know-how of different command line syntaxes. Furthermore, 'pyREX' offers many
-workflow-orientated functions and templates for different stages of a REX study.
-Its main focuses are 1) to provide efficient and robust methods for setting up
-optimized (contact-guided) REX simulations and 2) to offer many different
-structure analyses functions to exploit the large I/O sets generated by REX.
-It also adds a variety of useful general functions and QoL improvements, such as
-interactively linked figures and trajectory or creation of multi-panel figures
-from .pickle files. With `pyREX` it becomes especially easy to share and
-reproduce research results or transfer the work on other target structures of
-interest. Furthermore, it lowers the technical boundaries for newcomers who want
-to do research using REX for enhanced sampling.
+- `MDAnalysis` [@oliver_beckstein-proc-scipy-2016; @michaud2011mdanalysis],
+
+- `nglview` [@nguyen2018nglview],
+
+- `GromacsWrapper` [@oliver_beckstein_2019_2654393].
+
+By covering all important aspects with its functionality, `pyREX` eliminates the
+need of switching to additional programs which unnecessarily interrupts the
+workflow and often requires know-how of different command line syntaxes.
+Furthermore, `pyREX` offers many workflow-orientated functions and templates for
+different stages of a REX study. Its main focuses are 1) providing efficient and
+robust methods for setting up optimized (contact-guided) REX simulations and 2)
+offering many different structure analysis functions to exploit the large I/O
+sets generated by REX. It also adds a variety of useful general functions and
+QoL improvements, such as interactive links between a figure and trajectory or
+creation of multi-panel figures from .pickle files. With `pyREX`, it becomes
+especially easy to share and reproduce research results or transfer the work on
+other target structures of interest. Furthermore, it lowers the technical
+boundaries for newcomers who want to do research using REX enhanced sampling.
 
 # Applications
 
-`pyREX` was initially developed during the work of [@voronin2020including,
-2020]. It is currently applied on two ongoing REX studies about protein and RNA
-structure refinement. Fig. 1 exemplarily shows the invesigation of the true
-positive rate for used bias contacts. Fig. 2 shows the local accuracy based on a
+`pyREX` was initially developed during the work of [@voronin2020including]. It
+is currently applied in two ongoing REX studies about protein and RNA structure
+refinement. Fig. 1 exemplarily shows an analysis of used bias contacts with
+regards to the true positive rate. Fig. 2 shows the local accuracy based on a
 global distance test for models generated during a REX study.
 
-![Analysis of the true positive rate (TPR) for bias contacts using 'pyREX'. The
-figure shows many important factors when analysing the TPR and an estimated
-ideal number of contacts based on selection rules from [@voronin2020including,
-2020]](paper_figs/fig1.png)
+![Analysis of the true positive rate (TPR) for bias contacts using `pyREX`.
+The figure shows the TPR of considered bias contacts in blue, a TPR-cutoff of 75% in
+red, a region of interested shaded in orange and an estimated ideal number of
+contacts based on selection rules from
+[@voronin2020including]](paper_figs/fig1.png)
 
-![Local accuracy of REX-generated models based on "Global Distance Test" scores.](paper_figs/fig2.png)
+![Local accuracy of REX-generated models based on global distance test scores.
+The figure shows a color-coded CA-CA distance for each residue of the model and the
+corresponding global distance test scores on the left
+side.](paper_figs/fig2.png)
+
+# Availability
+
+`pyREX` can be downloaded from
+[https://github.com/KIT-MBS/pyREX](https://github.com/KIT-MBS/pyREX) under the
+MIT license.
 
 
+# Acknowledgments
 
-# Acknowledgements
-
-We want to thank all developers and contributors of MDAnalysis, which is the
-backbone of pyREX as it allows us to parse and analyze MD-related data files.
+We want to thank all developers and contributors of MDAnalysis as the
+backbone of pyREX allowing us to parse and analyze MD-related data files.
 
 This work is supported by the Helmholtz Association Initiative and Networking
 Fund under project number ZT-I-0003.
