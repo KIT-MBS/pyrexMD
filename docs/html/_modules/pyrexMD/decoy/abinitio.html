@@ -1,0 +1,897 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.decoy.abinitio &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pyrexMD.html">pyrexMD</a> &raquo;</li>
+        
+      <li>pyrexMD.decoy.abinitio</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrexMD.decoy.abinitio</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
+<span class="c1"># @Date:   17.04.2021</span>
+<span class="c1"># @Filename: abinitio.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
+
+
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="kn">import</span> <span class="n">get_Distance_Matrices</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrosetta</span>
+<span class="kn">from</span> <span class="nn">pyrosetta.rosetta</span> <span class="kn">import</span> <span class="n">protocols</span>
+<span class="n">pyrosetta</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s2">&quot;-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory&quot;</span><span class="p">)</span>  <span class="c1"># mute messages</span>
+
+
+<div class="viewcode-block" id="get_torsion_angles"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_torsion_angles">[docs]</a><span class="k">def</span> <span class="nf">get_torsion_angles</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">mol_type</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get torsion angles of object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (pose, str): pyrosetta pose object or pdb path</span>
+<span class="sd">        mol_type (str):</span>
+<span class="sd">          | molecule type</span>
+<span class="sd">          | &quot;auto&quot;: detect &quot;protein&quot; or &quot;rna&quot; by checking if pose.phi(1) exists.</span>
+<span class="sd">          | &quot;protein&quot;: protein molecule with torsion angles (phi, psi)</span>
+<span class="sd">          | &quot;rna&quot;: rna molecule with torsion angles (alpha, beta, gamma, delta)</span>
+<span class="sd">        prec (int): rounding precission</span>
+<span class="sd">        verbose (bool): print table with torsion angles</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        TORSION_ANGLES (tuple)</span>
+<span class="sd">          | tuple containing lists with torsion angles of each residue</span>
+<span class="sd">          | if mol_type == &quot;protein&quot;:</span>
+<span class="sd">          | TORSION_ANGLES = (phi, psi)</span>
+<span class="sd">          | if mol_type == &quot;rna&quot;:</span>
+<span class="sd">          | TORSION_ANGLES = (alpha, beta, gamma, delta)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">pose_from_pdb</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">obj</span>
+
+    <span class="k">if</span> <span class="n">mol_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pose</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">mol_type</span> <span class="o">=</span> <span class="s2">&quot;protein&quot;</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">mol_type</span> <span class="o">=</span> <span class="s2">&quot;rna&quot;</span>
+
+    <span class="k">if</span> <span class="n">mol_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span>
+        <span class="n">PHI</span><span class="p">,</span> <span class="n">PSI</span><span class="p">,</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">pose</span><span class="o">.</span><span class="n">total_residue</span><span class="p">()):</span>
+            <span class="n">PHI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+            <span class="n">PSI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+
+        <span class="n">TORSION_ANGLES</span> <span class="o">=</span> <span class="p">(</span><span class="n">PHI</span><span class="p">,</span> <span class="n">PSI</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;resid </span><span class="se">\t</span><span class="s2">phi </span><span class="se">\t</span><span class="s2">psi&quot;</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">(</span><span class="n">spacing</span><span class="p">),</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+            <span class="n">RESID</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">pose</span><span class="o">.</span><span class="n">total_residue</span><span class="p">()))</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">print_table</span><span class="p">([</span><span class="n">RESID</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">PSI</span><span class="p">],</span>
+                              <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="n">verbose_stop</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mol_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;rna&quot;</span><span class="p">:</span>
+        <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span><span class="p">,</span> <span class="n">DELTA</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">pose</span><span class="o">.</span><span class="n">total_residue</span><span class="p">()):</span>
+            <span class="n">ALPHA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+            <span class="n">BETA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+            <span class="n">GAMMA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+            <span class="n">DELTA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">delta</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">prec</span><span class="p">))</span>
+
+        <span class="n">TORSION_ANGLES</span> <span class="o">=</span> <span class="p">(</span><span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;resid  </span><span class="se">\t</span><span class="s2">alpha </span><span class="se">\t</span><span class="s2">beta </span><span class="se">\t</span><span class="s2">gamma </span><span class="se">\t</span><span class="s2">delta&quot;</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">(</span><span class="n">spacing</span><span class="p">),</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+            <span class="n">RESID</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">pose</span><span class="o">.</span><span class="n">total_residue</span><span class="p">()))</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">print_table</span><span class="p">([</span><span class="n">RESID</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">],</span>
+                              <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="n">verbose_stop</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TORSION_ANGLES</span></div>
+
+
+<div class="viewcode-block" id="apply_relative_torsion_angle"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.apply_relative_torsion_angle">[docs]</a><span class="k">def</span> <span class="nf">apply_relative_torsion_angle</span><span class="p">(</span><span class="n">pose_ref</span><span class="p">,</span> <span class="n">pose</span><span class="p">,</span> <span class="n">resid</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply relative torsion angle (use pose_ref angle and apply relative shift).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pose_ref (pose)</span>
+<span class="sd">        pose (pose)</span>
+<span class="sd">        resid (int)</span>
+<span class="sd">        angle (str)</span>
+<span class="sd">          | protein: &quot;phi&quot;, &quot;psi&quot;</span>
+<span class="sd">          | rna:  &quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot;, &quot;delta&quot;</span>
+<span class="sd">        shift (float): relative shift value</span>
+<span class="sd">        verbose (bool): print applied changes to torsion angle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;phi&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_phi</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;psi&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_psi</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_alpha</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;beta&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_beta</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;gamma&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_gamma</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span>
+            <span class="n">set_angle</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">set_delta</span>
+            <span class="n">vref</span> <span class="o">=</span> <span class="n">pose_ref</span><span class="o">.</span><span class="n">delta</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">pose</span><span class="o">.</span><span class="n">delta</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span>
+
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">vref</span> <span class="o">+</span> <span class="n">shift</span>
+        <span class="n">set_angle</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;resid </span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">angle</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v1</span><span class="si">:</span><span class="s2">&gt;8.2f</span><span class="si">}</span><span class="s2">  --&gt; </span><span class="si">{</span><span class="n">v2</span><span class="si">:</span><span class="s2">&gt;8.2f</span><span class="si">}</span><span class="s2">  (ref:</span><span class="si">{</span><span class="n">vref</span><span class="si">:</span><span class="s2">&gt;8.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+
+
+<div class="viewcode-block" id="setup_abinitio_cfg"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.setup_abinitio_cfg">[docs]</a><span class="k">def</span> <span class="nf">setup_abinitio_cfg</span><span class="p">(</span><span class="n">pdbid</span><span class="p">,</span> <span class="n">fasta_seq</span><span class="p">,</span> <span class="n">frag3mer</span><span class="p">,</span> <span class="n">frag9mer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Setup config file for abinitio functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pdbid (str): pdb id / pdb name</span>
+<span class="sd">        fasta_seq (str): fasta sequence</span>
+<span class="sd">        frag3mer (str): 3mer file path (get via robetta server)</span>
+<span class="sd">        frag9mer (str): 9mer file path (get via robetta server)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        fasta_seq_len (int): fasta sequence length</span>
+<span class="sd">        frag3inserts (int): number of frag3 inserts</span>
+<span class="sd">        frag9inserts (int): number of frag9 inserts</span>
+<span class="sd">        folding_cycles (int): folding move cycles</span>
+<span class="sd">        folding_repeats (int): folding move repeats</span>
+<span class="sd">        job_name (str)</span>
+<span class="sd">        n_decoys (int): total number of decoys</span>
+<span class="sd">        n_cores (int): -np option for multiprocessing</span>
+<span class="sd">        decoy_ndx_shift (int):</span>
+<span class="sd">          | shift decoy index (output filename) by this value</span>
+<span class="sd">          | required for multiprocessing to fix names of decoys</span>
+<span class="sd">        kT (float): kT parameter during Monte-Carlo simulation</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        abinitio_cfg (CONFIG class)</span>
+<span class="sd">            configs used as input for abinitio.create_decoys()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="n">pdbid</span><span class="p">,</span>
+               <span class="s2">&quot;fasta_seq&quot;</span><span class="p">:</span> <span class="n">fasta_seq</span><span class="p">,</span>
+               <span class="s2">&quot;fasta_seq_len&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;frag3mer&quot;</span><span class="p">:</span> <span class="n">frag3mer</span><span class="p">,</span>
+               <span class="s2">&quot;frag9mer&quot;</span><span class="p">:</span> <span class="n">frag9mer</span><span class="p">,</span>
+               <span class="s2">&quot;frag3inserts&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;frag9inserts&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;folding_cycles&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+               <span class="s2">&quot;folding_repeats&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+               <span class="s2">&quot;job_name&quot;</span><span class="p">:</span> <span class="n">pdbid</span><span class="p">,</span>
+               <span class="s2">&quot;n_decoys&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+               <span class="s2">&quot;n_cores&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;decoy_ndx_shift&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="s2">&quot;kT&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+    <span class="n">abinitio_cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+    <span class="n">abinitio_cfg</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">fasta_seq_len</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">abinitio_cfg</span><span class="o">.</span><span class="n">fasta_seq</span><span class="p">))</span>
+    <span class="n">abinitio_cfg</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">abinitio_cfg</span></div>
+
+
+<div class="viewcode-block" id="create_decoys"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.create_decoys">[docs]</a><span class="k">def</span> <span class="nf">create_decoys</span><span class="p">(</span><span class="n">abinitio_cfg</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./output&quot;</span><span class="p">,</span>
+                  <span class="n">stream2pymol</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastrelax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_log</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create decoys within pyrosetta framework.</span>
+
+<span class="sd">    .. Warning:: this function is currently broken (but abinitio._create_decoys()</span>
+<span class="sd">                 is working with 1 core)</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
+<span class="sd">        output_dir (str): output directory for decoys</span>
+<span class="sd">        stream2pymol (bool): stream decoys to pymol</span>
+<span class="sd">        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
+<span class="sd">        save_log (bool): save scores to logfile at &lt;output_dir/scores.txt&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">abinitio_cfg</span>
+
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span>
+
+    <span class="c1"># reset log for multiprocess run</span>
+    <span class="k">if</span> <span class="n">save_log</span><span class="p">:</span>
+        <span class="n">log_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/scores.txt&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">log_file</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span> <span class="o">&gt;=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt;&gt; Decoy creation will be distributed to </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="si">}</span><span class="s2"> cores.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;CFG file issue:</span>
+<span class="s2">&lt;n_decoys parameter&gt;: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">&lt;n_cores parameter&gt;: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt;&gt; Decoy creation will be distributed to use only </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span><span class="si">}</span><span class="s2"> cores.&quot;</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span>
+
+    <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">decoy_ndx_shift</span> <span class="o">=</span> <span class="n">worker</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span><span class="o">/</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">cfg</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">stream2pymol</span><span class="p">,</span> <span class="n">fastrelax</span><span class="p">,</span> <span class="n">save_log</span><span class="p">]</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_create_decoys</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">return</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_decoys</span><span class="p">(</span><span class="n">abinitio_cfg</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;./output&quot;</span><span class="p">,</span>
+                   <span class="n">stream2pymol</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastrelax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create decoys within pyrosetta framework.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
+<span class="sd">        output_dir (str): output directory for decoys</span>
+<span class="sd">        stream2pymol (bool): stream decoys to pymol</span>
+<span class="sd">        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
+<span class="sd">        save_log (bool): save scores to logfile at &lt;output_dir/scores.txt&gt;</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SCORES_low (list)</span>
+<span class="sd">            centroid scores ~ score 3</span>
+<span class="sd">        SCORES_high (list)</span>
+<span class="sd">            fa scores ~ ref2015</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">default_cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">abinitio_cfg</span><span class="p">,</span> <span class="o">**</span><span class="n">default_cfg</span><span class="p">)</span>
+
+    <span class="c1">### create output directory</span>
+    <span class="k">if</span> <span class="n">output_dir</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Output directory &#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&#39; already exists.</span>
+<span class="s2">Creating decoys will overwrite existing decoys in this directory.</span>
+<span class="s2">Proceed? [y/n]&quot;&quot;&quot;</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span> <span class="ow">or</span> <span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span> <span class="ow">or</span> <span class="n">answer</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">):</span>
+            <span class="k">return</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1">### create decoys code</span>
+    <span class="c1"># conversion movers</span>
+    <span class="n">to_centroid</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">SwitchResidueTypeSetMover</span><span class="p">(</span><span class="s1">&#39;centroid&#39;</span><span class="p">)</span>
+    <span class="n">to_fullatom</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">SwitchResidueTypeSetMover</span><span class="p">(</span><span class="s1">&#39;fa_standard&#39;</span><span class="p">)</span>
+
+    <span class="c1"># score function and score array</span>
+    <span class="n">scorefxn_low</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">create_score_function</span><span class="p">(</span><span class="s1">&#39;score3&#39;</span><span class="p">)</span>
+    <span class="n">scorefxn_high</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">create_score_function</span><span class="p">(</span><span class="s1">&#39;ref2015&#39;</span><span class="p">)</span>
+    <span class="c1">#scorefxn_high = get_fa_scorefxn() # ref2015</span>
+
+    <span class="c1">### pose objects</span>
+    <span class="c1"># linear pose</span>
+    <span class="n">pose_0</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">pose_from_sequence</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">fasta_seq</span><span class="p">)</span>
+    <span class="n">pose_0</span><span class="o">.</span><span class="n">pdb_info</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="si">}</span><span class="s2"> (linear)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># test pose</span>
+    <span class="n">pose</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">Pose</span><span class="p">()</span>
+    <span class="n">pose</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">pose_0</span><span class="p">)</span>
+    <span class="n">pose</span><span class="o">.</span><span class="n">pdb_info</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="p">)</span>
+
+    <span class="c1"># switch to centroid</span>
+    <span class="n">to_centroid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose_0</span><span class="p">)</span>
+    <span class="n">to_centroid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+    <span class="c1">### mover and fragset objects</span>
+    <span class="n">movemap</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">MoveMap</span><span class="p">()</span>
+    <span class="n">movemap</span><span class="o">.</span><span class="n">set_bb</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">fragset_3mer</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">rosetta</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">fragment</span><span class="o">.</span><span class="n">ConstantLengthFragSet</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">frag3mer</span><span class="p">)</span>
+    <span class="n">fragset_9mer</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">rosetta</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">fragment</span><span class="o">.</span><span class="n">ConstantLengthFragSet</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">frag9mer</span><span class="p">)</span>
+
+    <span class="n">mover_frag3</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">simple_moves</span><span class="o">.</span><span class="n">ClassicFragmentMover</span><span class="p">(</span><span class="n">fragset_3mer</span><span class="p">,</span> <span class="n">movemap</span><span class="p">)</span>
+    <span class="n">mover_frag9</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">simple_moves</span><span class="o">.</span><span class="n">ClassicFragmentMover</span><span class="p">(</span><span class="n">fragset_9mer</span><span class="p">,</span> <span class="n">movemap</span><span class="p">)</span>
+
+    <span class="n">insert_frag3</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">RepeatMover</span><span class="p">(</span><span class="n">mover_frag3</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">frag3inserts</span><span class="p">)</span>
+    <span class="n">insert_frag9</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">RepeatMover</span><span class="p">(</span><span class="n">mover_frag9</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">frag9inserts</span><span class="p">)</span>
+
+    <span class="n">folding_mover</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">SequenceMover</span><span class="p">()</span>
+    <span class="n">folding_mover</span><span class="o">.</span><span class="n">add_mover</span><span class="p">(</span><span class="n">insert_frag9</span><span class="p">)</span>
+    <span class="n">folding_mover</span><span class="o">.</span><span class="n">add_mover</span><span class="p">(</span><span class="n">insert_frag3</span><span class="p">)</span>
+
+    <span class="c1"># MC stuff</span>
+    <span class="n">mc</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">MonteCarlo</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">scorefxn_low</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">kT</span><span class="p">)</span>
+    <span class="n">trial</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">TrialMover</span><span class="p">(</span><span class="n">folding_mover</span><span class="p">,</span> <span class="n">mc</span><span class="p">)</span>
+    <span class="n">folding</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">RepeatMover</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">folding_cycles</span><span class="p">)</span>
+    <span class="c1">#jd = PyJobDistributor(cfg.job_name, cfg.n_decoys, scorefxn_high)</span>
+
+    <span class="k">if</span> <span class="n">stream2pymol</span><span class="p">:</span>
+        <span class="n">pmm</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">PyMOLMover</span><span class="p">()</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">keep_history</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1">### job distributor stuff</span>
+    <span class="n">worker_jobs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_decoys</span><span class="o">/</span><span class="n">cfg</span><span class="o">.</span><span class="n">n_cores</span><span class="p">)</span>
+    <span class="c1">#SCORES_low = [0]*(worker_jobs)  # scores array</span>
+    <span class="c1">#SCORES_high = [0]*(worker_jobs)  # scores array</span>
+    <span class="n">DECOYS</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">SCORES_low</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">SCORES_high</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">worker_jobs</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt;&gt; Working on decoy: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">job_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">decoy_ndx_shift</span><span class="o">+</span><span class="n">i</span><span class="si">}</span><span class="s2">.pdb&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+        <span class="n">DECOYS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">job_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">decoy_ndx_shift</span><span class="o">+</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">pose</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">pose_0</span><span class="p">)</span>
+        <span class="n">pose</span><span class="o">.</span><span class="n">pdb_info</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">job_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">decoy_ndx_shift</span><span class="o">+</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">mc</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">folding_repeats</span><span class="p">):</span>
+            <span class="n">folding</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">recover_low</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+        <span class="c1">#SCORES_low[i] = scorefxn_low(pose)</span>
+        <span class="n">SCORES_low</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scorefxn_low</span><span class="p">(</span><span class="n">pose</span><span class="p">))</span>
+        <span class="n">to_fullatom</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fastrelax</span><span class="p">:</span>
+            <span class="n">relax</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">relax</span><span class="o">.</span><span class="n">FastRelax</span><span class="p">()</span>
+            <span class="n">relax</span><span class="o">.</span><span class="n">set_scorefxn</span><span class="p">(</span><span class="n">scorefxn_high</span><span class="p">)</span>
+            <span class="n">relax</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+        <span class="c1">#SCORES_high[i] = scorefxn_high(pose)</span>
+        <span class="n">SCORES_high</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scorefxn_high</span><span class="p">(</span><span class="n">pose</span><span class="p">))</span>
+        <span class="n">pose</span><span class="o">.</span><span class="n">dump_pdb</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">job_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">decoy_ndx_shift</span><span class="o">+</span><span class="n">i</span><span class="si">}</span><span class="s2">.pdb&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stream2pymol</span><span class="p">:</span>
+            <span class="n">pmm</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">save_log</span><span class="p">:</span>
+        <span class="n">logfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/scores.txt&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">logfile</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;decoy&#39;</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;score3&#39;</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;ref2015&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># write header</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+            <span class="c1">#DECOYS = [f&quot;{cfg.job_name}_{cfg.decoy_ndx_shift+i}&quot; for i in range(worker_jobs)]</span>
+            <span class="n">table_str</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">print_table</span><span class="p">([</span><span class="n">DECOYS</span><span class="p">,</span> <span class="n">SCORES_low</span><span class="p">,</span> <span class="n">SCORES_high</span><span class="p">])</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">table_str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">SCORES_low</span><span class="p">,</span> <span class="n">SCORES_high</span>
+
+
+<span class="k">def</span> <span class="nf">_HELP_decoypath_to_decoyid</span><span class="p">(</span><span class="n">list_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    convert list with decoy strings to list with decoy ids</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">      | &gt;&gt; decoy_list = [&#39;./1LMB_decoys/set1_2000/1LMB_1.pdb&#39;,</span>
+<span class="sd">      |                 &#39;./1LMB_decoys/set1_2000/1LMB_2.pdb&#39;,</span>
+<span class="sd">      |                 &#39;./1LMB_decoys/set1_2000/1LMB_3.pdb&#39;]</span>
+<span class="sd">      | &gt;&gt; _HELP_decoystr_to_decoyid(decoy_list)</span>
+<span class="sd">      | [1, 2, 3]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">substrings</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_substrings</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_</span><span class="p">]</span>
+
+    <span class="c1"># get decoy index range</span>
+    <span class="n">diff_element</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">substrings</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">substrings</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff_element</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;substrings differ in more than 1 element (i.e. differ at more than 1 position)&#39;</span><span class="p">)</span>
+    <span class="n">diff_position</span> <span class="o">=</span> <span class="n">substrings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">diff_element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_substrings</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="n">diff_position</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ids</span>
+
+
+<div class="viewcode-block" id="get_decoy_list"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_list">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    | Alias function of get_structure_list().</span>
+<span class="sd">    | get decoy list (sorted by a numeric part at any position of the filename,</span>
+<span class="sd">    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        decoy_dir (str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DECOY_LIST (list)</span>
+<span class="sd">            list with decoy filenames</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">decoy_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;decoy_dir was None Type.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">decoy_dir</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+        <span class="n">decoy_dir</span> <span class="o">=</span> <span class="n">decoy_dir</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># preset stuff</span>
+    <span class="n">decoy_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decoy_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">decoy_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decoy_list</span><span class="p">]</span>
+    <span class="n">decoy_names_substrings</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_substrings</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decoy_names</span><span class="p">]</span>
+
+    <span class="c1"># get decoy index range</span>
+    <span class="n">diff_element</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">decoy_names_substrings</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">decoy_names_substrings</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff_element</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;decoy_names_substrings differ in more than 1 element (i.e. differ at more than 1 position)&#39;</span><span class="p">)</span>
+    <span class="n">diff_position</span> <span class="o">=</span> <span class="n">decoy_names_substrings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">diff_element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">min_ndx</span> <span class="o">=</span> <span class="mi">999999999</span>
+    <span class="n">max_ndx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">999999999</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decoy_names_substrings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">min_ndx</span><span class="p">:</span>
+            <span class="n">min_ndx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">max_ndx</span><span class="p">:</span>
+            <span class="n">max_ndx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">diff_position</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">ndx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_ndx</span> <span class="o">=</span> <span class="n">ndx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ndx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_ndx</span> <span class="o">=</span> <span class="n">ndx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># get decoy filename prefix and suffix</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">decoy_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">template_diff_element</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_substrings</span><span class="p">(</span><span class="n">template</span><span class="p">)[</span><span class="n">diff_position</span><span class="p">]</span>
+    <span class="n">decoy_filename_prefix</span> <span class="o">=</span> <span class="n">template</span><span class="p">[:</span><span class="n">template</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">template_diff_element</span><span class="p">)]</span>
+    <span class="n">decoy_filename_suffix</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="n">template</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">template_diff_element</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">template_diff_element</span><span class="p">):]</span>
+
+    <span class="c1"># create sorted decoy list</span>
+    <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decoy_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">decoy_filename_prefix</span><span class="si">}{</span><span class="n">i</span><span class="si">}{</span><span class="n">decoy_filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">min_ndx</span><span class="p">,</span> <span class="n">max_ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                  <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decoy_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">decoy_filename_prefix</span><span class="si">}{</span><span class="n">i</span><span class="si">}{</span><span class="n">decoy_filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">decoy_list</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">DECOY_LIST</span></div>
+
+
+<span class="c1">### Alias function of get_decoy_list()</span>
+<div class="viewcode-block" id="get_structure_list"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_structure_list">[docs]</a><span class="k">def</span> <span class="nf">get_structure_list</span><span class="p">(</span><span class="n">structure_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    | Alias function of get_decoy_list().</span>
+<span class="sd">    | get structure list (sorted by a numeric part at any position of the filename,</span>
+<span class="sd">    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        structure_dir (str): structure directory</span>
+<span class="sd">        pattern (str): pattern of structure filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit structure index range to [ndx_min, ndx_max]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        STRUCTURE_LIST (list)</span>
+<span class="sd">            list with structure filenames</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="o">=</span><span class="n">structure_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="n">ndx_range</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_decoy_scores"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_scores">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_scores</span><span class="p">(</span><span class="n">decoy_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span>
+                     <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">n_rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get decoy scores of &lt;decoy_list&gt; or &lt;decoy_dir&gt;.</span>
+
+<span class="sd">      - If &lt;n_rank&gt; is None: return unranked decoys, ids and scores.</span>
+<span class="sd">      - If &lt;n_rank&gt; is int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        decoy_list (None, list): list with decoy paths</span>
+<span class="sd">        decoy_dir (None, str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]</span>
+<span class="sd">        n_rank (None, int):</span>
+<span class="sd">          | None: return unranked decoys, ids and scores.</span>
+<span class="sd">          | int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</span>
+<span class="sd">        reverse (bool):</span>
+<span class="sd">          | True:  ascending ranking order (low to high)</span>
+<span class="sd">          | False: decending ranking order (high to low)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DECOY_LIST (list)</span>
+<span class="sd">            list with decoy paths</span>
+<span class="sd">        DECOY_ID   (list)</span>
+<span class="sd">            list with decoy ids</span>
+<span class="sd">        SCORE (list)</span>
+<span class="sd">            list with corresponding scores (ref 2015)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">scorefxn</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">get_fa_scorefxn</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">decoy_list</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">decoy_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Specify either decoy_list or decoy_dir.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="n">decoy_list</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="n">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Specify either decoy_list or decoy_dir.&quot;</span><span class="p">)</span>
+    <span class="n">DECOY_ID</span> <span class="o">=</span> <span class="n">_HELP_decoypath_to_decoyid</span><span class="p">(</span><span class="n">DECOY_LIST</span><span class="p">)</span>
+    <span class="n">SCORE</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list with corresponding scores</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Getting scores...&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">decoy_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">decoy_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The decoy path &#39;</span><span class="si">{</span><span class="n">decoy_path</span><span class="si">}</span><span class="s2">&#39; does not exist!&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># get SCORE</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">pose_from_pdb</span><span class="p">(</span><span class="n">decoy_path</span><span class="p">)</span>
+        <span class="n">SCORE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scorefxn</span><span class="p">(</span><span class="n">pose</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">n_rank</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="n">DECOY_LIST</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+        <span class="n">DECOY_ID</span> <span class="o">=</span> <span class="p">[</span><span class="n">DECOY_ID</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+        <span class="n">SCORE</span> <span class="o">=</span> <span class="p">[</span><span class="n">SCORE</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span></div>
+
+
+<div class="viewcode-block" id="get_decoy_RMSD"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">decoy_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span>
+                   <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">n_rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get decoy RMSD of &lt;decoy_list&gt; or &lt;decoy_dir&gt;.</span>
+
+<span class="sd">      - If &lt;n_rank&gt; is None: return unranked decoys, ids and RMSD.</span>
+<span class="sd">      - If &lt;n_rank&gt; is int: return ranked decoys, ids and RMSD for best &lt;n_rank&gt; decoys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (universe): reference structure</span>
+<span class="sd">        decoy_list (None, list): list with decoy paths</span>
+<span class="sd">        decoy_dir (None, str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]</span>
+<span class="sd">        n_rank (None,int):</span>
+<span class="sd">          | None: return unranked decoys, ids and scores.</span>
+<span class="sd">          | int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</span>
+<span class="sd">        reverse (bool):</span>
+<span class="sd">          | True:  ascending ranking order (low to high)</span>
+<span class="sd">          | False: decending ranking order (high to low)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DECOY_LIST (list)</span>
+<span class="sd">            list with decoy names</span>
+<span class="sd">        DECOY_ID (list)</span>
+<span class="sd">            list with decoy ids</span>
+<span class="sd">        RMSD (list)</span>
+<span class="sd">            list with decoy RMSDs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="n">decoy_list</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">decoy_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Specify either decoy_list or decoy_dir.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="n">decoy_list</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="n">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Specify either decoy_list or decoy_dir.&quot;</span><span class="p">)</span>
+    <span class="n">DECOY_ID</span> <span class="o">=</span> <span class="n">_HELP_decoypath_to_decoyid</span><span class="p">(</span><span class="n">DECOY_LIST</span><span class="p">)</span>
+    <span class="n">RMSD</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list with corresponding RMSD values</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Getting RMSDs...&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">decoy_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">decoy_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The decoy path &#39;</span><span class="si">{</span><span class="n">decoy_path</span><span class="si">}</span><span class="s2">&#39; does not exist!&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># get RMSD</span>
+        <span class="n">decoy</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">decoy_path</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># dt=0 fixes warnings.warn(&quot;Reader has no dt information, set to 1.0 ps&quot;) of MDAnalysis/coordinates/base.py</span>
+        <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_matching_selection</span><span class="p">(</span><span class="n">decoy</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ftr</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_RMSD</span><span class="p">(</span><span class="n">decoy</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="n">sel2</span><span class="p">)</span>
+        <span class="n">RMSD</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ftr</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">RMSD</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_rank</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">DECOY_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="n">DECOY_LIST</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+        <span class="n">DECOY_ID</span> <span class="o">=</span> <span class="p">[</span><span class="n">DECOY_ID</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+        <span class="n">RMSD</span> <span class="o">=</span> <span class="p">[</span><span class="n">RMSD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_rank</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">RMSD</span></div>
+
+
+<div class="viewcode-block" id="get_decoy_precission"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_precission">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_precission</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">decoy_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span>
+                         <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get decoy precission</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (universe): reference structure</span>
+<span class="sd">        decoy_dir (str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]</span>
+<span class="sd">        sel (str): selection string (for RMSD calculation)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DECOY_LIST (list)</span>
+<span class="sd">            list with decoy paths</span>
+<span class="sd">        DECOY_ID (list)</span>
+<span class="sd">            list with decoy ids</span>
+<span class="sd">        SCORE (list)</span>
+<span class="sd">            list with corresponding scores (ref 2015)</span>
+<span class="sd">        RMSD (list)</span>
+<span class="sd">            list with corresponding RMSD values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span> <span class="o">=</span> <span class="n">get_decoy_scores</span><span class="p">(</span><span class="n">decoy_dir</span><span class="o">=</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="n">ndx_range</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">get_decoy_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">decoy_list</span><span class="o">=</span><span class="n">decoy_list</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="n">ndx_range</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span></div>
+
+
+<div class="viewcode-block" id="rank_decoy_precission"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.rank_decoy_precission">[docs]</a><span class="k">def</span> <span class="nf">rank_decoy_precission</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rank_by</span><span class="o">=</span><span class="s2">&quot;SCORE&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    rank decoy precission</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (list):</span>
+<span class="sd">          | output of abinitio.get_decoy_precission()</span>
+<span class="sd">          | data[0]: DECOY_LIST</span>
+<span class="sd">          | data[1]: DECOY_ID</span>
+<span class="sd">          | data[2]: SCORE</span>
+<span class="sd">          | data[3]: RMSD</span>
+<span class="sd">        rank_by (str): &quot;SCORE&quot;, &quot;RMSD&quot;</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DECOY_LIST_ranked (array)</span>
+<span class="sd">            ranked list with decoy paths</span>
+<span class="sd">        DECOY_ID_ranked (array)</span>
+<span class="sd">            ranked list with decoy ids</span>
+<span class="sd">        SCORE_ranked (array)</span>
+<span class="sd">            ranked list with corresponding scores (ref 2015)</span>
+<span class="sd">        RMSD_ranked (array)</span>
+<span class="sd">            ranked list with corresponding RMSD values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">if</span> <span class="n">rank_by</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;SCORE&quot;</span><span class="p">:</span>
+        <span class="n">SCORE_ranked</span><span class="p">,</span> <span class="n">SCORE_ranked_ndx</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">DECOY_LIST_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">DECOY_LIST</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">SCORE_ranked_ndx</span><span class="p">])</span>
+        <span class="n">DECOY_ID_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">DECOY_ID</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">SCORE_ranked_ndx</span><span class="p">])</span>
+        <span class="n">RMSD_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">SCORE_ranked_ndx</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">rank_by</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;RMSD&quot;</span><span class="p">:</span>
+        <span class="n">RMSD_ranked</span><span class="p">,</span> <span class="n">RMSD_ranked_ndx</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">DECOY_LIST_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">DECOY_LIST</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">RMSD_ranked_ndx</span><span class="p">])</span>
+        <span class="n">DECOY_ID_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">DECOY_ID</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">RMSD_ranked_ndx</span><span class="p">])</span>
+        <span class="n">SCORE_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">SCORE</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">RMSD_ranked_ndx</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">DECOY_LIST_ranked</span><span class="p">,</span> <span class="n">DECOY_ID_ranked</span><span class="p">,</span> <span class="n">SCORE_ranked</span><span class="p">,</span> <span class="n">RMSD_ranked</span></div>
+
+
+<div class="viewcode-block" id="precission_scatterplot"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.precission_scatterplot">[docs]</a><span class="k">def</span> <span class="nf">precission_scatterplot</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a precission scatter plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        SCORE (list, array)</span>
+<span class="sd">        RMSD (list, array)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">SCORE</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;RMSD ($\AA$)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;SCORE (REU)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
