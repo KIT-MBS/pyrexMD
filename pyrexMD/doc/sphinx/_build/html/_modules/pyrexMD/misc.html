@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.misc &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.misc &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyREMD</a>
+          <a href="../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.misc</li>
+      <li>pyrexMD.misc</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,16 +160,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.misc</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.misc</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 11.05.2021</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
 
 
 <span class="c1"># miscellaneous</span>
-<span class="kn">import</span> <span class="nn">PIL</span>  <span class="c1"># pillow/PIL (Pyhon Imaging Library)</span>
+<span class="kn">import</span> <span class="nn">PIL</span>
 <span class="kn">import</span> <span class="nn">pdf2image</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pl</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -186,7 +186,7 @@
 <span class="kn">import</span> <span class="nn">termcolor</span>
 
 
-<div class="viewcode-block" id="apply_matplotlib_rc_settings"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.apply_matplotlib_rc_settings">[docs]</a><span class="k">def</span> <span class="nf">apply_matplotlib_rc_settings</span><span class="p">():</span>
+<div class="viewcode-block" id="apply_matplotlib_rc_settings"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.apply_matplotlib_rc_settings">[docs]</a><span class="k">def</span> <span class="nf">apply_matplotlib_rc_settings</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    apply matplotlib rc settings:</span>
 <span class="sd">        - render math text including greek letters in italic font by default</span>
@@ -214,7 +214,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="update_alias_docstring"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.update_alias_docstring">[docs]</a><span class="k">def</span> <span class="nf">update_alias_docstring</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
+<div class="viewcode-block" id="update_alias_docstring"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.update_alias_docstring">[docs]</a><span class="k">def</span> <span class="nf">update_alias_docstring</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use an existing docstring as template and replace &#39;Alias function of &lt;alias&gt;&#39; part:</span>
 <span class="sd">        - determine docstring template based on length</span>
@@ -251,12 +251,12 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### CUSTOM CLASSES</span>
 
-<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for exceptions&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="dtypeError"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.dtypeError">[docs]</a><span class="k">class</span> <span class="nc">dtypeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="dtypeError"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.dtypeError">[docs]</a><span class="k">class</span> <span class="nc">dtypeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for dtype exceptions</span>
 
@@ -276,7 +276,7 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="HiddenPrints"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.HiddenPrints">[docs]</a><span class="k">class</span> <span class="nc">HiddenPrints</span><span class="p">:</span>
+<div class="viewcode-block" id="HiddenPrints"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.HiddenPrints">[docs]</a><span class="k">class</span> <span class="nc">HiddenPrints</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to hide print commands.</span>
 
@@ -308,7 +308,7 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="CONFIG"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG">[docs]</a><span class="k">class</span> <span class="nc">CONFIG</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG">[docs]</a><span class="k">class</span> <span class="nc">CONFIG</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to store config data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -349,31 +349,31 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
 
-<div class="viewcode-block" id="CONFIG.deepcopy"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.deepcopy">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.deepcopy"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.deepcopy">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return deep copy of object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CONFIG.keys"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.keys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return dict keys.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CONFIG.values"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.values">[docs]</a>    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.values"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.values">[docs]</a>    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return dict values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CONFIG.items"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.items"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return dict items (key-value pairs).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CONFIG.update_config"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.update_config">[docs]</a>    <span class="k">def</span> <span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.update_config"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.update_config">[docs]</a>    <span class="k">def</span> <span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update config object by passing a dict, kwargs or both.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -382,7 +382,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="CONFIG.update_by_alias"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.update_by_alias">[docs]</a>    <span class="k">def</span> <span class="nf">update_by_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key_ndx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.update_by_alias"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.update_by_alias">[docs]</a>    <span class="k">def</span> <span class="nf">update_by_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key_ndx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update key value for an alias if alias is in kwargs.</span>
 
@@ -419,7 +419,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">key_ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="CONFIG.print_config"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.CONFIG.print_config">[docs]</a>    <span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CONFIG.print_config"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.print_config">[docs]</a>    <span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print and return stored data in table format with &quot;key&quot; and &quot;value&quot; columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -437,7 +437,7 @@
 <span class="c1">### timer stuff</span>
 
 
-<div class="viewcode-block" id="TIMER"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.TIMER">[docs]</a><span class="k">class</span> <span class="nc">TIMER</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TIMER"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.TIMER">[docs]</a><span class="k">class</span> <span class="nc">TIMER</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="mi">0</span>
@@ -447,7 +447,7 @@
         <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="timeit"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.timeit">[docs]</a><span class="k">def</span> <span class="nf">timeit</span><span class="p">(</span><span class="n">timer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;elapsed time:&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="timeit"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.timeit">[docs]</a><span class="k">def</span> <span class="nf">timeit</span><span class="p">(</span><span class="n">timer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;elapsed time:&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Test elapsed time of a process</span>
 
@@ -482,7 +482,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### linux-like cmds ~ os package</span>
 
-<div class="viewcode-block" id="cwd"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.cwd">[docs]</a><span class="k">def</span> <span class="nf">cwd</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="cwd"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cwd">[docs]</a><span class="k">def</span> <span class="nf">cwd</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of pwd().</span>
 <span class="sd">    Get/Print current working directory</span>
@@ -498,49 +498,49 @@
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="pwd"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.pwd">[docs]</a><span class="k">def</span> <span class="nf">pwd</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="pwd"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.pwd">[docs]</a><span class="k">def</span> <span class="nf">pwd</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">cwd</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
 
 
 <span class="n">update_alias_docstring</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">pwd</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="isdir"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.isdir">[docs]</a><span class="k">def</span> <span class="nf">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="isdir"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.isdir">[docs]</a><span class="k">def</span> <span class="nf">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return true if the path refers to an existing directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="isfile"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.isfile">[docs]</a><span class="k">def</span> <span class="nf">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="isfile"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.isfile">[docs]</a><span class="k">def</span> <span class="nf">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return true if the path refers to an existing file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pathexists"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.pathexists">[docs]</a><span class="k">def</span> <span class="nf">pathexists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="pathexists"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.pathexists">[docs]</a><span class="k">def</span> <span class="nf">pathexists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return true if path exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="realpath"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.realpath">[docs]</a><span class="k">def</span> <span class="nf">realpath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="realpath"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.realpath">[docs]</a><span class="k">def</span> <span class="nf">realpath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return realpath.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="relpath"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.relpath">[docs]</a><span class="k">def</span> <span class="nf">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="relpath"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.relpath">[docs]</a><span class="k">def</span> <span class="nf">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return relative path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dirpath"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.dirpath">[docs]</a><span class="k">def</span> <span class="nf">dirpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="dirpath"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.dirpath">[docs]</a><span class="k">def</span> <span class="nf">dirpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of get_filedir().</span>
 <span class="sd">    Get realpath or relpath of the last directory of &lt;path&gt;.</span>
@@ -558,14 +558,14 @@
 
 
 <span class="c1">### Alias function of dirpath</span>
-<div class="viewcode-block" id="get_filedir"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_filedir">[docs]</a><span class="k">def</span> <span class="nf">get_filedir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_filedir"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_filedir">[docs]</a><span class="k">def</span> <span class="nf">get_filedir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">dirpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">)</span></div>
 
 
 <span class="n">update_alias_docstring</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">get_filedir</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_filename"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_filename">[docs]</a><span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">search_file</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_filename"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_filename">[docs]</a><span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">search_file</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get filename (removes prefix of realpath of &lt;path&gt;).</span>
 
@@ -590,7 +590,7 @@
     <span class="k">return</span> <span class="n">filename</span></div>
 
 
-<div class="viewcode-block" id="joinpath"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.joinpath">[docs]</a><span class="k">def</span> <span class="nf">joinpath</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="joinpath"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.joinpath">[docs]</a><span class="k">def</span> <span class="nf">joinpath</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns joined path of (filedir + filename).</span>
 
@@ -629,7 +629,7 @@
     <span class="k">return</span> <span class="n">file_path</span></div>
 
 
-<div class="viewcode-block" id="mkdir"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.mkdir">[docs]</a><span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="mkdir"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.mkdir">[docs]</a><span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make directory.</span>
 
@@ -655,7 +655,7 @@
     <span class="k">return</span> <span class="n">realpath</span></div>
 
 
-<div class="viewcode-block" id="cd"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.cd">[docs]</a><span class="k">def</span> <span class="nf">cd</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="cd"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cd">[docs]</a><span class="k">def</span> <span class="nf">cd</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Change directory.</span>
 
@@ -673,7 +673,7 @@
     <span class="k">return</span> <span class="n">realpath</span></div>
 
 
-<div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;-rp&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;-rp&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Copy file(s) from &lt;source&gt; to &lt;target&gt;.</span>
 
@@ -707,7 +707,7 @@
     <span class="k">return</span> <span class="n">target</span></div>
 
 
-<div class="viewcode-block" id="rm"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.rm">[docs]</a><span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="rm"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.rm">[docs]</a><span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of remove().</span>
 <span class="sd">    Remove file(s) from path.</span>
@@ -735,14 +735,14 @@
 
 
 <span class="c1">### Alias function of rm()</span>
-<div class="viewcode-block" id="remove"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.remove">[docs]</a><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="remove"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.remove">[docs]</a><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">rm</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
 
 
 <span class="n">update_alias_docstring</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="n">remove</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="bash_cmd"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.bash_cmd">[docs]</a><span class="k">def</span> <span class="nf">bash_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="bash_cmd"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.bash_cmd">[docs]</a><span class="k">def</span> <span class="nf">bash_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Execte any bash command via python.</span>
 
@@ -777,7 +777,7 @@
 <span class="c1">### pillow/PIL stuff</span>
 
 
-<div class="viewcode-block" id="convert_image"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.convert_image">[docs]</a><span class="k">def</span> <span class="nf">convert_image</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_image"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.convert_image">[docs]</a><span class="k">def</span> <span class="nf">convert_image</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts image type. Currently ONLY tested for:</span>
 <span class="sd">        tif -&gt; png</span>
@@ -809,7 +809,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="convert_multiple_images"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.convert_multiple_images">[docs]</a><span class="k">def</span> <span class="nf">convert_multiple_images</span><span class="p">(</span><span class="n">folder_in</span><span class="p">,</span> <span class="n">folder_out</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_multiple_images"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.convert_multiple_images">[docs]</a><span class="k">def</span> <span class="nf">convert_multiple_images</span><span class="p">(</span><span class="n">folder_in</span><span class="p">,</span> <span class="n">folder_out</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        folder_in (str):  file path for folder with input  images</span>
@@ -838,7 +838,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### misc</span>
 
-<div class="viewcode-block" id="cprint"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.cprint">[docs]</a><span class="k">def</span> <span class="nf">cprint</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">on_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="cprint"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cprint">[docs]</a><span class="k">def</span> <span class="nf">cprint</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">on_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of termcolor.cprint().</span>
 <span class="sd">    Apply colored print.</span>
@@ -867,7 +867,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="unzip"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.unzip">[docs]</a><span class="k">def</span> <span class="nf">unzip</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<div class="viewcode-block" id="unzip"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.unzip">[docs]</a><span class="k">def</span> <span class="nf">unzip</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    alias function of zip(*iterable)</span>
 
@@ -880,14 +880,14 @@
     <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">iterable</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_python_version"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_python_version">[docs]</a><span class="k">def</span> <span class="nf">get_python_version</span><span class="p">():</span>
+<div class="viewcode-block" id="get_python_version"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_python_version">[docs]</a><span class="k">def</span> <span class="nf">get_python_version</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns python version.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="input_python_x"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.input_python_x">[docs]</a><span class="k">def</span> <span class="nf">input_python_x</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="input_python_x"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.input_python_x">[docs]</a><span class="k">def</span> <span class="nf">input_python_x</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses raw_input(msg) in python 2.x or input(msg) in python 3.x</span>
 
@@ -903,7 +903,7 @@
         <span class="k">return</span> <span class="nb">input</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="percent"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.percent">[docs]</a><span class="k">def</span> <span class="nf">percent</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">div</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="percent"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.percent">[docs]</a><span class="k">def</span> <span class="nf">percent</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">div</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the percentage of num/div as float:</span>
 <span class="sd">        p = 100 * num/div</span>
@@ -924,7 +924,7 @@
     <span class="k">return</span> <span class="n">p</span></div>
 
 
-<div class="viewcode-block" id="round_down"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.round_down">[docs]</a><span class="k">def</span> <span class="nf">round_down</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="round_down"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_down">[docs]</a><span class="k">def</span> <span class="nf">round_down</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        number (float/int)</span>
@@ -948,7 +948,7 @@
     <span class="k">return</span> <span class="n">number</span> <span class="o">-</span> <span class="p">(</span><span class="n">number</span> <span class="o">%</span> <span class="n">base</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="round_up"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.round_up">[docs]</a><span class="k">def</span> <span class="nf">round_up</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="round_up"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_up">[docs]</a><span class="k">def</span> <span class="nf">round_up</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        number (float/int)</span>
@@ -975,7 +975,7 @@
         <span class="k">return</span> <span class="n">number</span> <span class="o">+</span> <span class="n">base</span> <span class="o">-</span> <span class="p">(</span><span class="n">number</span> <span class="o">%</span> <span class="n">base</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="round_to_base"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.round_to_base">[docs]</a><span class="k">def</span> <span class="nf">round_to_base</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="round_to_base"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_to_base">[docs]</a><span class="k">def</span> <span class="nf">round_to_base</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Round up or down depending on smallest difference to base.</span>
 
@@ -991,7 +991,7 @@
         <span class="k">return</span> <span class="n">down</span></div>
 
 
-<div class="viewcode-block" id="round_object"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.round_object">[docs]</a><span class="k">def</span> <span class="nf">round_object</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="round_object"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_object">[docs]</a><span class="k">def</span> <span class="nf">round_object</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        object (list/array): can be any of these:</span>
@@ -1032,7 +1032,7 @@
     <span class="k">return</span> <span class="n">new_object</span></div>
 
 
-<div class="viewcode-block" id="get_substrings"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_substrings">[docs]</a><span class="k">def</span> <span class="nf">get_substrings</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">seperators</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_substrings"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_substrings">[docs]</a><span class="k">def</span> <span class="nf">get_substrings</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">seperators</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get substrings of string by removing each seperator.</span>
 
@@ -1058,7 +1058,7 @@
     <span class="k">return</span> <span class="n">substrings</span></div>
 
 
-<div class="viewcode-block" id="split_lists"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.split_lists">[docs]</a><span class="k">def</span> <span class="nf">split_lists</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">remap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="split_lists"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.split_lists">[docs]</a><span class="k">def</span> <span class="nf">split_lists</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">remap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    split list A into two lists B1 and B2 according to</span>
 <span class="sd">        A = B1 + B2</span>
@@ -1093,7 +1093,7 @@
     <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span></div>
 
 
-<div class="viewcode-block" id="flatten_array"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.flatten_array">[docs]</a><span class="k">def</span> <span class="nf">flatten_array</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="flatten_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.flatten_array">[docs]</a><span class="k">def</span> <span class="nf">flatten_array</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns flattened array of x.</span>
 
@@ -1110,7 +1110,7 @@
     <span class="k">return</span> <span class="n">flattened_array</span></div>
 
 
-<div class="viewcode-block" id="norm_array"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.norm_array">[docs]</a><span class="k">def</span> <span class="nf">norm_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">start_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.norm_array">[docs]</a><span class="k">def</span> <span class="nf">norm_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">start_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    normed array:</span>
 <span class="sd">        - starts with &lt;start_value&gt;</span>
@@ -1131,7 +1131,7 @@
     <span class="k">return</span> <span class="n">normed_array</span></div>
 
 
-<div class="viewcode-block" id="get_precision"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_precision">[docs]</a><span class="k">def</span> <span class="nf">get_precision</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+<div class="viewcode-block" id="get_precision"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_precision">[docs]</a><span class="k">def</span> <span class="nf">get_precision</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns leading precission of number.</span>
 
@@ -1158,7 +1158,7 @@
     <span class="k">return</span> <span class="n">precission</span></div>
 
 
-<div class="viewcode-block" id="get_base"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_base">[docs]</a><span class="k">def</span> <span class="nf">get_base</span><span class="p">(</span><span class="n">str_</span><span class="p">):</span>
+<div class="viewcode-block" id="get_base"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_base">[docs]</a><span class="k">def</span> <span class="nf">get_base</span><span class="p">(</span><span class="n">str_</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get base (i.e. everything except extension) of string &quot;str_&quot;.</span>
 
@@ -1177,7 +1177,7 @@
     <span class="k">return</span> <span class="n">base</span></div>
 
 
-<div class="viewcode-block" id="get_extension"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_extension">[docs]</a><span class="k">def</span> <span class="nf">get_extension</span><span class="p">(</span><span class="n">str_</span><span class="p">):</span>
+<div class="viewcode-block" id="get_extension"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_extension">[docs]</a><span class="k">def</span> <span class="nf">get_extension</span><span class="p">(</span><span class="n">str_</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get &quot;.ext&quot; (extension) of string &quot;str_&quot;.</span>
 
@@ -1196,7 +1196,7 @@
     <span class="k">return</span> <span class="n">ext</span></div>
 
 
-<div class="viewcode-block" id="insert_str"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.insert_str">[docs]</a><span class="k">def</span> <span class="nf">insert_str</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="insert_str"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.insert_str">[docs]</a><span class="k">def</span> <span class="nf">insert_str</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Insert str2 in str1.</span>
 
@@ -1218,7 +1218,7 @@
     <span class="k">return</span> <span class="n">str_</span></div>
 
 
-<div class="viewcode-block" id="autodetect_header"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.autodetect_header">[docs]</a><span class="k">def</span> <span class="nf">autodetect_header</span><span class="p">(</span><span class="n">fin</span><span class="p">):</span>
+<div class="viewcode-block" id="autodetect_header"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.autodetect_header">[docs]</a><span class="k">def</span> <span class="nf">autodetect_header</span><span class="p">(</span><span class="n">fin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Autodetects header. Header ends when line start with one of following characters:</span>
 <span class="sd">    {&#39;\t&#39;, &#39;\n&#39;, &#39; &#39;, &#39;,&#39;, &#39;.&#39;, &#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;}</span>
@@ -1252,7 +1252,7 @@
     <span class="k">return</span> <span class="n">header_rows</span></div>
 
 
-<div class="viewcode-block" id="read_file"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.read_file">[docs]</a><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="read_file"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.read_file">[docs]</a><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read file and return tuple of np.arrays with data for specified columns.</span>
 
@@ -1303,7 +1303,7 @@
         <span class="k">return</span> <span class="n">DATA</span></div>
 
 
-<div class="viewcode-block" id="read_DCA_file"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.read_DCA_file">[docs]</a><span class="k">def</span> <span class="nf">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">RES_range</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
+<div class="viewcode-block" id="read_DCA_file"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.read_DCA_file">[docs]</a><span class="k">def</span> <span class="nf">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">RES_range</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read DCA file and return DCA pairs IJ.</span>
 
@@ -1348,7 +1348,7 @@
     <span class="k">return</span> <span class="n">DCA_PAIRS</span><span class="p">,</span> <span class="n">DCA_PAIRS_RES_range</span></div>
 
 
-<div class="viewcode-block" id="get_PDBid"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_PDBid">[docs]</a><span class="k">def</span> <span class="nf">get_PDBid</span><span class="p">(</span><span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="get_PDBid"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_PDBid">[docs]</a><span class="k">def</span> <span class="nf">get_PDBid</span><span class="p">(</span><span class="n">ref</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Obtains PDB id from ref by splitting its path and searching for alpha numerical (alnum) strings with length 4.</span>
 
@@ -1402,7 +1402,7 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints each item of &quot;data&quot; elementwise next to each other as a table.</span>
 
@@ -1501,7 +1501,7 @@
     <span class="k">return</span> <span class="n">table_str</span></div>
 
 
-<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes misc.print_table() and saves the returned table string as a log file.</span>
 
@@ -1548,7 +1548,7 @@
     <span class="k">return</span> <span class="n">realpath</span></div>
 
 
-<div class="viewcode-block" id="get_slice_indices"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_slice_indices">[docs]</a><span class="k">def</span> <span class="nf">get_slice_indices</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">):</span>
+<div class="viewcode-block" id="get_slice_indices"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_slice_indices">[docs]</a><span class="k">def</span> <span class="nf">get_slice_indices</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get slice indices of two lists (mainlist and sublist) where sublist is a</span>
 <span class="sd">    slice of mainlist, e.g:</span>
@@ -1583,7 +1583,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_cutoff_array"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_cutoff_array">[docs]</a><span class="k">def</span> <span class="nf">get_cutoff_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">cut_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_cutoff_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_cutoff_array">[docs]</a><span class="k">def</span> <span class="nf">get_cutoff_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">cut_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies cutoff on array and returns it as well as the corresponding indices.</span>
 
@@ -1626,7 +1626,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">cutoff_array</span><span class="p">,</span> <span class="n">cutoff_array_ndx</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_subarray_start_ndx"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_subarray_start_ndx">[docs]</a><span class="k">def</span> <span class="nf">get_subarray_start_ndx</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">subarray</span><span class="p">):</span>
+<div class="viewcode-block" id="get_subarray_start_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_subarray_start_ndx">[docs]</a><span class="k">def</span> <span class="nf">get_subarray_start_ndx</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">subarray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns start index of &lt;array&gt; at which &lt;subarray&gt; matches.</span>
 
@@ -1654,7 +1654,7 @@
     <span class="k">return</span> <span class="n">start_ndx</span></div>
 
 
-<div class="viewcode-block" id="get_subarray"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_subarray">[docs]</a><span class="k">def</span> <span class="nf">get_subarray</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">ndx_sel</span><span class="p">):</span>
+<div class="viewcode-block" id="get_subarray"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_subarray">[docs]</a><span class="k">def</span> <span class="nf">get_subarray</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">ndx_sel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns sub array of &lt;array&gt; for items with indices &lt;ndx_sel&gt;.</span>
 
@@ -1671,7 +1671,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subarray</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_sorted_array"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_sorted_array">[docs]</a><span class="k">def</span> <span class="nf">get_sorted_array</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<div class="viewcode-block" id="get_sorted_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_sorted_array">[docs]</a><span class="k">def</span> <span class="nf">get_sorted_array</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns sorted array (increasing order) and the coresponding element indices of the input array.</span>
 
@@ -1696,7 +1696,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">SORTED_ARRAY</span><span class="p">,</span> <span class="n">SORTED_NDX</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_ranked_array"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_ranked_array">[docs]</a><span class="k">def</span> <span class="nf">get_ranked_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ranked_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_ranked_array">[docs]</a><span class="k">def</span> <span class="nf">get_ranked_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns ranked array (decreasing order) and the corresponding element indices of the input array.</span>
 
@@ -1741,7 +1741,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">RANKED_ARRAY</span><span class="p">,</span> <span class="n">RANKED_NDX</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_quantile"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_quantile">[docs]</a><span class="k">def</span> <span class="nf">get_quantile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_quantile"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_quantile">[docs]</a><span class="k">def</span> <span class="nf">get_quantile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of np.quantile()</span>
 <span class="sd">    Get value (or score) below which p% of the observations may be found.</span>
@@ -1758,7 +1758,7 @@
     <span class="k">return</span> <span class="n">quantile</span></div>
 
 
-<div class="viewcode-block" id="get_percentile"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.get_percentile">[docs]</a><span class="k">def</span> <span class="nf">get_percentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_percentile"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_percentile">[docs]</a><span class="k">def</span> <span class="nf">get_percentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of np.percentile()</span>
 <span class="sd">    Get value (or score) below which p% of the observations may be found.</span>
@@ -1778,7 +1778,7 @@
 <span class="c1">### custom plt.figure()</span>
 
 
-<div class="viewcode-block" id="figure"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.figure">[docs]</a><span class="k">def</span> <span class="nf">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hr</span><span class="o">=</span><span class="p">[],</span> <span class="n">wr</span><span class="o">=</span><span class="p">[],</span>
+<div class="viewcode-block" id="figure"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.figure">[docs]</a><span class="k">def</span> <span class="nf">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hr</span><span class="o">=</span><span class="p">[],</span> <span class="n">wr</span><span class="o">=</span><span class="p">[],</span>
            <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;ticks&#39;</span><span class="p">,</span> <span class="n">font_scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
            <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1873,7 +1873,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="set_pad"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.set_pad">[docs]</a><span class="k">def</span> <span class="nf">set_pad</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="set_pad"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.set_pad">[docs]</a><span class="k">def</span> <span class="nf">set_pad</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set pad (spacing) between axis and axis labels</span>
 
@@ -1908,7 +1908,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="legend"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.legend">[docs]</a><span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlecolors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlelength</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">handletextpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="legend"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.legend">[docs]</a><span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlecolors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlelength</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">handletextpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of plt.legend() with most frequently used parameters.</span>
 
@@ -1951,7 +1951,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="savefig"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.savefig">[docs]</a><span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<div class="viewcode-block" id="savefig"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.savefig">[docs]</a><span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    general helpfunction:</span>
 <span class="sd">        - save current figure</span>
@@ -1979,7 +1979,7 @@
     <span class="k">return</span> <span class="n">realpath</span></div>
 
 
-<div class="viewcode-block" id="autoapply_limits"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.autoapply_limits">[docs]</a><span class="k">def</span> <span class="nf">autoapply_limits</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<div class="viewcode-block" id="autoapply_limits"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.autoapply_limits">[docs]</a><span class="k">def</span> <span class="nf">autoapply_limits</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply plt.xlim() and plt.ylim() to each axis object based on its xmin, xmax, ymin, ymax values.</span>
 
@@ -2070,7 +2070,7 @@
 <span class="c1"># pickle functions</span>
 
 
-<div class="viewcode-block" id="pickle_dump"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.pickle_dump">[docs]</a><span class="k">def</span> <span class="nf">pickle_dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s1">&#39;./pickle&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="pickle_dump"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.pickle_dump">[docs]</a><span class="k">def</span> <span class="nf">pickle_dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s1">&#39;./pickle&#39;</span><span class="p">,</span>
                 <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    bug: can&#39;t dump figures which used the misc.add_cbar() or misc.add_cbar_ax() function</span>
@@ -2346,7 +2346,7 @@
 <span class="s2">    &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="pickle_load"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.pickle_load">[docs]</a><span class="k">def</span> <span class="nf">pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s2">&quot;./pickle&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="pickle_load"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.pickle_load">[docs]</a><span class="k">def</span> <span class="nf">pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s2">&quot;./pickle&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    pickle.load figure from &quot;&lt;pickledir&gt;/&lt;filename&gt;.pickle&quot;. If the pickle file</span>
 <span class="sd">    contains figure data, auto detects the figure type (i.e. it created using</span>
@@ -2403,7 +2403,7 @@
 <span class="s2">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="pickle_plot"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.pickle_plot">[docs]</a><span class="k">def</span> <span class="nf">pickle_plot</span><span class="p">(</span><span class="n">pickle_files</span><span class="o">=</span><span class="p">[],</span> <span class="n">import_settings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="pickle_plot"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.pickle_plot">[docs]</a><span class="k">def</span> <span class="nf">pickle_plot</span><span class="p">(</span><span class="n">pickle_files</span><span class="o">=</span><span class="p">[],</span> <span class="n">import_settings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
                 <span class="n">align_ylim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hist_minorticks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates multifigure from loading pickle_files</span>
@@ -2541,7 +2541,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="hide_figure"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.hide_figure">[docs]</a><span class="k">def</span> <span class="nf">hide_figure</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="hide_figure"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.hide_figure">[docs]</a><span class="k">def</span> <span class="nf">hide_figure</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of hide_plot()</span>
 <span class="sd">    &quot;Hide&quot; figure by setting its size to (0, 0) inches.</span>
@@ -2569,7 +2569,7 @@
 
 
 <span class="c1"># alias function of hide_figure</span>
-<div class="viewcode-block" id="hide_plot"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.hide_plot">[docs]</a><span class="k">def</span> <span class="nf">hide_plot</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="hide_plot"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.hide_plot">[docs]</a><span class="k">def</span> <span class="nf">hide_plot</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span><span class="p">(</span><span class="n">hide_figure</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="n">close</span><span class="p">))</span></div>
 
 
@@ -2580,7 +2580,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### limits, ticks and labels functions for plot aesthetics of gridplots</span>
 
-<div class="viewcode-block" id="align_limits"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.align_limits">[docs]</a><span class="k">def</span> <span class="nf">align_limits</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_lim</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="align_limits"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.align_limits">[docs]</a><span class="k">def</span> <span class="nf">align_limits</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_lim</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Read limits of ref_ax and asign them to target_ax</span>
 <span class="sd">    - if &quot;new_lim&quot; is passed: assign new values to both ref_ax and target_ax</span>
@@ -2617,7 +2617,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="align_ticks"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.align_ticks">[docs]</a><span class="k">def</span> <span class="nf">align_ticks</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticks</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="align_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.align_ticks">[docs]</a><span class="k">def</span> <span class="nf">align_ticks</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticks</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Read ticks of ref_ax and asign them to target_ax</span>
 <span class="sd">    - if &quot;new_ticks&quot; is passed: assign new values to both ref_ax and target_ax</span>
@@ -2654,7 +2654,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="align_ticklabels"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.align_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">align_ticklabels</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticklabels</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="align_ticklabels"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.align_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">align_ticklabels</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticklabels</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Read ticklabels of ref_ax and asign them to target_ax</span>
 <span class="sd">    - if &quot;new_ticklabels&quot; is passed: assign new values to both ref_ax and target_ax</span>
@@ -2690,7 +2690,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="apply_shared_axes"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.apply_shared_axes">[docs]</a><span class="k">def</span> <span class="nf">apply_shared_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+<div class="viewcode-block" id="apply_shared_axes"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.apply_shared_axes">[docs]</a><span class="k">def</span> <span class="nf">apply_shared_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - removes xticklabels of all axes except for bottom row.</span>
 <span class="sd">    - removes yticklabels of all axes except for left column.</span>
@@ -2713,7 +2713,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="convert_ticklabels"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.convert_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">convert_ticklabels</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_ticklabels"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.convert_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">convert_ticklabels</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read ticklabels of axes and multiply with &quot;multiplier&quot;</span>
 
@@ -2755,7 +2755,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="number_base_factorization"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.number_base_factorization">[docs]</a><span class="k">class</span> <span class="nc">number_base_factorization</span><span class="p">():</span>
+<div class="viewcode-block" id="number_base_factorization"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.number_base_factorization">[docs]</a><span class="k">class</span> <span class="nc">number_base_factorization</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to get 10base factorization of any number,</span>
 <span class="sd">    e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2</span>
@@ -2828,7 +2828,7 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="setup_ticks"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.setup_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_ticks</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">major_base</span><span class="p">,</span> <span class="n">minor_base</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.setup_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_ticks</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">major_base</span><span class="p">,</span> <span class="n">minor_base</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setup axis ticks of a plot in vmin &lt;= ticks &lt;= vmax.</span>
 
@@ -2855,7 +2855,7 @@
     <span class="k">return</span> <span class="n">majorticks</span><span class="p">,</span> <span class="n">minorticks</span></div>
 
 
-<div class="viewcode-block" id="setup_logscale_ticks"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.setup_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_logscale_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.setup_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setup majorticks and minorticks for logscale with ticks &lt;= vmax.</span>
 
@@ -2882,7 +2882,7 @@
     <span class="k">return</span> <span class="n">majorticks</span><span class="p">,</span> <span class="n">minorticks</span></div>
 
 
-<div class="viewcode-block" id="set_logscale_ticks"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.set_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">set_logscale_ticks</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minorticks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="set_logscale_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.set_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">set_logscale_ticks</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minorticks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply logscale ticks on specific axis of ax.</span>
 <span class="sd">    If vmax is specified, sets vmax as upper limit of axis.</span>
@@ -2953,7 +2953,7 @@
 <span class="c1">### colorbar functions</span>
 
 
-<div class="viewcode-block" id="add_cbar_ax"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.add_cbar_ax">[docs]</a><span class="k">def</span> <span class="nf">add_cbar_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="add_cbar_ax"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.add_cbar_ax">[docs]</a><span class="k">def</span> <span class="nf">add_cbar_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add colorbar ax relative to existing ax.</span>
 
@@ -2995,7 +2995,7 @@
     <span class="k">return</span> <span class="n">cbar_ax</span></div>
 
 
-<div class="viewcode-block" id="add_cbar"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.add_cbar">[docs]</a><span class="k">def</span> <span class="nf">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cbar_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="add_cbar"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.add_cbar">[docs]</a><span class="k">def</span> <span class="nf">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cbar_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Draw colorbar relative to existing ax.</span>
 
@@ -3052,7 +3052,7 @@
     <span class="k">return</span> <span class="n">cbar</span></div>
 
 
-<div class="viewcode-block" id="cbar_set_ticks_position"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.cbar_set_ticks_position">[docs]</a><span class="k">def</span> <span class="nf">cbar_set_ticks_position</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+<div class="viewcode-block" id="cbar_set_ticks_position"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cbar_set_ticks_position">[docs]</a><span class="k">def</span> <span class="nf">cbar_set_ticks_position</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set ticks position of colorbar.</span>
 
@@ -3070,7 +3070,7 @@
 <span class="c1">### complete / append docstrings</span>
 
 
-<div class="viewcode-block" id="INIT_append_docstrings"><a class="viewcode-back" href="../../pyREX.html#pyREX.misc.INIT_append_docstrings">[docs]</a><span class="k">def</span> <span class="nf">INIT_append_docstrings</span><span class="p">():</span>
+<div class="viewcode-block" id="INIT_append_docstrings"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.INIT_append_docstrings">[docs]</a><span class="k">def</span> <span class="nf">INIT_append_docstrings</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Some functions in this module have split up docstrings.</span>
 <span class="sd">    The intention of this design choice is to assure that docstrings which rely</span>
@@ -3101,7 +3101,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

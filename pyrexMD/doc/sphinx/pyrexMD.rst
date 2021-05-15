@@ -1,5 +1,5 @@
-pyREX package
-=============
+pyrexMD package
+===============
 
 Subpackages
 -----------
@@ -7,40 +7,40 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   pyREX.analysis
-   pyREX.decoy
+   pyrexMD.analysis
+   pyrexMD.decoy
 
 Submodules
 ----------
 
-pyREX.core module
------------------
+pyrexMD.core module
+-------------------
 
-.. automodule:: pyREX.core
+.. automodule:: pyrexMD.core
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyREX.gmx module
-----------------
+pyrexMD.gmx module
+------------------
 
-.. automodule:: pyREX.gmx
+.. automodule:: pyrexMD.gmx
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyREX.misc module
------------------
+pyrexMD.misc module
+-------------------
 
-.. automodule:: pyREX.misc
+.. automodule:: pyrexMD.misc
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyREX.rex module
-----------------
+pyrexMD.rex module
+------------------
 
-.. automodule:: pyREX.rex
+.. automodule:: pyrexMD.rex
    :members:
    :undoc-members:
    :show-inheritance:
@@ -48,7 +48,7 @@ pyREX.rex module
 Module contents
 ---------------
 
-.. automodule:: pyREX
+.. automodule:: pyrexMD
    :members:
    :undoc-members:
    :show-inheritance:

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.analysis.analysis &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.analysis.analysis &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">pyREMD</a>
+          <a href="../../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.analysis.analysis</li>
+      <li>pyrexMD.analysis.analysis</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,16 +160,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.analysis.analysis</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.analysis.analysis</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
 <span class="c1"># @Last modified time: 15.05.2021</span>
 
-
-<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
-<span class="kn">from</span> <span class="nn">pyREX.misc</span> <span class="kn">import</span> <span class="n">get_PDBid</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.misc</span> <span class="kn">import</span> <span class="n">get_PDBid</span>
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">Bio.PDB</span> <span class="kn">import</span> <span class="n">PDBParser</span><span class="p">,</span> <span class="n">Polypeptide</span>
 <span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="kn">import</span> <span class="n">distances</span> <span class="k">as</span> <span class="n">_distances</span><span class="p">,</span> <span class="n">rms</span> <span class="k">as</span> <span class="n">_rms</span><span class="p">,</span> <span class="n">align</span> <span class="k">as</span> <span class="n">_align</span>
@@ -193,15 +192,14 @@
 
 <span class="c1">################################################################################</span>
 <span class="c1">################################################################################</span>
-<div class="viewcode-block" id="get_time_conversion"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_time_conversion">[docs]</a><span class="k">def</span> <span class="nf">get_time_conversion</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_conversion"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_time_conversion">[docs]</a><span class="k">def</span> <span class="nf">get_time_conversion</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get/print time conversion of MDA universe &lt;u&gt;</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args and kwargs of misc.cprint()</span>
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.cprint() are valid Keyword Args.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">):</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">dt</span>
@@ -215,7 +213,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_FASTA"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_FASTA">[docs]</a><span class="k">def</span> <span class="nf">get_FASTA</span><span class="p">(</span><span class="n">pdb_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_FASTA"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_FASTA">[docs]</a><span class="k">def</span> <span class="nf">get_FASTA</span><span class="p">(</span><span class="n">pdb_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get FASTA sequence for each polypeptide of pdb_file</span>
 
@@ -223,8 +221,9 @@
 <span class="sd">        pdb_file (str): path to pdb_file</span>
 <span class="sd">        verbose (bool): print sequences</span>
 
-<span class="sd">    RETURNS:</span>
-<span class="sd">        FASTA (list): list with FASTA sequences (one per polypeptide)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        FASTA (list)</span>
+<span class="sd">            list with FASTA sequences (one per polypeptide)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">structure</span> <span class="o">=</span> <span class="n">PDBParser</span><span class="p">()</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="s2">&quot;pdb_label&quot;</span><span class="p">,</span> <span class="n">pdb_file</span><span class="p">)</span>  <span class="c1"># label not required</span>
     <span class="n">ppb</span> <span class="o">=</span> <span class="n">Polypeptide</span><span class="o">.</span><span class="n">PPBuilder</span><span class="p">()</span>
@@ -241,10 +240,10 @@
 <span class="c1">################################################################################</span>
 
 
-<div class="viewcode-block" id="alignto"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.alignto">[docs]</a><span class="k">def</span> <span class="nf">alignto</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">tol_mass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="alignto"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.alignto">[docs]</a><span class="k">def</span> <span class="nf">alignto</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">tol_mass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modified version of MDAnalysis.analysis.align.alignto()</span>
-<span class="sd">        -&gt; now works properly with two different selection strings</span>
+<span class="sd">    Modified version of MDAnalysis.analysis.align.alignto() which works properly</span>
+<span class="sd">    with two different selection strings.</span>
 
 <span class="sd">    Description:</span>
 <span class="sd">        Perform a spatial superposition by minimizing the RMSD.</span>
@@ -265,28 +264,29 @@
 <span class="sd">           to change this behavior through the `subselection` keyword.)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe): mobile structure</span>
-<span class="sd">        ref (MDA universe): reference structure</span>
+<span class="sd">        mobile (universe): mobile structure</span>
+<span class="sd">        ref (universe): reference structure</span>
 <span class="sd">        sel1 (str): selection string of mobile structure</span>
 <span class="sd">        sel2 (str): selection string of reference structure</span>
-<span class="sd">        weights (None/str/array):</span>
-<span class="sd">            None: weigh each atom equally</span>
-<span class="sd">            &quot;mass&quot;: weigh atoms based on mass</span>
-<span class="sd">            array: If a float array of the same length as `mobile` is provided,</span>
-<span class="sd">                   use each element of the `array_like` as a weight for the</span>
-<span class="sd">                   corresponding atom in `mobile`.</span>
+<span class="sd">        weights (None, str, array):</span>
+<span class="sd">          | None: weigh each atom equally</span>
+<span class="sd">          | &quot;mass&quot;: weigh atoms based on mass</span>
+<span class="sd">          | array: If a float array of the same length as `mobile` is provided,</span>
+<span class="sd">            use each element of the `array_like` as a weight for the corresponding</span>
+<span class="sd">            atom in `mobile`.</span>
 <span class="sd">        tol_mass (float): Reject match if the atomic masses for matched atoms</span>
-<span class="sd">                          differ by more than `tol_mass`, default [0.1]</span>
+<span class="sd">            differ by more than `tol_mass`, default [0.1]</span>
 <span class="sd">        strict (bool):</span>
-<span class="sd">            True: Will raise :exc:`SelectionError` if a single atom does not</span>
-<span class="sd">                  match between the two selections.</span>
-<span class="sd">            False:  Will try to prepare a matching selection by dropping</span>
-<span class="sd">                    residues with non-matching atoms.</span>
-<span class="sd">                    See :func:`ching_atoms` for details.</span>
+<span class="sd">          | True: Will raise :exc:`SelectionError` if a single atom does not</span>
+<span class="sd">            match between the two selections.</span>
+<span class="sd">          | False:  Will try to prepare a matching selection by dropping residues</span>
+<span class="sd">            with non-matching atoms.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        old_rmsd (float): RMSD before spatial alignment</span>
-<span class="sd">        new_rmsd (float): RMSD after spatial alignment</span>
+<span class="sd">        old_rmsd (float)</span>
+<span class="sd">            RMSD before spatial alignment</span>
+<span class="sd">        new_rmsd (float)</span>
+<span class="sd">            RMSD after spatial alignment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mobile_atoms</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span>
     <span class="n">ref_atoms</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span>
@@ -309,47 +309,46 @@
     <span class="k">return</span> <span class="n">old_rmsd</span><span class="p">,</span> <span class="n">new_rmsd</span></div>
 
 
-<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt_return</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt_return</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the RMSD between mobile and ref after superimposing (translation and rotation).</span>
-<span class="sd">    Alias function of MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for more information.</span>
+<span class="sd">    Calculates the RMSD between mobile and ref after superimposing (translation</span>
+<span class="sd">    and rotation). Alias function of MDAnalysis.analysis.rms.RMSD. See</span>
+<span class="sd">    help(MDAnalysis.analysis.rms.RMSD) for more information.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp): mobile structure</span>
-<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure</span>
+<span class="sd">        ref (universe, atomgrp): reference structure</span>
 <span class="sd">        sel1 (str): selection string of mobile structure</span>
 <span class="sd">        sel2 (str): selection string of reference structure</span>
-<span class="sd">        weights (bool/str/array_like): weights during superposition of mobile and reference</span>
-<span class="sd">           None: no weights</span>
-<span class="sd">           &quot;mass&quot;: atom masses as weights</span>
-<span class="sd">           array_like: If a float array of the same length as &quot;mobile&quot; is provided, use</span>
-<span class="sd">                       each element of the &quot;array_like&quot; as a weight for the corresponding</span>
-<span class="sd">                       atom in &quot;mobile&quot;.</span>
+<span class="sd">        weights (bool, str, array_like):</span>
+<span class="sd">          | weights during superposition of mobile and reference</span>
+<span class="sd">          | None: no weights</span>
+<span class="sd">          | &quot;mass&quot;: atom masses as weights</span>
+<span class="sd">          | array_like: If a float array of the same length as &quot;mobile&quot; is</span>
+<span class="sd">            provided, use each element of the &quot;array_like&quot; as a weight for the</span>
+<span class="sd">            corresponding atom in &quot;mobile&quot;.</span>
+<span class="sd">        plot (bool):</span>
+<span class="sd">        alt_return (bool): toggle alternative return datatype. See example below</span>
 
-<span class="sd">        plot (bool): create plot</span>
-<span class="sd">        alt_return (bool): alternative return datatype</span>
-<span class="sd">            True:</span>
-<span class="sd">                ftr_tuple = RMSD()    # tuple of arrays with shape (length, )</span>
-<span class="sd">                                      # ftr: frame, time, rmsd</span>
-<span class="sd">                frame= ftr_tuple[0]</span>
-<span class="sd">                time = ftr_tuple[1]</span>
-<span class="sd">                rmsd = ftr_tuple[2]</span>
-
-<span class="sd">            False:</span>
-<span class="sd">                ftr_array = get_RMSD()    # single array  with shape (length, 3)</span>
-<span class="sd">                                          # ftr: frame, time, rmsd</span>
-<span class="sd">                frame= ftr_array[:,0]</span>
-<span class="sd">                time = ftr_array[:,1]</span>
-<span class="sd">                rmsd = ftr_array[:,2]</span>
-
-<span class="sd">    Kwargs:</span>
-<span class="sd">        see help(misc.figure)</span>
+<span class="sd">    .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        if alt_return == True:</span>
-<span class="sd">            ftr_tuple (tuple)    # ftr: frame, time, rmsd</span>
-<span class="sd">        if alt_return == False:</span>
-<span class="sd">            ftr_array (array)    # ftr: frame, time, rmsd</span>
+<span class="sd">        ftr_tuple (tuple)</span>
+<span class="sd">            returns ftr tuple if alt_return is True (see example below)</span>
+<span class="sd">        ftr_array (array)</span>
+<span class="sd">            returns ftr_array if alt_return is False (see example below)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | # return type case 1</span>
+<span class="sd">        | &gt;&gt; ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )</span>
+<span class="sd">        | &gt;&gt; frame, time, rmsd = ftr_tuple</span>
+<span class="sd">        |</span>
+<span class="sd">        | # return type case 2</span>
+<span class="sd">        | &gt;&gt; ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)</span>
+<span class="sd">        | &gt;&gt; frame= ftr_array[:,0]</span>
+<span class="sd">        | &gt;&gt; time = ftr_array[:,1]</span>
+<span class="sd">        | &gt;&gt; rmsd = ftr_array[:,2]</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">))</span>
             <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">))):</span>
@@ -377,19 +376,19 @@
         <span class="k">return</span> <span class="n">ftr_array</span></div>
 
 
-<div class="viewcode-block" id="get_RMSF"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_RMSF">[docs]</a><span class="k">def</span> <span class="nf">get_RMSF</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein and name CA&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_RMSF"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_RMSF">[docs]</a><span class="k">def</span> <span class="nf">get_RMSF</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein and name CA&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the RMSF of mobile.</span>
-<span class="sd">    Alias function of MDAnalysis.analysis.rms.RMSF.</span>
+<span class="sd">    Calculates the RMSF of mobile. Alias function of MDAnalysis.analysis.rms.RMSF.</span>
 <span class="sd">    See help(MDAnalysis.analysis.rms.get_RMSF) for more information.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp): mobile structure</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        plot (bool): create plot</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RMSF (array)</span>
+<span class="sd">            array with RMSD values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">get_RMSF</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">get_RMSF</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">():</span><span class="se">\</span>
@@ -415,22 +414,23 @@
 
 <span class="k">def</span> <span class="nf">_HELP_sss_None2int</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Note: this function is (probably) required when a custom function uses</span>
-<span class="sd">    either a MDA universe or (distance)matrix and a misc.CONFIG class with</span>
-<span class="sd">    the keys &quot;sss&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;step&quot;.</span>
-
-<span class="sd">    Reason:</span>
-<span class="sd">        slicing: aList[None:None:None] is equal to aList[::]</span>
-<span class="sd">        get item: aList[None] does not exist</span>
-
 <span class="sd">    Converts None entries of the config keys to integers:</span>
 <span class="sd">        sss = [None, None, None] -&gt; [0, max frame of MDA universe, 1]</span>
 <span class="sd">        start = None -&gt;  0</span>
 <span class="sd">        stop = None -&gt;  max frame of u</span>
 <span class="sd">        step = None -&gt;  1</span>
 
+<span class="sd">    Note:</span>
+<span class="sd">        this function is (probably) required when a custom function uses either</span>
+<span class="sd">        a MDA universe or (distance)matrix and a misc.CONFIG class with the keys</span>
+<span class="sd">        &quot;sss&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;step&quot;.</span>
+
+<span class="sd">    Reason:</span>
+<span class="sd">        slicing: aList[None:None:None] is equal to aList[::]</span>
+<span class="sd">        get item: aList[None] does not exist</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        obj (MDA universe / matrix): MDA universe or distane(matrix)</span>
+<span class="sd">        obj (universe, matrix): MDA universe or distance(matrix)</span>
 <span class="sd">        cfg (misc.CONFIG class)</span>
 
 <span class="sd">    Returns:</span>
@@ -472,33 +472,34 @@
     <span class="k">return</span> <span class="n">cfg</span>
 
 
-<div class="viewcode-block" id="get_Distance_Matrices"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_Distance_Matrices">[docs]</a><span class="k">def</span> <span class="nf">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+<div class="viewcode-block" id="get_Distance_Matrices"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_Distance_Matrices">[docs]</a><span class="k">def</span> <span class="nf">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
                           <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                           <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate distance matrices for mobile and return them.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/list):</span>
-<span class="sd">            (MDA universe): structure with trajectory</span>
-<span class="sd">            (list): list with paths to structure files (.pdb)</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        mobile (universe, list):</span>
+<span class="sd">          | (MDA universe): structure with trajectory</span>
+<span class="sd">          | (list): list with paths to structure files (.pdb)</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        flatten (bool): returns flattened distance matrices</span>
+<span class="sd">        flatten (bool): return flattened distance matrices</span>
 <span class="sd">        verbose (bool): show progress bar</span>
 
-<span class="sd">    Kwargs:</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        dtype (dtype): float (default)</span>
-<span class="sd">        aliases for sss items:</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DM (array): array of distance matrices</span>
+<span class="sd">        DM (array)</span>
+<span class="sd">            array of distance matrices</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">############################################################################</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -543,16 +544,18 @@
 <span class="c1">### analysis.py &quot;universe modify&quot; functions</span>
 
 
-<div class="viewcode-block" id="get_resids_shift"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_resids_shift">[docs]</a><span class="k">def</span> <span class="nf">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+<div class="viewcode-block" id="get_resids_shift"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_resids_shift">[docs]</a><span class="k">def</span> <span class="nf">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compares universe.residues.resnames between mobile and ref in order to get resids shift.</span>
+<span class="sd">    Compares universe.residues.resnames between mobile and ref in order to get</span>
+<span class="sd">    resids shift.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe)</span>
-<span class="sd">        ref (MDA universe)</span>
+<span class="sd">        mobile (universe)</span>
+<span class="sd">        ref (universe)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        shift (int): shift value of ref residues to match mobile residues</span>
+<span class="sd">        shift (int)</span>
+<span class="sd">            shift value of ref residues to match mobile residues</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># compare resnames to get start_ndx</span>
     <span class="n">start_ndx</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_subarray_start_ndx</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">)</span>
@@ -573,13 +576,13 @@
     <span class="k">return</span> <span class="n">shift</span></div>
 
 
-<div class="viewcode-block" id="shift_resids"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.shift_resids">[docs]</a><span class="k">def</span> <span class="nf">shift_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="shift_resids"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.shift_resids">[docs]</a><span class="k">def</span> <span class="nf">shift_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Shift mda.universe.residues by &lt;shift&gt; value.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
-<span class="sd">        shift (None/int): shift value</span>
+<span class="sd">        u (universe)</span>
+<span class="sd">        shift (None, int): shift value</span>
 <span class="sd">        verbose (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">shift</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">shift</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -599,19 +602,19 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="align_resids"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.align_resids">[docs]</a><span class="k">def</span> <span class="nf">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="align_resids"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.align_resids">[docs]</a><span class="k">def</span> <span class="nf">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Align resids of mobile and ref by comparing universe.residues.resnames and</span>
 <span class="sd">    shifting the resids of reference (usually smaller than mobile).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe)</span>
-<span class="sd">        ref (MDA universe)</span>
+<span class="sd">        mobile (universe)</span>
+<span class="sd">        ref (universe)</span>
 <span class="sd">        norm (bool): apply analysis.norm_resids()</span>
 <span class="sd">        verbose (bool)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        cprint_color (None/str): colored print color</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -627,20 +630,22 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_matching_selection"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_matching_selection">[docs]</a><span class="k">def</span> <span class="nf">get_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_matching_selection"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_matching_selection">[docs]</a><span class="k">def</span> <span class="nf">get_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get matching selection strings of mobile and reference after resids alignment.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe)</span>
-<span class="sd">        ref (MDA universe)</span>
+<span class="sd">        mobile (universe)</span>
+<span class="sd">        ref (universe)</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        norm (bool): apply analysis.norm_resids()</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        sel1 (str): matching selection string (mobile)</span>
-<span class="sd">        sel2 (str): matching selection string (ref)</span>
+<span class="sd">        sel1 (str)</span>
+<span class="sd">            matching selection string of mobile</span>
+<span class="sd">        sel2 (str)</span>
+<span class="sd">            matching selection string of ref</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
@@ -654,28 +659,29 @@
     <span class="k">return</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span></div>
 
 
-<div class="viewcode-block" id="norm_ids"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.norm_ids">[docs]</a><span class="k">def</span> <span class="nf">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_ids"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.norm_ids">[docs]</a><span class="k">def</span> <span class="nf">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify existing MDA universe/atomgrp and normalize ids according to:</span>
+<span class="sd">    Modify existing MDA universe/atomgrp and normalize ids according to</span>
 <span class="sd">    min(universe.atoms.ids) = 1</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe/atomgrp): structure</span>
-<span class="sd">        info (str): additional info for print message</span>
-<span class="sd">            - &#39;reference&#39;</span>
-<span class="sd">            - &#39;mobile&#39;</span>
+<span class="sd">        u (universe, atomgrp): structure</span>
+<span class="sd">        info (str):</span>
+<span class="sd">          | additional info for print message</span>
+<span class="sd">          | &#39;reference&#39;</span>
+<span class="sd">          | &#39;mobile&#39;</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt; ref = mda.Universe(&lt;top&gt;)</span>
-<span class="sd">        &gt;&gt; print(ref.atoms.ids)</span>
-<span class="sd">        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</span>
-
-<span class="sd">        &gt;&gt; norm_ids(ref, &#39;reference&#39;)</span>
-<span class="sd">        Norming atom ids of reference...</span>
-
-<span class="sd">        &gt;&gt; print(ref.atoms.ids)</span>
-<span class="sd">        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
+<span class="sd">        | &gt;&gt; ref = mda.Universe(&lt;top&gt;)</span>
+<span class="sd">        | &gt;&gt; print(ref.atoms.ids)</span>
+<span class="sd">        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</span>
+<span class="sd">        |</span>
+<span class="sd">        | &gt;&gt; norm_ids(ref, &#39;reference&#39;)</span>
+<span class="sd">        | Norming atom ids of reference...</span>
+<span class="sd">        |</span>
+<span class="sd">        | &gt;&gt; print(ref.atoms.ids)</span>
+<span class="sd">        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__HELP_print</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -698,27 +704,28 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="norm_resids"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.norm_resids">[docs]</a><span class="k">def</span> <span class="nf">norm_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_resids"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.norm_resids">[docs]</a><span class="k">def</span> <span class="nf">norm_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify existing MDA universe/atomgrp and normalize resids according to:</span>
+<span class="sd">    Modify existing MDA universe/atomgrp and normalize resids according to</span>
 <span class="sd">    min(universe.residues.resids) = 1</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe/atomgrp): structure</span>
-<span class="sd">        info (str): additional info for print message</span>
-<span class="sd">            - &#39;reference&#39;</span>
-<span class="sd">            - &#39;topology&#39;</span>
+<span class="sd">        u (universe, atomgrp): structure</span>
+<span class="sd">        info (str):</span>
+<span class="sd">          | additional info for print message</span>
+<span class="sd">          | &#39;reference&#39;</span>
+<span class="sd">          | &#39;topology&#39;</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt; ref = mda.Universe(&lt;top&gt;)</span>
-<span class="sd">        &gt;&gt; print(ref.residues.resids)</span>
-<span class="sd">        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</span>
-
-<span class="sd">        &gt;&gt; norm_resids(u, &#39;reference&#39;)</span>
-<span class="sd">        Norming resids of reference...</span>
-
-<span class="sd">        &gt;&gt; print(ref.residues.resids)</span>
-<span class="sd">        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
+<span class="sd">        | &gt;&gt; ref = mda.Universe(&lt;top&gt;)</span>
+<span class="sd">        | &gt;&gt; print(ref.residues.resids)</span>
+<span class="sd">        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</span>
+<span class="sd">        |</span>
+<span class="sd">        | &gt;&gt; norm_resids(u, &#39;reference&#39;)</span>
+<span class="sd">        | Norming resids of reference...</span>
+<span class="sd">        |</span>
+<span class="sd">        | &gt;&gt; print(ref.residues.resids)</span>
+<span class="sd">        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__HELP_print</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -741,22 +748,19 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="norm_universe"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.norm_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_universe"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.norm_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Executes the functions:</span>
-<span class="sd">        - norm_ids(u, info)</span>
-<span class="sd">        - norm_resids(u, info)</span>
+<span class="sd">    Executes the functions</span>
 
-
-<span class="sd">    For additional information, type:</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_ids)</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_resids)</span>
+<span class="sd">      - norm_ids(u, info)</span>
+<span class="sd">      - norm_resids(u, info)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe/atomgrp): structure</span>
-<span class="sd">        info (str): additional info for print message</span>
-<span class="sd">            - &#39;reference&#39;</span>
-<span class="sd">            - &#39;mobile&#39;</span>
+<span class="sd">        u (universe, atomgrp): structure</span>
+<span class="sd">        info (str):</span>
+<span class="sd">          | additional info for print message</span>
+<span class="sd">          | &#39;reference&#39;</span>
+<span class="sd">          | &#39;mobile&#39;</span>
 <span class="sd">        verbose (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -764,20 +768,14 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="norm_and_align_universe"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.norm_and_align_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_and_align_universe"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.norm_and_align_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Norm reference and mobile universe</span>
 <span class="sd">    - Align mobile universe on reference universe (matching atom ids and res ids)</span>
 
-<span class="sd">    For additional information, type:</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_ids)</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_resids)</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_universe)</span>
-<span class="sd">        - help(&lt;PKG_name&gt;.norm_and_align_universe)</span>
-
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp)</span>
-<span class="sd">        ref    (MDA universe/atomgrp)</span>
+<span class="sd">        mobile (universe, atomgrp)</span>
+<span class="sd">        ref    (universe, atomgrp)</span>
 <span class="sd">        verbose (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -817,43 +815,45 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="true_select_atoms"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.true_select_atoms">[docs]</a><span class="k">def</span> <span class="nf">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="true_select_atoms"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.true_select_atoms">[docs]</a><span class="k">def</span> <span class="nf">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create &quot;true selection&quot; (atomgroup copy in NEW universe) after applying</span>
-<span class="sd">        - norm_ids()</span>
-<span class="sd">        - norm_resids()</span>
+
+<span class="sd">      - norm_ids()</span>
+<span class="sd">      - norm_resids()</span>
+
 <span class="sd">    Note that atom indices are reassigned according to range(0, len(u.atoms))</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (str): structure path or PDB id</span>
-<span class="sd">        u (MDA universe/atomgrp): structure</span>
+<span class="sd">        u (str, universe, atomgrp): structure path (PDB id) or universe with structure</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        ignh (bool): ignore hydrogen (mass &lt; 1.2)</span>
 <span class="sd">        norm (bool): apply analysis.norm_universe()</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        a (&lt;AtomGroup&gt;): &quot;true selection&quot; / atomgroup copy in NEW universe</span>
+<span class="sd">        a (atomgrp)</span>
+<span class="sd">            &quot;true selection&quot; ~ atomgroup copy in NEW universe</span>
 
-<span class="sd">    Additional Info:</span>
-<span class="sd">    mda.select_atoms() remembers information about the original configuration which is sometimes NOT WANTED.</span>
+<span class="sd">    .. Note:: mda.select_atoms() remembers information about the original</span>
+<span class="sd">       universe configuration which is sometimes NOT WANTED.</span>
 
 <span class="sd">    EXAMPLE:</span>
-<span class="sd">    # Init universe</span>
-<span class="sd">    u = mda.Universe(&lt;top&gt;)</span>
-
-<span class="sd">    # select_atoms() behaviour</span>
-<span class="sd">    &gt;&gt; a = u.select_atoms(&quot;protein and type C&quot;)</span>
-<span class="sd">    &gt;&gt; a</span>
-<span class="sd">    &lt;AtomGroup with 72 atoms&gt;</span>
-<span class="sd">    &gt;&gt; a.residues.atoms</span>
-<span class="sd">    &lt;AtomGroup with 964 atoms&gt;</span>
-
-<span class="sd">    # true_select_atoms() behaviour</span>
-<span class="sd">    &gt;&gt; a = ana.true_select_atoms(u, sel=&quot;protein and type C&quot;)</span>
-<span class="sd">    &gt;&gt; a</span>
-<span class="sd">    &lt;Universe with 72 atoms&gt;</span>
-<span class="sd">    &gt;&gt; a.residue.atoms</span>
-<span class="sd">    &lt;AtomGroup with 72 atoms&gt;</span>
+<span class="sd">      | # Init universe</span>
+<span class="sd">      | &gt;&gt; u = mda.Universe(&lt;top&gt;)</span>
+<span class="sd">      |</span>
+<span class="sd">      | # select_atoms() behaviour</span>
+<span class="sd">      | &gt;&gt; a = u.select_atoms(&quot;protein and type C&quot;)</span>
+<span class="sd">      | &gt;&gt; a</span>
+<span class="sd">      | &lt;AtomGroup with 72 atoms&gt;</span>
+<span class="sd">      | &gt;&gt; a.residues.atoms</span>
+<span class="sd">      | &lt;AtomGroup with 964 atoms&gt;</span>
+<span class="sd">      |</span>
+<span class="sd">      | # true_select_atoms() behaviour</span>
+<span class="sd">      | &gt;&gt; a = ana.true_select_atoms(u, sel=&quot;protein and type C&quot;)</span>
+<span class="sd">      | &gt;&gt; a</span>
+<span class="sd">      | &lt;Universe with 72 atoms&gt;</span>
+<span class="sd">      | &gt;&gt; a.residue.atoms</span>
+<span class="sd">      | &lt;AtomGroup with 72 atoms&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># case 1: input is PDB ID -&gt; fetch online</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -873,21 +873,22 @@
     <span class="k">return</span> <span class="n">a</span></div>
 
 
-<div class="viewcode-block" id="dump_structure"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.dump_structure">[docs]</a><span class="k">def</span> <span class="nf">dump_structure</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./structures&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_structure"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.dump_structure">[docs]</a><span class="k">def</span> <span class="nf">dump_structure</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./structures&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dump structures for a list of frames with the file name &quot;save_as&quot;.</span>
 <span class="sd">    Automatically prepends frame number to the extension.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe/atomgrp): universe containing the structure</span>
-<span class="sd">        frames (array/list)</span>
-<span class="sd">        save_as (str): save name or realpath to save file</span>
-<span class="sd">                 Note: frame number will be prepended to the extension</span>
+<span class="sd">        u (universe, atomgrp): universe containing the structure</span>
+<span class="sd">        frames (array, list)</span>
+<span class="sd">        save_as (str): save name or realpath to save file. frame number will</span>
+<span class="sd">          be prepended to the extension</span>
 <span class="sd">        default_dir (str)</span>
 <span class="sd">        sel (str): selection string</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        dirpath (str): realpath to directory, where structures were dumped</span>
+<span class="sd">        dirpath (str)</span>
+<span class="sd">            realpath to directory with dumped structures</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">save_as</span><span class="p">:</span>
         <span class="n">realpath</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">default_dir</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -909,24 +910,26 @@
     <span class="k">return</span> <span class="n">dirpath</span></div>
 
 
-<div class="viewcode-block" id="shortest_RES_distances"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.shortest_RES_distances">[docs]</a><span class="k">def</span> <span class="nf">shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">):</span>
+<div class="viewcode-block" id="shortest_RES_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.shortest_RES_distances">[docs]</a><span class="k">def</span> <span class="nf">shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates shortest RES distances for selection of universe u.</span>
-<span class="sd">    Attention: Displayed RES ids always start with 1</span>
+
+<span class="sd">    .. Attention:: Displayed RES ids always start with 1</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        u (str): structure path</span>
-<span class="sd">        u (MDA universe/atomgrp): structure</span>
+<span class="sd">        u (universe, atomgrp): structure</span>
 <span class="sd">        sel (str): selection string</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SD (np.arrray): NxN Matrix with shortest RES distances</span>
-<span class="sd">                        i.e.: SD[0][0] is shortest distance RES0-RES0</span>
-<span class="sd">                              SD[0][1] is shortest distance RES0-RES1</span>
-<span class="sd">                              SD[0][2] is shortest distance RES0-RES2</span>
-<span class="sd">                              etc.</span>
-<span class="sd">        SD_d (np.array, dtype=object): detailed List with:</span>
-<span class="sd">            [d_min, (RES_pair), (ATM_pair), (ATM_names)]</span>
+<span class="sd">        SD (arrray)</span>
+<span class="sd">          | NxN Matrix with shortest RES distances</span>
+<span class="sd">          | i.e.: SD[0][0] is shortest distance RES0-RES0</span>
+<span class="sd">          |       SD[0][1] is shortest distance RES0-RES1</span>
+<span class="sd">          |       SD[0][2] is shortest distance RES0-RES2</span>
+<span class="sd">          | etc.</span>
+<span class="sd">        SD_d (array, dtype=object)</span>
+<span class="sd">            detailed List with [d_min, (RES_pair), (ATM_pair), (ATM_names)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># uc: universe copy</span>
@@ -962,8 +965,8 @@
         <span class="n">SD_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">SD</span><span class="p">)</span>    <span class="c1"># -&gt; transpose SD</span>
         <span class="n">SD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">SD</span><span class="p">,</span> <span class="n">SD_t</span><span class="p">)</span>  <span class="c1"># -&gt; take element-wise maximum</span>
 
-    <span class="c1"># convert to np.array with dtype=object since array contains lists, tuples and sequences</span>
-    <span class="n">SD_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">SD_d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+    <span class="c1"># convert to array with dtype=object since array contains lists, tuples and sequences</span>
+    <span class="n">SD_d</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">SD_d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">SD</span><span class="p">,</span> <span class="n">SD_d</span><span class="p">)</span></div>
 
 
@@ -972,19 +975,21 @@
 <span class="c1">### analysis.py plot functions</span>
 
 
-<div class="viewcode-block" id="get_trendline"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.get_trendline">[docs]</a><span class="k">def</span> <span class="nf">get_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="get_trendline"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_trendline">[docs]</a><span class="k">def</span> <span class="nf">get_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reduces &lt;xdata, ydata&gt; by &lt;compress&gt; factor and returns trendline data.</span>
 <span class="sd">    (Trendline: sum and normalize each &lt;compress&gt; elements of input data)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        xdata (list/array)</span>
-<span class="sd">        ydata (list/array)</span>
+<span class="sd">        xdata (list, array)</span>
+<span class="sd">        ydata (list, array)</span>
 <span class="sd">        compress (int): compress factor (sum and normalize &lt;compress&gt; elements)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        trend_xdata (list/array)</span>
-<span class="sd">        trend_ydata (list/array)</span>
+<span class="sd">        trend_xdata (list, array)</span>
+<span class="sd">            reduced xdata</span>
+<span class="sd">        trend_ydata (list, array)</span>
+<span class="sd">            reduced ydata</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ydata</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xdata and ydata have unequal length.&quot;</span><span class="p">)</span>
@@ -1001,33 +1006,35 @@
         <span class="n">trend_ydata</span> <span class="o">=</span> <span class="n">trend_ydata</span><span class="p">[:</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">ydata</span><span class="p">[</span><span class="o">-</span><span class="n">remainder</span><span class="p">:])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">remainder</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="n">trend_xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trend_xdata</span><span class="p">)</span>
+        <span class="n">trend_xdata</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">trend_xdata</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ydata</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="n">trend_ydata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trend_ydata</span><span class="p">)</span>
+        <span class="n">trend_ydata</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">trend_ydata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">trend_xdata</span><span class="p">,</span> <span class="n">trend_ydata</span></div>
 
 
-<div class="viewcode-block" id="plot_trendline"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_trendline">[docs]</a><span class="k">def</span> <span class="nf">plot_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_trendline"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_trendline">[docs]</a><span class="k">def</span> <span class="nf">plot_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot trendline of &lt;xdata, ydata&gt; and return trendline object</span>
-<span class="sd">    Remove trendline via trendline.remove()</span>
+
+<span class="sd">    .. Hint:: trendline can be removed via trendline.remove()</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        xdata (list/array)</span>
-<span class="sd">        ydata (list/array)</span>
+<span class="sd">        xdata (list, array)</span>
+<span class="sd">        ydata (list, array)</span>
 <span class="sd">        compress (int): compress factor (sum and normalize &lt;compress&gt; elements)</span>
 <span class="sd">        fignum (int): figure number (get with plt.gcf().number)</span>
 
-<span class="sd">    Kwargs:</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        &quot;alpha&quot;: 1.0</span>
 <span class="sd">        &quot;color&quot;: &quot;black&quot;</span>
 <span class="sd">        &quot;ls&quot;: &quot;-&quot;</span>
 <span class="sd">        &quot;lw&quot;: 2.0</span>
 <span class="sd">        &quot;ms&quot;: 1</span>
-<span class="sd">        &quot;marker&quot;: &quot;</span>
+<span class="sd">        &quot;marker&quot; : &quot;.&quot;</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        trendline (matplotlib.lines.Line2D): trendline object</span>
+<span class="sd">        trendline (matplotlib.lines.Line2D)</span>
+<span class="sd">            &quot;trendline&quot; object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
@@ -1065,8 +1072,13 @@
     <span class="k">return</span> <span class="n">fig</span><span class="o">.</span><span class="n">trendline</span></div>
 
 
-<div class="viewcode-block" id="remove_trendline"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.remove_trendline">[docs]</a><span class="k">def</span> <span class="nf">remove_trendline</span><span class="p">(</span><span class="n">trendline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_trendline"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.remove_trendline">[docs]</a><span class="k">def</span> <span class="nf">remove_trendline</span><span class="p">(</span><span class="n">trendline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    remove trendline of figure.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        trendline (None, obj): &quot;trendline object&quot;</span>
+<span class="sd">        fig (None, obj): figure object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">trendline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">trendline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
@@ -1086,35 +1098,37 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="PLOT"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.PLOT">[docs]</a><span class="k">def</span> <span class="nf">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PLOT"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.PLOT">[docs]</a><span class="k">def</span> <span class="nf">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    General plot function for analysis.py</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        xdata (array/list)</span>
-<span class="sd">        ydata (array/list)</span>
+<span class="sd">        xdata (array, list)</span>
+<span class="sd">        ydata (array, list)</span>
 <span class="sd">        xlabel (str)</span>
 <span class="sd">        ylabel (str)</span>
-<span class="sd">        title (None/str)</span>
-<span class="sd">        xlim (None/list)</span>
-<span class="sd">        ylim (None/list)</span>
+<span class="sd">        title (None, str)</span>
+<span class="sd">        xlim (None, list)</span>
+<span class="sd">        ylim (None, list)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        &quot;alpha&quot;: 0.3</span>
 <span class="sd">        &quot;color&quot;: &quot;r&quot;</span>
 <span class="sd">        &quot;lw&quot;: 1.5</span>
 <span class="sd">        &quot;ms&quot;: 1</span>
 <span class="sd">        &quot;marker&quot;: &quot;.&quot;</span>
 
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt; PLOT(TIME, RMSD, xlabel=&quot;time (ns)&quot;, ylabel=r&quot;RMSD ($\AA$)&quot;, title=&quot;RMSD plot&quot;,</span>
-<span class="sd">                xlim=[50, 500], ylim=[0, 20])</span>
+<span class="sd">        | &gt;&gt; PLOT(TIME, RMSD, xlabel=&quot;time (ns)&quot;, ylabel=r&quot;RMSD ($\AA$)&quot;,</span>
+<span class="sd">        |         title=&quot;RMSD plot&quot;, xlim=[50, 500], ylim=[0, 20])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -1152,35 +1166,41 @@
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_RMSD"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_RMSD">[docs]</a><span class="k">def</span> <span class="nf">plot_RMSD</span><span class="p">(</span><span class="n">RMSD_file</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_RMSD">[docs]</a><span class="k">def</span> <span class="nf">plot_RMSD</span><span class="p">(</span><span class="n">RMSD_file</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    plot RMSD curve</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        RMSD_file (str): path to RMSD file</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
-<span class="sd">        verbose (None/bool):</span>
-<span class="sd">            None: print step to user (as a reminder)</span>
-<span class="sd">            True: print start, step, stop to user</span>
-<span class="sd">            False: no print</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        verbose (None, bool):</span>
+<span class="sd">          | None: print step to user (as a reminder)</span>
+<span class="sd">          | True: print start, step, stop to user</span>
+<span class="sd">          | False: no print</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        alpha (float)</span>
 <span class="sd">        color (str)</span>
-<span class="sd">        cut_min (None/int/float): min value for cutoff</span>
-<span class="sd">        cut_max (None/int/float): max value for cutoff</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
+<span class="sd">        cut_min (None, int, float): min value for cutoff</span>
+<span class="sd">        cut_max (None ,int, float): max value for cutoff</span>
+<span class="sd">        start (None ,int): start frame</span>
+<span class="sd">        stop (None ,int): stop frame</span>
+<span class="sd">        step (None ,int): step size</span>
 <span class="sd">        filedir (str): default directory where to save figure</span>
 <span class="sd">        title (None/str)</span>
 
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#######################################</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
@@ -1245,20 +1265,26 @@
 <span class="sd">    important cfg parameter, such as vmin, vmax.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data (array/list)</span>
-<span class="sd">        vmin (None/int/float): min value of histogram/bins</span>
-<span class="sd">        vmax (None/int/float): max value of histogram/bins</span>
-<span class="sd">        vbase (int): rounding base of vmin, vmax.</span>
-<span class="sd">                     see misc.round_down(number,base) or misc.round_up(number,base)</span>
-<span class="sd">        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase</span>
+<span class="sd">        data (array, list)</span>
+<span class="sd">        vmin (None, int, float): min value of histogram/bins</span>
+<span class="sd">        vmax (None, int, float): max value of histogram/bins</span>
+<span class="sd">        vbase (int): r</span>
+<span class="sd">          | rounding base of vmin, vmax.</span>
+<span class="sd">          | look up misc.round_down(number,base) or misc.round_up(number,base)</span>
+<span class="sd">        bins (None, list): use bins if passed, else construct bins based on</span>
+<span class="sd">          n_bins, vmin, vmax, vbase</span>
 <span class="sd">        n_bins (int): number of bins</span>
-<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because hist usually require 1 extra bin</span>
+<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because hist</span>
+<span class="sd">          usually require 1 extra bin</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">        bins (list)</span>
-<span class="sd">        bins_step (int/float)</span>
-<span class="sd">        cfg (dict): dictionary containing the current values of:</span>
-<span class="sd">            vmin, vmax, vbase, bins, n_bins, n_bins_autoadd</span>
+<span class="sd">            list with bins</span>
+<span class="sd">        bins_step (int, float)</span>
+<span class="sd">            bins step size</span>
+<span class="sd">        cfg (dict)</span>
+<span class="sd">            | dictionary containing the current values of:</span>
+<span class="sd">            | vmin, vmax, vbase, bins, n_bins, n_bins_autoadd</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">vbase</span><span class="o">=</span><span class="n">vbase</span><span class="p">,</span>
@@ -1282,49 +1308,58 @@
     <span class="k">return</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">bins_step</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="plot_hist"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_hist"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    plot histogram</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        data (list/array/list of lists): input data. Dimensions of each list must</span>
-<span class="sd">                                         be equal if multiple lists are provided.</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        data (list, array, list of lists): input data. Dimensions of each list</span>
+<span class="sd">          must be equal if multiple lists are provided.</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
-<span class="sd">        cut_min (None/int/float): min value for cutoff</span>
-<span class="sd">        cut_max (None/int/float): max value for cutoff</span>
-<span class="sd">        apply_cut_limits (bool): apply plt.xlim(cut_min, cut_max) if orientation is &quot;vertical&quot;</span>
-<span class="sd">                                 apply plt.ylim(cut_min, cut_max) if orientation is &quot;horizontal&quot;</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
+<span class="sd">        cut_min (None, int, float): min value for cutoff</span>
+<span class="sd">        cut_max (None, int, float): max value for cutoff</span>
+<span class="sd">        apply_cut_limits (bool):</span>
+<span class="sd">          | apply plt.xlim(cut_min, cut_max) if orientation is &quot;vertical&quot;</span>
+<span class="sd">          | apply plt.ylim(cut_min, cut_max) if orientation is &quot;horizontal&quot;</span>
 <span class="sd">        align_bins (str): &#39;center&#39;, &#39;edge&#39; (default, left edge alignment)</span>
-<span class="sd">        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase</span>
+<span class="sd">        bins (None, list): use bins if passed, else construct bins based on</span>
+<span class="sd">          n_bins, vmin, vmax, vbase</span>
 <span class="sd">        n_bins (int): number of bins</span>
-<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code requires 1 extra bin.</span>
-<span class="sd">        vmin (None/int/float): min value of histogram/bins</span>
-<span class="sd">        vmax (None/int/float): max value of histogram/bins</span>
-<span class="sd">        vbase (int): rounding base of vmin, vmax.</span>
-<span class="sd">                     see misc.round_down(number,base) or misc.round_up(number,base)</span>
+<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code</span>
+<span class="sd">          requires 1 extra bin.</span>
+<span class="sd">        vmin (None, int, float): min value of histogram/bins</span>
+<span class="sd">        vmax (None, int, float): max value of histogram/bins</span>
+<span class="sd">        vbase (int):</span>
+<span class="sd">          | rounding base of vmin, vmax.</span>
+<span class="sd">          | look up misc.round_down(number,base) or misc.round_up(number,base)</span>
 <span class="sd">        logscale (bool): apply logscale on the &quot;count&quot; axis</span>
 <span class="sd">        minorticks (bool): turns minorticks (~logscale) for hist figure on/off</span>
 <span class="sd">        norm (bool): normalize histogram</span>
 <span class="sd">        orientation (str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
-<span class="sd">        alpha (int/float)</span>
+<span class="sd">        alpha (int, float)</span>
 <span class="sd">        colors (list of str/sns.colorpalette)</span>
-<span class="sd">        ec (None/str): edge color</span>
-<span class="sd">        title (None/str)</span>
+<span class="sd">        ec (None, str): edge color</span>
+<span class="sd">        title (None, str)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
-
-<span class="sd">        hist (tuple): n, bins, patches</span>
-<span class="sd">        or HIST (list): list of hist, i.e. list of (n, bins, patches) tuples</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">        hist (tuple, list)</span>
+<span class="sd">            (n, bins, patches) or list of (n, bins, patches)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1466,53 +1501,63 @@
         <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">HIST</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_deltahist"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_deltahist">[docs]</a><span class="k">def</span> <span class="nf">plot_deltahist</span><span class="p">(</span><span class="n">RMSD_file</span><span class="p">,</span> <span class="n">RMSD_ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+<div class="viewcode-block" id="plot_deltahist"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_deltahist">[docs]</a><span class="k">def</span> <span class="nf">plot_deltahist</span><span class="p">(</span><span class="n">RMSD_file</span><span class="p">,</span> <span class="n">RMSD_ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
                    <span class="n">show_all_hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    plot delta histogram (i.e. delta = RMSD_file - RMSD_ref)</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        RMSD_file (str): path to RMSD file</span>
 <span class="sd">        RMSD_ref (str): path to RMSD reference file</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        show_all_hist (bool):</span>
-<span class="sd">            True:  show ref hist, non-ref hist and delta hist</span>
-<span class="sd">            False: show only delta hist</span>
+<span class="sd">          | True:  show ref hist, non-ref hist and delta hist</span>
+<span class="sd">          | False: show only delta hist</span>
 <span class="sd">        title (str)</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        alpha (float)</span>
-<span class="sd">        colors (list): two string elements in list: color_positive, color_negative</span>
-<span class="sd">                       Example: [&quot;g&quot;, &quot;r&quot;]</span>
+<span class="sd">        colors (list): two strings in list describing color_positive and</span>
+<span class="sd">         color_negative, e.g. [&quot;g&quot;, &quot;r&quot;]</span>
 <span class="sd">        color_positive (str)</span>
 <span class="sd">        color_negative (str)</span>
-<span class="sd">        ec (None/str): edge color</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
-<span class="sd">        cut_min (None/int/float): min value for cutoff (here: alias of vmin)</span>
-<span class="sd">        cut_max (None/int/float): max value for cutoff (here: alias of vmax)</span>
-<span class="sd">        apply_cut_limits (bool): apply plt.xlim(cut_min, cut_max) if orientation is &quot;vertical&quot;</span>
-<span class="sd">                                 apply plt.ylim(cut_min, cut_max) if orientation is &quot;horizontal&quot;</span>
-<span class="sd">        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase</span>
+<span class="sd">        ec (None, str): edge color</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
+<span class="sd">        cut_min (None, int, float): min value for cutoff (here: alias of vmin)</span>
+<span class="sd">        cut_max (None, int, float): max value for cutoff (here: alias of vmax)</span>
+<span class="sd">        apply_cut_limits (bool):</span>
+<span class="sd">          | apply plt.xlim(cut_min, cut_max) if orientation is &quot;vertical&quot;</span>
+<span class="sd">          | apply plt.ylim(cut_min, cut_max) if orientation is &quot;horizontal&quot;</span>
+<span class="sd">        bins (None, list): use bins if passed, else construct bins based on</span>
+<span class="sd">          n_bins, vmin, vmax, vbase</span>
 <span class="sd">        n_bins (int): number of bins</span>
-<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code requires 1 extra bin.</span>
-<span class="sd">        vmin (None/int/float): min value of histogram/bins</span>
-<span class="sd">        vmax (None/int/float): max value of histogram/bins</span>
-<span class="sd">        vbase (int): rounding base of vmin, vmax.</span>
-<span class="sd">                     see misc.round_down(number,base) or misc.round_up(number,base)</span>
+<span class="sd">        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code</span>
+<span class="sd">          requires 1 extra bin.</span>
+<span class="sd">        vmin (None, int, float): min value of histogram/bins</span>
+<span class="sd">        vmax (None, int, float): max value of histogram/bins</span>
+<span class="sd">        vbase (int):</span>
+<span class="sd">          | rounding base of vmin, vmax.</span>
+<span class="sd">          | look up misc.round_down(number,base) or misc.round_up(number,base)</span>
 <span class="sd">        logscale (bool): apply logscale on the &quot;count&quot; axis</span>
 <span class="sd">        minorticks (bool): turns minorticks (~logscale) for hist figure on/off</span>
 <span class="sd">        norm (bool): normalize histogram</span>
 <span class="sd">        orientation (str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
-<span class="sd">        title (None/str)</span>
+<span class="sd">        title (None, str)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1643,7 +1688,8 @@
 <span class="sd">        RMSD_nm (list): rmsd values in nm</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        RMSD (list): rmsd values in angstrom</span>
+<span class="sd">        RMSD (list)</span>
+<span class="sd">            rmsd values in angstrom</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RMSD_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">RMSD_nm</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">RMSD_max</span> <span class="o">&lt;</span> <span class="mf">5.0</span><span class="p">:</span>
@@ -1670,35 +1716,39 @@
     <span class="k">return</span> <span class="n">xticks_time</span>
 
 
-<div class="viewcode-block" id="plot_HEATMAP"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_HEATMAP">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_HEATMAP"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_HEATMAP">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Note: if data is incomplete:</span>
-<span class="sd">       -&gt; use min/max values or np.nan for missing values</span>
-<span class="sd">          and the keyword argument annot=True or annot=False</span>
+<span class="sd">    plot heatmap</span>
+
+<span class="sd">    .. Note:: if data is incomplete: use min/max values or np.nan for missing</span>
+<span class="sd">      values and the Keyword Arg annot=True or annot=False</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (arrays)</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
-<span class="sd">        annot (bool/list): toggle annotation within the heatmap squares.</span>
-<span class="sd">                           if a list is provided, annotates the list content.</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        annot (bool, list): toggle annotation within the heatmap squares. If a</span>
+<span class="sd">          list is provided, annotates the list content.</span>
 <span class="sd">        cmap (str): color map string</span>
-<span class="sd">        n_colors (None/int)</span>
-<span class="sd">        cbar_min / vmin (None/int/float): min value of colorbar and heatmap</span>
-<span class="sd">        cbar_max / vmax (None/int/float): max value of colorbar and heatmap</span>
-<span class="sd">        cbar_label (None/str)</span>
-<span class="sd">        title (None/str)</span>
-<span class="sd">        xlabel (None/str)</span>
-<span class="sd">        ylabel (None/str)</span>
-<span class="sd">        xticklabels (None/list)</span>
-<span class="sd">        yticklabels (None/list)</span>
+<span class="sd">        n_colors (None, int)</span>
+<span class="sd">        cbar_min/vmin (None, int, float): min value of colorbar and heatmap</span>
+<span class="sd">        cbar_max/vmax (None, int, float): max value of colorbar and heatmap</span>
+<span class="sd">        cbar_label (None, str)</span>
+<span class="sd">        title (None, str)</span>
+<span class="sd">        xlabel (None, str)</span>
+<span class="sd">        ylabel (None, str)</span>
+<span class="sd">        xticklabels (None, list)</span>
+<span class="sd">        yticklabels (None, list)</span>
 <span class="sd">        show_ticks (bool): toggle (label) ticks</span>
 
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
                <span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -1765,29 +1815,34 @@
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_HEATMAP_REX_RMSD"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.analysis.plot_HEATMAP_REX_RMSD">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP_REX_RMSD</span><span class="p">(</span><span class="n">REX_RMSD_dir</span><span class="p">,</span> <span class="n">cps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">auto_convert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_HEATMAP_REX_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_HEATMAP_REX_RMSD">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP_REX_RMSD</span><span class="p">(</span><span class="n">REX_RMSD_dir</span><span class="p">,</span> <span class="n">cps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">auto_convert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    plot heatmap with REX RMSDs. This function uses a directory with RMSD files as input.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        REX_RMSD_dir (str): directory to REX_RMSD files</span>
-<span class="sd">        cps (list): color_palette_settings</span>
-<span class="sd">            [0]: color_palette name (str)</span>
-<span class="sd">            [1]: n_colors (int)</span>
-<span class="sd">            [2]: heatmap vmin (int/float)</span>
-<span class="sd">            [3]: heatmap vmax (int/float)</span>
-<span class="sd">        auto_convert (bool): convert &quot;displayed&quot; RMSD and xticks for plot</span>
-<span class="sd">                             returned values stay unconverted</span>
-<span class="sd">            if True:</span>
-<span class="sd">                RMSD: RMSD (nm) -&gt; RMSD (angstrom)</span>
-<span class="sd">                xticks: frame -&gt; time (ns)</span>
+<span class="sd">        cps (list):</span>
+<span class="sd">          | color_palette_settings</span>
+<span class="sd">          | cps[0]: color_palette name (str)</span>
+<span class="sd">          | cps[1]: n_colors (int)</span>
+<span class="sd">          | cps[2]: heatmap vmin (int, float)</span>
+<span class="sd">          | cps[3]: heatmap vmax (int, float)</span>
+<span class="sd">        auto_convert (bool):</span>
+<span class="sd">          | convert &quot;displayed&quot; RMSD and xticks for plot. Returned values stay unconverted</span>
+<span class="sd">          | True: convert RMSD (nm) -&gt; RMSD (angstrom)</span>
+<span class="sd">          |       convert frame -&gt; time (ns)</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
-<span class="sd">        title (None/str)</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        title (None, str)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        TIME (list): time values of first REX_RMSD file</span>
-<span class="sd">        RMSD (list of arrays): RMSD values of each REX_RMSD file</span>
+<span class="sd">        TIME (list)</span>
+<span class="sd">            time values taken from first REX_RMSD file</span>
+<span class="sd">        RMSD (list of arrays)</span>
+<span class="sd">            RMSD values of each REX_RMSD file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">### setup default kwargs if not passed</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
@@ -1861,7 +1916,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

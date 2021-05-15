@@ -18,19 +18,21 @@ def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbos
     """
     Save data (e.g. distance matrices DM) as h5 file.
 
-    Note:
-        HDF: Hierarchical Data Format
-        h5: Hierarchical Data Format 5
+    .. Note::
+      | HDF: Hierarchical Data Format
+      | h5: Hierarchical Data Format 5
 
     Args:
-        data (np.array): array of distance matrices
+        data (array): array of distance matrices
         save_as (str)
-        save_dir (str): save directory
-            special case: save_dir is ignored when save_as is relative/absolute path
+        save_dir (str):
+          | save directory
+          | special case: save_dir is ignored when save_as is relative/absolute path
         HDF_group (str): Hierarchical Data Format group
 
     Returns:
-        h5_file (str): realpath of h5 file
+        h5_file (str)
+            realpath of h5 file
     """
     if _misc.get_extension(save_as) != ".h5":
         save_as += ".h5"
@@ -45,18 +47,19 @@ def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbos
 
 def read_h5(h5_file, HDF_group="/distance_matrices"):
     """
-    read data (e.g. distance matrices DM) from h5 file.
+    read h5 data (e.g. distance matrices DM)
 
-    Note:
-        HDF: Hierarchical Data Format
-        h5: Hierarchical Data Format 5
+    .. Note::
+      | HDF: Hierarchical Data Format
+      | h5: Hierarchical Data Format 5
 
     Args:
         h5_file (str)
         HDF_group (str): Hierarchical Data Format group
 
     Returns:
-        data (np.array): data of h5 file
+        data (array)
+            data of h5 file
     """
     if _misc.get_extension(h5_file) != ".h5":
         h5_file += ".h5"
@@ -70,24 +73,26 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
     Reshape data between the shapes: (length, size) <-> (length, sizeD1, sideD2)
 
     Args:
-        data (np.array/ht.DNDarray)
-        dim_out (int): output dimension of data
-            2: output data with shape: (length, size)
-            3: output data with shape: (length, sizeD1, sideD2)
-        sss (list): [start, stop, step]
-            start (None/int): start index
-            stop (None/int): stop index
-            step (None/int): step size
+        data (array, heat.DNDarray)
+        dim_out (int):
+          | output dimension of data
+          | 2: output data with shape: (length, size)
+          | 3: output data with shape: (length, sizeD1, sideD2)
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start index
+          | stop (None, int): stop index
+          | step (None, int): step size
         verbose (bool): print messages ('reshaping data: ...')
 
-    Kwargs:
-        aliases for sss items:
-            start (None/int): start index
-            stop (None/int): stop index
-            step (None/int): step size
+    Keyword Args:
+        start (None, int): start index
+        stop (None, int): stop index
+        step (None, int): step size
 
     Returns:
-        data (np.array/ht.DNDarray): data (same data-type as input)
+        data (array, ht.DNDarray)
+            reshaped data with same data-type as input
     """
     ############################################################################
     default = {"start": sss[0],
@@ -120,32 +125,35 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
 def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_type='medoid',
                 sss=[None, None, None], verbose=True, **kwargs):
     """
-    Use heat's KMeans Clustering
+    apply heat's KMeans clustering algorithm
 
     Args:
         h5_file (str): path to h5 file containing data
         HDF_group (str): Hierarchical Data Format group
         n_clusters (int): number of clusters
         center_type (str):
-            'centroid': use heat.cluster.KMeans() with centroids as cluster centers
-            'medoid': use heat.cluster.KMedoids() with medoids as cluster centers
+          | 'centroid': use heat.cluster.KMeans() with centroids as cluster centers
+          | 'medoid': use heat.cluster.KMedoids() with medoids as cluster centers
         verbose (bool)
-        sss (list): [start, stop, step] indices of <h5_file> data
-            start (None/int): start index
-            stop (None/int): stop index
-            step (None/int): step size
+        sss (list):
+          | [start, stop, step] indices of <h5_file> data
+          | start (None, int): start index
+          | stop (None, int): stop index
+          | step (None, int): step size
 
-    Kwargs:
-        aliases for sss items:
-            start (None/int): start index
-            stop (None/int): stop index
-            step (None/int): step size
+    Keyword Args:
+        start (None, int): start index
+        stop (None, int): stop index
+        step (None, int): step size
         dtype (dtype): heat.float64 (default), heat.float32, etc.
 
     Returns:
-        centers (np.array): cluster centers
-        counts (np.array): counts per cluster
-        labels (np.array): data point cluster labels
+        centers (array)
+            cluster centers
+        counts (array)
+            counts per cluster
+        labels (array)
+            data point cluster labels
     """
     default = {"dtype": ht.float64,
                "start": sss[0],
@@ -191,21 +199,23 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=Tr
     Args:
         decoy_list (list): output of get_decoy_list()
         scores (list): output of get_decoy_scores()
-        labels (array/list): output of heat_KMeans()
+        labels (array, list): output of heat_KMeans()
         reverse (bool):
-            True:  ascending ranking order (low to high)
-            False: decending ranking order (high to low)
+          | True:  ascending ranking order (low to high)
+          | False: decending ranking order (high to low)
         return_path (bool):
-            True:  BEST_DECOYS and CLUSTER_DECOYS contain decoy paths
-            False: BEST_DECOYS and CLUSTER_DECOYS contain decoy filenames
+          | True:  BEST_DECOYS and CLUSTER_DECOYS contain decoy paths
+          | False: BEST_DECOYS and CLUSTER_DECOYS contain decoy filenames
 
     Returns:
-        BEST_DECOYS (list): best ranked decoys (only one per cluster)
-        BEST_SCORES (list): best ranked scores (only one per cluster)
-        CLUSTER_DECOYS (list):
-            CLUSTER_DECOYS[k]: ranked decoys of cluster k
-        CLUSTER_SCORES (list):
-            CLUSTER_SCORES[k]: ranked scores of cluster k
+        BEST_DECOYS (list)
+            best ranked decoys (only one per cluster)
+        BEST_SCORES (list)
+            best ranked scores (only one per cluster)
+        CLUSTER_DECOYS (list)
+            CLUSTER_DECOYS[k] are ranked decoys of cluster k
+        CLUSTER_SCORES (list)
+            CLUSTER_SCORES[k] are ranked scores of cluster k
     """
     n_labels = np.max(labels) + 1
 
@@ -243,18 +253,20 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True, *
     Copy cluster decoys specified in <decoy_list> to <target_dir>.
 
     Args:
-        decoy_list (list): output of abinitio.get_decoy_list()
-                                  or cluster.get_decoy_list()
-                                  or cluster.rank_cluster_decoys(return_path=True)
+        decoy_list (list):
+          | output of abinitio.get_decoy_list()
+          | or cluster.get_decoy_list()
+          | or cluster.rank_cluster_decoys(return_path=True)
         target_dir (str): target directory
         create_dir (bool)
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         cprint_color (str): colored print color
 
     Returns:
-        target_dir (str): realpath of target directory
+        target_dir (str)
+            realpath of target directory
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -287,7 +299,8 @@ def log_cluster_decoys(best_decoys, best_scores, save_as, verbose=True):
         verbose (bool)
 
     Returns:
-        realpath (str): realpath of log file
+        realpath (str)
+            realpath of log file
     """
     if not isinstance(best_decoys, list):
         _misc.dtypeError("best_decoys", "list")

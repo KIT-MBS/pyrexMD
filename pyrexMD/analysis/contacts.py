@@ -30,9 +30,8 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True,
         whereas NC_d contains each ATOM pair.
 
     Args:
-        ref (str): reference path
-        ref (MDA universe/atomgrp): reference structure
-        d_cutoff (float): distance cutoff for nat. contacts
+        ref (str, universe, atomgrp): reference structure
+        d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
         method (str):
             '1' or 'Contact_Matrix': mda.contact_matrix() with d_cutoff
@@ -43,8 +42,10 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True,
         verbose (bool): print "Note: Please verify that your selection is
 
     Returns:
-        NC (list): NCs (only unique RES pairs)
-        NC_d (list): detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)
+        NC (list)
+            list with unique RES pairs
+        NC_d (list)
+            detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)
     """
     if type(method) is int:
         method = str(method)
@@ -95,28 +96,32 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
         ref (str, universe, atomgrp): reference path or structure
         DCA_fin (None, str): DCA input file
         n_DCA (None, int): number of used DCA contacts
-        d_cutoff (float): distance cutoff for nat. contacts
+        d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
         pdbid (str): pdbid which is used for plot title
 
-        --- Kwargs: ---
-        **DCA_cols (tuple): columns containing the RES pairs in DCA_fin
-        **DCA_skiprows (int): ignore header rows of DCA_fin.
-            -1 or "auto": auto detect
-        **filter_DCA (bool):
-           True: ignore DCA pairs with |i-j| < 3.\n
+    Keyword Args:
+        DCA_cols (tuple): columns containing the RES pairs in DCA_fin
+        DCA_skiprows (int):
+          | skip header rows of DCA_fin
+          | -1 or "auto": auto detect
+        filter_DCA (bool):
+          | True: ignore DCA pairs with abs(i-j) < 3.
           | False: use all DCA pairs w/o applying filter.
-        **RES_range (None, list): apply [RES_min, RES_max] range to ignore invalid RES ids.
-            None: do not narrow down RES range
-        **ignh (bool): ignore hydrogen (mass < 1.2)
-        **norm (bool): apply analysis.norm_universe()
-        **save_plot (bool):
+        RES_range (None, list):
+          | include RES only within [RES_min, RES_max] range
+          | None: do not narrow down RES range
+        ignh (bool): ignore hydrogen (mass < 1.2)
+        norm (bool): apply analysis.norm_universe()
+        save_plot (bool)
 
-        .. hint:: args of misc.figure() are valid kwargs
+    .. hint:: Args and Keyword Args of misc.figure() are also valid.
 
     Returns:
-        fig (matplotlib.figure.Figure)\n
-        ax (ax or list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     default = {"DCA_cols": (0, 1),
                "DCA_skiprows": "auto",
@@ -204,55 +209,59 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     """
     Plots true positive rate for number of used DCA contacts.
 
-    Method:
-       - calculates shortest RES distance of the selection
-         (only heavy atoms if ignh is True)
-       - if distance is below threshold: DCA contact is true
+    - calculates shortest RES distance of the selection (only heavy atoms if ignh is True)
+    - if distance is below threshold: DCA contact is True
 
     Args:
         ref (str): reference path
-        ref (MDA universe/atomgrp): reference structure
+        ref (universe, atomgrp): reference structure
         DCA_fin (str): DCA input file (path)
         n_DCA (int): number of used DCA contacts
-        d_cutoff (float): distance cutoff for nat. contacts
+        d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
         pdbid (str): pdbid; used for plot title and figure name
 
-    Kwargs:
-        DCA_cols (tuple/list): columns containing the RES pairs in DCA_fin
-        DCA_skiprows (int): ignore header rows of DCA_fin
-            -1 or "auto": auto detect
+    Keyword Args:
+        DCA_cols (tuple, list): columns containing the RES pairs in DCA_fin
+        DCA_skiprows (int):
+          | skip header rows of DCA_fin
+          | -1 or "auto": auto detect
         filter_DCA (bool):
-            True: ignore DCA pairs with |i-j| < 4
-            False: use all DCA pairs w/o applying filter
-        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids
-            None: do not narrow down RES range
+          | True: ignore DCA pairs with abs(i-j) < 4
+          | False: use all DCA pairs w/o applying filter
+        RES_range (None):
+          | [RES_min, RES_max] range. Ignore invalid RES ids
+          | None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
         norm (bool): apply analysis.norm_universe()
-        TPR_layer (str): plot TPR curve in foreground or background layer
-            "fg", "foreground", "bg", "background"
+        TPR_layer (str):
+          | plot TPR curve in foreground or background layer
+          | "fg", "foreground", "bg", "background"
         color (str)
         shade_area (bool): shade area between L/2 and L ranked contacts
         shade_color (str)
         shade_alpha (float)
-        hline_color (None/str): color of 75p threshold (horizontal line)
+        hline_color (None, str): color of 75p threshold (horizontal line)
         hline_ls (str): linestyle of hline (default: "-")
-        nDCA_opt_color (None/str): color of optimal/recommended nDCA threshold
-            nDCA_opt = misc.round_up(3/4*len(ref.residues), base=5))
-            (vertical line ~ nDCA_opt)
-            (horizontal line ~ TPR(nDCA_opt))
+        nDCA_opt_color (None, str):
+          | color of optimal/recommended nDCA threshold
+          | nDCA_opt = misc.round_up(3/4*len(ref.residues), base=5))
+          | (vertical line ~ nDCA_opt)
+          | (horizontal line ~ TPR(nDCA_opt))
         nDCA_opt_ls (str): linestyle of nDCA_opt (default: "--")
         save_plot (bool)
         save_log (bool)
         figsize (tuple)
-        marker (None/str): marker
+        marker (None, str): marker
         ms (int): markersize
         ls (str): linestyle
         alpha (float): alpha value
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     default = {"DCA_cols": (0, 1),
                "DCA_skiprows": "auto",
@@ -380,39 +389,44 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     """
     Get QValue for native contacts.
 
-    1) norms and aligns mobile to ref so that atomgroups have same resids
-    2) performs native contact analysis
+    - norms and aligns mobile to ref so that atomgroups have same resids
+    - performs native contact analysis
 
     Args:
-        mobile (MDA universe): mobile structure with trajectory
-        ref (MDA universe): reference structure
+        mobile (universe): mobile structure with trajectory
+        ref (universe): reference structure
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        d_cutoff (float): cutoff distance
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        d_cutoff (float): cutoff distance for native contacts
         plot (bool)
         verbose (bool)
 
-    Kwargs:
+    Keyword Arguments:
         sel1 (str): selection string for contacting group (1 to 1 mapping)
         sel2 (str): selection string for contacting group (1 to 1 mapping)
-            Note: ignores sel (arg) if sel1 or sel2 (kwargs) are passed
-        method (str): method for QValues calculation
-            'radius_cut': native if d < d_cutoff
-            'soft_cut': see help(MDAnalysis.analysis.contacts.soft_cut_q)
-            'hardcut': native if d < d_ref
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+        method (str):
+          | method for QValues calculation
+          | 'radius_cut': native if d < d_cutoff
+          | 'soft_cut': see help(MDAnalysis.analysis.contacts.soft_cut_q)
+          | 'hardcut': native if d < d_ref
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
         color (str)
         save_plot (bool)
         save_as (str): "Qnative.png"
 
+    .. Note:: sel (arg) is ignored if sel1 or sel2 (kwargs) are passed.
+
     Returns:
         FRAMES (list)
-        QNATIVE (list): fraction of native contacts
+            list with frames
+        QNATIVE (list)
+            list with fraction of native contacts
     """
     default = {"sel1": None,
                "sel2": None,
@@ -459,49 +473,55 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
 def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
               plot=True, warn=True, verbose=True, **kwargs):
     """
-    Get QValue for formed biased contacts.
+    Get QValue for formed bias contacts.
 
-    Note 1: selection of get_Qbias() is hardcoded to sel='protein and name CA'.
-    Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
-            sel='protein and name CA' to sel='protein' increases the atom count
-            significantly. Most of them will count as non-native and thus make
-            the Qbias value very low.
+    .. Note:: selection of get_Qbias() is hardcoded to sel='protein and name CA'.
 
-    Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods
-            yields better results when include_selfcontacts (bool, see kwargs) is set to
-            True. However this improves the calculated Qbias value artificially (e.g. even
-            when all used bias contacts are never formed, Qbias will not be zero due to the
-            selfcontact counts)
+      Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
+      sel='protein and name CA' to sel='protein' increases the atom count
+      significantly. Most of them will count as non-native and thus make
+      the Qbias value very low.
+
+    .. Note :: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of
+      both methods yields better results when the kwarg include_selfcontacts
+      (bool) is set to True. However this improves the calculated Qbias value
+      artificially (e.g. even when all used bias contacts are never formed,
+      Qbias will not be zero due to the selfcontact counts)
 
     Args:
-        mobile (MDA universe): mobile structure with trajectory
+        mobile (universe): mobile structure with trajectory
         bc (list): list with bias contacts to analyze
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        d_cutoff (float): cutoff distance
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        d_cutoff (float): cutoff distance for native contacts
         norm (bool): norm universe before calculation.
         plot (bool)
         warn (bool): print important warnings about usage of this function.
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         dtype (dtype): data type of returned contact matrix CM
-        include_selfcontacts (bool): sets norm of QBIAS. Default is False.
-            True: includes selfcontacts on main diagonal of CM (max count > len(bc))
-            False: ignores selfcontacts on main diagonal of CM (max count == len(bc))
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+        include_selfcontacts (bool):
+          | sets norm of QBIAS. Default is False.
+          | True: includes selfcontacts on main diagonal of CM (max count > len(bc))
+          | False: ignores selfcontacts on main diagonal of CM (max count == len(bc))
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
         color (str)
         save_plot (bool)
         save_as (str): "Qbias.png"
 
     Returns:
-        FRAMES (np.array)
-        QBIAS (np.array): fraction of formed bias contacts
-        CM (np.array): array of distance matrices
+        FRAMES (array)
+            array with frame numbers
+        QBIAS (array)
+            array with fraction of formed bias contacts
+        CM (array)
+            array with distance matrices
     """
     default = {"dtype": bool,
                "include_selfcontacts": False,
@@ -555,7 +575,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
-    return np.array(FRAMES), np.array(QBIAS), np.array(CM)
+    return array(FRAMES), array(QBIAS), array(CM)
 
 
 def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwargs):
@@ -564,16 +584,17 @@ def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwarg
     tuples (RESi,RESj).
 
     Args:
-        u (mda.Universe): used to obtain topology information
-        cm (np.array): single contact matrix of size (n_atoms, n_atoms)
+        u (universe): used to obtain topology information
+        cm (array): single contact matrix of size (n_atoms, n_atoms)
         sel (str): selection string
         norm (bool): norm universe before obtaining topology information
 
-    Kwargs:
+    Keyword Args:
         include_selfcontacts (bool): include contacts on main diagonal of cm. Default is False.
 
     Returns:
-        CP (list): list with contact pairs (RESi,RESj)
+        CP (list)
+            list with contact pairs (RESi,RESj)
     """
     default = {"include_selfcontacts": False}
     cfg = _misc.CONFIG(default, **kwargs)

@@ -18,12 +18,12 @@ sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'pyREMD'
+project = 'pyrexMD'
 author = 'Arthur Voronin'
-copyright = '2021, Arthur Voronin'
+copyright = '2021, KIT-MBS'
 
 # The full version, including alpha/beta/rc tags
-packageversion = str(__import__('pyREX').__version__)
+packageversion = str(__import__('pyrexMD').__version__)
 release = packageversion
 version = packageversion
 
@@ -34,9 +34,8 @@ version = packageversion
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
-              'sphinx.ext.mathjax', 'sphinx.ext.viewcode',
-              'sphinx.ext.napoleon', 'sphinx.ext.todo',
-              "sphinx_rtd_theme"]
+              'sphinx.ext.viewcode', 'sphinx.ext.napoleon',
+              'sphinx.ext.todo', "sphinx_rtd_theme"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -65,7 +64,7 @@ html_theme_options = {
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
-    'style_nav_header_background': 'white',
+    'style_nav_header_background': '#343131',
     # Toc options
     'collapse_navigation': True,
     'sticky_navigation': True,

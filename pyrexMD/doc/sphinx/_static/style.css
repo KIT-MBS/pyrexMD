@@ -1,14 +1,11 @@
-/* #343131      greenish color */
+/* #1abc9c     hint color dark */
+/* #dbfaf4     hint color light */
 
 /* --- page layout --------------------------------------------------------- */
 
 body {
     font-family: Helvetica, Arial;
     font-size: 17px;
-}
-
-div.body {
-    color: #42f5f5;
 }
 
 div.sphinxsidebar a:hover {
@@ -19,19 +16,19 @@ div.sphinxsidebar p {
     color: #808080;
 }
 
-/* Home MDAnalysis colour */
+/* home colour */
 .wy-side-nav-search > a {
-    color: #343131;
+    color: #1abc9c ;
 }
 
-/* Side MDAnalysis version colour */
+/* version colour */
 .wy-side-nav-search > div.version {
     color: #808080;
 }
 
 /* Menubar caption colour */
 div.wy-menu-vertical span.caption-text {
-    color: #00c7a2;
+    color: #1abc9c ;
 }
 
 /* Mobile layout menubar option */
@@ -42,4 +39,41 @@ nav.wy-nav-top {
 /* Menu search bar outline (default blue) */
 .wy-side-nav-search input[type="text"] {
     border-color: #808080;
+}
+
+
+/* -- body styles --------------------------------------------------------- */
+/* Different coloured links for sidebar vs body) */
+div.rst-content a {
+    color: #1abc9c;
+    text-decoration: none;
+}
+
+div.rst-content a:visited {
+    color: #1abc9c;
+}
+
+a:hover {
+    color: #1abc9c !important;
+    text-decoration: underline;
+}
+
+pre, tt, code {
+    font-family: Menlo, Monaco, monospace
+}
+
+div.body h1 {
+    font-weight: bolder;
+}
+
+a.headerlink {
+    color: #808080;
+    font-size: 0.8em;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+}
+
+a.headerlink:hover {
+    background-color: #808080;
+    color: #fff;
 }

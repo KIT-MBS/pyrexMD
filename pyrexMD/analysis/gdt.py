@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 import pyrexMD.misc as _misc
@@ -20,17 +20,17 @@ from tqdm.notebook import tqdm
 
 def get_array_percent(dist_array, cutoff):
     """
-    Get percentage and indices of dist_array that fulfil the condition:
-        dist_array <= cutoff
+    Get percentage and indices of dist_array that fulfill: dist_array <= cutoff
 
     Args:
         dist_array (array): distance array
-        cutoff (int/float)
+        cutoff (int, float): cutoff distance
 
     Returns:
-        p (float): percent of dist_array (condition: dist_array <= cutoff)
-        ndx (array): indices of dist_array (condition:
-        dist_array <= cutoff)
+        p (float)
+            percentage of dist_array that fulfill: dist_array <= cutoff)
+        ndx (array)
+            indices of dist_array that fulfill: dist_array <= cutoff)
     """
     norm = len(dist_array)
     ndx = np.where(dist_array <= cutoff)
@@ -40,19 +40,23 @@ def get_array_percent(dist_array, cutoff):
 
 def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein and name CA", **kwargs):
     """
-    Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).
+    Aligns mobile to ref and calculates pair distances (e.g. CA-CA distances).
 
     Args:
-        mobile (MDA universe/atomgrp): mobile structure with trajectory
-        ref (MDA universe/atomgrp): reference structure
+        mobile (universe, atomgrp): mobile structure with trajectory
+        ref (universe, atomgrp): reference structure
         sel1 (str): selection string of mobile structure
         sel2 (str): selection string of reference structure
 
     Returns:
-        PAIR_DISTANCES
-        RMSD (tuple): (RMSD before alignment, RMSD after alignment)
+        PAIR_DISTANCES (array)
+            array with pair pair distances
+        RMSD (tuple)
+            (RMSD before alignment, RMSD after alignment)
         _resids_mobile (array)
+            array with mobile RES ids
         _resids_ref (array)
+            array with reference RES ids
         """
     mobile_atoms = mobile.atoms.select_atoms(sel1)
     ref_atoms = ref.atoms.select_atoms(sel2)
@@ -67,22 +71,24 @@ def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein an
 
 def _HELP_sss_None2int(obj, cfg):
     """
-    Note: this function is (probably) required when a custom function uses
-    either a MDA universe or (distance)matrix and a misc.CONFIG class with
-    the keys "sss", "start", "stop", "step".
-
-    Reason:
-        slicing: aList[None:None:None] is equal to aList[::]
-        get item: aList[None] does not exist
-
     Converts None entries of the config keys to integers:
         sss = [None, None, None] -> [0, max frame of MDA universe, 1]
         start = None ->  0
         stop = None ->  max frame of u
         step = None ->  1
 
+    Note:
+        this function is (probably) required when a custom function uses either
+        a MDA universe or (distance)matrix and a misc.CONFIG class with the keys
+        "sss", "start", "stop", "step".
+
+    Reason:
+        slicing: aList[None:None:None] is equal to aList[::]
+        get item: aList[None] does not exist
+
+
     Args:
-        obj (MDA universe / matrix): MDA universe or distane(matrix)
+        obj (universe, matrix): MDA universe or distance(matrix)
         cfg (misc.CONFIG class)
 
     Returns:
@@ -127,55 +133,62 @@ def _HELP_sss_None2int(obj, cfg):
 def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
         sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True, **kwargs):
     """
-    GDT: Global Distance Test
+    performs Global Distance Test (GDT).
 
-    Algorithm to identify how good "mobile" matches to "reference" by calculating the sets
-    of residues which do not deviate more than a specified (pairwise) CA distance cutoff.
+    Algorithm to identify how good "mobile" matches to "reference" by calculating
+    the sets of residues which do not deviate more than a specified (pairwise)
+    CA distance cutoff.
 
-    Note:
-        sel1 = mobile.select_atoms(sel1)
-        sel2 = ref.select_atoms(sel2)
-        weights="mass"  # hardcoded weights for alignment
+    .. Note::
+      | sel1 = mobile.select_atoms(sel1)
+      | sel2 = ref.select_atoms(sel2)
+      | weights="mass"  # hardcoded weights for alignment
 
     Args:
-        mobile (MDA universe/atomgrp): mobile structure with trajectory
-        ref (MDA universe/atomgrp): reference structure
+        mobile (universe, atomgrp): mobile structure with trajectory
+        ref (universe, atomgrp): reference structure
         sel1 (str): selection string of mobile structure
         sel2 (str): selection string of reference structure
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        cutoff (list): parameters describing GDT
-            cutoff[0]: min_cutoff (float)
-            cutoff[1]: max_cutoff (float)
-            cutoff[2]: step_cutoff (float)
-        true_resids (bool): offset resids of "GDT_resids" to correct codestyle resids into real resids
-            True: return true resids in output "GDT_resids"
-            False: return codestyle resids in output "GDT_resids"
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        cutoff (list):
+          | parameters describing GDT
+          | cutoff[0]: min_cutoff (float)
+          | cutoff[1]: max_cutoff (float)
+          | cutoff[2]: step_cutoff (float)
+        true_resids (bool):
+          | offset resids of "GDT_resids" to correct codestyle resids into real resids
+          | True: return true resids in output "GDT_resids"
+          | False: return codestyle resids in output "GDT_resids"
 
-    Kwargs:
-        aliases for sss items:
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        aliases for cutoff items:
-            min_cutoff (float)
-            max_cutoff (float)
-            step_cutoff (float)
+    Keyword Args:
+        start (None/int): start frame
+        stop (None/int): stop frame
+        step (None/int): step size
+        min_cutoff (float)
+        max_cutoff (float)
+        step_cutoff (float)
         disable (bool): disable progress bar
 
     Returns:
-        GDT_percent (list): GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes
-                            percent of residues under distance cutoff <= x Angstrom
-        GDT_resids (list): resids within cutoff
-            if true_resids == True:
-                true resids; possible values are: minRES <= value <= maxRES
-            if true_resids == False:
-                codestyle resids; possible values are 0 <= value <= len(mobile.select_atoms(sel)))
-        GDT_cutoff (list): cutoff distances in Angstrom
-        RMSD (list): (RMSD before alignment, RMSD after elignment)
-        FRAME (list): analyzed frames
+        GDT_percent (list)
+          GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes
+          percent of residues under distance cutoff <= x Angstrom
+        GDT_resids (list)
+          | list with resids within cutoff
+          | if true_resids == True:
+          |   returns true resids; possible values are: minRES <= value <= maxRES
+          | if true_resids == False:
+          |   returns codestyle resids; possible values are 0 <= value <= len(mobile.select_atoms(sel)))
+        GDT_cutoff (list)
+          list with cutoff distances in Angstrom
+        RMSD (list)
+          list with (RMSD before alignment, RMSD after elignment)
+        FRAME (list)
+          list of analyzed frames
     """
     ############################################################################
     #sel_mobile = mobile.select_atoms(sel1)
@@ -230,15 +243,16 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
 
 def GDT_match_cutoff_dim(GDT_percent, GDT_cutoff):
     """
-    Match GDT_cutoff array to the dimension of GDT_percent.
-    Used in combination with analysis.PLOT() function to plot multiple curves on one canvas.
+    Matches GDT_cutoff array to the dimensions of GDT_percent. Used in combination
+    with analysis.PLOT() function to plot multiple curves on one canvas.
 
     Args:
-        GDT_percent (list/array): output of gdt.GDT()
-        GDT_cutoff  (list/array): output of gdt.GDT()
+        GDT_percent (list, array): output of gdt.GDT()
+        GDT_cutoff (list, array): output of gdt.GDT()
 
     Returns:
-        GDT_cutoff (list/array): GDT_cutoff with same dimension as GDT_percent
+        GDT_cutoff (list, array)
+            transformed GDT_cutoff with same dimensions as GDT_percent
     """
     GDT_cutoff = [GDT_cutoff for i in range(len(GDT_percent))]
     return GDT_cutoff
@@ -246,19 +260,20 @@ def GDT_match_cutoff_dim(GDT_percent, GDT_cutoff):
 
 def plot_GDT(GDT_percent, GDT_cutoff, **kwargs):
     """
-    Create a GDT_PLOT.
+    Creates a GDT_PLOT.
 
     Args:
-        GDT_percent (list/array): output of gdt.GDT()
-        GDT_cutoff (list/array): output of gdt.GDT()
+        GDT_percent (list, array): output of gdt.GDT()
+        GDT_cutoff (list, array): output of gdt.GDT()
         title (str)
 
-    Kwargs:
-        # see args of misc.figure()
+    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"figsize": (7.5, 5),
@@ -275,18 +290,18 @@ def plot_GDT(GDT_percent, GDT_cutoff, **kwargs):
 
 def get_GDT_TS(GDT_percent):
     """
-    GDT_TS: GlobalDistanceTest_TotalScore
-    Possible values: 0 <= GDT_TS <= 100
+    .. Note:: GlobalDistanceTest_TotalScore. Possible values: 0 <= GDT_TS <= 100
 
-    Calculate GDT_TS for any given GDT_percent array according to:
-        GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,
-    where GDT_Px denotes the percentage of residues with distance cutoff <= x Angstrom
+    | Calculates GDT_TS for any given GDT_percent array according to:
+    | GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,
+    | where GDT_Px denotes the percentage of residues with distance cutoff <= x Angstrom
 
     Args:
-        GDT_percent (list/array): output of gdt.GDT()
+        GDT_percent (list, array): output of gdt.GDT()
 
     Returns:
         GDT_TS (array)
+            array with GDT_TS scores
     """
     GDT_TS = []
     for item in GDT_percent:
@@ -298,18 +313,18 @@ def get_GDT_TS(GDT_percent):
 
 def get_GDT_HA(GDT_percent):
     """
-    GDT_HA: GlobalDistanceTest_HighAccuracy
-    Possible values: 0 <= GDT_HA <= 100
+    .. Note :: GlobalDistanceTest_HighAccuracy. Possible values: 0 <= GDT_HA <= 100
 
-    Calculate GDT_HA for any given GDT_percent array according to:
-        GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,
-    where GDT_Px denotes the percentage of residues with distance cutoff <= x Angstrom
+    | Calculate GDT_HA for any given GDT_percent array according to:
+    | GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,
+    | where GDT_Px denotes the percentage of residues with distance cutoff <= x Angstrom
 
     Args:
-        GDT_percent (list/array): output of analysis.GDT()
+        GDT_percent (list, array): output of gdt.GDT()
 
     Returns:
         GDT_HA (array)
+            array with GDT_HA scores
     """
     GDT_HA = []
     for item in GDT_percent:
@@ -321,23 +336,29 @@ def get_GDT_HA(GDT_percent):
 
 def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
     """
+    rank scores
+
+    .. Note:: Similar function to gdt.GDT_rank_scores() but takes other arguments.
+
     Args:
-        GDT_TS (array): GlobalDistanceTest_TotalScore
-        GDT_HA (array): GlobalDistanceTest_HighAccuracy
-        ranking_order (None/str):
-            (None): output ranking ordered by frame number
-            "FRAME": output ranking ordered by frame number
-            "GDT_TS": output ranking ordered by GDT_TS
-            "GDT_HA": output ranking ordered by GDT_HA
-        prec (None/int):
-            (None) or -1: rounding off
-            (int):  rounding on to <prec> decimals
+        GDT_TS (array): output of gdt.get_GDT_TS()
+        GDT_HA (array): output of gdt.get_GDT_HA()
+        ranking_order (None, str):
+          | "FRAME" or None: output ranking ordered by frame number
+          | "GDT_TS": output ranking ordered by GDT_TS
+          | "GDT_HA": output ranking ordered by GDT_HA
+        prec (None, int):
+          | -1 or None: rounding off
+          | int: rounding on to this number of decimals
         verbose (bool)
 
     Returns:
-        GDT_TS_ranked (array): ranked array with GDT_TS scores
-        GDT_HA_ranked (array): ranked array with GDT_HA scores
-        GDT_ndx_ranked (array): corresponding element indices of scores
+        GDT_TS_ranked (array)
+            ranked array with GDT_TS scores
+        GDT_HA_ranked (array)
+            ranked array with GDT_HA scores
+        GDT_ndx_ranked (array)
+            array with score indices for correct mapping
     """
     if ranking_order is None or ranking_order.upper() == "FRAME":
         GDT_TS_ranked = GDT_TS
@@ -368,28 +389,34 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
 
 def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
     """
+    rank scores.
+
+    .. Note:: Similar function to gdt.rank_scores() but takes other arguments.
+
     Args:
-        GDT_percent (list): output of analysis.GDT()
-        ranking_order (None/str):
-            (None): output ranking orded by frame number
-            "Frame": output ranking ordered by frame number
-            "GDT_TS": output ranking ordered by GDT_TS
-            "GDT_HA": output ranking ordered by GDT_HA
-        prec (None/int):
-            (None) or -1: rounding off
-            (int): rounding to <prec> decimals
+        GDT_percent (list): output of gdt.GDT()
+        ranking_order (None, str):
+          | "FRAME" or None: output ranking ordered by frame number
+          | "GDT_TS": output ranking ordered by GDT_TS
+          | "GDT_HA": output ranking ordered by GDT_HA
+        prec (None, int):
+          | -1 or None: rounding off
+          | int: rounding on to this number of decimals
         verbose (bool)
 
     Returns:
-        GDT_TS_ranked (array): ranked array with GDT_TS values
-        GDT_HA_ranked (array): ranked array with GDT_HA values
-        GDT_ndx_ranked (array): array with corresponding index values
+        GDT_TS_ranked (array)
+            ranked array with GDT_TS scores
+        GDT_HA_ranked (array)
+            ranked array with GDT_HA scores
+        GDT_ndx_ranked (array)
+            array with score indices for correct mapping
 
     Example:
-        u = mda.Universe(<top>, <traj>)
-        r = mda.universe(<ref> )
-        GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(u, r)
-        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_TS")
+      | >> mobile = mda.Universe(<top>, <traj>)
+      | >> ref = mda.universe(<ref> )
+      | >> GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(mobile, ref)
+      | >> GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_TS")
     """
     GDT_TS = get_GDT_TS(GDT_percent)
     GDT_HA = get_GDT_HA(GDT_percent)
@@ -403,17 +430,19 @@ def GDT_rank_percent(GDT_percent, norm=True, verbose=False):
     Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.
     (Higher sum means better accuracy during protein alignment)
 
-    (Ranked) Psum can be view analogous to GDT scores but using all cutoffs
+    Ranked Psum can be view analogous to GDT scores but using all cutoffs
     instead of specific ones
 
     Args:
         GDT_percent (list): output of gdt.GDT()
-        norm (bool): norms Psum during sum of GDT_Px
+        norm (bool): norms Psum ~ 1/N * sum of GDT_Px
         verbose (bool)
 
     Returns:
-        RANKED_Psum (list): ranked percent sum
-        RANKED_Psum_ndx (list): related indices of ranked percent sum
+        RANKED_Psum (list)
+            ranked percent sum
+        RANKED_Psum_ndx (list)
+            indices of ranked percent sum for correct mapping
     """
     Psum = []
     for item in GDT_percent:
@@ -428,18 +457,20 @@ def GDT_rank_percent(GDT_percent, norm=True, verbose=False):
 
 def get_continuous_segments(array):
     """
-    Note: single frame function
+    Get continuous segments for single frame.
 
     Args:
-        array (array): ordered array with integers representing resids ~ single frame
-                       e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]
+        array (array):
+          | ordered array with integers representing resids ~ single frame
+          |  e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]
 
     Returns:
-        SEGMENTS (list): list of continuous segments
+        SEGMENTS (list)
+            list of continuous segments
 
     Example:
-        >> gdt.get_continuous_segments([1,2,3,22,23,50,51,52])
-        [[1, 2, 3], [22, 23], [50, 51, 52]]
+        | >> gdt.get_continuous_segments([1,2,3,22,23,50,51,52])
+        | [[1, 2, 3], [22, 23], [50, 51, 52]]
     """
     SEGMENTS = []
     temp = []
@@ -457,13 +488,14 @@ def get_continuous_segments(array):
 
 def GDT_continuous_segments(GDT_resids):
     """
-    Note: multiple frame function
+    Get continous segments for multiple frames (due to GDT_resids)
 
     Args:
-        GDT_resids (array): output of analysis.GDT()
+        GDT_resids (array): output of gdt.GDT()
 
     Returns:
-        SEGMENTS (list): list of continuous segments for each frame
+        SEGMENTS (list)
+            list of continuous segments for each frame
     """
     SEGMENTS = []
     temp = []
@@ -482,75 +514,78 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
             show_cbar=True, show_frames=False, show_scores=True,
             save_as="", **kwargs):
     """
-    Create LocalAccuracy Plot (heatmap) with:
-        xdata = Residue ID
-        ydata = Frame Number
-        color = color-coded Pair Distance
+    Create LocalAccuracy Plot (heatmap) with
 
-    Note: be sure that you pass not too many data points otherwise this
-          function will just squeeze them in.
+      - xdata = residue ID
+      - ydata = frame number
+      - color = color-coded pair distance
+
+    .. Note:: do not pass too many data points otherwise the plot will get squeezed
 
     Args:
-        mobile (MDA universe/atomgrp): mobile structure with trajectory
-        ref (MDA universe/atomgrp): reference structure
-        GDT_TS (array): array with GDT_TS values
-        GDT_HA (array): array with GDT_HA values
+        mobile (universe, atomgrp): mobile structure with trajectory
+        ref (universe, atomgrp): reference structure
+        GDT_TS (array): array with GDT_TS scores
+        GDT_HA (array): array with GDT_HA scores
         GTD_ndx (array): array with corresponding index values (representative for frame numbers)
-        sel1 (str): selection string of mobile structure (calculation of PairDistances)
-        sel2 (str): selection string of reference structure (calculation of PairDistances)
-        ndx_offset (int): offset/shift of GDT_ndx to match real "mobile" frames.
-                          Look up "start" parameter during execution of analysis.GDT()
+        sel1 (str): selection string of mobile structure (calculation of pair distances)
+        sel2 (str): selection string of reference structure (calculation of pair distances)
+        ndx_offset (int):
+          | offset/shift of GDT_ndx to match real "mobile" frames.
+          | Look up "start" parameter during execution of gdt.GDT()
         rank_num (int): plot only <rank_num> best ranked frames
         cmap (str):
-            "GDT_TS" or "TS": color map with new colors at values (0,  1, 2, 4, 8)
-                              and vmin, vmax = (0, 10).
-            "GDT_HA" or "HA": color map with new colors at values (0, .5, 1, 2, 4)
-                              and vmin, vmax = (0, 5).
-            other cmap names: see help(plt.colormaps) or alternatively
-                              https://matplotlib.org/examples/color/colormaps_reference.html
+          | "GDT_TS" or "TS": color map with new colors at values (0,  1, 2, 4, 8)
+            and vmin, vmax = (0, 10).
+          | "GDT_HA" or "HA": color map with new colors at values (0, .5, 1, 2, 4)
+            and vmin, vmax = (0, 5).
+          | other cmap names: see help(plt.colormaps) or alternatively
+            https://matplotlib.org/examples/color/colormaps_reference.html
         show_cbar (bool): show/hide colorbar
-        show_scores (bool): show/hide frames
         show_scores (bool): show/hide GDT_TS and GDT_HA scores
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
-        prec (None/int): rounding of scores
-            (None): rounding off
-            (int):  rounding on
+    Keyword Args:
+        prec (None, int):
+          | rounding precission of scores
+          | None: rounding off
+          | int:  rounding on to <int> decimals
         cbar_label/label (str)
         cbar_fontweight/fontweight (str): "normal", "bold"
         cbar_location/location (str): "right", "bottom", "left", "top"
         cbar_orientation/orientation (str): "horizontal", "vertical"
-        cbar_min / vmin (None/int): min value of colorbar and heatmap
-        cbar_max / vmax (None/int): max value of colorbar and heatmap
+        cbar_min/vmin (None, int): min value of colorbar and heatmap
+        cbar_max/vmax (None, int): max value of colorbar and heatmap
         text_pos_Frame (list): [x0, y0] position of the "Frame" text box (label)
         text_pos_TS (list): [x0, y0] position of the "TS" text box (label)
         text_pos_HA (list): [x0, y0] position of the "HA" text box (label)
 
+    .. Hint:: Args and Keyword of misc.figure() are also valid.
+
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
-        LA_data (tuple):
-            LA_data[0]: PairDistances (list)
-            LA_data[1]: Frames (list)
-
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
+        LA_data (tuple)
+            | LA_data[0]: PairDistances (list)
+            | LA_data[1]: Frames (list)
     Example:
-        # obtain data
-        GDT = gdt.GDT(u, r, sss=[None,None,None])
-        GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT
-
-        # rank data
-        SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_HA")
-        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
-
-        # edit text box positions of labels "Frame", "TS", "HA"
-        text_pos_kws = {"text_pos_Frame": [-8.8, -0.3],
-                        "text_pos_TS": [-4.2, -0.3],
-                        "text_pos_HA": [-1.9, -0.3]}
-
-        # plot
-        gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)
+        | # obtain data
+        | >> GDT = gdt.GDT(mobile, ref, sss=[None,None,None])
+        | >> GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT
+        |
+        | # rank data
+        | >> SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_HA")
+        | >> GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
+        |
+        | # edit text box positions of labels "Frame", "TS", "HA"
+        | >>text_pos_kws = {"text_pos_Frame": [-8.8, -0.3],
+        |                   "text_pos_TS": [-4.2, -0.3],
+        |                   "text_pos_HA": [-1.9, -0.3]}
+        |
+        | # plot
+        | >> gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"figsize": (7.5, 6),

@@ -4,7 +4,6 @@
 # @Last modified by:   arthur
 # @Last modified time: 15.05.2021
 
-
 import pyrexMD.misc as _misc
 from pyrexMD.misc import get_PDBid
 from tqdm.notebook import tqdm
@@ -35,10 +34,9 @@ def get_time_conversion(u, **kwargs):
     get/print time conversion of MDA universe <u>
 
     Args:
-        u (MDA universe)
+        u (universe)
 
-    Kwargs:
-        # see args and kwargs of misc.cprint()
+    .. Hint:: Args and Keyword Args of misc.cprint() are valid Keyword Args.
     """
     if isinstance(u, mda.core.universe.Universe):
         dt = u.trajectory.dt
@@ -60,8 +58,9 @@ def get_FASTA(pdb_file, verbose=True):
         pdb_file (str): path to pdb_file
         verbose (bool): print sequences
 
-    RETURNS:
-        FASTA (list): list with FASTA sequences (one per polypeptide)
+    Returns:
+        FASTA (list)
+            list with FASTA sequences (one per polypeptide)
     """
     structure = PDBParser().get_structure("pdb_label", pdb_file)  # label not required
     ppb = Polypeptide.PPBuilder()
@@ -80,8 +79,8 @@ def get_FASTA(pdb_file, verbose=True):
 
 def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False):
     """
-    Modified version of MDAnalysis.analysis.align.alignto()
-        -> now works properly with two different selection strings
+    Modified version of MDAnalysis.analysis.align.alignto() which works properly
+    with two different selection strings.
 
     Description:
         Perform a spatial superposition by minimizing the RMSD.
@@ -102,28 +101,29 @@ def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False)
            to change this behavior through the `subselection` keyword.)
 
     Args:
-        mobile (MDA universe): mobile structure
-        ref (MDA universe): reference structure
+        mobile (universe): mobile structure
+        ref (universe): reference structure
         sel1 (str): selection string of mobile structure
         sel2 (str): selection string of reference structure
-        weights (None/str/array):
-            None: weigh each atom equally
-            "mass": weigh atoms based on mass
-            array: If a float array of the same length as `mobile` is provided,
-                   use each element of the `array_like` as a weight for the
-                   corresponding atom in `mobile`.
+        weights (None, str, array):
+          | None: weigh each atom equally
+          | "mass": weigh atoms based on mass
+          | array: If a float array of the same length as `mobile` is provided,
+            use each element of the `array_like` as a weight for the corresponding
+            atom in `mobile`.
         tol_mass (float): Reject match if the atomic masses for matched atoms
-                          differ by more than `tol_mass`, default [0.1]
+            differ by more than `tol_mass`, default [0.1]
         strict (bool):
-            True: Will raise :exc:`SelectionError` if a single atom does not
-                  match between the two selections.
-            False:  Will try to prepare a matching selection by dropping
-                    residues with non-matching atoms.
-                    See :func:`ching_atoms` for details.
+          | True: Will raise :exc:`SelectionError` if a single atom does not
+            match between the two selections.
+          | False:  Will try to prepare a matching selection by dropping residues
+            with non-matching atoms.
 
     Returns:
-        old_rmsd (float): RMSD before spatial alignment
-        new_rmsd (float): RMSD after spatial alignment
+        old_rmsd (float)
+            RMSD before spatial alignment
+        new_rmsd (float)
+            RMSD after spatial alignment
     """
     mobile_atoms = mobile.select_atoms(sel1)
     ref_atoms = ref.select_atoms(sel2)
@@ -148,45 +148,44 @@ def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False)
 
 def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot=False, alt_return=True, **kwargs):
     """
-    Calculates the RMSD between mobile and ref after superimposing (translation and rotation).
-    Alias function of MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for more information.
+    Calculates the RMSD between mobile and ref after superimposing (translation
+    and rotation). Alias function of MDAnalysis.analysis.rms.RMSD. See
+    help(MDAnalysis.analysis.rms.RMSD) for more information.
 
     Args:
-        mobile (MDA universe/atomgrp): mobile structure
-        ref (MDA universe/atomgrp): reference structure
+        mobile (universe, atomgrp): mobile structure
+        ref (universe, atomgrp): reference structure
         sel1 (str): selection string of mobile structure
         sel2 (str): selection string of reference structure
-        weights (bool/str/array_like): weights during superposition of mobile and reference
-           None: no weights
-           "mass": atom masses as weights
-           array_like: If a float array of the same length as "mobile" is provided, use
-                       each element of the "array_like" as a weight for the corresponding
-                       atom in "mobile".
+        weights (bool, str, array_like):
+          | weights during superposition of mobile and reference
+          | None: no weights
+          | "mass": atom masses as weights
+          | array_like: If a float array of the same length as "mobile" is
+            provided, use each element of the "array_like" as a weight for the
+            corresponding atom in "mobile".
+        plot (bool):
+        alt_return (bool): toggle alternative return datatype. See example below
 
-        plot (bool): create plot
-        alt_return (bool): alternative return datatype
-            True:
-                ftr_tuple = RMSD()    # tuple of arrays with shape (length, )
-                                      # ftr: frame, time, rmsd
-                frame= ftr_tuple[0]
-                time = ftr_tuple[1]
-                rmsd = ftr_tuple[2]
-
-            False:
-                ftr_array = get_RMSD()    # single array  with shape (length, 3)
-                                          # ftr: frame, time, rmsd
-                frame= ftr_array[:,0]
-                time = ftr_array[:,1]
-                rmsd = ftr_array[:,2]
-
-    Kwargs:
-        see help(misc.figure)
+    .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.
 
     Returns:
-        if alt_return == True:
-            ftr_tuple (tuple)    # ftr: frame, time, rmsd
-        if alt_return == False:
-            ftr_array (array)    # ftr: frame, time, rmsd
+        ftr_tuple (tuple)
+            returns ftr tuple if alt_return is True (see example below)
+        ftr_array (array)
+            returns ftr_array if alt_return is False (see example below)
+
+    Example:
+        | # return type case 1
+        | >> ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )
+        | >> frame, time, rmsd = ftr_tuple
+        |
+        | # return type case 2
+        | >> ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)
+        | >> frame= ftr_array[:,0]
+        | >> time = ftr_array[:,1]
+        | >> rmsd = ftr_array[:,2]
+
     """
     if not (isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup))
             and isinstance(ref, (mda.core.universe.Universe, mda.core.groups.AtomGroup))):
@@ -216,17 +215,17 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
 
 def get_RMSF(mobile, sel='protein and name CA', plot=False):
     """
-    Calculates the RMSF of mobile.
-    Alias function of MDAnalysis.analysis.rms.RMSF.
+    Calculates the RMSF of mobile. Alias function of MDAnalysis.analysis.rms.RMSF.
     See help(MDAnalysis.analysis.rms.get_RMSF) for more information.
 
     Args:
-        mobile (MDA universe/atomgrp): mobile structure
+        mobile (universe, atomgrp): mobile structure
         sel (str): selection string
         plot (bool): create plot
 
     Returns:
         RMSF (array)
+            array with RMSD values
     """
     if not isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError(f'''{get_RMSF.__module__}.{get_RMSF.__name__}():\
@@ -252,22 +251,23 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
 
 def _HELP_sss_None2int(obj, cfg):
     """
-    Note: this function is (probably) required when a custom function uses
-    either a MDA universe or (distance)matrix and a misc.CONFIG class with
-    the keys "sss", "start", "stop", "step".
-
-    Reason:
-        slicing: aList[None:None:None] is equal to aList[::]
-        get item: aList[None] does not exist
-
     Converts None entries of the config keys to integers:
         sss = [None, None, None] -> [0, max frame of MDA universe, 1]
         start = None ->  0
         stop = None ->  max frame of u
         step = None ->  1
 
+    Note:
+        this function is (probably) required when a custom function uses either
+        a MDA universe or (distance)matrix and a misc.CONFIG class with the keys
+        "sss", "start", "stop", "step".
+
+    Reason:
+        slicing: aList[None:None:None] is equal to aList[::]
+        get item: aList[None] does not exist
+
     Args:
-        obj (MDA universe / matrix): MDA universe or distane(matrix)
+        obj (universe, matrix): MDA universe or distance(matrix)
         cfg (misc.CONFIG class)
 
     Returns:
@@ -316,26 +316,27 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     Calculate distance matrices for mobile and return them.
 
     Args:
-        mobile (MDA universe/list):
-            (MDA universe): structure with trajectory
-            (list): list with paths to structure files (.pdb)
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        mobile (universe, list):
+          | (MDA universe): structure with trajectory
+          | (list): list with paths to structure files (.pdb)
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         sel (str): selection string
-        flatten (bool): returns flattened distance matrices
+        flatten (bool): return flattened distance matrices
         verbose (bool): show progress bar
 
-    Kwargs:
+    Keyword Args:
         dtype (dtype): float (default)
-        aliases for sss items:
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
-        DM (array): array of distance matrices
+        DM (array)
+            array of distance matrices
     """
     ############################################################################
     default = {"dtype": float,
@@ -382,14 +383,16 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
 
 def get_resids_shift(mobile, ref):
     """
-    Compares universe.residues.resnames between mobile and ref in order to get resids shift.
+    Compares universe.residues.resnames between mobile and ref in order to get
+    resids shift.
 
     Args:
-        mobile (MDA universe)
-        ref (MDA universe)
+        mobile (universe)
+        ref (universe)
 
     Returns:
-        shift (int): shift value of ref residues to match mobile residues
+        shift (int)
+            shift value of ref residues to match mobile residues
     """
     # compare resnames to get start_ndx
     start_ndx = _misc.get_subarray_start_ndx(mobile.residues.resnames, ref.residues.resnames)
@@ -415,8 +418,8 @@ def shift_resids(u, shift=None, verbose=True):
     Shift mda.universe.residues by <shift> value.
 
     Args:
-        u (MDA universe)
-        shift (None/int): shift value
+        u (universe)
+        shift (None, int): shift value
         verbose (bool)
     """
     if shift == None or shift == 0:
@@ -442,13 +445,13 @@ def align_resids(mobile, ref, norm=True, verbose=True, **kwargs):
     shifting the resids of reference (usually smaller than mobile).
 
     Args:
-        mobile (MDA universe)
-        ref (MDA universe)
+        mobile (universe)
+        ref (universe)
         norm (bool): apply analysis.norm_resids()
         verbose (bool)
 
-    Kwargs:
-        cprint_color (None/str): colored print color
+    Keyword Args:
+        cprint_color (None, str): colored print color
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -469,15 +472,17 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, ve
     Get matching selection strings of mobile and reference after resids alignment.
 
     Args:
-        mobile (MDA universe)
-        ref (MDA universe)
+        mobile (universe)
+        ref (universe)
         sel (str): selection string
         norm (bool): apply analysis.norm_resids()
         verbose (bool)
 
     Returns:
-        sel1 (str): matching selection string (mobile)
-        sel2 (str): matching selection string (ref)
+        sel1 (str)
+            matching selection string of mobile
+        sel2 (str)
+            matching selection string of ref
     """
     if get_resids_shift(mobile, ref) != 0:
         align_resids(mobile, ref, norm=norm, verbose=verbose)
@@ -493,26 +498,27 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, ve
 
 def norm_ids(u, info='', verbose=True):
     """
-    Modify existing MDA universe/atomgrp and normalize ids according to:
+    Modify existing MDA universe/atomgrp and normalize ids according to
     min(universe.atoms.ids) = 1
 
     Args:
-        u (MDA universe/atomgrp): structure
-        info (str): additional info for print message
-            - 'reference'
-            - 'mobile'
+        u (universe, atomgrp): structure
+        info (str):
+          | additional info for print message
+          | 'reference'
+          | 'mobile'
         verbose (bool)
 
     Example:
-        >> ref = mda.Universe(<top>)
-        >> print(ref.atoms.ids)
-        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
-
-        >> norm_ids(ref, 'reference')
-        Norming atom ids of reference...
-
-        >> print(ref.atoms.ids)
-        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
+        | >> ref = mda.Universe(<top>)
+        | >> print(ref.atoms.ids)
+        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
+        |
+        | >> norm_ids(ref, 'reference')
+        | Norming atom ids of reference...
+        |
+        | >> print(ref.atoms.ids)
+        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
     def __HELP_print(info='', verbose=True):
         if verbose:
@@ -537,25 +543,26 @@ def norm_ids(u, info='', verbose=True):
 
 def norm_resids(u, info='', verbose=True):
     """
-    Modify existing MDA universe/atomgrp and normalize resids according to:
+    Modify existing MDA universe/atomgrp and normalize resids according to
     min(universe.residues.resids) = 1
 
     Args:
-        u (MDA universe/atomgrp): structure
-        info (str): additional info for print message
-            - 'reference'
-            - 'topology'
+        u (universe, atomgrp): structure
+        info (str):
+          | additional info for print message
+          | 'reference'
+          | 'topology'
 
     Example:
-        >> ref = mda.Universe(<top>)
-        >> print(ref.residues.resids)
-        [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
-
-        >> norm_resids(u, 'reference')
-        Norming resids of reference...
-
-        >> print(ref.residues.resids)
-        [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
+        | >> ref = mda.Universe(<top>)
+        | >> print(ref.residues.resids)
+        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
+        |
+        | >> norm_resids(u, 'reference')
+        | Norming resids of reference...
+        |
+        | >> print(ref.residues.resids)
+        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
     def __HELP_print(info='', verbose=True):
         if verbose:
@@ -580,20 +587,17 @@ def norm_resids(u, info='', verbose=True):
 
 def norm_universe(u, info='', verbose=True):
     """
-    Executes the functions:
-        - norm_ids(u, info)
-        - norm_resids(u, info)
+    Executes the functions
 
-
-    For additional information, type:
-        - help(<PKG_name>.norm_ids)
-        - help(<PKG_name>.norm_resids)
+      - norm_ids(u, info)
+      - norm_resids(u, info)
 
     Args:
-        u (MDA universe/atomgrp): structure
-        info (str): additional info for print message
-            - 'reference'
-            - 'mobile'
+        u (universe, atomgrp): structure
+        info (str):
+          | additional info for print message
+          | 'reference'
+          | 'mobile'
         verbose (bool)
     """
     norm_ids(u, info, verbose)
@@ -606,15 +610,9 @@ def norm_and_align_universe(mobile, ref, verbose=True):
     - Norm reference and mobile universe
     - Align mobile universe on reference universe (matching atom ids and res ids)
 
-    For additional information, type:
-        - help(<PKG_name>.norm_ids)
-        - help(<PKG_name>.norm_resids)
-        - help(<PKG_name>.norm_universe)
-        - help(<PKG_name>.norm_and_align_universe)
-
     Args:
-        mobile (MDA universe/atomgrp)
-        ref    (MDA universe/atomgrp)
+        mobile (universe, atomgrp)
+        ref    (universe, atomgrp)
         verbose (bool)
     """
 
@@ -657,40 +655,42 @@ def norm_and_align_universe(mobile, ref, verbose=True):
 def true_select_atoms(u, sel='protein', ignh=True, norm=True):
     """
     Create "true selection" (atomgroup copy in NEW universe) after applying
-        - norm_ids()
-        - norm_resids()
+
+      - norm_ids()
+      - norm_resids()
+
     Note that atom indices are reassigned according to range(0, len(u.atoms))
 
     Args:
-        u (str): structure path or PDB id
-        u (MDA universe/atomgrp): structure
+        u (str, universe, atomgrp): structure path (PDB id) or universe with structure
         sel (str): selection string
         ignh (bool): ignore hydrogen (mass < 1.2)
         norm (bool): apply analysis.norm_universe()
 
     Returns:
-        a (<AtomGroup>): "true selection" / atomgroup copy in NEW universe
+        a (atomgrp)
+            "true selection" ~ atomgroup copy in NEW universe
 
-    Additional Info:
-    mda.select_atoms() remembers information about the original configuration which is sometimes NOT WANTED.
+    .. Note:: mda.select_atoms() remembers information about the original
+       universe configuration which is sometimes NOT WANTED.
 
     EXAMPLE:
-    # Init universe
-    u = mda.Universe(<top>)
-
-    # select_atoms() behaviour
-    >> a = u.select_atoms("protein and type C")
-    >> a
-    <AtomGroup with 72 atoms>
-    >> a.residues.atoms
-    <AtomGroup with 964 atoms>
-
-    # true_select_atoms() behaviour
-    >> a = ana.true_select_atoms(u, sel="protein and type C")
-    >> a
-    <Universe with 72 atoms>
-    >> a.residue.atoms
-    <AtomGroup with 72 atoms>
+      | # Init universe
+      | >> u = mda.Universe(<top>)
+      |
+      | # select_atoms() behaviour
+      | >> a = u.select_atoms("protein and type C")
+      | >> a
+      | <AtomGroup with 72 atoms>
+      | >> a.residues.atoms
+      | <AtomGroup with 964 atoms>
+      |
+      | # true_select_atoms() behaviour
+      | >> a = ana.true_select_atoms(u, sel="protein and type C")
+      | >> a
+      | <Universe with 72 atoms>
+      | >> a.residue.atoms
+      | <AtomGroup with 72 atoms>
     """
     # case 1: input is PDB ID -> fetch online
     if type(u) is str and len(u) == 4:
@@ -716,15 +716,16 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
     Automatically prepends frame number to the extension.
 
     Args:
-        u (MDA universe/atomgrp): universe containing the structure
-        frames (array/list)
-        save_as (str): save name or realpath to save file
-                 Note: frame number will be prepended to the extension
+        u (universe, atomgrp): universe containing the structure
+        frames (array, list)
+        save_as (str): save name or realpath to save file. frame number will
+          be prepended to the extension
         default_dir (str)
         sel (str): selection string
 
     Returns:
-        dirpath (str): realpath to directory, where structures were dumped
+        dirpath (str)
+            realpath to directory with dumped structures
     """
     if "." in save_as:
         realpath = _misc.joinpath(default_dir, save_as, create_dir=True)
@@ -749,21 +750,23 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
 def shortest_RES_distances(u, sel):
     """
     Calculates shortest RES distances for selection of universe u.
-    Attention: Displayed RES ids always start with 1
+
+    .. Attention:: Displayed RES ids always start with 1
 
     Args:
         u (str): structure path
-        u (MDA universe/atomgrp): structure
+        u (universe, atomgrp): structure
         sel (str): selection string
 
     Returns:
-        SD (np.arrray): NxN Matrix with shortest RES distances
-                        i.e.: SD[0][0] is shortest distance RES0-RES0
-                              SD[0][1] is shortest distance RES0-RES1
-                              SD[0][2] is shortest distance RES0-RES2
-                              etc.
-        SD_d (np.array, dtype=object): detailed List with:
-            [d_min, (RES_pair), (ATM_pair), (ATM_names)]
+        SD (arrray)
+          | NxN Matrix with shortest RES distances
+          | i.e.: SD[0][0] is shortest distance RES0-RES0
+          |       SD[0][1] is shortest distance RES0-RES1
+          |       SD[0][2] is shortest distance RES0-RES2
+          | etc.
+        SD_d (array, dtype=object)
+            detailed List with [d_min, (RES_pair), (ATM_pair), (ATM_names)]
     """
     if isinstance(u, str):
         # uc: universe copy
@@ -799,8 +802,8 @@ def shortest_RES_distances(u, sel):
         SD_t = np.transpose(SD)    # -> transpose SD
         SD = np.maximum(SD, SD_t)  # -> take element-wise maximum
 
-    # convert to np.array with dtype=object since array contains lists, tuples and sequences
-    SD_d = np.array(SD_d, dtype=object)
+    # convert to array with dtype=object since array contains lists, tuples and sequences
+    SD_d = array(SD_d, dtype=object)
     return(SD, SD_d)
 
 
@@ -815,13 +818,15 @@ def get_trendline(xdata, ydata, compress=10):
     (Trendline: sum and normalize each <compress> elements of input data)
 
     Args:
-        xdata (list/array)
-        ydata (list/array)
+        xdata (list, array)
+        ydata (list, array)
         compress (int): compress factor (sum and normalize <compress> elements)
 
     Returns:
-        trend_xdata (list/array)
-        trend_ydata (list/array)
+        trend_xdata (list, array)
+            reduced xdata
+        trend_ydata (list, array)
+            reduced ydata
     """
     if len(xdata) != len(ydata):
         raise ValueError("xdata and ydata have unequal length.")
@@ -838,33 +843,35 @@ def get_trendline(xdata, ydata, compress=10):
         trend_ydata = trend_ydata[: -1] + [sum(ydata[-remainder:])/float(remainder)]
 
     if isinstance(xdata, np.ndarray):
-        trend_xdata = np.array(trend_xdata)
+        trend_xdata = array(trend_xdata)
     if isinstance(ydata, np.ndarray):
-        trend_ydata = np.array(trend_ydata)
+        trend_ydata = array(trend_ydata)
     return trend_xdata, trend_ydata
 
 
 def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
     """
     Plot trendline of <xdata, ydata> and return trendline object
-    Remove trendline via trendline.remove()
+
+    .. Hint:: trendline can be removed via trendline.remove()
 
     Args:
-        xdata (list/array)
-        ydata (list/array)
+        xdata (list, array)
+        ydata (list, array)
         compress (int): compress factor (sum and normalize <compress> elements)
         fignum (int): figure number (get with plt.gcf().number)
 
-    Kwargs:
+    Keyword Args:
         "alpha": 1.0
         "color": "black"
         "ls": "-"
         "lw": 2.0
         "ms": 1
-        "marker": "
+        "marker" : "."
 
     Returns:
-        trendline (matplotlib.lines.Line2D): trendline object
+        trendline (matplotlib.lines.Line2D)
+            "trendline" object
     """
     default = {"alpha": 1.0,
                "color": "black",
@@ -904,6 +911,11 @@ def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
 
 def remove_trendline(trendline=None, fig=None):
     """
+    remove trendline of figure.
+
+    Args:
+        trendline (None, obj): "trendline object"
+        fig (None, obj): figure object
     """
     if trendline is not None:
         trendline.remove()
@@ -928,30 +940,32 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
     General plot function for analysis.py
 
     Args:
-        xdata (array/list)
-        ydata (array/list)
+        xdata (array, list)
+        ydata (array, list)
         xlabel (str)
         ylabel (str)
-        title (None/str)
-        xlim (None/list)
-        ylim (None/list)
+        title (None, str)
+        xlim (None, list)
+        ylim (None, list)
 
-    Kwargs:
-        # see args of misc.figure()
-
+    Keyword Args:
         "alpha": 0.3
         "color": "r"
         "lw": 1.5
         "ms": 1
         "marker": "."
 
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
+
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
 
     Example:
-        >> PLOT(TIME, RMSD, xlabel="time (ns)", ylabel=r"RMSD ($\AA$)", title="RMSD plot",
-                xlim=[50, 500], ylim=[0, 20])
+        | >> PLOT(TIME, RMSD, xlabel="time (ns)", ylabel=r"RMSD ($\AA$)",
+        |         title="RMSD plot", xlim=[50, 500], ylim=[0, 20])
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"alpha": 1.0,
@@ -991,33 +1005,39 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
 
 def plot_RMSD(RMSD_file, sss=[None, None, 10], verbose=None, save_as="", **kwargs):
     """
+    plot RMSD curve
+
     Args:
         RMSD_file (str): path to RMSD file
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        verbose (None/bool):
-            None: print step to user (as a reminder)
-            True: print start, step, stop to user
-            False: no print
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        verbose (None, bool):
+          | None: print step to user (as a reminder)
+          | True: print start, step, stop to user
+          | False: no print
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
+    Keyword Args:
         alpha (float)
         color (str)
-        cut_min (None/int/float): min value for cutoff
-        cut_max (None/int/float): max value for cutoff
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+        cut_min (None, int, float): min value for cutoff
+        cut_max (None ,int, float): max value for cutoff
+        start (None ,int): start frame
+        stop (None ,int): stop frame
+        step (None ,int): step size
         filedir (str): default directory where to save figure
         title (None/str)
 
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
+
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     #######################################
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
@@ -1082,20 +1102,26 @@ def _HELP_setup_bins(data, vmin=None, vmax=None, vbase=1, bins=None, n_bins=200,
     important cfg parameter, such as vmin, vmax.
 
     Args:
-        data (array/list)
-        vmin (None/int/float): min value of histogram/bins
-        vmax (None/int/float): max value of histogram/bins
-        vbase (int): rounding base of vmin, vmax.
-                     see misc.round_down(number,base) or misc.round_up(number,base)
-        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase
+        data (array, list)
+        vmin (None, int, float): min value of histogram/bins
+        vmax (None, int, float): max value of histogram/bins
+        vbase (int): r
+          | rounding base of vmin, vmax.
+          | look up misc.round_down(number,base) or misc.round_up(number,base)
+        bins (None, list): use bins if passed, else construct bins based on
+          n_bins, vmin, vmax, vbase
         n_bins (int): number of bins
-        n_bins_autoadd (int): autocorrect n_bins (default: 1), because hist usually require 1 extra bin
+        n_bins_autoadd (int): autocorrect n_bins (default: 1), because hist
+          usually require 1 extra bin
 
     Returns
         bins (list)
-        bins_step (int/float)
-        cfg (dict): dictionary containing the current values of:
-            vmin, vmax, vbase, bins, n_bins, n_bins_autoadd
+            list with bins
+        bins_step (int, float)
+            bins step size
+        cfg (dict)
+            | dictionary containing the current values of:
+            | vmin, vmax, vbase, bins, n_bins, n_bins_autoadd
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = dict(vmin=vmin, vmax=vmax, vbase=vbase,
@@ -1121,47 +1147,56 @@ def _HELP_setup_bins(data, vmin=None, vmax=None, vbase=1, bins=None, n_bins=200,
 
 def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
     """
+    plot histogram
+
     Args:
-        data (list/array/list of lists): input data. Dimensions of each list must
-                                         be equal if multiple lists are provided.
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        data (list, array, list of lists): input data. Dimensions of each list
+          must be equal if multiple lists are provided.
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
-        cut_min (None/int/float): min value for cutoff
-        cut_max (None/int/float): max value for cutoff
-        apply_cut_limits (bool): apply plt.xlim(cut_min, cut_max) if orientation is "vertical"
-                                 apply plt.ylim(cut_min, cut_max) if orientation is "horizontal"
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        cut_min (None, int, float): min value for cutoff
+        cut_max (None, int, float): max value for cutoff
+        apply_cut_limits (bool):
+          | apply plt.xlim(cut_min, cut_max) if orientation is "vertical"
+          | apply plt.ylim(cut_min, cut_max) if orientation is "horizontal"
         align_bins (str): 'center', 'edge' (default, left edge alignment)
-        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase
+        bins (None, list): use bins if passed, else construct bins based on
+          n_bins, vmin, vmax, vbase
         n_bins (int): number of bins
-        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code requires 1 extra bin.
-        vmin (None/int/float): min value of histogram/bins
-        vmax (None/int/float): max value of histogram/bins
-        vbase (int): rounding base of vmin, vmax.
-                     see misc.round_down(number,base) or misc.round_up(number,base)
+        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code
+          requires 1 extra bin.
+        vmin (None, int, float): min value of histogram/bins
+        vmax (None, int, float): max value of histogram/bins
+        vbase (int):
+          | rounding base of vmin, vmax.
+          | look up misc.round_down(number,base) or misc.round_up(number,base)
         logscale (bool): apply logscale on the "count" axis
         minorticks (bool): turns minorticks (~logscale) for hist figure on/off
         norm (bool): normalize histogram
         orientation (str): "vertical", "horizontal"
-        alpha (int/float)
+        alpha (int, float)
         colors (list of str/sns.colorpalette)
-        ec (None/str): edge color
-        title (None/str)
+        ec (None, str): edge color
+        title (None, str)
+
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
-
-        hist (tuple): n, bins, patches
-        or HIST (list): list of hist, i.e. list of (n, bins, patches) tuples
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
+        hist (tuple, list)
+            (n, bins, patches) or list of (n, bins, patches)
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"start": sss[0],
@@ -1306,50 +1341,60 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
 def plot_deltahist(RMSD_file, RMSD_ref, sss=[None, None, None],
                    show_all_hist=False, save_as="", **kwargs):
     """
+    plot delta histogram (i.e. delta = RMSD_file - RMSD_ref)
+
     Args:
         RMSD_file (str): path to RMSD file
         RMSD_ref (str): path to RMSD reference file
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         show_all_hist (bool):
-            True:  show ref hist, non-ref hist and delta hist
-            False: show only delta hist
+          | True:  show ref hist, non-ref hist and delta hist
+          | False: show only delta hist
         title (str)
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
+    Keyword Args:
         alpha (float)
-        colors (list): two string elements in list: color_positive, color_negative
-                       Example: ["g", "r"]
+        colors (list): two strings in list describing color_positive and
+         color_negative, e.g. ["g", "r"]
         color_positive (str)
         color_negative (str)
-        ec (None/str): edge color
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
-        cut_min (None/int/float): min value for cutoff (here: alias of vmin)
-        cut_max (None/int/float): max value for cutoff (here: alias of vmax)
-        apply_cut_limits (bool): apply plt.xlim(cut_min, cut_max) if orientation is "vertical"
-                                 apply plt.ylim(cut_min, cut_max) if orientation is "horizontal"
-        bins (None/list): use bins if passed, else construct bins based on n_bins, vmin, vmax, vbase
+        ec (None, str): edge color
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        cut_min (None, int, float): min value for cutoff (here: alias of vmin)
+        cut_max (None, int, float): max value for cutoff (here: alias of vmax)
+        apply_cut_limits (bool):
+          | apply plt.xlim(cut_min, cut_max) if orientation is "vertical"
+          | apply plt.ylim(cut_min, cut_max) if orientation is "horizontal"
+        bins (None, list): use bins if passed, else construct bins based on
+          n_bins, vmin, vmax, vbase
         n_bins (int): number of bins
-        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code requires 1 extra bin.
-        vmin (None/int/float): min value of histogram/bins
-        vmax (None/int/float): max value of histogram/bins
-        vbase (int): rounding base of vmin, vmax.
-                     see misc.round_down(number,base) or misc.round_up(number,base)
+        n_bins_autoadd (int): autocorrect n_bins (default: 1), because code
+          requires 1 extra bin.
+        vmin (None, int, float): min value of histogram/bins
+        vmax (None, int, float): max value of histogram/bins
+        vbase (int):
+          | rounding base of vmin, vmax.
+          | look up misc.round_down(number,base) or misc.round_up(number,base)
         logscale (bool): apply logscale on the "count" axis
         minorticks (bool): turns minorticks (~logscale) for hist figure on/off
         norm (bool): normalize histogram
         orientation (str): "vertical", "horizontal"
-        title (None/str)
+        title (None, str)
+
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"start": sss[0],
@@ -1480,7 +1525,8 @@ def _HELP_convert_RMSD_nm2angstrom(RMSD_nm):
         RMSD_nm (list): rmsd values in nm
 
     Returns:
-        RMSD (list): rmsd values in angstrom
+        RMSD (list)
+            rmsd values in angstrom
     """
     RMSD_max = np.amax(RMSD_nm)
     if RMSD_max < 5.0:
@@ -1509,33 +1555,37 @@ def _HELP_convert_xticks_frame2time(ax, delta_t=0.002):
 
 def plot_HEATMAP(data, save_as="", **kwargs):
     """
-    Note: if data is incomplete:
-       -> use min/max values or np.nan for missing values
-          and the keyword argument annot=True or annot=False
+    plot heatmap
+
+    .. Note:: if data is incomplete: use min/max values or np.nan for missing
+      values and the Keyword Arg annot=True or annot=False
 
     Args:
         data (arrays)
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
-        annot (bool/list): toggle annotation within the heatmap squares.
-                           if a list is provided, annotates the list content.
+    Keyword Args:
+        annot (bool, list): toggle annotation within the heatmap squares. If a
+          list is provided, annotates the list content.
         cmap (str): color map string
-        n_colors (None/int)
-        cbar_min / vmin (None/int/float): min value of colorbar and heatmap
-        cbar_max / vmax (None/int/float): max value of colorbar and heatmap
-        cbar_label (None/str)
-        title (None/str)
-        xlabel (None/str)
-        ylabel (None/str)
-        xticklabels (None/list)
-        yticklabels (None/list)
+        n_colors (None, int)
+        cbar_min/vmin (None, int, float): min value of colorbar and heatmap
+        cbar_max/vmax (None, int, float): max value of colorbar and heatmap
+        cbar_label (None, str)
+        title (None, str)
+        xlabel (None, str)
+        ylabel (None, str)
+        xticklabels (None, list)
+        yticklabels (None, list)
         show_ticks (bool): toggle (label) ticks
 
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
+
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     default = {"figsize": (6.5, 4),
                "vmin": None,
@@ -1604,27 +1654,32 @@ def plot_HEATMAP(data, save_as="", **kwargs):
 
 def plot_HEATMAP_REX_RMSD(REX_RMSD_dir, cps=["RdBu_r", 50, 0, 8], auto_convert=True, save_as="", **kwargs):
     """
+    plot heatmap with REX RMSDs. This function uses a directory with RMSD files as input.
+
     Args:
         REX_RMSD_dir (str): directory to REX_RMSD files
-        cps (list): color_palette_settings
-            [0]: color_palette name (str)
-            [1]: n_colors (int)
-            [2]: heatmap vmin (int/float)
-            [3]: heatmap vmax (int/float)
-        auto_convert (bool): convert "displayed" RMSD and xticks for plot
-                             returned values stay unconverted
-            if True:
-                RMSD: RMSD (nm) -> RMSD (angstrom)
-                xticks: frame -> time (ns)
+        cps (list):
+          | color_palette_settings
+          | cps[0]: color_palette name (str)
+          | cps[1]: n_colors (int)
+          | cps[2]: heatmap vmin (int, float)
+          | cps[3]: heatmap vmax (int, float)
+        auto_convert (bool):
+          | convert "displayed" RMSD and xticks for plot. Returned values stay unconverted
+          | True: convert RMSD (nm) -> RMSD (angstrom)
+          |       convert frame -> time (ns)
         save_as (str): save name or realpath to save file
 
-    Kwargs:
-        # see args of misc.figure()
-        title (None/str)
+    Keyword Args:
+        title (None, str)
+
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
     Returns:
-        TIME (list): time values of first REX_RMSD file
-        RMSD (list of arrays): RMSD values of each REX_RMSD file
+        TIME (list)
+            time values taken from first REX_RMSD file
+        RMSD (list of arrays)
+            RMSD values of each REX_RMSD file
     """
     ### setup default kwargs if not passed
     default = {"figsize": (7.5, 6),

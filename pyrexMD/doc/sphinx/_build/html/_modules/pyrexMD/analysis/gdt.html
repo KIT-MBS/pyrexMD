@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.analysis.gdt &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.analysis.gdt &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">pyREMD</a>
+          <a href="../../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.analysis.gdt</li>
+      <li>pyrexMD.analysis.gdt</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,16 +160,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.analysis.gdt</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.analysis.gdt</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: gdt.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 13.05.2021</span>
+<span class="c1"># @Last modified time: 16.05.2021</span>
 
 
-<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
-<span class="kn">import</span> <span class="nn">pyREX.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -181,19 +181,19 @@
 <span class="c1"># GDT (Global Distance Test) Analyses</span>
 
 
-<div class="viewcode-block" id="get_array_percent"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.get_array_percent">[docs]</a><span class="k">def</span> <span class="nf">get_array_percent</span><span class="p">(</span><span class="n">dist_array</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+<div class="viewcode-block" id="get_array_percent"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_array_percent">[docs]</a><span class="k">def</span> <span class="nf">get_array_percent</span><span class="p">(</span><span class="n">dist_array</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get percentage and indices of dist_array that fulfil the condition:</span>
-<span class="sd">        dist_array &lt;= cutoff</span>
+<span class="sd">    Get percentage and indices of dist_array that fulfill: dist_array &lt;= cutoff</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dist_array (array): distance array</span>
-<span class="sd">        cutoff (int/float)</span>
+<span class="sd">        cutoff (int, float): cutoff distance</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        p (float): percent of dist_array (condition: dist_array &lt;= cutoff)</span>
-<span class="sd">        ndx (array): indices of dist_array (condition:</span>
-<span class="sd">        dist_array &lt;= cutoff)</span>
+<span class="sd">        p (float)</span>
+<span class="sd">            percentage of dist_array that fulfill: dist_array &lt;= cutoff)</span>
+<span class="sd">        ndx (array)</span>
+<span class="sd">            indices of dist_array that fulfill: dist_array &lt;= cutoff)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist_array</span><span class="p">)</span>
     <span class="n">ndx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dist_array</span> <span class="o">&lt;=</span> <span class="n">cutoff</span><span class="p">)</span>
@@ -201,21 +201,25 @@
     <span class="k">return</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">ndx</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_Pair_Distances"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.get_Pair_Distances">[docs]</a><span class="k">def</span> <span class="nf">get_Pair_Distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_Pair_Distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_Pair_Distances">[docs]</a><span class="k">def</span> <span class="nf">get_Pair_Distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Aligns mobile to ref and calculates PairDistances (e.g. CA-CA distances).</span>
+<span class="sd">    Aligns mobile to ref and calculates pair distances (e.g. CA-CA distances).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp): mobile structure with trajectory</span>
-<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure with trajectory</span>
+<span class="sd">        ref (universe, atomgrp): reference structure</span>
 <span class="sd">        sel1 (str): selection string of mobile structure</span>
 <span class="sd">        sel2 (str): selection string of reference structure</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        PAIR_DISTANCES</span>
-<span class="sd">        RMSD (tuple): (RMSD before alignment, RMSD after alignment)</span>
+<span class="sd">        PAIR_DISTANCES (array)</span>
+<span class="sd">            array with pair pair distances</span>
+<span class="sd">        RMSD (tuple)</span>
+<span class="sd">            (RMSD before alignment, RMSD after alignment)</span>
 <span class="sd">        _resids_mobile (array)</span>
+<span class="sd">            array with mobile RES ids</span>
 <span class="sd">        _resids_ref (array)</span>
+<span class="sd">            array with reference RES ids</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">mobile_atoms</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span>
     <span class="n">ref_atoms</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span>
@@ -230,22 +234,24 @@
 
 <span class="k">def</span> <span class="nf">_HELP_sss_None2int</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Note: this function is (probably) required when a custom function uses</span>
-<span class="sd">    either a MDA universe or (distance)matrix and a misc.CONFIG class with</span>
-<span class="sd">    the keys &quot;sss&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;step&quot;.</span>
-
-<span class="sd">    Reason:</span>
-<span class="sd">        slicing: aList[None:None:None] is equal to aList[::]</span>
-<span class="sd">        get item: aList[None] does not exist</span>
-
 <span class="sd">    Converts None entries of the config keys to integers:</span>
 <span class="sd">        sss = [None, None, None] -&gt; [0, max frame of MDA universe, 1]</span>
 <span class="sd">        start = None -&gt;  0</span>
 <span class="sd">        stop = None -&gt;  max frame of u</span>
 <span class="sd">        step = None -&gt;  1</span>
 
+<span class="sd">    Note:</span>
+<span class="sd">        this function is (probably) required when a custom function uses either</span>
+<span class="sd">        a MDA universe or (distance)matrix and a misc.CONFIG class with the keys</span>
+<span class="sd">        &quot;sss&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;step&quot;.</span>
+
+<span class="sd">    Reason:</span>
+<span class="sd">        slicing: aList[None:None:None] is equal to aList[::]</span>
+<span class="sd">        get item: aList[None] does not exist</span>
+
+
 <span class="sd">    Args:</span>
-<span class="sd">        obj (MDA universe / matrix): MDA universe or distane(matrix)</span>
+<span class="sd">        obj (universe, matrix): MDA universe or distance(matrix)</span>
 <span class="sd">        cfg (misc.CONFIG class)</span>
 
 <span class="sd">    Returns:</span>
@@ -287,58 +293,65 @@
     <span class="k">return</span> <span class="n">cfg</span>
 
 
-<div class="viewcode-block" id="GDT"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.GDT">[docs]</a><span class="k">def</span> <span class="nf">GDT</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="GDT"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT">[docs]</a><span class="k">def</span> <span class="nf">GDT</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
         <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">cutoff</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">true_resids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    GDT: Global Distance Test</span>
+<span class="sd">    performs Global Distance Test (GDT).</span>
 
-<span class="sd">    Algorithm to identify how good &quot;mobile&quot; matches to &quot;reference&quot; by calculating the sets</span>
-<span class="sd">    of residues which do not deviate more than a specified (pairwise) CA distance cutoff.</span>
+<span class="sd">    Algorithm to identify how good &quot;mobile&quot; matches to &quot;reference&quot; by calculating</span>
+<span class="sd">    the sets of residues which do not deviate more than a specified (pairwise)</span>
+<span class="sd">    CA distance cutoff.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        sel1 = mobile.select_atoms(sel1)</span>
-<span class="sd">        sel2 = ref.select_atoms(sel2)</span>
-<span class="sd">        weights=&quot;mass&quot;  # hardcoded weights for alignment</span>
+<span class="sd">    .. Note::</span>
+<span class="sd">      | sel1 = mobile.select_atoms(sel1)</span>
+<span class="sd">      | sel2 = ref.select_atoms(sel2)</span>
+<span class="sd">      | weights=&quot;mass&quot;  # hardcoded weights for alignment</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp): mobile structure with trajectory</span>
-<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure with trajectory</span>
+<span class="sd">        ref (universe, atomgrp): reference structure</span>
 <span class="sd">        sel1 (str): selection string of mobile structure</span>
 <span class="sd">        sel2 (str): selection string of reference structure</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
-<span class="sd">        cutoff (list): parameters describing GDT</span>
-<span class="sd">            cutoff[0]: min_cutoff (float)</span>
-<span class="sd">            cutoff[1]: max_cutoff (float)</span>
-<span class="sd">            cutoff[2]: step_cutoff (float)</span>
-<span class="sd">        true_resids (bool): offset resids of &quot;GDT_resids&quot; to correct codestyle resids into real resids</span>
-<span class="sd">            True: return true resids in output &quot;GDT_resids&quot;</span>
-<span class="sd">            False: return codestyle resids in output &quot;GDT_resids&quot;</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        cutoff (list):</span>
+<span class="sd">          | parameters describing GDT</span>
+<span class="sd">          | cutoff[0]: min_cutoff (float)</span>
+<span class="sd">          | cutoff[1]: max_cutoff (float)</span>
+<span class="sd">          | cutoff[2]: step_cutoff (float)</span>
+<span class="sd">        true_resids (bool):</span>
+<span class="sd">          | offset resids of &quot;GDT_resids&quot; to correct codestyle resids into real resids</span>
+<span class="sd">          | True: return true resids in output &quot;GDT_resids&quot;</span>
+<span class="sd">          | False: return codestyle resids in output &quot;GDT_resids&quot;</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        aliases for sss items:</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
-<span class="sd">        aliases for cutoff items:</span>
-<span class="sd">            min_cutoff (float)</span>
-<span class="sd">            max_cutoff (float)</span>
-<span class="sd">            step_cutoff (float)</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None/int): start frame</span>
+<span class="sd">        stop (None/int): stop frame</span>
+<span class="sd">        step (None/int): step size</span>
+<span class="sd">        min_cutoff (float)</span>
+<span class="sd">        max_cutoff (float)</span>
+<span class="sd">        step_cutoff (float)</span>
 <span class="sd">        disable (bool): disable progress bar</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        GDT_percent (list): GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes</span>
-<span class="sd">                            percent of residues under distance cutoff &lt;= x Angstrom</span>
-<span class="sd">        GDT_resids (list): resids within cutoff</span>
-<span class="sd">            if true_resids == True:</span>
-<span class="sd">                true resids; possible values are: minRES &lt;= value &lt;= maxRES</span>
-<span class="sd">            if true_resids == False:</span>
-<span class="sd">                codestyle resids; possible values are 0 &lt;= value &lt;= len(mobile.select_atoms(sel)))</span>
-<span class="sd">        GDT_cutoff (list): cutoff distances in Angstrom</span>
-<span class="sd">        RMSD (list): (RMSD before alignment, RMSD after elignment)</span>
-<span class="sd">        FRAME (list): analyzed frames</span>
+<span class="sd">        GDT_percent (list)</span>
+<span class="sd">          GDT_Px for each cutoff distance in GDT_cutoff, where GDT_Px denotes</span>
+<span class="sd">          percent of residues under distance cutoff &lt;= x Angstrom</span>
+<span class="sd">        GDT_resids (list)</span>
+<span class="sd">          | list with resids within cutoff</span>
+<span class="sd">          | if true_resids == True:</span>
+<span class="sd">          |   returns true resids; possible values are: minRES &lt;= value &lt;= maxRES</span>
+<span class="sd">          | if true_resids == False:</span>
+<span class="sd">          |   returns codestyle resids; possible values are 0 &lt;= value &lt;= len(mobile.select_atoms(sel)))</span>
+<span class="sd">        GDT_cutoff (list)</span>
+<span class="sd">          list with cutoff distances in Angstrom</span>
+<span class="sd">        RMSD (list)</span>
+<span class="sd">          list with (RMSD before alignment, RMSD after elignment)</span>
+<span class="sd">        FRAME (list)</span>
+<span class="sd">          list of analyzed frames</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">############################################################################</span>
     <span class="c1">#sel_mobile = mobile.select_atoms(sel1)</span>
@@ -391,37 +404,39 @@
     <span class="k">return</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_resids</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="n">FRAME</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GDT_match_cutoff_dim"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.GDT_match_cutoff_dim">[docs]</a><span class="k">def</span> <span class="nf">GDT_match_cutoff_dim</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">):</span>
+<div class="viewcode-block" id="GDT_match_cutoff_dim"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_match_cutoff_dim">[docs]</a><span class="k">def</span> <span class="nf">GDT_match_cutoff_dim</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Match GDT_cutoff array to the dimension of GDT_percent.</span>
-<span class="sd">    Used in combination with analysis.PLOT() function to plot multiple curves on one canvas.</span>
+<span class="sd">    Matches GDT_cutoff array to the dimensions of GDT_percent. Used in combination</span>
+<span class="sd">    with analysis.PLOT() function to plot multiple curves on one canvas.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_percent (list/array): output of gdt.GDT()</span>
-<span class="sd">        GDT_cutoff  (list/array): output of gdt.GDT()</span>
+<span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
+<span class="sd">        GDT_cutoff (list, array): output of gdt.GDT()</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        GDT_cutoff (list/array): GDT_cutoff with same dimension as GDT_percent</span>
+<span class="sd">        GDT_cutoff (list, array)</span>
+<span class="sd">            transformed GDT_cutoff with same dimensions as GDT_percent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">GDT_cutoff</span> <span class="o">=</span> <span class="p">[</span><span class="n">GDT_cutoff</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">))]</span>
     <span class="k">return</span> <span class="n">GDT_cutoff</span></div>
 
 
-<div class="viewcode-block" id="plot_GDT"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.plot_GDT">[docs]</a><span class="k">def</span> <span class="nf">plot_GDT</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_GDT"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.plot_GDT">[docs]</a><span class="k">def</span> <span class="nf">plot_GDT</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a GDT_PLOT.</span>
+<span class="sd">    Creates a GDT_PLOT.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_percent (list/array): output of gdt.GDT()</span>
-<span class="sd">        GDT_cutoff (list/array): output of gdt.GDT()</span>
+<span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
+<span class="sd">        GDT_cutoff (list, array): output of gdt.GDT()</span>
 <span class="sd">        title (str)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
@@ -436,20 +451,20 @@
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_GDT_TS"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.get_GDT_TS">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
+<div class="viewcode-block" id="get_GDT_TS"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_TS">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    GDT_TS: GlobalDistanceTest_TotalScore</span>
-<span class="sd">    Possible values: 0 &lt;= GDT_TS &lt;= 100</span>
+<span class="sd">    .. Note:: GlobalDistanceTest_TotalScore. Possible values: 0 &lt;= GDT_TS &lt;= 100</span>
 
-<span class="sd">    Calculate GDT_TS for any given GDT_percent array according to:</span>
-<span class="sd">        GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,</span>
-<span class="sd">    where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</span>
+<span class="sd">    | Calculates GDT_TS for any given GDT_percent array according to:</span>
+<span class="sd">    | GDT_TS = (GDT_P1 + GDT_P2 + GDT_P4 + GDT_P8)/4,</span>
+<span class="sd">    | where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_percent (list/array): output of gdt.GDT()</span>
+<span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_TS (array)</span>
+<span class="sd">            array with GDT_TS scores</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">GDT_TS</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">GDT_percent</span><span class="p">:</span>
@@ -459,20 +474,20 @@
     <span class="k">return</span> <span class="n">GDT_TS</span></div>
 
 
-<div class="viewcode-block" id="get_GDT_HA"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.get_GDT_HA">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
+<div class="viewcode-block" id="get_GDT_HA"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_HA">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    GDT_HA: GlobalDistanceTest_HighAccuracy</span>
-<span class="sd">    Possible values: 0 &lt;= GDT_HA &lt;= 100</span>
+<span class="sd">    .. Note :: GlobalDistanceTest_HighAccuracy. Possible values: 0 &lt;= GDT_HA &lt;= 100</span>
 
-<span class="sd">    Calculate GDT_HA for any given GDT_percent array according to:</span>
-<span class="sd">        GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,</span>
-<span class="sd">    where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</span>
+<span class="sd">    | Calculate GDT_HA for any given GDT_percent array according to:</span>
+<span class="sd">    | GDT_HA = (GDT_P0.5 + GDT_P1 + GDT_P2 + GDT_P4)/4,</span>
+<span class="sd">    | where GDT_Px denotes the percentage of residues with distance cutoff &lt;= x Angstrom</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_percent (list/array): output of analysis.GDT()</span>
+<span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_HA (array)</span>
+<span class="sd">            array with GDT_HA scores</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">GDT_HA</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">GDT_percent</span><span class="p">:</span>
@@ -482,25 +497,31 @@
     <span class="k">return</span> <span class="n">GDT_HA</span></div>
 
 
-<div class="viewcode-block" id="rank_scores"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.rank_scores">[docs]</a><span class="k">def</span> <span class="nf">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.rank_scores">[docs]</a><span class="k">def</span> <span class="nf">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    rank scores</span>
+
+<span class="sd">    .. Note:: Similar function to gdt.GDT_rank_scores() but takes other arguments.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_TS (array): GlobalDistanceTest_TotalScore</span>
-<span class="sd">        GDT_HA (array): GlobalDistanceTest_HighAccuracy</span>
-<span class="sd">        ranking_order (None/str):</span>
-<span class="sd">            (None): output ranking ordered by frame number</span>
-<span class="sd">            &quot;FRAME&quot;: output ranking ordered by frame number</span>
-<span class="sd">            &quot;GDT_TS&quot;: output ranking ordered by GDT_TS</span>
-<span class="sd">            &quot;GDT_HA&quot;: output ranking ordered by GDT_HA</span>
-<span class="sd">        prec (None/int):</span>
-<span class="sd">            (None) or -1: rounding off</span>
-<span class="sd">            (int):  rounding on to &lt;prec&gt; decimals</span>
+<span class="sd">        GDT_TS (array): output of gdt.get_GDT_TS()</span>
+<span class="sd">        GDT_HA (array): output of gdt.get_GDT_HA()</span>
+<span class="sd">        ranking_order (None, str):</span>
+<span class="sd">          | &quot;FRAME&quot; or None: output ranking ordered by frame number</span>
+<span class="sd">          | &quot;GDT_TS&quot;: output ranking ordered by GDT_TS</span>
+<span class="sd">          | &quot;GDT_HA&quot;: output ranking ordered by GDT_HA</span>
+<span class="sd">        prec (None, int):</span>
+<span class="sd">          | -1 or None: rounding off</span>
+<span class="sd">          | int: rounding on to this number of decimals</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        GDT_TS_ranked (array): ranked array with GDT_TS scores</span>
-<span class="sd">        GDT_HA_ranked (array): ranked array with GDT_HA scores</span>
-<span class="sd">        GDT_ndx_ranked (array): corresponding element indices of scores</span>
+<span class="sd">        GDT_TS_ranked (array)</span>
+<span class="sd">            ranked array with GDT_TS scores</span>
+<span class="sd">        GDT_HA_ranked (array)</span>
+<span class="sd">            ranked array with GDT_HA scores</span>
+<span class="sd">        GDT_ndx_ranked (array)</span>
+<span class="sd">            array with score indices for correct mapping</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ranking_order</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ranking_order</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span>
         <span class="n">GDT_TS_ranked</span> <span class="o">=</span> <span class="n">GDT_TS</span>
@@ -529,30 +550,36 @@
     <span class="k">return</span><span class="p">(</span><span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GDT_rank_scores"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.GDT_rank_scores">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_scores</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GDT_rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_rank_scores">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_scores</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    rank scores.</span>
+
+<span class="sd">    .. Note:: Similar function to gdt.rank_scores() but takes other arguments.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_percent (list): output of analysis.GDT()</span>
-<span class="sd">        ranking_order (None/str):</span>
-<span class="sd">            (None): output ranking orded by frame number</span>
-<span class="sd">            &quot;Frame&quot;: output ranking ordered by frame number</span>
-<span class="sd">            &quot;GDT_TS&quot;: output ranking ordered by GDT_TS</span>
-<span class="sd">            &quot;GDT_HA&quot;: output ranking ordered by GDT_HA</span>
-<span class="sd">        prec (None/int):</span>
-<span class="sd">            (None) or -1: rounding off</span>
-<span class="sd">            (int): rounding to &lt;prec&gt; decimals</span>
+<span class="sd">        GDT_percent (list): output of gdt.GDT()</span>
+<span class="sd">        ranking_order (None, str):</span>
+<span class="sd">          | &quot;FRAME&quot; or None: output ranking ordered by frame number</span>
+<span class="sd">          | &quot;GDT_TS&quot;: output ranking ordered by GDT_TS</span>
+<span class="sd">          | &quot;GDT_HA&quot;: output ranking ordered by GDT_HA</span>
+<span class="sd">        prec (None, int):</span>
+<span class="sd">          | -1 or None: rounding off</span>
+<span class="sd">          | int: rounding on to this number of decimals</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        GDT_TS_ranked (array): ranked array with GDT_TS values</span>
-<span class="sd">        GDT_HA_ranked (array): ranked array with GDT_HA values</span>
-<span class="sd">        GDT_ndx_ranked (array): array with corresponding index values</span>
+<span class="sd">        GDT_TS_ranked (array)</span>
+<span class="sd">            ranked array with GDT_TS scores</span>
+<span class="sd">        GDT_HA_ranked (array)</span>
+<span class="sd">            ranked array with GDT_HA scores</span>
+<span class="sd">        GDT_ndx_ranked (array)</span>
+<span class="sd">            array with score indices for correct mapping</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        u = mda.Universe(&lt;top&gt;, &lt;traj&gt;)</span>
-<span class="sd">        r = mda.universe(&lt;ref&gt; )</span>
-<span class="sd">        GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(u, r)</span>
-<span class="sd">        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order=&quot;GDT_TS&quot;)</span>
+<span class="sd">      | &gt;&gt; mobile = mda.Universe(&lt;top&gt;, &lt;traj&gt;)</span>
+<span class="sd">      | &gt;&gt; ref = mda.universe(&lt;ref&gt; )</span>
+<span class="sd">      | &gt;&gt; GDT_cutoff, GDT_percent, GDT_resids, FRAME = gdt.GDT(mobile, ref)</span>
+<span class="sd">      | &gt;&gt; GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = gdt.GDT_rank_scores(GDT_percent, ranking_order=&quot;GDT_TS&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
     <span class="n">GDT_HA</span> <span class="o">=</span> <span class="n">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
@@ -561,22 +588,24 @@
     <span class="k">return</span><span class="p">(</span><span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GDT_rank_percent"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.GDT_rank_percent">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_percent</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GDT_rank_percent"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_rank_percent">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_percent</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ranks GDT_percent based on the sum of GDT_Px for all x in cutoff.</span>
 <span class="sd">    (Higher sum means better accuracy during protein alignment)</span>
 
-<span class="sd">    (Ranked) Psum can be view analogous to GDT scores but using all cutoffs</span>
+<span class="sd">    Ranked Psum can be view analogous to GDT scores but using all cutoffs</span>
 <span class="sd">    instead of specific ones</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        GDT_percent (list): output of gdt.GDT()</span>
-<span class="sd">        norm (bool): norms Psum during sum of GDT_Px</span>
+<span class="sd">        norm (bool): norms Psum ~ 1/N * sum of GDT_Px</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        RANKED_Psum (list): ranked percent sum</span>
-<span class="sd">        RANKED_Psum_ndx (list): related indices of ranked percent sum</span>
+<span class="sd">        RANKED_Psum (list)</span>
+<span class="sd">            ranked percent sum</span>
+<span class="sd">        RANKED_Psum_ndx (list)</span>
+<span class="sd">            indices of ranked percent sum for correct mapping</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Psum</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">GDT_percent</span><span class="p">:</span>
@@ -589,20 +618,22 @@
     <span class="k">return</span><span class="p">(</span><span class="n">RANKED_Psum</span><span class="p">,</span> <span class="n">RANKED_Psum_ndx</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_continuous_segments"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.get_continuous_segments">[docs]</a><span class="k">def</span> <span class="nf">get_continuous_segments</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<div class="viewcode-block" id="get_continuous_segments"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_continuous_segments">[docs]</a><span class="k">def</span> <span class="nf">get_continuous_segments</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Note: single frame function</span>
+<span class="sd">    Get continuous segments for single frame.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (array): ordered array with integers representing resids ~ single frame</span>
-<span class="sd">                       e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]</span>
+<span class="sd">        array (array):</span>
+<span class="sd">          | ordered array with integers representing resids ~ single frame</span>
+<span class="sd">          |  e.g.: array = [5, 6, 7, 12, 13, 18, 19, 20]</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SEGMENTS (list): list of continuous segments</span>
+<span class="sd">        SEGMENTS (list)</span>
+<span class="sd">            list of continuous segments</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt; gdt.get_continuous_segments([1,2,3,22,23,50,51,52])</span>
-<span class="sd">        [[1, 2, 3], [22, 23], [50, 51, 52]]</span>
+<span class="sd">        | &gt;&gt; gdt.get_continuous_segments([1,2,3,22,23,50,51,52])</span>
+<span class="sd">        | [[1, 2, 3], [22, 23], [50, 51, 52]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SEGMENTS</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
@@ -618,15 +649,16 @@
     <span class="k">return</span> <span class="n">SEGMENTS</span></div>
 
 
-<div class="viewcode-block" id="GDT_continuous_segments"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.GDT_continuous_segments">[docs]</a><span class="k">def</span> <span class="nf">GDT_continuous_segments</span><span class="p">(</span><span class="n">GDT_resids</span><span class="p">):</span>
+<div class="viewcode-block" id="GDT_continuous_segments"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_continuous_segments">[docs]</a><span class="k">def</span> <span class="nf">GDT_continuous_segments</span><span class="p">(</span><span class="n">GDT_resids</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Note: multiple frame function</span>
+<span class="sd">    Get continous segments for multiple frames (due to GDT_resids)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        GDT_resids (array): output of analysis.GDT()</span>
+<span class="sd">        GDT_resids (array): output of gdt.GDT()</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SEGMENTS (list): list of continuous segments for each frame</span>
+<span class="sd">        SEGMENTS (list)</span>
+<span class="sd">            list of continuous segments for each frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SEGMENTS</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
@@ -639,81 +671,84 @@
     <span class="k">return</span> <span class="n">SEGMENTS</span></div>
 
 
-<div class="viewcode-block" id="plot_LA"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.gdt.plot_LA">[docs]</a><span class="k">def</span> <span class="nf">plot_LA</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">GDT_TS</span><span class="o">=</span><span class="p">[],</span> <span class="n">GDT_HA</span><span class="o">=</span><span class="p">[],</span> <span class="n">GDT_ndx</span><span class="o">=</span><span class="p">[],</span>
+<div class="viewcode-block" id="plot_LA"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.plot_LA">[docs]</a><span class="k">def</span> <span class="nf">plot_LA</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">GDT_TS</span><span class="o">=</span><span class="p">[],</span> <span class="n">GDT_HA</span><span class="o">=</span><span class="p">[],</span> <span class="n">GDT_ndx</span><span class="o">=</span><span class="p">[],</span>
             <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
             <span class="n">ndx_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rank_num</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;GDT_HA&quot;</span><span class="p">,</span>
             <span class="n">show_cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create LocalAccuracy Plot (heatmap) with:</span>
-<span class="sd">        xdata = Residue ID</span>
-<span class="sd">        ydata = Frame Number</span>
-<span class="sd">        color = color-coded Pair Distance</span>
+<span class="sd">    Create LocalAccuracy Plot (heatmap) with</span>
 
-<span class="sd">    Note: be sure that you pass not too many data points otherwise this</span>
-<span class="sd">          function will just squeeze them in.</span>
+<span class="sd">      - xdata = residue ID</span>
+<span class="sd">      - ydata = frame number</span>
+<span class="sd">      - color = color-coded pair distance</span>
+
+<span class="sd">    .. Note:: do not pass too many data points otherwise the plot will get squeezed</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mobile (MDA universe/atomgrp): mobile structure with trajectory</span>
-<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
-<span class="sd">        GDT_TS (array): array with GDT_TS values</span>
-<span class="sd">        GDT_HA (array): array with GDT_HA values</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure with trajectory</span>
+<span class="sd">        ref (universe, atomgrp): reference structure</span>
+<span class="sd">        GDT_TS (array): array with GDT_TS scores</span>
+<span class="sd">        GDT_HA (array): array with GDT_HA scores</span>
 <span class="sd">        GTD_ndx (array): array with corresponding index values (representative for frame numbers)</span>
-<span class="sd">        sel1 (str): selection string of mobile structure (calculation of PairDistances)</span>
-<span class="sd">        sel2 (str): selection string of reference structure (calculation of PairDistances)</span>
-<span class="sd">        ndx_offset (int): offset/shift of GDT_ndx to match real &quot;mobile&quot; frames.</span>
-<span class="sd">                          Look up &quot;start&quot; parameter during execution of analysis.GDT()</span>
+<span class="sd">        sel1 (str): selection string of mobile structure (calculation of pair distances)</span>
+<span class="sd">        sel2 (str): selection string of reference structure (calculation of pair distances)</span>
+<span class="sd">        ndx_offset (int):</span>
+<span class="sd">          | offset/shift of GDT_ndx to match real &quot;mobile&quot; frames.</span>
+<span class="sd">          | Look up &quot;start&quot; parameter during execution of gdt.GDT()</span>
 <span class="sd">        rank_num (int): plot only &lt;rank_num&gt; best ranked frames</span>
 <span class="sd">        cmap (str):</span>
-<span class="sd">            &quot;GDT_TS&quot; or &quot;TS&quot;: color map with new colors at values (0,  1, 2, 4, 8)</span>
-<span class="sd">                              and vmin, vmax = (0, 10).</span>
-<span class="sd">            &quot;GDT_HA&quot; or &quot;HA&quot;: color map with new colors at values (0, .5, 1, 2, 4)</span>
-<span class="sd">                              and vmin, vmax = (0, 5).</span>
-<span class="sd">            other cmap names: see help(plt.colormaps) or alternatively</span>
-<span class="sd">                              https://matplotlib.org/examples/color/colormaps_reference.html</span>
+<span class="sd">          | &quot;GDT_TS&quot; or &quot;TS&quot;: color map with new colors at values (0,  1, 2, 4, 8)</span>
+<span class="sd">            and vmin, vmax = (0, 10).</span>
+<span class="sd">          | &quot;GDT_HA&quot; or &quot;HA&quot;: color map with new colors at values (0, .5, 1, 2, 4)</span>
+<span class="sd">            and vmin, vmax = (0, 5).</span>
+<span class="sd">          | other cmap names: see help(plt.colormaps) or alternatively</span>
+<span class="sd">            https://matplotlib.org/examples/color/colormaps_reference.html</span>
 <span class="sd">        show_cbar (bool): show/hide colorbar</span>
-<span class="sd">        show_scores (bool): show/hide frames</span>
 <span class="sd">        show_scores (bool): show/hide GDT_TS and GDT_HA scores</span>
 <span class="sd">        save_as (str): save name or realpath to save file</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see args of misc.figure()</span>
-<span class="sd">        prec (None/int): rounding of scores</span>
-<span class="sd">            (None): rounding off</span>
-<span class="sd">            (int):  rounding on</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        prec (None, int):</span>
+<span class="sd">          | rounding precission of scores</span>
+<span class="sd">          | None: rounding off</span>
+<span class="sd">          | int:  rounding on to &lt;int&gt; decimals</span>
 <span class="sd">        cbar_label/label (str)</span>
 <span class="sd">        cbar_fontweight/fontweight (str): &quot;normal&quot;, &quot;bold&quot;</span>
 <span class="sd">        cbar_location/location (str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
 <span class="sd">        cbar_orientation/orientation (str): &quot;horizontal&quot;, &quot;vertical&quot;</span>
-<span class="sd">        cbar_min / vmin (None/int): min value of colorbar and heatmap</span>
-<span class="sd">        cbar_max / vmax (None/int): max value of colorbar and heatmap</span>
+<span class="sd">        cbar_min/vmin (None, int): min value of colorbar and heatmap</span>
+<span class="sd">        cbar_max/vmax (None, int): max value of colorbar and heatmap</span>
 <span class="sd">        text_pos_Frame (list): [x0, y0] position of the &quot;Frame&quot; text box (label)</span>
 <span class="sd">        text_pos_TS (list): [x0, y0] position of the &quot;TS&quot; text box (label)</span>
 <span class="sd">        text_pos_HA (list): [x0, y0] position of the &quot;HA&quot; text box (label)</span>
 
+<span class="sd">    .. Hint:: Args and Keyword of misc.figure() are also valid.</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (matplotlib.figure.Figure)</span>
-<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
-<span class="sd">        LA_data (tuple):</span>
-<span class="sd">            LA_data[0]: PairDistances (list)</span>
-<span class="sd">            LA_data[1]: Frames (list)</span>
-
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">        LA_data (tuple)</span>
+<span class="sd">            | LA_data[0]: PairDistances (list)</span>
+<span class="sd">            | LA_data[1]: Frames (list)</span>
 <span class="sd">    Example:</span>
-<span class="sd">        # obtain data</span>
-<span class="sd">        GDT = gdt.GDT(u, r, sss=[None,None,None])</span>
-<span class="sd">        GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT</span>
-
-<span class="sd">        # rank data</span>
-<span class="sd">        SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order=&quot;GDT_HA&quot;)</span>
-<span class="sd">        GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES</span>
-
-<span class="sd">        # edit text box positions of labels &quot;Frame&quot;, &quot;TS&quot;, &quot;HA&quot;</span>
-<span class="sd">        text_pos_kws = {&quot;text_pos_Frame&quot;: [-8.8, -0.3],</span>
-<span class="sd">                        &quot;text_pos_TS&quot;: [-4.2, -0.3],</span>
-<span class="sd">                        &quot;text_pos_HA&quot;: [-1.9, -0.3]}</span>
-
-<span class="sd">        # plot</span>
-<span class="sd">        gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)</span>
+<span class="sd">        | # obtain data</span>
+<span class="sd">        | &gt;&gt; GDT = gdt.GDT(mobile, ref, sss=[None,None,None])</span>
+<span class="sd">        | &gt;&gt; GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT</span>
+<span class="sd">        |</span>
+<span class="sd">        | # rank data</span>
+<span class="sd">        | &gt;&gt; SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order=&quot;GDT_HA&quot;)</span>
+<span class="sd">        | &gt;&gt; GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES</span>
+<span class="sd">        |</span>
+<span class="sd">        | # edit text box positions of labels &quot;Frame&quot;, &quot;TS&quot;, &quot;HA&quot;</span>
+<span class="sd">        | &gt;&gt;text_pos_kws = {&quot;text_pos_Frame&quot;: [-8.8, -0.3],</span>
+<span class="sd">        |                   &quot;text_pos_TS&quot;: [-4.2, -0.3],</span>
+<span class="sd">        |                   &quot;text_pos_HA&quot;: [-1.9, -0.3]}</span>
+<span class="sd">        |</span>
+<span class="sd">        | # plot</span>
+<span class="sd">        | &gt;&gt; gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], **text_pos_kws)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
@@ -837,7 +872,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

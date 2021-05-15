@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.analysis.dihedrals &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.analysis.dihedrals &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">pyREMD</a>
+          <a href="../../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.analysis.dihedrals</li>
+      <li>pyrexMD.analysis.dihedrals</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,15 +160,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.analysis.dihedrals</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.analysis.dihedrals</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   06.05.2021</span>
 <span class="c1"># @Filename: dihedrals.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 08.05.2021</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
 
 
-<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="kn">import</span> <span class="n">dihedrals</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -176,42 +176,39 @@
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL residues&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_ramachandran"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_ramachandran">[docs]</a><span class="k">def</span> <span class="nf">get_ramachandran</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ramachandran"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_ramachandran">[docs]</a><span class="k">def</span> <span class="nf">get_ramachandran</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get Ramachandran information (phi &amp; psi dihedral values, n_frames, etc).</span>
+<span class="sd">    Get Ramachandran information (phi &amp; psi dihedral values, frames, etc).</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        phi/psi angles are not defined for first and last residues.</span>
+<span class="sd">    .. Note:: phi/psi angles are not defined for first and last residues.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        plot (bool)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 <span class="sd">        color (str): &quot;black&quot;</span>
 <span class="sd">        marker (str): &quot;.&quot;</span>
-<span class="sd">        ref (bool):</span>
-<span class="sd">            True: Adds a general Ramachandran plot which shows allowed (dark</span>
-<span class="sd">                  blue ~ 90% data points) and marginally allowed regions (light</span>
-<span class="sd">                  blue ~ 99% data points).</span>
-<span class="sd">                  -&gt; lookup MDAnalysis online documentation about dihedrals.</span>
-<span class="sd">        num (None/int): figure number</span>
-<span class="sd">            None: create new figure</span>
+<span class="sd">        ref (bool): True: Adds a general Ramachandran plot which shows allowed</span>
+<span class="sd">          (dark blue ~ 90% data points) and marginally allowed regions (light</span>
+<span class="sd">          blue ~ 99% data points). Lookup MDAnalysis online documentation about</span>
+<span class="sd">          dihedrals for more information.</span>
+<span class="sd">        num (None, int):</span>
+<span class="sd">          | figure number</span>
+<span class="sd">          | None: create new figure</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        rama (MDAnalysis.analysis.dihedrals.Ramachandran): class contains, e.g.</span>
-<span class="sd">            - atom groups</span>
-<span class="sd">            - angles</span>
-<span class="sd">            - frames</span>
-<span class="sd">            - times</span>
+<span class="sd">        rama (MDAnalysis.analysis.dihedrals.Ramachandran)</span>
+<span class="sd">            class contains atom groups, angles, frames, times, etc</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -234,44 +231,41 @@
     <span class="k">return</span> <span class="n">rama</span></div>
 
 
-<div class="viewcode-block" id="get_janin"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_janin">[docs]</a><span class="k">def</span> <span class="nf">get_janin</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_janin"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_janin">[docs]</a><span class="k">def</span> <span class="nf">get_janin</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get Janin information (chi1 &amp; chi2 dihedral values, n_frames, etc).</span>
+<span class="sd">    Get Janin information (chi1 &amp; chi2 dihedral values, frames, etc).</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        chi1/chi2 angles are not defined for ALA, CYS, GLY, PRO, SER, THR, VAL</span>
+<span class="sd">    .. Note:: chi1/chi2 angles are not defined for ALA, CYS, GLY, PRO, SER, THR, VAL</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        plot (bool)</span>
 <span class="sd">        verbose (bool): print warning &quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL</span>
 <span class="sd">                        residues have been removed from the selection.&quot;</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 <span class="sd">        color (str): &quot;black&quot;</span>
 <span class="sd">        marker (str): &quot;.&quot;</span>
-<span class="sd">        ref (bool):</span>
-<span class="sd">            True: Adds a general Janin plot which shows allowed (dark</span>
-<span class="sd">                  blue ~ 90% data points) and marginally allowed regions (light</span>
-<span class="sd">                  blue ~ 99% data points).</span>
-<span class="sd">                  -&gt; lookup MDAnalysis online documentation about dihedrals.</span>
-<span class="sd">        num (None/int): figure number</span>
-<span class="sd">            None: create new figure</span>
+<span class="sd">        ref (bool): True: adds a general Janin plot which shows allowed (dark</span>
+<span class="sd">          blue ~ 90% data points) and marginally allowed regions (light blue ~</span>
+<span class="sd">          99% data points). Lookup MDAnalysis online documentation about</span>
+<span class="sd">          dihedrals for more information.</span>
+<span class="sd">        num (None, int):</span>
+<span class="sd">          | figure number</span>
+<span class="sd">          | None: create new figure</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        janin (MDAnalysis.analysis.dihedrals.Janin): class contains, e.g.</span>
-<span class="sd">            - atom groups</span>
-<span class="sd">            - angles</span>
-<span class="sd">            - frames</span>
-<span class="sd">            - times</span>
+<span class="sd">        janin (MDAnalysis.analysis.dihedrals.Janin)</span>
+<span class="sd">            class contains atom groups, angles, frames, times, etc</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -297,23 +291,29 @@
     <span class="k">return</span> <span class="n">janin</span></div>
 
 
-<div class="viewcode-block" id="get_phi_values"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_phi_values">[docs]</a><span class="k">def</span> <span class="nf">get_phi_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_phi_values"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_phi_values">[docs]</a><span class="k">def</span> <span class="nf">get_phi_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get phi dihedral values.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        phi/psi angles are not defined for first and last residues.</span>
+<span class="sd">    .. Note:: phi/psi angles are not defined for first and last residues.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">         | [start, stop, step]</span>
+<span class="sd">         | start (None, int): start frame</span>
+<span class="sd">         | stop (None, int): stop frame</span>
+<span class="sd">         | step (None, int): step size</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        phi (array)</span>
+<span class="sd">            array with phi dihedral values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -327,23 +327,29 @@
     <span class="k">return</span> <span class="n">phi_values</span></div>
 
 
-<div class="viewcode-block" id="get_psi_values"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_psi_values">[docs]</a><span class="k">def</span> <span class="nf">get_psi_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_psi_values"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_psi_values">[docs]</a><span class="k">def</span> <span class="nf">get_psi_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get psi dihedral values.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        phi/psi angles are not defined for first and last residues.</span>
+<span class="sd">    .. Note:: phi/psi angles are not defined for first and last residues.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">         | [start, stop, step]</span>
+<span class="sd">         | start (None, int): start frame</span>
+<span class="sd">         | stop (None, int): stop frame</span>
+<span class="sd">         | step (None, int): step size</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        psi_values (array)</span>
+<span class="sd">            array with psi dihedral values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -357,20 +363,27 @@
     <span class="k">return</span> <span class="n">psi_values</span></div>
 
 
-<div class="viewcode-block" id="get_omega_values"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_omega_values">[docs]</a><span class="k">def</span> <span class="nf">get_omega_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_omega_values"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_omega_values">[docs]</a><span class="k">def</span> <span class="nf">get_omega_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get omega dihedral values.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (Muniverse)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        omega_values (array)</span>
+<span class="sd">            array with omega dihedral values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -384,27 +397,29 @@
     <span class="k">return</span> <span class="n">omega_values</span></div>
 
 
-<div class="viewcode-block" id="get_chi1_values"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_chi1_values">[docs]</a><span class="k">def</span> <span class="nf">get_chi1_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_chi1_values"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_chi1_values">[docs]</a><span class="k">def</span> <span class="nf">get_chi1_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get chi1 dihedral values.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
-<span class="sd">        verbose (bool): print warning &quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL</span>
-<span class="sd">                        residues have been removed from the selection.&quot;</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        warn (bool): print warning &quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL</span>
+<span class="sd">                     residues have been removed from the selection.&quot;</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        chi1_values (array)</span>
+<span class="sd">            array with chi1 dihedral values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -416,32 +431,34 @@
     <span class="n">dih</span> <span class="o">=</span> <span class="n">dihedrals</span><span class="o">.</span><span class="n">Dihedral</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
     <span class="n">chi1_values</span> <span class="o">=</span> <span class="n">dih</span><span class="o">.</span><span class="n">angles</span>
 
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">chi1_values</span></div>
 
 
-<div class="viewcode-block" id="get_chi2_values"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.dihedrals.get_chi2_values">[docs]</a><span class="k">def</span> <span class="nf">get_chi2_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_chi2_values"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.dihedrals.get_chi2_values">[docs]</a><span class="k">def</span> <span class="nf">get_chi2_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get chi2 dihedral values.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (MDA universe)</span>
+<span class="sd">        u (universe)</span>
 <span class="sd">        sel (str): selection string</span>
-<span class="sd">        sss (list): [start, stop, step]</span>
-<span class="sd">            start (None/int): start frame</span>
-<span class="sd">            stop (None/int): stop frame</span>
-<span class="sd">            step (None/int): step size</span>
-<span class="sd">        verbose (bool): print warning &quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL</span>
-<span class="sd">                        residues have been removed from the selection.&quot;</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        warn (bool): print warning &quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL</span>
+<span class="sd">                     residues have been removed from the selection.&quot;</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        start (None/int): start frame</span>
-<span class="sd">        stop (None/int): stop frame</span>
-<span class="sd">        step (None/int): step size</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        start (None, int): start frame</span>
+<span class="sd">        stop (None, int): stop frame</span>
+<span class="sd">        step (None, int): step size</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        chi2_values (array)</span>
+<span class="sd">            array with chi2 dihedral values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
@@ -453,7 +470,7 @@
     <span class="n">dih</span> <span class="o">=</span> <span class="n">dihedrals</span><span class="o">.</span><span class="n">Dihedral</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
     <span class="n">chi2_values</span> <span class="o">=</span> <span class="n">dih</span><span class="o">.</span><span class="n">angles</span>
 
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">chi2_values</span></div>
 </pre></div>
@@ -467,7 +484,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

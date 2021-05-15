@@ -1,7 +1,7 @@
-pyREX
-=====
+pyrexMD
+=======
 
 .. toctree::
    :maxdepth: 4
 
-   pyREX
+   pyrexMD

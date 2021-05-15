@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.gmx &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.gmx &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyREMD</a>
+          <a href="../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.gmx</li>
+      <li>pyrexMD.gmx</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,19 +160,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.gmx</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.gmx</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 07.05.2021</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
 
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">gromacs</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
-<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;gromacs.config&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
@@ -211,7 +211,7 @@
 <span class="c1">################################################################################</span>
 
 
-<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;gmx_pattern&quot;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;gmx_pattern&quot;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clean up gromacs backup files with the patterns #*# and .*offsets.npz</span>
 
@@ -286,7 +286,7 @@
     <span class="k">return</span> <span class="n">sel_code</span>
 
 
-<div class="viewcode-block" id="pdb2gmx"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.pdb2gmx">[docs]</a><span class="k">def</span> <span class="nf">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="pdb2gmx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.pdb2gmx">[docs]</a><span class="k">def</span> <span class="nf">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
             <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.pdb2gmx().</span>
@@ -367,7 +367,7 @@
 
 
 <span class="c1"># same function as TPR2PDB()</span>
-<div class="viewcode-block" id="editconf"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.editconf">[docs]</a><span class="k">def</span> <span class="nf">editconf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="editconf"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.editconf">[docs]</a><span class="k">def</span> <span class="nf">editconf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of:</span>
 <span class="sd">        TPR2PDB()</span>
@@ -451,7 +451,7 @@
 
 
 <span class="c1"># same function as editconf()</span>
-<div class="viewcode-block" id="convert_TPR2PDB"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.convert_TPR2PDB">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR2PDB</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_TPR2PDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.convert_TPR2PDB">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR2PDB</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of:</span>
 <span class="sd">        editconf()</span>
@@ -530,7 +530,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="convert_TPR"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.convert_TPR">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_TPR"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.convert_TPR">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.convert_tpr().</span>
 
@@ -586,7 +586,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="grompp"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.grompp">[docs]</a><span class="k">def</span> <span class="nf">grompp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="grompp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.grompp">[docs]</a><span class="k">def</span> <span class="nf">grompp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.grompp().</span>
 
@@ -659,7 +659,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="solvate"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.solvate">[docs]</a><span class="k">def</span> <span class="nf">solvate</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="s2">&quot;spc216.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="solvate"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.solvate">[docs]</a><span class="k">def</span> <span class="nf">solvate</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="s2">&quot;spc216.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span>
             <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.solvate().</span>
@@ -733,7 +733,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;13&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+<div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;13&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
            <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias fuction of gromacs.genion().</span>
@@ -815,7 +815,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="mdrun"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.mdrun">[docs]</a><span class="k">def</span> <span class="nf">mdrun</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="mdrun"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.mdrun">[docs]</a><span class="k">def</span> <span class="nf">mdrun</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias fuction of gromacs.mdrun().</span>
 
@@ -839,7 +839,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="trjconv"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.trjconv">[docs]</a><span class="k">def</span> <span class="nf">trjconv</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="trjconv"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.trjconv">[docs]</a><span class="k">def</span> <span class="nf">trjconv</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.trjconv().</span>
 
@@ -911,7 +911,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="fix_TRAJ"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.fix_TRAJ">[docs]</a><span class="k">def</span> <span class="nf">fix_TRAJ</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="s2">&quot;mol&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="fix_TRAJ"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.fix_TRAJ">[docs]</a><span class="k">def</span> <span class="nf">fix_TRAJ</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="s2">&quot;mol&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
              <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fix topology:</span>
@@ -993,7 +993,7 @@
     <span class="k">return</span> <span class="n">tpr_file</span><span class="p">,</span> <span class="n">xtc_file</span></div>
 
 
-<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias function of gromacs.rms().</span>
 <span class="sd">    Calculate backbone RMSD.</span>
@@ -1049,7 +1049,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="get_ref_structure"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_ref_structure">[docs]</a><span class="k">def</span> <span class="nf">get_ref_structure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="get_ref_structure"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_ref_structure">[docs]</a><span class="k">def</span> <span class="nf">get_ref_structure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
                       <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates ref structure of input structure via pdb2gmx to fix atom count by</span>
@@ -1098,7 +1098,7 @@
 <span class="c1">### COMPLEX BUILDER</span>
 
 
-<div class="viewcode-block" id="create_complex"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.create_complex">[docs]</a><span class="k">def</span> <span class="nf">create_complex</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="p">[],</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;complex.gro&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="create_complex"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.create_complex">[docs]</a><span class="k">def</span> <span class="nf">create_complex</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="p">[],</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;complex.gro&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create complex using multiple .gro files.</span>
 <span class="sd">    First .gro file in &lt;f&gt; must have largest box.</span>
@@ -1159,7 +1159,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="extend_complex_topology"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.extend_complex_topology">[docs]</a><span class="k">def</span> <span class="nf">extend_complex_topology</span><span class="p">(</span><span class="n">ligand_name</span><span class="p">,</span> <span class="n">ligand_itp</span><span class="p">,</span> <span class="n">ligand_prm</span><span class="p">,</span> <span class="n">ligand_nmol</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">top_out</span><span class="o">=</span><span class="s2">&quot;topol_complex.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="extend_complex_topology"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.extend_complex_topology">[docs]</a><span class="k">def</span> <span class="nf">extend_complex_topology</span><span class="p">(</span><span class="n">ligand_name</span><span class="p">,</span> <span class="n">ligand_itp</span><span class="p">,</span> <span class="n">ligand_prm</span><span class="p">,</span> <span class="n">ligand_nmol</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">top_out</span><span class="o">=</span><span class="s2">&quot;topol_complex.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extend an existing .top file.</span>
 
@@ -1229,7 +1229,7 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="create_positions_dat"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.create_positions_dat">[docs]</a><span class="k">def</span> <span class="nf">create_positions_dat</span><span class="p">(</span><span class="n">box_vec</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
+<div class="viewcode-block" id="create_positions_dat"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.create_positions_dat">[docs]</a><span class="k">def</span> <span class="nf">create_positions_dat</span><span class="p">(</span><span class="n">box_vec</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
                          <span class="n">nmol</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
                          <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1268,7 +1268,7 @@
 <span class="c1">### TEMPLATES</span>
 
 
-<div class="viewcode-block" id="get_template_1_EM"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_template_1_EM">[docs]</a><span class="k">def</span> <span class="nf">get_template_1_EM</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_template_1_EM"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_1_EM">[docs]</a><span class="k">def</span> <span class="nf">get_template_1_EM</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
@@ -1284,7 +1284,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_template_2_NVT"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_template_2_NVT">[docs]</a><span class="k">def</span> <span class="nf">get_template_2_NVT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_template_2_NVT"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_2_NVT">[docs]</a><span class="k">def</span> <span class="nf">get_template_2_NVT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
@@ -1300,7 +1300,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_template_3_NPT"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_template_3_NPT">[docs]</a><span class="k">def</span> <span class="nf">get_template_3_NPT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_template_3_NPT"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_3_NPT">[docs]</a><span class="k">def</span> <span class="nf">get_template_3_NPT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
@@ -1316,7 +1316,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_template_4_MD"><a class="viewcode-back" href="../../pyREX.html#pyREX.gmx.get_template_4_MD">[docs]</a><span class="k">def</span> <span class="nf">get_template_4_MD</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_template_4_MD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_4_MD">[docs]</a><span class="k">def</span> <span class="nf">get_template_4_MD</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
@@ -1345,7 +1345,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

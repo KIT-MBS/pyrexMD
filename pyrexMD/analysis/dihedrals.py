@@ -15,40 +15,37 @@ warnings.filterwarnings("ignore", message="All ALA, CYS, GLY, PRO, SER, THR, and
 
 def get_ramachandran(u, sel="protein", sss=[None, None, None], plot=True, **kwargs):
     """
-    get Ramachandran information (phi & psi dihedral values, n_frames, etc).
+    Get Ramachandran information (phi & psi dihedral values, frames, etc).
 
-    Note:
-        phi/psi angles are not defined for first and last residues.
+    .. Note:: phi/psi angles are not defined for first and last residues.
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         plot (bool)
 
-    Kwargs:
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
         color (str): "black"
         marker (str): "."
-        ref (bool):
-            True: Adds a general Ramachandran plot which shows allowed (dark
-                  blue ~ 90% data points) and marginally allowed regions (light
-                  blue ~ 99% data points).
-                  -> lookup MDAnalysis online documentation about dihedrals.
-        num (None/int): figure number
-            None: create new figure
+        ref (bool): True: Adds a general Ramachandran plot which shows allowed
+          (dark blue ~ 90% data points) and marginally allowed regions (light
+          blue ~ 99% data points). Lookup MDAnalysis online documentation about
+          dihedrals for more information.
+        num (None, int):
+          | figure number
+          | None: create new figure
 
     Returns:
-        rama (MDAnalysis.analysis.dihedrals.Ramachandran): class contains, e.g.
-            - atom groups
-            - angles
-            - frames
-            - times
+        rama (MDAnalysis.analysis.dihedrals.Ramachandran)
+            class contains atom groups, angles, frames, times, etc
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -73,42 +70,39 @@ def get_ramachandran(u, sel="protein", sss=[None, None, None], plot=True, **kwar
 
 def get_janin(u, sel="protein", sss=[None, None, None], plot=True, verbose=True, **kwargs):
     """
-    get Janin information (chi1 & chi2 dihedral values, n_frames, etc).
+    Get Janin information (chi1 & chi2 dihedral values, frames, etc).
 
-    Note:
-        chi1/chi2 angles are not defined for ALA, CYS, GLY, PRO, SER, THR, VAL
+    .. Note:: chi1/chi2 angles are not defined for ALA, CYS, GLY, PRO, SER, THR, VAL
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         plot (bool)
         verbose (bool): print warning "All ALA, CYS, GLY, PRO, SER, THR, and VAL
                         residues have been removed from the selection."
 
-    Kwargs:
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
         color (str): "black"
         marker (str): "."
-        ref (bool):
-            True: Adds a general Janin plot which shows allowed (dark
-                  blue ~ 90% data points) and marginally allowed regions (light
-                  blue ~ 99% data points).
-                  -> lookup MDAnalysis online documentation about dihedrals.
-        num (None/int): figure number
-            None: create new figure
+        ref (bool): True: adds a general Janin plot which shows allowed (dark
+          blue ~ 90% data points) and marginally allowed regions (light blue ~
+          99% data points). Lookup MDAnalysis online documentation about
+          dihedrals for more information.
+        num (None, int):
+          | figure number
+          | None: create new figure
 
     Returns:
-        janin (MDAnalysis.analysis.dihedrals.Janin): class contains, e.g.
-            - atom groups
-            - angles
-            - frames
-            - times
+        janin (MDAnalysis.analysis.dihedrals.Janin)
+            class contains atom groups, angles, frames, times, etc
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -138,19 +132,25 @@ def get_phi_values(u, sel="protein", sss=[None, None, None], **kwargs):
     """
     Get phi dihedral values.
 
-    Note:
-        phi/psi angles are not defined for first and last residues.
+    .. Note:: phi/psi angles are not defined for first and last residues.
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+         | [start, stop, step]
+         | start (None, int): start frame
+         | stop (None, int): stop frame
+         | step (None, int): step size
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
         phi (array)
+            array with phi dihedral values
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -168,19 +168,25 @@ def get_psi_values(u, sel="protein", sss=[None, None, None], **kwargs):
     """
     Get psi dihedral values.
 
-    Note:
-        phi/psi angles are not defined for first and last residues.
+    .. Note:: phi/psi angles are not defined for first and last residues.
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+         | [start, stop, step]
+         | start (None, int): start frame
+         | stop (None, int): stop frame
+         | step (None, int): step size
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
         psi_values (array)
+            array with psi dihedral values
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -199,15 +205,22 @@ def get_omega_values(u, sel="protein", sss=[None, None, None], **kwargs):
     Get omega dihedral values.
 
     Args:
-        u (MDA universe)
+        u (Muniverse)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
         omega_values (array)
+            array with omega dihedral values
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -221,27 +234,29 @@ def get_omega_values(u, sel="protein", sss=[None, None, None], **kwargs):
     return omega_values
 
 
-def get_chi1_values(u, sel="protein", sss=[None, None, None], verbose=True, **kwargs):
+def get_chi1_values(u, sel="protein", sss=[None, None, None], warn=True, **kwargs):
     """
     Get chi1 dihedral values.
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        verbose (bool): print warning "All ALA, CYS, GLY, PRO, SER, THR, and VAL
-                        residues have been removed from the selection."
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        warn (bool): print warning "All ALA, CYS, GLY, PRO, SER, THR, and VAL
+                     residues have been removed from the selection."
 
-    Kwargs:
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
         chi1_values (array)
+            array with chi1 dihedral values
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -253,32 +268,34 @@ def get_chi1_values(u, sel="protein", sss=[None, None, None], verbose=True, **kw
     dih = dihedrals.Dihedral(a).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
     chi1_values = dih.angles
 
-    if verbose:
+    if warn:
         _misc.cprint("All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.", "red")
     return chi1_values
 
 
-def get_chi2_values(u, sel="protein", sss=[None, None, None], verbose=True, **kwargs):
+def get_chi2_values(u, sel="protein", sss=[None, None, None], warn=True, **kwargs):
     """
     Get chi2 dihedral values.
 
     Args:
-        u (MDA universe)
+        u (universe)
         sel (str): selection string
-        sss (list): [start, stop, step]
-            start (None/int): start frame
-            stop (None/int): stop frame
-            step (None/int): step size
-        verbose (bool): print warning "All ALA, CYS, GLY, PRO, SER, THR, and VAL
-                        residues have been removed from the selection."
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        warn (bool): print warning "All ALA, CYS, GLY, PRO, SER, THR, and VAL
+                     residues have been removed from the selection."
 
-    Kwargs:
-        start (None/int): start frame
-        stop (None/int): stop frame
-        step (None/int): step size
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
 
     Returns:
         chi2_values (array)
+            array with chi2 dihedral values
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -290,6 +307,6 @@ def get_chi2_values(u, sel="protein", sss=[None, None, None], verbose=True, **kw
     dih = dihedrals.Dihedral(a).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
     chi2_values = dih.angles
 
-    if verbose:
+    if warn:
         _misc.cprint("All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.", "red")
     return chi2_values

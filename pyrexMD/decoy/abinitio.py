@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 from tqdm.notebook import tqdm
@@ -22,23 +22,25 @@ pyrosetta.init("-mute basic.io.database core.import_pose core.scoring core.chemi
 
 def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, verbose_stop=None):
     """
+    get torsion angles of object.
+
     Args:
-        obj (pose or pdb): object to read
-            (pose): pyrosetta pose object
-            (pdb): str path to pdb
-        mol_type (str): molecule type
-            "auto": detect "protein" or "rna" by checking if pose.phi(1) exists.
-            "protein": protein molecule with torsion angles (PHI, PSI)
-            "rna": rna molecule with torsion angles (ALPHA, BETA, GAMMA, DELTA)
+        obj (pose, str): pyrosetta pose object or pdb path
+        mol_type (str):
+          | molecule type
+          | "auto": detect "protein" or "rna" by checking if pose.phi(1) exists.
+          | "protein": protein molecule with torsion angles (phi, psi)
+          | "rna": rna molecule with torsion angles (alpha, beta, gamma, delta)
         prec (int): rounding precission
         verbose (bool): print table with torsion angles
 
     Returns:
-        TORSION_ANGLES (tuple): tuple containing lists with torsion angles of each residue
-            if mol_type == "protein":
-                TORSION_ANGLES = (PSI, PHI)
-            if mol_type == "rna":
-                TORSION_ANGLES = (ALPHA, BETA, GAMMA, DELTA)
+        TORSION_ANGLES (tuple)
+          | tuple containing lists with torsion angles of each residue
+          | if mol_type == "protein":
+          | TORSION_ANGLES = (phi, psi)
+          | if mol_type == "rna":
+          | TORSION_ANGLES = (alpha, beta, gamma, delta)
     """
     if isinstance(obj, str):
         pose = pyrosetta.pose_from_pdb(obj)
@@ -91,11 +93,11 @@ def apply_relative_torsion_angle(pose_ref, pose, resid=1, angle="alpha", shift=0
 
     Args:
         pose_ref (pose)
-        pose (pose):
-        resid (int):
-        angle (str):
-            protein: "phi", "psi"
-                rna:  "alpha", "beta", "gamma", "delta"
+        pose (pose)
+        resid (int)
+        angle (str)
+          | protein: "phi", "psi"
+          | rna:  "alpha", "beta", "gamma", "delta"
         shift (float): relative shift value
         verbose (bool): print applied changes to torsion angle.
     """
@@ -143,7 +145,7 @@ def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
         frag3mer (str): 3mer file path (get via robetta server)
         frag9mer (str): 9mer file path (get via robetta server)
 
-    Kwargs:
+    Keyword Args:
         fasta_seq_len (int): fasta sequence length
         frag3inserts (int): number of frag3 inserts
         frag9inserts (int): number of frag9 inserts
@@ -152,12 +154,14 @@ def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
         job_name (str)
         n_decoys (int): total number of decoys
         n_cores (int): -np option for multiprocessing
-        decoy_ndx_shift (int): shift decoy index (output filename) by this value
-                               required for multiprocessing to fix names of decoys
+        decoy_ndx_shift (int):
+          | shift decoy index (output filename) by this value
+          | required for multiprocessing to fix names of decoys
         kT (float): kT parameter during Monte-Carlo simulation
 
     Returns:
-        cfg (CONFIG class)
+        abinitio_cfg (CONFIG class)
+            configs used as input for abinitio.create_decoys()
     """
     default = {"pdbid": pdbid,
                "fasta_seq": fasta_seq,
@@ -173,18 +177,20 @@ def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
                "n_cores": 1,
                "decoy_ndx_shift": 0,
                "kT": 1.0}
-    cfg = _misc.CONFIG(default)
-    cfg.update_config(fasta_seq_len=len(cfg.fasta_seq))
-    cfg.update_config(**kwargs)
-    return cfg
+    abinitio_cfg = _misc.CONFIG(default)
+    abinitio_cfg.update_config(fasta_seq_len=len(abinitio_cfg.fasta_seq))
+    abinitio_cfg.update_config(**kwargs)
+    return abinitio_cfg
 
 
 def create_decoys(abinitio_cfg, output_dir="./output",
                   stream2pymol=True, fastrelax=True, save_log=True):
     """
-    NOTE: this function is broken (but _create_decoys() is working with 1 core)
-
     Create decoys within pyrosetta framework.
+
+    .. Warning:: this function is currently broken (but abinitio._create_decoys()
+                 is working with 1 core)
+
 
     Args:
         abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
@@ -235,12 +241,14 @@ def _create_decoys(abinitio_cfg, output_dir="./output",
         fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
         save_log (bool): save scores to logfile at <output_dir/scores.txt>
 
-    Kwargs:
-        cprint_color (None/str): colored print color
+    Keyword Args:
+        cprint_color (None, str): colored print color
 
     Returns:
-        SCORES_low (list): centroid scores ~ score 3
-        SCORES_high (list): fa scores ~ ref2015
+        SCORES_low (list)
+            centroid scores ~ score 3
+        SCORES_high (list)
+            fa scores ~ ref2015
     """
     default = {"cprint_color": "blue"}
     default_cfg = _misc.CONFIG(default, **kwargs)
@@ -358,14 +366,14 @@ Proceed? [y/n]"""
 
 def _HELP_decoypath_to_decoyid(list_):
     """
-    HELP FUNCTION: convert list with decoy strings to list with decoy ids
+    convert list with decoy strings to list with decoy ids
 
     Example:
-        decoy_list = ['./1LMB_decoys/set1_2000/1LMB_1.pdb',
-                      './1LMB_decoys/set1_2000/1LMB_2.pdb',
-                      './1LMB_decoys/set1_2000/1LMB_3.pdb']
-        _HELP_decoystr_to_decoyid(decoy_list)
-        >> [1, 2, 3]
+      | >> decoy_list = ['./1LMB_decoys/set1_2000/1LMB_1.pdb',
+      |                 './1LMB_decoys/set1_2000/1LMB_2.pdb',
+      |                 './1LMB_decoys/set1_2000/1LMB_3.pdb']
+      | >> _HELP_decoystr_to_decoyid(decoy_list)
+      | [1, 2, 3]
     """
     substrings = [_misc.get_substrings(i) for i in list_]
 
@@ -380,19 +388,18 @@ def _HELP_decoypath_to_decoyid(list_):
 
 def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
     """
-    Alias function of get_structure_list().
-    get decoy list (sorted by a numeric part at any position of the filename,
-    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+    | Alias function of get_structure_list().
+    | get decoy list (sorted by a numeric part at any position of the filename,
+    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
 
     Args:
         decoy_dir (str): decoy directory
         pattern (str): pattern of decoy filenames
-        ndx_range (tuple/list): limit decoy index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
+        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
 
     Returns:
         DECOY_LIST (list)
+            list with decoy filenames
     """
     if decoy_dir is None:
         raise TypeError("decoy_dir was None Type.")
@@ -437,19 +444,18 @@ def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
 ### Alias function of get_decoy_list()
 def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
     """
-    Alias function of get_decoy_list().
-    get structure list (sorted by a numeric part at any position of the filename,
-    e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+    | Alias function of get_decoy_list().
+    | get structure list (sorted by a numeric part at any position of the filename,
+    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
 
     Args:
         structure_dir (str): structure directory
         pattern (str): pattern of structure filenames
-        ndx_range (tuple/list): limit structure index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
+        ndx_range (tuple, list): limit structure index range to [ndx_min, ndx_max]
 
     Returns:
         STRUCTURE_LIST (list)
+            list with structure filenames
     """
     return(get_decoy_list(decoy_dir=structure_dir, pattern=pattern, ndx_range=ndx_range))
 
@@ -460,31 +466,32 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
     """
     Get decoy scores of <decoy_list> or <decoy_dir>.
 
-    If <n_rank> is None: return unranked decoys, ids and scores.
-    If <n_rank> is int: return ranked decoys, ids and scores for best <n_rank> decoys.
+      - If <n_rank> is None: return unranked decoys, ids and scores.
+      - If <n_rank> is int: return ranked decoys, ids and scores for best <n_rank> decoys.
 
     Args:
-        decoy_list (None/list): list with decoy paths
-        decoy_dir (None/str): decoy directory
+        decoy_list (None, list): list with decoy paths
+        decoy_dir (None, str): decoy directory
         pattern (str): pattern of decoy filenames
-        ndx_range (tuple/list): limit decoy index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
-        n_rank (None/int):
-            (None): return unranked decoys, ids and scores.
-            (int): return ranked decoys, ids and scores for best <n_rank> decoys.
+        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
+        n_rank (None, int):
+          | None: return unranked decoys, ids and scores.
+          | int: return ranked decoys, ids and scores for best <n_rank> decoys.
         reverse (bool):
-            True:  ascending ranking order (low to high)
-            False: decending ranking order (high to low)
+          | True:  ascending ranking order (low to high)
+          | False: decending ranking order (high to low)
         verbose (bool)
 
-    Kwargs:
-        cprint_color (None/str): colored print color
+    Keyword Args:
+        cprint_color (None, str): colored print color
 
     Returns:
-        DECOY_LIST (list): list with decoy paths
-        DECOY_ID   (list): list with decoy ids
-        SCORE (list): list with corresponding scores (ref 2015)
+        DECOY_LIST (list)
+            list with decoy paths
+        DECOY_ID   (list)
+            list with decoy ids
+        SCORE (list)
+            list with corresponding scores (ref 2015)
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -525,32 +532,33 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     """
     Get decoy RMSD of <decoy_list> or <decoy_dir>.
 
-    If <n_rank> is None: return unranked decoys, ids and RMSD.
-    If <n_rank> is int: return ranked decoys, ids and RMSD for best <n_rank> decoys.
+      - If <n_rank> is None: return unranked decoys, ids and RMSD.
+      - If <n_rank> is int: return ranked decoys, ids and RMSD for best <n_rank> decoys.
 
     Args:
-        ref (MDA universe): reference structure
-        decoy_list (None/list): list with decoy paths
-        decoy_dir (None/str): decoy directory
+        ref (universe): reference structure
+        decoy_list (None, list): list with decoy paths
+        decoy_dir (None, str): decoy directory
         pattern (str): pattern of decoy filenames
-        ndx_range (tuple/list): limit decoy index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
-        n_rank (None/int):
-            (None): return unranked decoys, ids and scores.
-            (int): return ranked decoys, ids and scores for best <n_rank> decoys.
+        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
+        n_rank (None,int):
+          | None: return unranked decoys, ids and scores.
+          | int: return ranked decoys, ids and scores for best <n_rank> decoys.
         reverse (bool):
-            True:  ascending ranking order (low to high)
-            False: decending ranking order (high to low)
+          | True:  ascending ranking order (low to high)
+          | False: decending ranking order (high to low)
         verbose (bool)
 
-    Kwargs:
-        cprint_color (None/str): colored print color
+    Keyword Args:
+        cprint_color (None, str): colored print color
 
     Returns:
         DECOY_LIST (list)
+            list with decoy names
         DECOY_ID (list)
+            list with decoy ids
         RMSD (list)
+            list with decoy RMSDs
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -591,21 +599,25 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
 def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
                          ndx_range=(None, None), sel='backbone', verbose=True):
     """
+    get decoy precission
+
     Args:
-        ref (MDA universe): reference structure
+        ref (universe): reference structure
         decoy_dir (str): decoy directory
         pattern (str): pattern of decoy filenames
-        ndx_range (tuple/list): limit decoy index range
-            ndx_range[0]: ndx_min
-            ndx_range[1]: ndx_max
-        sel (str): selection string (for RMSD)
+        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
+        sel (str): selection string (for RMSD calculation)
         verbose (bool)
 
     Returns:
-        DECOY_LIST (list): list with decoy paths
-        DECOY_ID   (list): list with decoy ids
-        SCORE (list): list with corresponding scores (ref 2015)
-        RMSD  (list): list with corresponding RMSD values
+        DECOY_LIST (list)
+            list with decoy paths
+        DECOY_ID (list)
+            list with decoy ids
+        SCORE (list)
+            list with corresponding scores (ref 2015)
+        RMSD (list)
+            list with corresponding RMSD values
     """
     DECOY_LIST, DECOY_ID, SCORE = get_decoy_scores(decoy_dir=decoy_dir, pattern=pattern, ndx_range=ndx_range, verbose=verbose)
     DECOY_LIST, DECOY_ID, RMSD = get_decoy_RMSD(ref=ref, decoy_list=decoy_list, decoy_dir=decoy_dir, pattern=pattern, ndx_range=ndx_range, verbose=verbose)
@@ -614,20 +626,27 @@ def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
 
 def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
     """
+    rank decoy precission
+
     Args:
-        data (list): output of abinitio.get_decoy_precission()
-            data[0]: DECOY_LIST
-            data[1]: DECOY_ID
-            data[2]: SCORE
-            data[3]: RMSD
+        data (list):
+          | output of abinitio.get_decoy_precission()
+          | data[0]: DECOY_LIST
+          | data[1]: DECOY_ID
+          | data[2]: SCORE
+          | data[3]: RMSD
         rank_by (str): "SCORE", "RMSD"
         verbose (bool)
 
     Returns:
         DECOY_LIST_ranked (array)
+            ranked list with decoy paths
         DECOY_ID_ranked (array)
+            ranked list with decoy ids
         SCORE_ranked (array)
+            ranked list with corresponding scores (ref 2015)
         RMSD_ranked (array)
+            ranked list with corresponding RMSD values
     """
     DECOY_LIST, DECOY_ID, SCORE, RMSD = data
     if rank_by.upper() == "SCORE":
@@ -646,16 +665,19 @@ def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
 
 def precission_scatterplot(SCORE, RMSD, **kwargs):
     """
-    Args:
-        SCORE (list/array)
-        RMSD (list/array)
+    create a precission scatter plot.
 
-    Kwargs:
-        # see args of misc.figure()
+    Args:
+        SCORE (list, array)
+        RMSD (list, array)
+
+    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
 
     fig, ax = _misc.figure(**kwargs)

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.rex &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.rex &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyREMD</a>
+          <a href="../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.rex</li>
+      <li>pyrexMD.rex</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,8 +160,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.rex</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.rex</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
@@ -170,13 +170,13 @@
 <span class="c1">#from __future__ import division, print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">next</span>
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
-<span class="kn">import</span> <span class="nn">pyREX.gmx</span> <span class="k">as</span> <span class="nn">_gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">_gmx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 
 
-<div class="viewcode-block" id="apply_ff_best_decoys"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.apply_ff_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">apply_ff_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./PDBID_best_decoys_ref&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="apply_ff_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.apply_ff_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">apply_ff_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./PDBID_best_decoys_ref&quot;</span><span class="p">,</span>
                          <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply forcefield on best decoys and save as &lt;filename&gt;_ref.pdb.</span>
@@ -246,7 +246,7 @@
     <span class="k">return</span> <span class="n">odir</span></div>
 
 
-<div class="viewcode-block" id="assign_best_decoys"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.assign_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">assign_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">rex_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="assign_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.assign_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">assign_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">rex_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assigns decoys based on ranking taken from &lt;best_decoys_dir&gt;/decoy_scores.log</span>
 <span class="sd">    to each rex subdirectory rex_1, rex_2, ...</span>
@@ -279,7 +279,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_REX_DIRS"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.get_REX_DIRS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_DIRS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_REX_DIRS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.get_REX_DIRS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_DIRS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get list with REX DIRS.</span>
 
@@ -299,7 +299,7 @@
     <span class="k">return</span> <span class="n">REX_DIRS</span></div>
 
 
-<div class="viewcode-block" id="get_REX_PDBS"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.get_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_PDBS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.get_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_PDBS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get list with REX PDBS.</span>
 
@@ -319,7 +319,7 @@
     <span class="k">return</span> <span class="n">REX_PDBS</span></div>
 
 
-<div class="viewcode-block" id="test_REX_PDBS"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.test_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">test_REX_PDBS</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">,</span> <span class="n">ref_pdb</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="test_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.test_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">test_REX_PDBS</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">,</span> <span class="n">ref_pdb</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Test if all REX PDBS have equal RES, ATOM, NAME arrays.</span>
 <span class="sd">    Uses ref as &quot;template PDB&quot;.</span>
@@ -356,7 +356,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### DCA REX setup functions</span>
 <span class="c1">### -&gt; allow different start conformations with fixed boxsize and solution number</span>
-<div class="viewcode-block" id="WF_getParameter_boxsize"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.WF_getParameter_boxsize">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_boxsize</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/editconf.log&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_getParameter_boxsize"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_boxsize">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_boxsize</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/editconf.log&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read &lt;logfile&gt; and suggest a &#39;fixed boxsize&#39; parameter for REX simulations.</span>
 
@@ -391,7 +391,7 @@
     <span class="k">return</span> <span class="n">boxsize</span></div>
 
 
-<div class="viewcode-block" id="WF_getParameter_maxsol"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.WF_getParameter_maxsol">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_maxsol</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/solution.log&quot;</span><span class="p">,</span> <span class="n">maxsol_reduce</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_getParameter_maxsol"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_maxsol">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_maxsol</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/solution.log&quot;</span><span class="p">,</span> <span class="n">maxsol_reduce</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read &lt;logfile&gt; and suggest a &#39;max solution&#39; parameter for REX simulations.</span>
 
@@ -421,7 +421,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Workflow: REX setup (without energy minimization)</span>
 
@@ -465,7 +465,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="WF_REX_setup_energy_minimization"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.WF_REX_setup_energy_minimization">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_REX_setup_energy_minimization"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup_energy_minimization">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Workflow: REX energy minimization</span>
 
@@ -500,7 +500,7 @@
 <span class="c1">### Modify topology functions</span>
 
 
-<div class="viewcode-block" id="parsePDB_RES_ATOM_NAME"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.parsePDB_RES_ATOM_NAME">[docs]</a><span class="k">def</span> <span class="nf">parsePDB_RES_ATOM_NAME</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="parsePDB_RES_ATOM_NAME"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.parsePDB_RES_ATOM_NAME">[docs]</a><span class="k">def</span> <span class="nf">parsePDB_RES_ATOM_NAME</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads PDB file and returns the columns for residue, atom-number and atom-name as lists.</span>
 <span class="sd">    Removes column entries which consist only of whitespace or newlines.</span>
@@ -585,7 +585,7 @@
     <span class="k">return</span> <span class="n">RES</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span></div>
 
 
-<div class="viewcode-block" id="create_special_group_ndx"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.create_special_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_special_group_ndx</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;special_group.ndx&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_special_group_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_special_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_special_group_ndx</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;special_group.ndx&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create index file for special group.</span>
 
@@ -606,7 +606,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="create_pull_groups_ndx"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.create_pull_groups_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_pull_groups_ndx</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;pull_groups.ndx&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_pull_groups_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_pull_groups_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_pull_groups_ndx</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;pull_groups.ndx&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create index file for pull groups.</span>
 
@@ -626,7 +626,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="DCAREX_res2atom_mapping"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.DCAREX_res2atom_mapping">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="DCAREX_res2atom_mapping"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.DCAREX_res2atom_mapping">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span>
                             <span class="n">n_bonds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ref_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">DCA_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                             <span class="n">filter_DCA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -829,7 +829,7 @@
     <span class="k">return</span> <span class="n">RES_PAIR</span><span class="p">,</span> <span class="n">ATOM_PAIR</span></div>
 
 
-<div class="viewcode-block" id="DCAREX_modify_scoreFile"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.DCAREX_modify_scoreFile">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_scoreFile</span><span class="p">(</span><span class="n">score_fin</span><span class="p">,</span> <span class="n">shift_res</span><span class="p">,</span> <span class="n">res_cols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">score_col</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DCAREX_modify_scoreFile"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.DCAREX_modify_scoreFile">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_scoreFile</span><span class="p">(</span><span class="n">score_fin</span><span class="p">,</span> <span class="n">shift_res</span><span class="p">,</span> <span class="n">res_cols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">score_col</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify score file (MSA scores) by shifting residues.</span>
 
@@ -876,7 +876,7 @@
     <span class="k">return</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span></div>
 
 
-<div class="viewcode-block" id="DCAREX_modify_topology"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.DCAREX_modify_topology">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="p">,</span> <span class="n">force_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">DCA_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DCAREX_modify_topology"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.DCAREX_modify_topology">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="p">,</span> <span class="n">force_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">DCA_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modifies topology by using the contacts written in &quot;DCA_used.txt&quot; file.</span>
 <span class="sd">    &quot;DCA_used.txt&quot; is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</span>
@@ -954,7 +954,7 @@
 
 
 <span class="c1">### TODO</span>
-<div class="viewcode-block" id="DCAREX_modify_topology_v2"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.DCAREX_modify_topology_v2">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_topology_v2</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">temp_fin</span><span class="p">,</span> <span class="n">force_range</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="n">lambda_scaling</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DCAREX_modify_topology_v2"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.DCAREX_modify_topology_v2">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_topology_v2</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">temp_fin</span><span class="p">,</span> <span class="n">force_range</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="n">lambda_scaling</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TODO</span>
 
@@ -1047,7 +1047,7 @@
 <span class="c1">### prep REX run files functions</span>
 
 
-<div class="viewcode-block" id="prep_REX_temps"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.prep_REX_temps">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="prep_REX_temps"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_temps">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepare REX temperatures.</span>
 
@@ -1160,7 +1160,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">DELTA_DELTA</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="prep_REX_mdp"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.prep_REX_mdp">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="prep_REX_mdp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_mdp">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepare REX mdp:</span>
 <span class="sd">    copy template and change tempereratures according to rex_temps.log</span>
@@ -1201,7 +1201,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="prep_REX_tpr"><a class="viewcode-back" href="../../pyREX.html#pyREX.rex.prep_REX_tpr">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="prep_REX_tpr"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_tpr">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepare REX tpr.</span>
 
@@ -1251,7 +1251,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>

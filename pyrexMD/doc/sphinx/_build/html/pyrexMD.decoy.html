@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.decoy package &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="pyrexMD.analysis package" href="pyrexMD.analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyrexMD</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyrexMD.html">pyrexMD package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pyrexMD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pyrexMD.decoy package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-pyrexMD.decoy.abinitio">pyrexMD.decoy.abinitio module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-pyrexMD.decoy.cluster">pyrexMD.decoy.cluster module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-pyrexMD.decoy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.core">pyrexMD.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.misc">pyrexMD.misc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.rex">pyrexMD.rex module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.html#module-pyrexMD">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">pyrexMD</a> &raquo;</li>
+        
+          <li><a href="pyrexMD.html">pyrexMD package</a> &raquo;</li>
+        
+      <li>pyrexMD.decoy package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pyrexMD.decoy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pyrexmd-decoy-package">
+<h1>pyrexMD.decoy package<a class="headerlink" href="#pyrexmd-decoy-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyrexMD.decoy.abinitio">
+<span id="pyrexmd-decoy-abinitio-module"></span><h2>pyrexMD.decoy.abinitio module<a class="headerlink" href="#module-pyrexMD.decoy.abinitio" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.apply_relative_torsion_angle">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">apply_relative_torsion_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'alpha'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#apply_relative_torsion_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.apply_relative_torsion_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply relative torsion angle (use pose_ref angle and apply relative shift).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose_ref</strong> (<em>pose</em>) – </p></li>
+<li><p><strong>pose</strong> (<em>pose</em>) – </p></li>
+<li><p><strong>resid</strong> (<em>int</em>) – </p></li>
+<li><p><strong>angle</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">protein: “phi”, “psi”</div>
+<div class="line">rna:  “alpha”, “beta”, “gamma”, “delta”</div>
+</div>
+</p></li>
+<li><p><strong>shift</strong> (<em>float</em>) – relative shift value</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print applied changes to torsion angle.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.create_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">create_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abinitio_cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream2pymol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastrelax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#create_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.create_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create decoys within pyrosetta framework.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this function is currently broken (but abinitio._create_decoys()
+is working with 1 core)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abinitio_cfg</strong> (<em>CONFIG class</em>) – output of abinitio.setup_abinitio_cfg()</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – output directory for decoys</p></li>
+<li><p><strong>stream2pymol</strong> (<em>bool</em>) – stream decoys to pymol</p></li>
+<li><p><strong>fastrelax</strong> (<em>bool</em>) – apply fastrelax protocol on decoys before dumping them as pdb</p></li>
+<li><p><strong>save_log</strong> (<em>bool</em>) – save scores to logfile at &lt;output_dir/scores.txt&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_decoy_RMSD">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'backbone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_RMSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get decoy RMSD of &lt;decoy_list&gt; or &lt;decoy_dir&gt;.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If &lt;n_rank&gt; is None: return unranked decoys, ids and RMSD.</p></li>
+<li><p>If &lt;n_rank&gt; is int: return ranked decoys, ids and RMSD for best &lt;n_rank&gt; decoys.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>universe</em>) – reference structure</p></li>
+<li><p><strong>decoy_list</strong> (<em>None</em><em>, </em><em>list</em>) – list with decoy paths</p></li>
+<li><p><strong>decoy_dir</strong> (<em>None</em><em>, </em><em>str</em>) – decoy directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
+<li><p><strong>n_rank</strong> (<em>None</em><em>,</em><em>int</em>) – <div class="line-block">
+<div class="line">None: return unranked decoys, ids and scores.</div>
+<div class="line">int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</div>
+</div>
+</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  ascending ranking order (low to high)</div>
+<div class="line">False: decending ranking order (high to low)</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy names</p>
+</dd>
+<dt>DECOY_ID (list)</dt><dd><p>list with decoy ids</p>
+</dd>
+<dt>RMSD (list)</dt><dd><p>list with decoy RMSDs</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_decoy_list">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_list" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Alias function of get_structure_list().</div>
+<div class="line">get decoy list (sorted by a numeric part at any position of the filename,</div>
+<div class="line">e.g. 1LMB_1.pdb, 1LMB_2.pdb,…)</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decoy_dir</strong> (<em>str</em>) – decoy directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy filenames</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_decoy_precission">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_precission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'backbone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_precission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_precission" title="Permalink to this definition">¶</a></dt>
+<dd><p>get decoy precission</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>universe</em>) – reference structure</p></li>
+<li><p><strong>decoy_dir</strong> (<em>str</em>) – decoy directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string (for RMSD calculation)</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy paths</p>
+</dd>
+<dt>DECOY_ID (list)</dt><dd><p>list with decoy ids</p>
+</dd>
+<dt>SCORE (list)</dt><dd><p>list with corresponding scores (ref 2015)</p>
+</dd>
+<dt>RMSD (list)</dt><dd><p>list with corresponding RMSD values</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_decoy_scores">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get decoy scores of &lt;decoy_list&gt; or &lt;decoy_dir&gt;.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If &lt;n_rank&gt; is None: return unranked decoys, ids and scores.</p></li>
+<li><p>If &lt;n_rank&gt; is int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decoy_list</strong> (<em>None</em><em>, </em><em>list</em>) – list with decoy paths</p></li>
+<li><p><strong>decoy_dir</strong> (<em>None</em><em>, </em><em>str</em>) – decoy directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
+<li><p><strong>n_rank</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">None: return unranked decoys, ids and scores.</div>
+<div class="line">int: return ranked decoys, ids and scores for best &lt;n_rank&gt; decoys.</div>
+</div>
+</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  ascending ranking order (low to high)</div>
+<div class="line">False: decending ranking order (high to low)</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy paths</p>
+</dd>
+<dt>DECOY_ID   (list)</dt><dd><p>list with decoy ids</p>
+</dd>
+<dt>SCORE (list)</dt><dd><p>list with corresponding scores (ref 2015)</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_structure_list">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_structure_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_structure_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_structure_list" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Alias function of get_decoy_list().</div>
+<div class="line">get structure list (sorted by a numeric part at any position of the filename,</div>
+<div class="line">e.g. 1LMB_1.pdb, 1LMB_2.pdb,…)</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure_dir</strong> (<em>str</em>) – structure directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of structure filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit structure index range to [ndx_min, ndx_max]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>STRUCTURE_LIST (list)</dt><dd><p>list with structure filenames</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_torsion_angles">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_torsion_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mol_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_torsion_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_torsion_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>get torsion angles of object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>pose</em><em>, </em><em>str</em>) – pyrosetta pose object or pdb path</p></li>
+<li><p><strong>mol_type</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">molecule type</div>
+<div class="line">”auto”: detect “protein” or “rna” by checking if pose.phi(1) exists.</div>
+<div class="line">”protein”: protein molecule with torsion angles (phi, psi)</div>
+<div class="line">”rna”: rna molecule with torsion angles (alpha, beta, gamma, delta)</div>
+</div>
+</p></li>
+<li><p><strong>prec</strong> (<em>int</em>) – rounding precission</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print table with torsion angles</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl>
+<dt>TORSION_ANGLES (tuple)</dt><dd><div class="line-block">
+<div class="line">tuple containing lists with torsion angles of each residue</div>
+<div class="line">if mol_type == “protein”:</div>
+<div class="line">TORSION_ANGLES = (phi, psi)</div>
+<div class="line">if mol_type == “rna”:</div>
+<div class="line">TORSION_ANGLES = (alpha, beta, gamma, delta)</div>
+</div>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.precission_scatterplot">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">precission_scatterplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SCORE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RMSD</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#precission_scatterplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.precission_scatterplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a precission scatter plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SCORE</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
+<li><p><strong>RMSD</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Args and Keyword Args of misc.figure() are valid Keyword Args.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
+</dd>
+<dt>ax (class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.rank_decoy_precission">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">rank_decoy_precission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SCORE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#rank_decoy_precission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.rank_decoy_precission" title="Permalink to this definition">¶</a></dt>
+<dd><p>rank decoy precission</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">output of abinitio.get_decoy_precission()</div>
+<div class="line">data[0]: DECOY_LIST</div>
+<div class="line">data[1]: DECOY_ID</div>
+<div class="line">data[2]: SCORE</div>
+<div class="line">data[3]: RMSD</div>
+</div>
+</p></li>
+<li><p><strong>rank_by</strong> (<em>str</em>) – “SCORE”, “RMSD”</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>DECOY_LIST_ranked (array)</dt><dd><p>ranked list with decoy paths</p>
+</dd>
+<dt>DECOY_ID_ranked (array)</dt><dd><p>ranked list with decoy ids</p>
+</dd>
+<dt>SCORE_ranked (array)</dt><dd><p>ranked list with corresponding scores (ref 2015)</p>
+</dd>
+<dt>RMSD_ranked (array)</dt><dd><p>ranked list with corresponding RMSD values</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.setup_abinitio_cfg">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">setup_abinitio_cfg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdbid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frag3mer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frag9mer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#setup_abinitio_cfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.setup_abinitio_cfg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup config file for abinitio functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdbid</strong> (<em>str</em>) – pdb id / pdb name</p></li>
+<li><p><strong>fasta_seq</strong> (<em>str</em>) – fasta sequence</p></li>
+<li><p><strong>frag3mer</strong> (<em>str</em>) – 3mer file path (get via robetta server)</p></li>
+<li><p><strong>frag9mer</strong> (<em>str</em>) – 9mer file path (get via robetta server)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fasta_seq_len</strong> (<em>int</em>) – fasta sequence length</p></li>
+<li><p><strong>frag3inserts</strong> (<em>int</em>) – number of frag3 inserts</p></li>
+<li><p><strong>frag9inserts</strong> (<em>int</em>) – number of frag9 inserts</p></li>
+<li><p><strong>folding_cycles</strong> (<em>int</em>) – folding move cycles</p></li>
+<li><p><strong>folding_repeats</strong> (<em>int</em>) – folding move repeats</p></li>
+<li><p><strong>job_name</strong> (<em>str</em>) – </p></li>
+<li><p><strong>n_decoys</strong> (<em>int</em>) – total number of decoys</p></li>
+<li><p><strong>n_cores</strong> (<em>int</em>) – -np option for multiprocessing</p></li>
+<li><p><strong>decoy_ndx_shift</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">shift decoy index (output filename) by this value</div>
+<div class="line">required for multiprocessing to fix names of decoys</div>
+</div>
+</p></li>
+<li><p><strong>kT</strong> (<em>float</em>) – kT parameter during Monte-Carlo simulation</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>abinitio_cfg (CONFIG class)</dt><dd><p>configs used as input for abinitio.create_decoys()</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyrexMD.decoy.cluster">
+<span id="pyrexmd-decoy-cluster-module"></span><h2>pyrexMD.decoy.cluster module<a class="headerlink" href="#module-pyrexMD.decoy.cluster" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.copy_cluster_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">copy_cluster_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#copy_cluster_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.copy_cluster_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy cluster decoys specified in &lt;decoy_list&gt; to &lt;target_dir&gt;.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decoy_list</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">output of abinitio.get_decoy_list()</div>
+<div class="line">or cluster.get_decoy_list()</div>
+<div class="line">or cluster.rank_cluster_decoys(return_path=True)</div>
+</div>
+</p></li>
+<li><p><strong>target_dir</strong> (<em>str</em>) – target directory</p></li>
+<li><p><strong>create_dir</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – colored print color</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>target_dir (str)</dt><dd><p>realpath of target directory</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.heat_KMeans">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">heat_KMeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HDF_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/distance_matrices'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'medoid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#heat_KMeans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.heat_KMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply heat’s KMeans clustering algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5_file</strong> (<em>str</em>) – path to h5 file containing data</p></li>
+<li><p><strong>HDF_group</strong> (<em>str</em>) – Hierarchical Data Format group</p></li>
+<li><p><strong>n_clusters</strong> (<em>int</em>) – number of clusters</p></li>
+<li><p><strong>center_type</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">‘centroid’: use heat.cluster.KMeans() with centroids as cluster centers</div>
+<div class="line">’medoid’: use heat.cluster.KMedoids() with medoids as cluster centers</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step] indices of &lt;h5_file&gt; data</div>
+<div class="line">start (None, int): start index</div>
+<div class="line">stop (None, int): stop index</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start index</p></li>
+<li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop index</p></li>
+<li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em>) – heat.float64 (default), heat.float32, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>centers (array)</dt><dd><p>cluster centers</p>
+</dd>
+<dt>counts (array)</dt><dd><p>counts per cluster</p>
+</dd>
+<dt>labels (array)</dt><dd><p>data point cluster labels</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.log_cluster_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">log_cluster_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_decoys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">best_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#log_cluster_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.log_cluster_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create logfile with &lt;best_decoys&gt; and &lt;best_scores&gt;.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>best_decoys</strong> (<em>list</em>) – output of cluster.rank_cluster_decoys()</p></li>
+<li><p><strong>best_scores</strong> (<em>list</em>) – output of cluster.rank_cluster_decoys()</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>realpath (str)</dt><dd><p>realpath of log file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.rank_cluster_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">rank_cluster_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#rank_cluster_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.rank_cluster_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rank cluster decoys based on rosetta scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decoy_list</strong> (<em>list</em>) – output of get_decoy_list()</p></li>
+<li><p><strong>scores</strong> (<em>list</em>) – output of get_decoy_scores()</p></li>
+<li><p><strong>labels</strong> (<em>array</em><em>, </em><em>list</em>) – output of heat_KMeans()</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  ascending ranking order (low to high)</div>
+<div class="line">False: decending ranking order (high to low)</div>
+</div>
+</p></li>
+<li><p><strong>return_path</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  BEST_DECOYS and CLUSTER_DECOYS contain decoy paths</div>
+<div class="line">False: BEST_DECOYS and CLUSTER_DECOYS contain decoy filenames</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>BEST_DECOYS (list)</dt><dd><p>best ranked decoys (only one per cluster)</p>
+</dd>
+<dt>BEST_SCORES (list)</dt><dd><p>best ranked scores (only one per cluster)</p>
+</dd>
+<dt>CLUSTER_DECOYS (list)</dt><dd><p>CLUSTER_DECOYS[k] are ranked decoys of cluster k</p>
+</dd>
+<dt>CLUSTER_SCORES (list)</dt><dd><p>CLUSTER_SCORES[k] are ranked scores of cluster k</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.read_h5">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">read_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HDF_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/distance_matrices'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#read_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.read_h5" title="Permalink to this definition">¶</a></dt>
+<dd><p>read h5 data (e.g. distance matrices DM)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line">HDF: Hierarchical Data Format</div>
+<div class="line">h5: Hierarchical Data Format 5</div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5_file</strong> (<em>str</em>) – </p></li>
+<li><p><strong>HDF_group</strong> (<em>str</em>) – Hierarchical Data Format group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>data (array)</dt><dd><p>data of h5 file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.reshape_data">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">reshape_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#reshape_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.reshape_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape data between the shapes: (length, size) &lt;-&gt; (length, sizeD1, sideD2)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array</em><em>, </em><em>heat.DNDarray</em>) – </p></li>
+<li><p><strong>dim_out</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">output dimension of data</div>
+<div class="line">2: output data with shape: (length, size)</div>
+<div class="line">3: output data with shape: (length, sizeD1, sideD2)</div>
+</div>
+</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step]</div>
+<div class="line">start (None, int): start index</div>
+<div class="line">stop (None, int): stop index</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print messages (‘reshaping data: …’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start index</p></li>
+<li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop index</p></li>
+<li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>data (array, ht.DNDarray)</dt><dd><p>reshaped data with same data-type as input</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.save_h5">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">save_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HDF_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/distance_matrices'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#save_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.save_h5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data (e.g. distance matrices DM) as h5 file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line">HDF: Hierarchical Data Format</div>
+<div class="line">h5: Hierarchical Data Format 5</div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array</em>) – array of distance matrices</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+<li><p><strong>save_dir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">save directory</div>
+<div class="line">special case: save_dir is ignored when save_as is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>HDF_group</strong> (<em>str</em>) – Hierarchical Data Format group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>h5_file (str)</dt><dd><p>realpath of h5 file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyrexMD.decoy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyrexMD.decoy" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pyrexMD.analysis.html" class="btn btn-neutral float-left" title="pyrexMD.analysis package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

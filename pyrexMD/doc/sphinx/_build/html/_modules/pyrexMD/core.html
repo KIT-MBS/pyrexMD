@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyREX.core &mdash; pyREMD 1.0 documentation</title>
+  <title>pyrexMD.core &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -51,11 +51,11 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
           
 
           
-            <a href="../../index.html" class="icon icon-home"> pyREMD
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
           
 
           
@@ -92,7 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyREX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
             
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyREMD</a>
+          <a href="../../index.html">pyrexMD</a>
         
       </nav>
 
@@ -143,9 +143,9 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pyREX.html">pyREX</a> &raquo;</li>
+          <li><a href="../pyrexMD.html">pyrexMD</a> &raquo;</li>
         
-      <li>pyREX.core</li>
+      <li>pyrexMD.core</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,12 +160,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyREX.core</h1><div class="highlight"><pre>
-<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+  <h1>Source code for pyrexMD.core</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: core.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 07.05.2021</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
 
 
 <span class="c1"># core module</span>
@@ -194,12 +194,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="iColor"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iColor">[docs]</a><span class="k">class</span> <span class="nc">iColor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="iColor"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iColor">[docs]</a><span class="k">class</span> <span class="nc">iColor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iPlayer_cls</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_iPlayer</span> <span class="o">=</span> <span class="n">iPlayer_cls</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="iColor.get_color_scheme"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iColor.get_color_scheme">[docs]</a>    <span class="k">def</span> <span class="nf">get_color_scheme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">universe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="iColor.get_color_scheme"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iColor.get_color_scheme">[docs]</a>    <span class="k">def</span> <span class="nf">get_color_scheme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">universe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns color scheme.</span>
 
@@ -292,7 +292,7 @@
 
         <span class="k">return</span><span class="p">(</span><span class="n">color_scheme</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="iColor.set_color_scheme"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iColor.set_color_scheme">[docs]</a>    <span class="k">def</span> <span class="nf">set_color_scheme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="iColor.set_color_scheme"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iColor.set_color_scheme">[docs]</a>    <span class="k">def</span> <span class="nf">set_color_scheme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Applies color scheme. If ci=None, then target is determinded by &lt;iPlayer_object&gt;.widgets.Components.description.</span>
 
@@ -350,7 +350,7 @@
         <span class="k">return</span></div></div>
 
 
-<div class="viewcode-block" id="iWidgets"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iWidgets">[docs]</a><span class="k">class</span> <span class="nc">iWidgets</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="iWidgets"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iWidgets">[docs]</a><span class="k">class</span> <span class="nc">iWidgets</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iPlayer_cls</span><span class="p">):</span>
         <span class="c1"># align via wg.&lt;type&gt;(..., **.align_kw)</span>
         <span class="n">align_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_css</span><span class="o">=</span><span class="p">((</span><span class="s1">&#39;.widget-label&#39;</span><span class="p">,</span> <span class="s1">&#39;min-width&#39;</span><span class="p">,</span> <span class="s1">&#39;20ex&#39;</span><span class="p">),),</span>
@@ -760,7 +760,7 @@
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;iWidgets Class&gt;&quot;</span>
 
-<div class="viewcode-block" id="iWidgets.toggle_UI"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iWidgets.toggle_UI">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_UI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="iWidgets.toggle_UI"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iWidgets.toggle_UI">[docs]</a>    <span class="k">def</span> <span class="nf">toggle_UI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggle UI with a=True/False. If a=None, then UI will switch to other state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -791,7 +791,7 @@
         <span class="k">return</span></div></div>
 
 
-<div class="viewcode-block" id="iPlayer"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iPlayer">[docs]</a><span class="k">class</span> <span class="nc">iPlayer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="iPlayer"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iPlayer">[docs]</a><span class="k">class</span> <span class="nc">iPlayer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">universe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        init iPlayer</span>
@@ -865,14 +865,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">YValue</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">wg</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;visible&#39;</span><span class="p">)</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="iPlayer.sync_view"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iPlayer.sync_view">[docs]</a>    <span class="k">def</span> <span class="nf">sync_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="iPlayer.sync_view"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iPlayer.sync_view">[docs]</a>    <span class="k">def</span> <span class="nf">sync_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Alias for &lt;iPlayer_object&gt;.player.sync_view().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">sync_view</span><span class="p">()</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="iPlayer.show_player"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iPlayer.show_player">[docs]</a>    <span class="k">def</span> <span class="nf">show_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="iPlayer.show_player"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iPlayer.show_player">[docs]</a>    <span class="k">def</span> <span class="nf">show_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Show trajectory viewer with GUI.</span>
 
@@ -958,7 +958,7 @@
         <span class="k">return</span></div></div>
 
 
-<div class="viewcode-block" id="iPlot"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iPlot">[docs]</a><span class="k">class</span> <span class="nc">iPlot</span><span class="p">(</span><span class="n">iPlayer</span><span class="p">):</span>
+<div class="viewcode-block" id="iPlot"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iPlot">[docs]</a><span class="k">class</span> <span class="nc">iPlot</span><span class="p">(</span><span class="n">iPlayer</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">universe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">tu</span><span class="o">=</span><span class="s1">&#39;ps&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1082,7 +1082,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;RMSD&#39;</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="iPlot.show_plot"><a class="viewcode-back" href="../../pyREX.html#pyREX.core.iPlot.show_plot">[docs]</a>    <span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="iPlot.show_plot"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.core.iPlot.show_plot">[docs]</a>    <span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                   <span class="n">tu</span><span class="o">=</span><span class="s1">&#39;ps&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Show trajectory viewer with GUI and interactive matplotlib plot.</span>
@@ -1233,7 +1233,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Arthur Voronin.
+        &#169; Copyright 2021, KIT-MBS.
 
     </p>
   </div>
