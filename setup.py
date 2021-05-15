@@ -6,7 +6,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='pyREX',
+setup(name='pyrexMD',
       version='1.0',
       description='workflow orientated setup and analyses of contact-guided Replica Exchange Molecular Dynamics (requires GROMACS for MD)',
       license="MIT",
