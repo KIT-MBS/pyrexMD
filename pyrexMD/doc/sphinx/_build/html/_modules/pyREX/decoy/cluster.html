@@ -1,0 +1,508 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyREX.decoy.cluster &mdash; pyREMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyREMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyREX</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyREMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pyREX.html">pyREX</a> &raquo;</li>
+        
+      <li>pyREX.decoy.cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyREX.decoy.cluster</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+<span class="c1"># @Date:   17.04.2021</span>
+<span class="c1"># @Filename: cluster.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 07.05.2021</span>
+
+
+<span class="c1">#from __future__ import division, print_function</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">heat</span> <span class="k">as</span> <span class="nn">ht</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">from</span> <span class="nn">pyREX.analysis.analysis</span> <span class="kn">import</span> <span class="n">get_Distance_Matrices</span><span class="p">,</span> <span class="n">_HELP_sss_None2int</span>  <span class="c1"># required for internal conversion</span>
+<span class="kn">from</span> <span class="nn">pyREX.decoy.abinitio</span> <span class="kn">import</span> <span class="n">get_decoy_list</span><span class="p">,</span> <span class="n">get_decoy_scores</span><span class="p">,</span> <span class="n">get_decoy_RMSD</span>
+
+
+<div class="viewcode-block" id="save_h5"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.save_h5">[docs]</a><span class="k">def</span> <span class="nf">save_h5</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save data (e.g. distance matrices DM) as h5 file.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        HDF: Hierarchical Data Format</span>
+<span class="sd">        h5: Hierarchical Data Format 5</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (np.array): array of distance matrices</span>
+<span class="sd">        save_as (str)</span>
+<span class="sd">        save_dir (str): save directory</span>
+<span class="sd">            special case: save_dir is ignored when save_as is relative/absolute path</span>
+<span class="sd">        HDF_group (str): Hierarchical Data Format group</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        h5_file (str): realpath of h5 file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;.h5&quot;</span><span class="p">:</span>
+        <span class="n">save_as</span> <span class="o">+=</span> <span class="s2">&quot;.h5&quot;</span>
+    <span class="n">h5_file</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">save_as</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">handle</span><span class="p">[</span><span class="n">HDF_group</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved h5 file as: </span><span class="si">{</span><span class="n">h5_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h5_file</span></div>
+
+
+<div class="viewcode-block" id="read_h5"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.read_h5">[docs]</a><span class="k">def</span> <span class="nf">read_h5</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    read data (e.g. distance matrices DM) from h5 file.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        HDF: Hierarchical Data Format</span>
+<span class="sd">        h5: Hierarchical Data Format 5</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        h5_file (str)</span>
+<span class="sd">        HDF_group (str): Hierarchical Data Format group</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        data (np.array): data of h5 file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">h5_file</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;.h5&quot;</span><span class="p">:</span>
+        <span class="n">h5_file</span> <span class="o">+=</span> <span class="s2">&quot;.h5&quot;</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">handle</span><span class="p">[</span><span class="n">HDF_group</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="reshape_data"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.reshape_data">[docs]</a><span class="k">def</span> <span class="nf">reshape_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reshape data between the shapes: (length, size) &lt;-&gt; (length, sizeD1, sideD2)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (np.array/ht.DNDarray)</span>
+<span class="sd">        dim_out (int): output dimension of data</span>
+<span class="sd">            2: output data with shape: (length, size)</span>
+<span class="sd">            3: output data with shape: (length, sizeD1, sideD2)</span>
+<span class="sd">        sss (list): [start, stop, step]</span>
+<span class="sd">            start (None/int): start index</span>
+<span class="sd">            stop (None/int): stop index</span>
+<span class="sd">            step (None/int): step size</span>
+<span class="sd">        verbose (bool): print messages (&#39;reshaping data: ...&#39;)</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        aliases for sss items:</span>
+<span class="sd">            start (None/int): start index</span>
+<span class="sd">            stop (None/int): stop index</span>
+<span class="sd">            step (None/int): step size</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        data (np.array/ht.DNDarray): data (same data-type as input)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+               <span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_HELP_sss_None2int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>  <span class="c1"># convert None values of they keys sss, start, stop, step to integers</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">]</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">==</span> <span class="n">dim_out</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">length</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">new_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">length</span><span class="p">,</span> <span class="n">new_size</span><span class="p">,</span> <span class="n">new_size</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;reshaping data: (</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">) -&gt; (</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">new_size</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">new_size</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">length</span><span class="p">,</span> <span class="n">sizeD1</span><span class="p">,</span> <span class="n">sizeD2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">new_size</span> <span class="o">=</span> <span class="n">sizeD1</span><span class="o">*</span><span class="n">sizeD2</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">length</span><span class="p">,</span> <span class="n">new_size</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;reshaping data: (</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">sizeD1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">sizeD2</span><span class="si">}</span><span class="s2">) -&gt; (</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">new_size</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="heat_KMeans"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.heat_KMeans">[docs]</a><span class="k">def</span> <span class="nf">heat_KMeans</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">center_type</span><span class="o">=</span><span class="s1">&#39;medoid&#39;</span><span class="p">,</span>
+                <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use heat&#39;s KMeans Clustering</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        h5_file (str): path to h5 file containing data</span>
+<span class="sd">        HDF_group (str): Hierarchical Data Format group</span>
+<span class="sd">        n_clusters (int): number of clusters</span>
+<span class="sd">        center_type (str):</span>
+<span class="sd">            &#39;centroid&#39;: use heat.cluster.KMeans() with centroids as cluster centers</span>
+<span class="sd">            &#39;medoid&#39;: use heat.cluster.KMedoids() with medoids as cluster centers</span>
+<span class="sd">        verbose (bool)</span>
+<span class="sd">        sss (list): [start, stop, step] indices of &lt;h5_file&gt; data</span>
+<span class="sd">            start (None/int): start index</span>
+<span class="sd">            stop (None/int): stop index</span>
+<span class="sd">            step (None/int): step size</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        aliases for sss items:</span>
+<span class="sd">            start (None/int): start index</span>
+<span class="sd">            stop (None/int): stop index</span>
+<span class="sd">            step (None/int): step size</span>
+<span class="sd">        dtype (dtype): heat.float64 (default), heat.float32, etc.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        centers (np.array): cluster centers</span>
+<span class="sd">        counts (np.array): counts per cluster</span>
+<span class="sd">        labels (np.array): data point cluster labels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="n">ht</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+               <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loading data...&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">HDF_group</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;wrong datatype: &lt;h5_file&gt; must be str (path to h5 file containing data).&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;clustering data...&quot;</span><span class="p">)</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">TIMER</span><span class="p">()</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>  <span class="c1"># start timer</span>
+
+    <span class="n">length</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">center_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;centroid&quot;</span><span class="p">:</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">center_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;medoid&quot;</span><span class="p">:</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMedoids</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;center_type must be either &#39;centroid&#39; or &#39;medoid&#39;.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="n">centers</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_clusters</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">))))</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;clustering time:&quot;</span><span class="p">)</span>  <span class="c1"># stop timer</span>
+    <span class="k">return</span> <span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">labels</span></div>
+
+
+<div class="viewcode-block" id="rank_cluster_decoys"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.rank_cluster_decoys">[docs]</a><span class="k">def</span> <span class="nf">rank_cluster_decoys</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_path</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rank cluster decoys based on rosetta scores.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        decoy_list (list): output of get_decoy_list()</span>
+<span class="sd">        scores (list): output of get_decoy_scores()</span>
+<span class="sd">        labels (array/list): output of heat_KMeans()</span>
+<span class="sd">        reverse (bool):</span>
+<span class="sd">            True:  ascending ranking order (low to high)</span>
+<span class="sd">            False: decending ranking order (high to low)</span>
+<span class="sd">        return_path (bool):</span>
+<span class="sd">            True:  BEST_DECOYS and CLUSTER_DECOYS contain decoy paths</span>
+<span class="sd">            False: BEST_DECOYS and CLUSTER_DECOYS contain decoy filenames</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        BEST_DECOYS (list): best ranked decoys (only one per cluster)</span>
+<span class="sd">        BEST_SCORES (list): best ranked scores (only one per cluster)</span>
+<span class="sd">        CLUSTER_DECOYS (list):</span>
+<span class="sd">            CLUSTER_DECOYS[k]: ranked decoys of cluster k</span>
+<span class="sd">        CLUSTER_SCORES (list):</span>
+<span class="sd">            CLUSTER_SCORES[k]: ranked scores of cluster k</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1">### link decoys and scores</span>
+    <span class="n">CLUSTER_DECOYS</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)]</span>
+    <span class="n">CLUSTER_SCORES</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">)):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">CLUSTER_DECOYS</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># rank by score</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CLUSTER_DECOYS</span><span class="p">)):</span>
+        <span class="n">CLUSTER_DECOYS</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">CLUSTER_DECOYS</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="c1">### best per cluster</span>
+    <span class="n">BEST_DECOYS</span> <span class="o">=</span> <span class="p">[</span><span class="n">CLUSTER_DECOYS</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CLUSTER_DECOYS</span><span class="p">))]</span>
+    <span class="n">BEST_SCORES</span> <span class="o">=</span> <span class="p">[</span><span class="n">CLUSTER_SCORES</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CLUSTER_SCORES</span><span class="p">))]</span>
+
+    <span class="c1"># rank by score</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">BEST_DECOYS</span><span class="p">)):</span>
+        <span class="n">BEST_DECOYS</span> <span class="o">=</span> <span class="p">[</span><span class="n">BEST_DECOYS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">BEST_SCORES</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">BEST_SCORES</span> <span class="o">=</span> <span class="p">[</span><span class="n">BEST_SCORES</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">BEST_SCORES</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">return_path</span><span class="p">:</span>
+        <span class="n">BEST_DECOYS</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">BEST_DECOYS</span><span class="p">]</span>
+        <span class="n">CLUSTER_DECOYS</span> <span class="o">=</span> <span class="p">[[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">itemList</span><span class="p">]</span> <span class="k">for</span> <span class="n">itemList</span> <span class="ow">in</span> <span class="n">CLUSTER_DECOYS</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">BEST_DECOYS</span><span class="p">,</span> <span class="n">BEST_SCORES</span><span class="p">,</span> <span class="n">CLUSTER_DECOYS</span><span class="p">,</span> <span class="n">CLUSTER_SCORES</span></div>
+
+
+<div class="viewcode-block" id="copy_cluster_decoys"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.copy_cluster_decoys">[docs]</a><span class="k">def</span> <span class="nf">copy_cluster_decoys</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copy cluster decoys specified in &lt;decoy_list&gt; to &lt;target_dir&gt;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        decoy_list (list): output of abinitio.get_decoy_list()</span>
+<span class="sd">                                  or cluster.get_decoy_list()</span>
+<span class="sd">                                  or cluster.rank_cluster_decoys(return_path=True)</span>
+<span class="sd">        target_dir (str): target directory</span>
+<span class="sd">        create_dir (bool)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        cprint_color (str): colored print color</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        target_dir (str): realpath of target directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">dtypeError</span><span class="p">(</span><span class="s2">&quot;decoy_list&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">decoy_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&lt;decoy_list&gt; must be list of str (source paths)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">dtypeError</span><span class="p">(</span><span class="s2">&quot;target_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;str&quot;</span><span class="p">)</span>
+
+    <span class="c1"># copy decoys if no Error occurred</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">decoy_list</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_dir</span><span class="p">,</span>
+                          <span class="n">create_dir</span><span class="o">=</span><span class="n">create_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied decoys to: </span><span class="si">{</span><span class="n">target_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">target_dir</span></div>
+
+
+<div class="viewcode-block" id="log_cluster_decoys"><a class="viewcode-back" href="../../../pyREX.decoy.html#pyREX.decoy.cluster.log_cluster_decoys">[docs]</a><span class="k">def</span> <span class="nf">log_cluster_decoys</span><span class="p">(</span><span class="n">best_decoys</span><span class="p">,</span> <span class="n">best_scores</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create logfile with &lt;best_decoys&gt; and &lt;best_scores&gt;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        best_decoys (list): output of cluster.rank_cluster_decoys()</span>
+<span class="sd">        best_scores (list): output of cluster.rank_cluster_decoys()</span>
+<span class="sd">        save_as (str)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        realpath (str): realpath of log file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">best_decoys</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">dtypeError</span><span class="p">(</span><span class="s2">&quot;best_decoys&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">best_scores</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">dtypeError</span><span class="p">(</span><span class="s2">&quot;best_scores&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">)</span>
+
+    <span class="n">NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">best_decoys</span><span class="p">]</span>
+    <span class="n">realpath</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">save_table</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">NAMES</span><span class="p">,</span> <span class="n">best_scores</span><span class="p">],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;decoy name      score&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">realpath</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Arthur Voronin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

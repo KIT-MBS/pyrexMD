@@ -1,0 +1,45 @@
+/* #343131      greenish color */
+
+/* --- page layout --------------------------------------------------------- */
+
+body {
+    font-family: Helvetica, Arial;
+    font-size: 17px;
+}
+
+div.body {
+    color: #42f5f5;
+}
+
+div.sphinxsidebar a:hover {
+    text-decoration: none !important;
+}
+
+div.sphinxsidebar p {
+    color: #808080;
+}
+
+/* Home MDAnalysis colour */
+.wy-side-nav-search > a {
+    color: #343131;
+}
+
+/* Side MDAnalysis version colour */
+.wy-side-nav-search > div.version {
+    color: #808080;
+}
+
+/* Menubar caption colour */
+div.wy-menu-vertical span.caption-text {
+    color: #00c7a2;
+}
+
+/* Mobile layout menubar option */
+nav.wy-nav-top {
+    background: #343131;
+}
+
+/* Menu search bar outline (default blue) */
+.wy-side-nav-search input[type="text"] {
+    border-color: #808080;
+}

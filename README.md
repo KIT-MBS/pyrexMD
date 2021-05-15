@@ -1,5 +1,5 @@
-pyREX
-=====
+pyrexMD
+=======
 
 Workflow-orientated python package for Replica Exchange Molecular Dynamics.
 
@@ -9,7 +9,7 @@ Workflow-orientated python package for Replica Exchange Molecular Dynamics.
 https://manual.gromacs.org/documentation/current/index.html
 
 
-(2) install pyREX:
+(2) install pyrexMD:
 
 pip3 install .
 
@@ -21,12 +21,12 @@ jupyter nbextension enable --py widgetsnbextension
 jupyter nbextension enable --py nglview
 
 
-(Optional): download and install PyRosetta if you want to use pyREX.decoy:
+(Optional): download and install PyRosetta if you want to use pyrexMD.decoy:
 http://www.pyrosetta.org/home
 
 
 ## Tests
-To run the python tests install pytest, go into pyREX/tests folder and run python -m pytest
+To run the python tests install pytest, go into pyrexMD/tests folder and run python -m pytest
 
 ## Examples
-To run one of the short examples, go into the pyREX/examples folder and run jupyter notebook
+To run one of the short examples, go into the pyrexMD/examples folder and run jupyter notebook

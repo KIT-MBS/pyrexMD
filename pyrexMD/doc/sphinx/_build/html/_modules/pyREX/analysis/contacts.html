@@ -1,0 +1,927 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyREX.analysis.contacts &mdash; pyREMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyREMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyREX</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyREMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pyREX.html">pyREX</a> &raquo;</li>
+        
+      <li>pyREX.analysis.contacts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyREX.analysis.contacts</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+<span class="c1"># @Date:   07.05.2021</span>
+<span class="c1"># @Filename: contacts.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 15.05.2021</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1"># Native Contacts &amp; Bias Contacts Analyses</span>
+
+<span class="kn">import</span> <span class="nn">pyREX.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
+<span class="kn">import</span> <span class="nn">pyREX.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="kn">import</span> <span class="n">contacts</span> <span class="k">as</span> <span class="n">_contacts</span><span class="p">,</span> <span class="n">distances</span> <span class="k">as</span> <span class="n">_distances</span><span class="p">,</span> <span class="n">rms</span> <span class="k">as</span> <span class="n">_rms</span><span class="p">,</span> <span class="n">align</span> <span class="k">as</span> <span class="n">_align</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+
+<div class="viewcode-block" id="get_Native_Contacts"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.get_Native_Contacts">[docs]</a><span class="k">def</span> <span class="nf">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get list of unique RES pairs and list of detailed RES pairs with native contacts.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        len(NC) &lt; len(NC_d) because NC contains only unique RES pairs</span>
+<span class="sd">        whereas NC_d contains each ATOM pair.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (str): reference path</span>
+<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
+<span class="sd">        d_cutoff (float): distance cutoff for nat. contacts</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        method (str):</span>
+<span class="sd">            &#39;1&#39; or &#39;Contact_Matrix&#39;: mda.contact_matrix() with d_cutoff</span>
+<span class="sd">            &#39;2&#39; or &#39;Capped_Distance&#39;: mda.lib.distances.capped_distance() with d_cutoff #TODO</span>
+<span class="sd">            &#39;3&#39; or &#39;Shadow_Map&#39; #TODO</span>
+<span class="sd">        norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">        ignh (bool): ignore hydrogen</span>
+<span class="sd">        verbose (bool): print &quot;Note: Please verify that your selection is</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        NC (list): NCs (only unique RES pairs)</span>
+<span class="sd">        NC_d (list): detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+    <span class="c1"># load universe</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
+    <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ignh</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="n">ignh</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+
+    <span class="n">NC</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># list with unique NC pairs</span>
+    <span class="n">NC_d</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># detailed list with NCs containing (RES pairs), (ATOM pairs), (NAME pairs)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Contact_Matrix&#39;</span><span class="p">]:</span>
+        <span class="n">RES</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">resids</span>
+        <span class="n">NAMES</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">names</span>
+
+        <span class="n">CM</span> <span class="o">=</span> <span class="n">_distances</span><span class="o">.</span><span class="n">contact_matrix</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CM</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">CM</span><span class="p">)):</span>  <span class="c1"># no double count/reduce computing time</span>
+                <span class="k">if</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">CM</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="p">(</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
+                    <span class="n">NC</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+                    <span class="n">NC_d</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="p">(</span><span class="n">NAMES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">NAMES</span><span class="p">[</span><span class="n">j</span><span class="p">])])</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;Capped_Distance&#39;</span><span class="p">]:</span>
+        <span class="c1"># TODO method 2: Capped distance</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;Shadow_Map&#39;</span><span class="p">]:</span>
+        <span class="c1"># TODO method 3: SHADOWMAP</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_Contact_Map"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.plot_Contact_Map">[docs]</a><span class="k">def</span> <span class="nf">plot_Contact_Map</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span>
+                     <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">pdbid</span><span class="o">=</span><span class="s1">&#39;pdbid&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create contact map based on the reference pdb structure.</span>
+<span class="sd">    If DCA file is passed, correct/wrong contacts are visualized in green/red.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (str, universe, atomgrp): reference path or structure</span>
+<span class="sd">        DCA_fin (None, str): DCA input file</span>
+<span class="sd">        n_DCA (None, int): number of used DCA contacts</span>
+<span class="sd">        d_cutoff (float): distance cutoff for nat. contacts</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        pdbid (str): pdbid which is used for plot title</span>
+
+<span class="sd">        --- Kwargs: ---</span>
+<span class="sd">        **DCA_cols (tuple): columns containing the RES pairs in DCA_fin</span>
+<span class="sd">        **DCA_skiprows (int): ignore header rows of DCA_fin.</span>
+<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        **filter_DCA (bool):</span>
+<span class="sd">           True: ignore DCA pairs with |i-j| &lt; 3.\n</span>
+<span class="sd">          | False: use all DCA pairs w/o applying filter.</span>
+<span class="sd">        **RES_range (None, list): apply [RES_min, RES_max] range to ignore invalid RES ids.</span>
+<span class="sd">            None: do not narrow down RES range</span>
+<span class="sd">        **ignh (bool): ignore hydrogen (mass &lt; 1.2)</span>
+<span class="sd">        **norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">        **save_plot (bool):</span>
+
+<span class="sd">        .. hint:: args of misc.figure() are valid kwargs</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (matplotlib.figure.Figure)\n</span>
+<span class="sd">        ax (ax or list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DCA_cols&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+               <span class="s2">&quot;DCA_skiprows&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;filter_DCA&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;RES_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+               <span class="s2">&quot;ignh&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># init values</span>
+    <span class="k">if</span> <span class="s2">&quot;figsize&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)}</span>
+
+    <span class="c1"># load universe</span>
+    <span class="k">if</span> <span class="n">pdbid</span> <span class="o">==</span> <span class="s1">&#39;pdbid&#39;</span><span class="p">:</span>
+        <span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+    <span class="n">res_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
+    <span class="n">res_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
+
+    <span class="c1"># calculate nat. contacts for ref structure</span>
+    <span class="n">NC</span><span class="p">,</span> <span class="n">NC_details</span> <span class="o">=</span> <span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+
+    <span class="c1"># PLOT</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># conditions for markersize</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Plotting native contacts...&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">res_max</span> <span class="o">-</span> <span class="n">res_min</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;silver&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;silver&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># find matching contacts ij</span>
+    <span class="k">if</span> <span class="n">DCA_fin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">DCA</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_cols</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_skiprows</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">filter_DCA</span><span class="p">,</span> <span class="n">RES_range</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">RES_range</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">res_max</span> <span class="o">-</span> <span class="n">res_min</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">DCA</span><span class="p">:</span>     <span class="c1"># if item is in both lists plot it green otherwise red</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">DCA</span><span class="p">:</span>     <span class="c1"># if item is in both lists plot it green otherwise red</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># plt.legend(loc=&quot;upper left&quot;, numpoints=1)</span>
+    <span class="k">if</span> <span class="n">res_max</span> <span class="o">-</span> <span class="n">res_min</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_down</span><span class="p">(</span><span class="n">res_min</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_up</span><span class="p">(</span><span class="n">res_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_down</span><span class="p">(</span><span class="n">res_min</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_up</span><span class="p">(</span><span class="n">res_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># this locator puts ticks at regular intervals</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_down</span><span class="p">(</span><span class="n">res_min</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_up</span><span class="p">(</span><span class="n">res_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_down</span><span class="p">(</span><span class="n">res_min</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_up</span><span class="p">(</span><span class="n">res_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Residue i&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Residue j&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Contact Map of </span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_plot</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_Fig_Contact_Map.png&quot;</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;./plots&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_DCA_TPR"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.plot_DCA_TPR">[docs]</a><span class="k">def</span> <span class="nf">plot_DCA_TPR</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">pdbid</span><span class="o">=</span><span class="s1">&#39;pdbid&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots true positive rate for number of used DCA contacts.</span>
+
+<span class="sd">    Method:</span>
+<span class="sd">       - calculates shortest RES distance of the selection</span>
+<span class="sd">         (only heavy atoms if ignh is True)</span>
+<span class="sd">       - if distance is below threshold: DCA contact is true</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (str): reference path</span>
+<span class="sd">        ref (MDA universe/atomgrp): reference structure</span>
+<span class="sd">        DCA_fin (str): DCA input file (path)</span>
+<span class="sd">        n_DCA (int): number of used DCA contacts</span>
+<span class="sd">        d_cutoff (float): distance cutoff for nat. contacts</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        pdbid (str): pdbid; used for plot title and figure name</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        DCA_cols (tuple/list): columns containing the RES pairs in DCA_fin</span>
+<span class="sd">        DCA_skiprows (int): ignore header rows of DCA_fin</span>
+<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        filter_DCA (bool):</span>
+<span class="sd">            True: ignore DCA pairs with |i-j| &lt; 4</span>
+<span class="sd">            False: use all DCA pairs w/o applying filter</span>
+<span class="sd">        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids</span>
+<span class="sd">            None: do not narrow down RES range</span>
+<span class="sd">        ignh (bool): ignore hydrogen (mass &lt; 1.2)</span>
+<span class="sd">        norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">        TPR_layer (str): plot TPR curve in foreground or background layer</span>
+<span class="sd">            &quot;fg&quot;, &quot;foreground&quot;, &quot;bg&quot;, &quot;background&quot;</span>
+<span class="sd">        color (str)</span>
+<span class="sd">        shade_area (bool): shade area between L/2 and L ranked contacts</span>
+<span class="sd">        shade_color (str)</span>
+<span class="sd">        shade_alpha (float)</span>
+<span class="sd">        hline_color (None/str): color of 75p threshold (horizontal line)</span>
+<span class="sd">        hline_ls (str): linestyle of hline (default: &quot;-&quot;)</span>
+<span class="sd">        nDCA_opt_color (None/str): color of optimal/recommended nDCA threshold</span>
+<span class="sd">            nDCA_opt = misc.round_up(3/4*len(ref.residues), base=5))</span>
+<span class="sd">            (vertical line ~ nDCA_opt)</span>
+<span class="sd">            (horizontal line ~ TPR(nDCA_opt))</span>
+<span class="sd">        nDCA_opt_ls (str): linestyle of nDCA_opt (default: &quot;--&quot;)</span>
+<span class="sd">        save_plot (bool)</span>
+<span class="sd">        save_log (bool)</span>
+<span class="sd">        figsize (tuple)</span>
+<span class="sd">        marker (None/str): marker</span>
+<span class="sd">        ms (int): markersize</span>
+<span class="sd">        ls (str): linestyle</span>
+<span class="sd">        alpha (float): alpha value</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (matplotlib.figure.Figure)</span>
+<span class="sd">        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DCA_cols&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+               <span class="s2">&quot;DCA_skiprows&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;filter_DCA&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;RES_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+               <span class="s2">&quot;ignh&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;TPR_layer&quot;</span><span class="p">:</span> <span class="s2">&quot;fg&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;shade_area&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;shade_color&quot;</span><span class="p">:</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;shade_alpha&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+               <span class="s2">&quot;hline_color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;hline_ls&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;nDCA_opt_color&quot;</span><span class="p">:</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;nDCA_opt_ls&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;save_log&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;ls&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># load universe</span>
+    <span class="k">if</span> <span class="n">pdbid</span> <span class="o">==</span> <span class="s1">&#39;pdbid&#39;</span><span class="p">:</span>
+        <span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+    <span class="c1"># read DCA and calculate TPR</span>
+    <span class="n">DCA</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_cols</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_skiprows</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">filter_DCA</span><span class="p">,</span> <span class="n">RES_range</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">RES_range</span><span class="p">)</span>
+    <span class="n">DCA_TPR</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List with TPR of DCA contacts with d &lt; d_cutoff</span>
+    <span class="n">SD</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">RES_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">DCA</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">SD</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">RES_min</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">RES_min</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">d_cutoff</span><span class="p">:</span>  <span class="c1"># shift RES ids to match matrix indices</span>
+            <span class="n">z</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">percent_value</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">percent</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">DCA_TPR</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">percent_value</span><span class="p">)</span>
+
+    <span class="c1"># LOG FILE</span>
+    <span class="c1"># List with number of DCA contacts and TPR values</span>
+    <span class="n">DCA_TPR_sorted</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">DCA_TPR</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">DCA_TPR</span><span class="p">))]</span>
+    <span class="n">DCA_TPR_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">DCA_TPR_sorted</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># sort by TPR value</span>
+
+    <span class="c1"># PLOT: find optimum for number of DCA contacts</span>
+    <span class="c1"># x-axis: number of DCA contacts</span>
+    <span class="c1"># y-axis: % of DCA contacts with d &lt;= d_cuttoff</span>
+    <span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s1">&#39;darkgrid&#39;</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">TPR_layer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;bg&quot;</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">TPR_layer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;background&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_DCA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">DCA_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ls</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_DCA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">DCA_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># plt.legend(loc=&quot;upper right&quot;, numpoints=1)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_DCA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">105</span><span class="p">)</span>
+        <span class="c1"># if min(DCA_TPR) &lt; 50:</span>
+        <span class="c1">#     plt.ylim(0, 105)  # full range for TPR</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     plt.ylim(50, 105) # smaller range for very good TPR</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">shade_area</span><span class="p">:</span>
+            <span class="n">L1</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">round_down</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">n_residues</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">L2</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">n_residues</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">shade_alpha</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">shade_color</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">L1</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;L/2&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">shade_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">L2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">shade_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">hline_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">hline_color</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">hline_ls</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="s2">&quot;75&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">hline_color</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+            <span class="c1">#_misc.set_pad(ax, xpad=None, ypad=10) # set padding after tight_layout()</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nDCA_opt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">round_to_base</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="p">),</span> <span class="mi">5</span><span class="p">))</span>
+            <span class="n">nDCA_opt_TPR</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">DCA_TPR</span><span class="p">[</span><span class="n">nDCA_opt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># requires index shift by 1 to get correct value</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">nDCA_opt_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_ls</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">nDCA_opt_TPR</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">nDCA_opt_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">nDCA_opt</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_ls</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">nDCA_opt</span><span class="o">-</span><span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">nDCA_opt</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+            <span class="c1">#_misc.set_pad(ax, xpad=10, ypad=10)  # set padding after tight_layout()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Number of ranked contacts&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;True Positive Rate (%)&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TPR of </span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">TPR_layer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;fg&quot;</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">TPR_layer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;foreground&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_DCA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">DCA_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ls</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_DCA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">DCA_TPR</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">hline_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">set_pad</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># set padding after tight_layout()</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">set_pad</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>    <span class="c1"># set padding after tight_layout()</span>
+
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_plot</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_Fig_DCA_TPR.png&quot;</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;./plots&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_log</span><span class="p">:</span>
+            <span class="n">save_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;./logs&quot;</span><span class="p">)</span>
+            <span class="n">file_dir</span> <span class="o">=</span> <span class="n">save_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_DCA_TPR.log&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Format:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Number of DCA Contacts </span><span class="se">\t</span><span class="s2"> True Positive Rate (%)</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;10 Best values (100</span><span class="si">% e</span><span class="s2">xcluded):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">DCA_TPR_sorted</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">DCA_TPR_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">100.0</span><span class="p">:</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DCA_TPR_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">DCA_TPR_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Full list:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">0</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="mf">0.0</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">DCA_TPR</span><span class="p">)):</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">DCA_TPR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved log as: </span><span class="si">{</span><span class="n">file_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="get_Qnative"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.get_Qnative">[docs]</a><span class="k">def</span> <span class="nf">get_Qnative</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get QValue for native contacts.</span>
+
+<span class="sd">    1) norms and aligns mobile to ref so that atomgroups have same resids</span>
+<span class="sd">    2) performs native contact analysis</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mobile (MDA universe): mobile structure with trajectory</span>
+<span class="sd">        ref (MDA universe): reference structure</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        sss (list): [start, stop, step]</span>
+<span class="sd">            start (None/int): start frame</span>
+<span class="sd">            stop (None/int): stop frame</span>
+<span class="sd">            step (None/int): step size</span>
+<span class="sd">        d_cutoff (float): cutoff distance</span>
+<span class="sd">        plot (bool)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        sel1 (str): selection string for contacting group (1 to 1 mapping)</span>
+<span class="sd">        sel2 (str): selection string for contacting group (1 to 1 mapping)</span>
+<span class="sd">            Note: ignores sel (arg) if sel1 or sel2 (kwargs) are passed</span>
+<span class="sd">        method (str): method for QValues calculation</span>
+<span class="sd">            &#39;radius_cut&#39;: native if d &lt; d_cutoff</span>
+<span class="sd">            &#39;soft_cut&#39;: see help(MDAnalysis.analysis.contacts.soft_cut_q)</span>
+<span class="sd">            &#39;hardcut&#39;: native if d &lt; d_ref</span>
+<span class="sd">        start (None/int): start frame</span>
+<span class="sd">        stop (None/int): stop frame</span>
+<span class="sd">        step (None/int): step size</span>
+<span class="sd">        color (str)</span>
+<span class="sd">        save_plot (bool)</span>
+<span class="sd">        save_as (str): &quot;Qnative.png&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FRAMES (list)</span>
+<span class="sd">        QNATIVE (list): fraction of native contacts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sel1&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;sel2&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;radius_cut&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+               <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;Qnative.png&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span> <span class="o">=</span> <span class="n">sel</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span> <span class="o">=</span> <span class="n">sel</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Set either sel (arg) or both sel1 and sel2 (kwargs).&quot;</span><span class="p">)</span>
+    <span class="c1">#####################################################################</span>
+    <span class="n">_ana</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+
+    <span class="n">ref1</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span><span class="p">)</span>  <span class="c1"># reference group 1 in reference conformation</span>
+    <span class="n">ref2</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span><span class="p">)</span>  <span class="c1"># reference group 2 in reference conformation</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">_contacts</span><span class="o">.</span><span class="n">Contacts</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span><span class="p">),</span> <span class="n">refgroup</span><span class="o">=</span><span class="p">(</span><span class="n">ref1</span><span class="p">,</span> <span class="n">ref2</span><span class="p">),</span>
+                                 <span class="n">radius</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+
+    <span class="n">results</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">FRAMES</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">timeseries</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">QNATIVE</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">timeseries</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average qnative value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QNATIVE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=0.3)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Qnative&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_plot</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span></div>
+
+
+<div class="viewcode-block" id="get_Qbias"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.get_Qbias">[docs]</a><span class="k">def</span> <span class="nf">get_Qbias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get QValue for formed biased contacts.</span>
+
+<span class="sd">    Note 1: selection of get_Qbias() is hardcoded to sel=&#39;protein and name CA&#39;.</span>
+<span class="sd">    Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from</span>
+<span class="sd">            sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count</span>
+<span class="sd">            significantly. Most of them will count as non-native and thus make</span>
+<span class="sd">            the Qbias value very low.</span>
+
+<span class="sd">    Note 2: MDAnalysis&#39; qvalue algorithm includes selfcontacts. Comparison of both methods</span>
+<span class="sd">            yields better results when include_selfcontacts (bool, see kwargs) is set to</span>
+<span class="sd">            True. However this improves the calculated Qbias value artificially (e.g. even</span>
+<span class="sd">            when all used bias contacts are never formed, Qbias will not be zero due to the</span>
+<span class="sd">            selfcontact counts)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mobile (MDA universe): mobile structure with trajectory</span>
+<span class="sd">        bc (list): list with bias contacts to analyze</span>
+<span class="sd">        sss (list): [start, stop, step]</span>
+<span class="sd">            start (None/int): start frame</span>
+<span class="sd">            stop (None/int): stop frame</span>
+<span class="sd">            step (None/int): step size</span>
+<span class="sd">        d_cutoff (float): cutoff distance</span>
+<span class="sd">        norm (bool): norm universe before calculation.</span>
+<span class="sd">        plot (bool)</span>
+<span class="sd">        warn (bool): print important warnings about usage of this function.</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        dtype (dtype): data type of returned contact matrix CM</span>
+<span class="sd">        include_selfcontacts (bool): sets norm of QBIAS. Default is False.</span>
+<span class="sd">            True: includes selfcontacts on main diagonal of CM (max count &gt; len(bc))</span>
+<span class="sd">            False: ignores selfcontacts on main diagonal of CM (max count == len(bc))</span>
+<span class="sd">        start (None/int): start frame</span>
+<span class="sd">        stop (None/int): stop frame</span>
+<span class="sd">        step (None/int): step size</span>
+<span class="sd">        color (str)</span>
+<span class="sd">        save_plot (bool)</span>
+<span class="sd">        save_as (str): &quot;Qbias.png&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FRAMES (np.array)</span>
+<span class="sd">        QBIAS (np.array): fraction of formed bias contacts</span>
+<span class="sd">        CM (np.array): array of distance matrices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+               <span class="s2">&quot;include_selfcontacts&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+               <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;Qbias.png&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="s2">&quot;protein and name CA&quot;</span>  <span class="c1"># selection must be hardcoded (see print msg below)</span>
+    <span class="c1">################################################################################</span>
+    <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 1: selection of get_Qbias() is hardcoded to sel=&#39;protein and name CA&#39;.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count significantly. Most of them will count as non-native and thus make the Qbias value very low.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 2: MDAnalysis&#39; qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated Qbias value artificially (e.g. even when all used bias contacts are never formed, Qbias will not be zero due to the selfcontact counts)&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
+
+    <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># QBias value (fraction of formed bias contacts)</span>
+    <span class="n">CM</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># Contact Matrices</span>
+
+    <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="o">=</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="n">DM</span><span class="p">:</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="p">(</span><span class="n">dm</span> <span class="o">&lt;=</span> <span class="n">d_cutoff</span><span class="p">)</span>   <span class="c1"># converts distance matrix to bool matrix -&gt; use as contact matrix</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">include_selfcontacts</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="c1"># norm based on used bias contacts</span>
+            <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">))</span>
+            <span class="n">CM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># norm based on used bias contacts and selfcontacts</span>
+            <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)))</span>
+            <span class="n">CM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+
+    <span class="n">FRAMES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average qbias value: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#plt.plot(FRAMES, QBIAS, color=cfg.color, alpha=0.3)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Qbias&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_plot</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">CM</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_formed_contactpairs"><a class="viewcode-back" href="../../../pyREX.analysis.html#pyREX.analysis.contacts.get_formed_contactpairs">[docs]</a><span class="k">def</span> <span class="nf">get_formed_contactpairs</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get formed contact pairs by converting a contact matrix cm into a list with</span>
+<span class="sd">    tuples (RESi,RESj).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        u (mda.Universe): used to obtain topology information</span>
+<span class="sd">        cm (np.array): single contact matrix of size (n_atoms, n_atoms)</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        norm (bool): norm universe before obtaining topology information</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        include_selfcontacts (bool): include contacts on main diagonal of cm. Default is False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CP (list): list with contact pairs (RESi,RESj)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;include_selfcontacts&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">########################################################</span>
+    <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">RES</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">resids</span>   <span class="c1"># get RESIDS information</span>
+    <span class="n">CP</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list with contact pairs</span>
+
+    <span class="c1">### test if input is single contact matrix</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">cm</span><span class="p">))</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;get_formed_contactpairs() expected contact map cm with size (n_atoms, n_atoms). You probably passed a contact map with size (n_frames, n_atoms, n_atoms)&quot;</span><span class="p">)</span>
+
+    <span class="c1">### calculate contact pairs</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">include_selfcontacts</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="c1"># loop over upper triangle</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">CP</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># loop over upper triangle including main diagonal</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">CP</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">CP</span></div>
+
+<span class="c1"># Note: seems buggy</span>
+<span class="c1"># def Contact_Analysis_CA(ref, top, traj, d_cutoff=6.0, sel=&#39;protein and name CA&#39;,</span>
+<span class="c1">#                         pdbid=&#39;pdbid&#39;, plot=True, save_plot=False, **kwargs):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Works currently only for CA level. All atom version is very slow.</span>
+<span class="c1">#</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         ref (str): reference path</span>
+<span class="c1">#         ref (MDA universe/atomgrp): reference structure</span>
+<span class="c1">#         top (str): topology path</span>
+<span class="c1">#         top (MDA universe/atomgrp): topology</span>
+<span class="c1">#         traj (str): trajectory path</span>
+<span class="c1">#         traj (MDA universe/atomgrp): trajectory</span>
+<span class="c1">#         sel (str): selection string</span>
+<span class="c1">#         pdbid (str): pdbid; used for plot title and figure name</span>
+<span class="c1">#         plot (bool): create plot</span>
+<span class="c1">#         save_plot (bool)</span>
+<span class="c1">#</span>
+<span class="c1">#     Kwargs:</span>
+<span class="c1">#         # see args of misc.figure()</span>
+<span class="c1">#</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         TIME (list): time in ps</span>
+<span class="c1">#         QValues (list): fraction of nat. contacts</span>
+<span class="c1">#         C (list): unique contact pairs IJ</span>
+<span class="c1">#         C_NperRes (list): contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     # load universe and shift residues if needed</span>
+<span class="c1">#</span>
+<span class="c1">#     if pdbid == &#39;pdbid&#39;:</span>
+<span class="c1">#         pdbid = _misc.get_PDBid(ref)</span>
+<span class="c1">#     if type(ref) is str:</span>
+<span class="c1">#         ref = mda.Universe(ref)</span>
+<span class="c1">#     if type(top) is str and type(traj) is str:</span>
+<span class="c1">#         u = mda.Universe(top, traj)</span>
+<span class="c1">#     elif type(top) is str and type(traj) is not str:</span>
+<span class="c1">#         u = mda.Universe(top, traj.filename)</span>
+<span class="c1">#     elif type(top) is not str and type(traj) is str:</span>
+<span class="c1">#         u = mda.Universe(top.filename, traj)</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         u = mda.Universe(top.filename, traj.filename)</span>
+<span class="c1">#</span>
+<span class="c1">#     _ana.norm_universe(u)</span>
+<span class="c1">#     a = u.select_atoms(sel)</span>
+<span class="c1">#     _ana.norm_and_align_universe(ref, u)  # u is eq. to top</span>
+<span class="c1">#</span>
+<span class="c1">#     # calculate nat. contacts for ref structure</span>
+<span class="c1">#     NC, NC_d = get_Native_Contacts(ref, d_cutoff, sel)</span>
+<span class="c1">#</span>
+<span class="c1">#     # calculate contacts for trajectory</span>
+<span class="c1">#     TIME = []  # time</span>
+<span class="c1">#     QValues = []</span>
+<span class="c1">#     C = []  # unique contact pairs (RES/IJ pairs)</span>
+<span class="c1">#     C_NperRES = []  # contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</span>
+<span class="c1">#</span>
+<span class="c1">#     print(&quot;Performing contact analysis for trajectory.&quot;)</span>
+<span class="c1">#     for ts in tqdm(u.trajectory):</span>
+<span class="c1">#         TIME.append(u.trajectory.time)</span>
+<span class="c1">#         dist_array = _distances.distance_array(a.positions, a.positions)</span>
+<span class="c1">#</span>
+<span class="c1">#         ignore_asr = 3  # asr: adjecent sequence residues</span>
+<span class="c1">#         for i in range(ignore_asr + 1):  # left half of main diag</span>
+<span class="c1">#             np.fill_diagonal(dist_array[i:], 999999999)</span>
+<span class="c1">#         dist_array = np.matrix.transpose(dist_array)  # right half of main diag</span>
+<span class="c1">#         for i in range(ignore_asr + 1):</span>
+<span class="c1">#             np.fill_diagonal(dist_array[i:], 999999999)</span>
+<span class="c1">#         dist_array = np.matrix.transpose(dist_array)</span>
+<span class="c1">#</span>
+<span class="c1">#         C_NperRES_now = np.sum(d &lt;= d_cutoff for d in dist_array)</span>
+<span class="c1">#         C_NperRES.append(C_NperRES_now)</span>
+<span class="c1">#</span>
+<span class="c1">#         # get unique contact pairs</span>
+<span class="c1">#         IJ = np.where(dist_array &lt;= d_cutoff)</span>
+<span class="c1">#         IJ = np.transpose(IJ)</span>
+<span class="c1">#         IJ = [(item[0] + 1, item[1] + 1) for item in IJ if item[0] &lt; item[1]]  # index shift for resids: 0..n-1 --&gt; 1..n</span>
+<span class="c1">#         C.append(IJ)</span>
+<span class="c1">#</span>
+<span class="c1">#         # get QValues</span>
+<span class="c1">#         num = 0.0</span>
+<span class="c1">#         div = len(NC)</span>
+<span class="c1">#         for item in IJ:</span>
+<span class="c1">#             if item in NC:</span>
+<span class="c1">#                 num += 1</span>
+<span class="c1">#         QValues.append(round(num / div, 2))</span>
+<span class="c1">#</span>
+<span class="c1">#     # PLOT</span>
+<span class="c1">#     if plot:</span>
+<span class="c1">#         TIME_ns = [item * 0.001 for item in TIME]</span>
+<span class="c1">#         C_perFrame = [len(item) for item in C]</span>
+<span class="c1">#</span>
+<span class="c1">#         fig, ax = _misc.figure(**kwargs)</span>
+<span class="c1">#         plt.plot(TIME_ns, QValues, &quot;r.&quot;, ms=1)</span>
+<span class="c1">#         plt.plot(TIME_ns, QValues, &quot;r&quot;, lw=1.5, alpha=0.3)</span>
+<span class="c1">#         # ax.set_ylim(_misc.round_down(min(QValues), 0.1), _misc.round_up(max(QValues), 0.1))</span>
+<span class="c1">#         ax.set(xlabel=&quot;Time (ns)&quot;, ylabel=&quot;Q&quot;)</span>
+<span class="c1">#         plt.title(&quot;QValues, avg = {:.2f}&quot;.format(np.mean(QValues)), fontweight=&quot;bold&quot;)</span>
+<span class="c1">#         plt.tight_layout()</span>
+<span class="c1">#         if save_plot:</span>
+<span class="c1">#             _misc.savefig(filename=f&quot;{pdbid}_Fig_QValues.png&quot;, filedir=&quot;./plots&quot;)</span>
+<span class="c1">#         plt.show()</span>
+<span class="c1">#</span>
+<span class="c1">#         fig, ax = _misc.figure()</span>
+<span class="c1">#         plt.plot(TIME_ns, C_perFrame, &quot;r.&quot;, ms=1)</span>
+<span class="c1">#         plt.plot(TIME_ns, C_perFrame, &quot;r&quot;, lw=1.5, alpha=0.3)</span>
+<span class="c1">#         ax.set_ylim(_misc.round_down(min(C_perFrame), 5), _misc.round_up(max(C_perFrame), 5))</span>
+<span class="c1">#         ax.set(xlabel=&quot;Time (ns)&quot;, ylabel=&quot;Contacts&quot;)</span>
+<span class="c1">#         plt.title(&quot;Contacts, avg = {:.2f}&quot;.format(np.mean(C_perFrame)), fontweight=&quot;bold&quot;)</span>
+<span class="c1">#         plt.tight_layout()</span>
+<span class="c1">#         if save_plot:</span>
+<span class="c1">#             _misc.savefig(filename=f&quot;{pdbid}_Fig_Contacts.png&quot;, filedir=&quot;./plots&quot;)</span>
+<span class="c1">#         plt.show()</span>
+<span class="c1">#</span>
+<span class="c1">#     return(TIME, QValues, C, C_NperRES)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Arthur Voronin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
