@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 import pyrexMD.misc as _misc
 from pyrexMD.misc import get_PDBid
@@ -803,7 +803,7 @@ def shortest_RES_distances(u, sel):
         SD = np.maximum(SD, SD_t)  # -> take element-wise maximum
 
     # convert to array with dtype=object since array contains lists, tuples and sequences
-    SD_d = array(SD_d, dtype=object)
+    SD_d = np.array(SD_d, dtype=object)
     return(SD, SD_d)
 
 
@@ -843,9 +843,9 @@ def get_trendline(xdata, ydata, compress=10):
         trend_ydata = trend_ydata[: -1] + [sum(ydata[-remainder:])/float(remainder)]
 
     if isinstance(xdata, np.ndarray):
-        trend_xdata = array(trend_xdata)
+        trend_xdata = np.array(trend_xdata)
     if isinstance(ydata, np.ndarray):
-        trend_ydata = array(trend_ydata)
+        trend_ydata = np.array(trend_ydata)
     return trend_xdata, trend_ydata
 
 

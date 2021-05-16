@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 #from __future__ import division, print_function
 from builtins import next
@@ -20,15 +20,16 @@ def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
 
     Args:
         best_decoys_dir (str): directory with
-            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
-            - decoy_scores.log (output of cluster.log_cluster.decoys())
-        odir (str): output directory
-            Note: if "PDBID" in <odir> and no <pdbid> kwarg is passed
-                  -> find and replace "PDBID" in <odir> automatically based on filenames
+
+          - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
+          - decoy_scores.log (output of cluster.log_cluster.decoys())
+        odir (str):
+          | output directory
+          | Note: if "PDBID" in <odir> and no <pdbid> kwarg is passed -> find and replace "PDBID" in <odir> automatically based on filenames
         create_dir (bool)
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         pdbid (str)
         logfile (str): logfile name (default: "decoy_scores.log")
         water (str): water model (default: "tip3p")
@@ -36,7 +37,8 @@ def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
         cprint_color (str)
 
     Returns:
-        odir (str): output directory with ref pdb files (forcefield is applied)
+        odir (str)
+            output directory with ref pdb files (forcefield is applied)
     """
     default = {"pdbid": "PDBID",
                "logfile": "decoy_scores.log",
@@ -90,13 +92,14 @@ def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=F
 
     Args:
         best_decoys_dir (str): directory with
-            - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
-            - decoys_score.log (output of cluster.log_cluster.decoys())
+
+          - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
+          - decoys_score.log (output of cluster.log_cluster.decoys())
         rex_dir (str): rex directory with folders rex_1, rex_2, ...
         create_dir (bool)
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         cprint_color (str)
     """
     default = {"cprint_color": "blue"}
@@ -125,7 +128,8 @@ def get_REX_DIRS(main_dir="./", realpath=True):
         realpath (bool): return realpath
 
     Returns:
-        REX_DIRS (list): list with REX directory paths
+        REX_DIRS (list)
+            list with REX directory paths
     """
     n_REX = 300   # hardcoded but will be filtered automatically
     REX_DIRS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))
@@ -145,7 +149,8 @@ def get_REX_PDBS(main_dir="./", realpath=True):
         realpath (bool): return realpath
 
     Returns:
-        REX_PDBS (list): list with PDB paths within folders rex_1, rex_2, etc.
+        REX_PDBS (list)
+            list with PDB paths within folders rex_1, rex_2, etc.
     """
     n_REX = 300   # hardcoded but will be filtered automatically
     REX_PDBS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}/*.pdb", realpath=realpath))
@@ -158,19 +163,19 @@ def get_REX_PDBS(main_dir="./", realpath=True):
 
 def test_REX_PDBS(REX_PDBS, ref_pdb, ignh=True, verbose=True, **kwargs):
     """
-    Test if all REX PDBS have equal RES, ATOM, NAME arrays.
-    Uses ref as "template PDB".
+    Test if all REX PDBS have equal RES, ATOM, NAME arrays. Uses ref as "template PDB".
 
     Args:
         REX_PDBS (list): output of get_REX_PDBS()
-        ref_pdb (str): reference pdb
-            if target is known: apply ff -> save as ref -> use as ref
-            if target is unknown: use one of REX_PDBS -> apply ff -> use as ref
+        ref_pdb (str):
+          | reference pdb
+          | if target is known: apply ff -> save as ref -> use as ref
+          | if target is unknown: use one of REX_PDBS -> apply ff -> use as ref
         ignh (bool): ignore hydrogen
         verbose (bool)
 
-    Kwargs:
-        cprint_color (None/str)
+    Keyword Args:
+        cprint_color (None, str)
     """
     default = {"cprint_color": "green"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -203,7 +208,8 @@ def WF_getParameter_boxsize(logfile="./logs/editconf.log", base=0.2, verbose=Tru
         verbose (bool)prep_REX_tpr
 
     Returns:
-        boxsize (float): suggested boxsize parameter
+        boxsize (float)
+            suggested boxsize parameter
     """
     boxsize = None
 
@@ -234,13 +240,14 @@ def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verb
 
     Args:
         logfile (str): path to <editconf.log> containing the line 'system size: X Y Z'
-        maxsol_reduce (int): reduce max solution number taken from <logfile>
-                          -> guarantees fixed solution number for different
-                             rstart configurations
+        maxsol_reduce (int):
+          | reduce max solution number taken from <logfile>
+          | -> guarantees fixed solution number for different start configurations
         verbose (bool)
 
     Returns:
-        maxsol (int): suggested max solution parameter
+        maxsol (int)
+            suggested max solution parameter
     """
     with open(logfile, "r") as fin:
         for line in fin:
@@ -308,9 +315,10 @@ def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
 
     Args:
         rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
-        nsteps (None/int): maximum number of steps
-            None: use .mdp option
-            int: use instead of .mdp option
+        nsteps (None,int):
+          | maximum number of steps
+          | None: use .mdp option
+          | int: use instead of .mdp option
         verbose (bool): show/hide gromacs output
     """
     for rex_dir in rex_dirs:
@@ -344,17 +352,22 @@ def parsePDB_RES_ATOM_NAME(fin, parse="all", skiprows="auto", ignh=True):
 
     Args:
         fin (str): PDB file
-        parse (str): select which atoms should be parsed. ("all" or "<atom name>")
-            "all": parse all atoms
-            "CA": parse only CA atoms (any atom name works)
-        skiprows (int): ignore header rows of fin
-            -1 or "auto": auto detect
+        parse (str):
+          | select which atoms should be parsed. ("all" or "<atom name>")
+          | "all": parse all atoms
+          | "CA": parse only CA atoms (any atom name works)
+        skiprows (int):
+          | ignore header rows of fin
+          | -1 or "auto": auto detect
         ignh (bool): ignore hydrogen
 
     Returns:
-        RES (list): residue column of PDB
-        ATOM (list): atom column of PDB
-        NAME (list): name column of PDB
+        RES (list)
+            residue column of PDB
+        ATOM (list)
+            atom column of PDB
+        NAME (list)
+            name column of PDB
     """
     # help function to ignh
     def HELP_atom_is_hydrogen(line):
@@ -428,8 +441,9 @@ def create_special_group_ndx(fin, parse="CA", save_as="special_group.ndx"):
 
     Args:
         fin (str): PDB ref file (after applying force field)
-        parse (str): select which atoms should be parsed.
-            "CA": parse only CA atoms (any atom name works)
+        parse (str):
+          | select which atoms should be parsed.
+          | "CA": parse only CA atoms (any atom name works)
         save_as (str)
     """
     RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(fin=fin, parse=parse)
@@ -449,8 +463,9 @@ def create_pull_groups_ndx(fin, parse="CA", save_as="pull_groups.ndx"):
 
     Args:
         fin (str): PDB ref file (after applying force field)
-        parse (str): select which atoms should be parsed.
-            "CA": parse only CA atoms (any atom name works)
+        parse (str):
+          | select which atoms should be parsed.
+          | "CA": parse only CA atoms (any atom name works)
         save_as (str)
     """
     RES, ATOM, NAME = parsePDB_RES_ATOM_NAME(fin=fin, parse=parse)
@@ -467,56 +482,64 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, parse="CA",
                             n_bonds=1, ref_skiprows="auto", DCA_skiprows="auto",
                             filter_DCA=True, save_log=True, **kwargs):
     """
-    NOTE: all n_bonds options are currently disabled except n_bonds=1
+    .. Warning:: all n_bonds options are currently disabled except n_bonds=1
 
-    Get DCA contact mapping:
-    Return lists of matching RES pairs and ATOM pairs for "DCA REX Workflow"
+    Get DCA contact mapping. Return lists of matching RES pairs and ATOM pairs
+    for "DCA REX Workflow"
 
     Algorithm:
-        - Read files line by line, skip header if skiprows is set correctly
-            -- ref_pdb: get RES, ATOM, NAME
-            -- DCA_fin: get DCA_pairs
-        - for IJ in DCA_pairs:
-            -- find matching CA atoms (CA_ij)
-            -- append IJ to RES_pair, CA_ij to ATOM_pair
-        - return RES_pair and ATOM_pair
+
+      - Read files line by line, skip header if skiprows is set correctly
+
+        - ref_pdb: get RES, ATOM, NAME
+        - DCA_fin: get DCA_pairs
+      - for IJ in DCA_pairs:
+
+        - find matching CA atoms (CA_ij)
+        - append IJ to RES_pair, CA_ij to ATOM_pair
+      - return RES_pair and ATOM_pair
 
     Args:
         ref_pdb (str): reference PDB (path)
-        ref_skiprows (int): ignore header rows of ref
-            -1 or "auto": auto detect
+        ref_skiprows (int):
+          | ignore header rows of ref
+          | -1 or "auto": auto detect
         DCA_fin (str): DCA file (path)
         n_DCA (int): number of DCA contacts which should be used
-        usecols (tuple/list): columns containing the RES pairs in DCA_fin
+        usecols (tuple, list): columns containing the RES pairs in DCA_fin
         parse (str): select which atom(names) should be parsed. Default "CA"
-        n_bonds (int/str): number of restraints per DCA contact
-            "all", 0 or -1: bonds between all heavy atoms of RES pair ij
-                    -> all permutations of heavy atoms per DCA pair
-            1: bonds between  CA atoms of RES pair ij
-                    -> 1 bond per DCA pair
-            2: bonds between CA, CB atoms of RES pair ij
-                    -> 2 bonds per DCA pair
-            3: bonds between CA, CB, CG atoms of RES pair ij
-                    -> 3 bonds per DCA pair
-        DCA_skiprows (int): ignore header rows of DCA_fin
-            -1 or "auto": auto detect
+        n_bonds (int, str):
+          | number of restraints per DCA contact
+          | "all", 0 or -1: bonds between all heavy atoms of RES pair ij
+          |         -> all permutations of heavy atoms per DCA pair
+          | 1: bonds between  CA atoms of RES pair ij
+          |         -> 1 bond per DCA pair
+          | 2: bonds between CA, CB atoms of RES pair ij
+          |         -> 2 bonds per DCA pair
+          | 3: bonds between CA, CB, CG atoms of RES pair ij
+          |         -> 3 bonds per DCA pair
+        DCA_skiprows (int):
+          | ignore header rows of DCA_fin
+          | -1 or "auto": auto detect
         filter_DCA (bool):
-            True: ignore DCA pairs with |i-j| < 3
-            False: use all DCA pairs w/o applying filter
+          | True: ignore DCA pairs with Abs(i-j) < 3
+          | False: use all DCA pairs w/o applying filter
         save_log (bool)
 
-    Kwargs:
-        cprint_color (None/str): colored print color
-        pdbid (str):
-            "auto" (default): detect PDBID based on ref_PDB path
+    Keyword Args:
+        cprint_color (None, str): colored print color
+        pdbid (str): "auto" (default): detect PDBID based on ref_PDB path
         default_dir (str): "./"
-        save_as (str): "PDBID_DCA_used.txt"
-            detect and replace PDBID in kwarg <save_as> based on ref_PDB path
-            if kwarg <pdbid> is "auto" (default).
+        save_as (str):
+          | "PDBID_DCA_used.txt"
+          | detect and replace PDBID in kwarg <save_as> based on ref_PDB path
+          | if kwarg <pdbid> is "auto" (default).
 
     Returns:
         RES_PAIR (list)
+            list with RES pairs
         ATOM_PAIR (list)
+            list with ATOM pairs
     """
     default = {"cprint_color": "blue",
                "pdbid": "auto",
@@ -673,19 +696,22 @@ def DCAREX_modify_scoreFile(score_fin, shift_res, res_cols=(0, 1), score_col=(2)
     Args:
         score_fin (str): path to score file
         shift_res (int): shift residues by this value
-        outputFileName (str): realpath to modified score file.
-            if "PDBID_mod.score" is left as default: try to automatically detect
-            pattern based on score_fin and add the "_mod" part into filename.
+        outputFileName (str):
+          | realpath to modified score file.
+          | if "PDBID_mod.score" is left as default: try to automatically detect
+          | pattern based on score_fin and add the "_mod" part into filename.
         res_cols (tuple/list): score_fin columns with residue numbers
         score_col (tuple/list): score_fin column with score/confidence
 
-    Kwargs:
-        save_as (str): "PDBID_mod.score"
-            if "PDBID_mod.score" (default): try to automatically detect pattern
-            based on score_fin and insert the "_mod" part into filename.
+    Keyword Args:
+        save_as (str):
+          | "PDBID_mod.score"
+          | if "PDBID_mod.score" (default): try to automatically detect pattern
+          | based on score_fin and insert the "_mod" part into filename.
 
     Returns:
-        save_as (str): realpath to modified score file
+        save_as (str)
+            realpath to modified score file
     """
     default = {"save_as": "PDBID_mod.score"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -719,23 +745,26 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
     "DCA_used.txt" is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.
 
     Modify topology:
-        - top_fin (topol.top file): use as template
-        - DCA_used_fin (DCA_used.txt): use all contacts as restraints
-        - modify bond section of new topology by adding contacts with constant force constant
+
+      - top_fin (topol.top file): use as template
+      - DCA_used_fin (DCA_used.txt): use all contacts as restraints
+      - modify bond section of new topology by adding contacts with constant force constant
 
     Args:
         top_fin (str): topology file (path)
         DCA_used_fin (str): DCA used file (path)
         force_k (int, float): force constant of DCA pairs
-        DCA_skiprows (int): ignore header rows of DCA_used_fin
+        DCA_skiprows (int):
+          | ignore header rows of DCA_used_fin
+          | -1 or "auto": auto detect
 
-            -1 or "auto": auto detect
-    Kwargs:
+    Keyword Args:
         pdbid (str): "auto" (default): detect PDBID based on ref_PDB path
         default_dir (str): "./" (default)
-        save_as (str): "PDBID_topol_mod.top"
-            detect and replace PDBID in save_as based on ref_PDB path
-            if kwarg <pdbid> is "auto" (default).
+        save_as (str):
+          | "PDBID_topol_mod.top"
+          | detect and replace PDBID in save_as based on ref_PDB path
+          | if kwarg <pdbid> is "auto" (default).
     """
     default = {"pdbid": "auto",
                "default_dir": "./",
@@ -793,9 +822,7 @@ def DCAREX_modify_topology(top_fin, DCA_used_fin, force_k=10, DCA_skiprows="auto
 ### TODO
 def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_scaling="T", **kwargs):
     """
-    TODO
-
-    Modify topology with lambda scaling prop to temperature.
+    .. TODO :: Modify topology with lambda scaling prop to temperature.
 
     Args:
         top_fin
@@ -804,9 +831,8 @@ def DCAREX_modify_topology_v2(top_fin, temp_fin, force_range=[10, 40], lambda_sc
             T: prop. to T
           1/T: prop to 1/T
 
-    Kwargs:
-        pdbid (str):
-            "auto" (default): detect PDBID based on ref_PDB path
+    Keyword Args:
+        pdbid (str): "auto" (default): detect PDBID based on ref_PDB path
         default_dir (str): "./"
         save_as (str) : "PDBID_topol_mod.top"
     """
@@ -999,8 +1025,7 @@ def prep_REX_temps(T_0=None, n_REX=None, k=None):
 
 def prep_REX_mdp(main_dir="./", template="rex.mdp", n_REX=None, verbose=True):
     """
-    Prepare REX mdp:
-    copy template and change tempereratures according to rex_temps.log
+    Prepare REX mdp -> copy template and change tempereratures according to rex_temps.log
 
     Args:
         main_dir (str): main directory with rex_1, rex_2, etc.
@@ -1047,13 +1072,13 @@ def prep_REX_tpr(main_dir="./", n_REX=None, verbose=False, **kwargs):
         n_REX (None/int): number of replica
         verbose (bool)
 
-    Kwargs:
-        parameter of gmx.grompp(f,o,c,r,p)
+    Keyword Args:
         f (str)
         o (str)
         c (str)
         p (str)
 
+    .. Note:: Keyword Args are parameter of gmx.grompp(f,o,c,r,p)
     """
     default = {"f": "rex.mdp",
                "o": "rex.tpr",

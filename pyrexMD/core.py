@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: core.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 # core module
@@ -42,25 +42,26 @@ class iColor(object):
 
         Args:
             color (str)
-            universe (MDA universe/atom grp)
+            universe (universe, atomgrp)
 
         Returns:
-            color_scheme (array): HEX colors for each RES taken from iPlayer.universe (default) or universe.
+            color_scheme (array)
+                HEX colors for each RES taken from iPlayer.universe (default) or universe.
 
         Accepted colors (simple):
-            'red'       'black'
-            'orange'    'grey_80'
-            'yellow'    'grey_60'
-            'green'     'grey_40'
-            'cyan'      'grey_20'
-            'blue'      'white'
-            'purple'
-            'magenta'
+          | 'red'       'black'
+          | 'orange'    'grey_80'
+          | 'yellow'    'grey_60'
+          | 'green'     'grey_40'
+          | 'cyan'      'grey_20'
+          | 'blue'      'white'
+          | 'purple'
+          | 'magenta'
 
         Accepted colors (complex):
-            'baw': black and white
-            'b/w': black and white
-            'rainbow': red to magenta
+          | 'baw': black and white
+          | 'b/w': black and white
+          | 'rainbow': red to magenta
         """
         color = str(color)
 
@@ -135,25 +136,26 @@ class iColor(object):
 
         Args:
             color (str)
-            universe (MDA universe/atom grp)
+            universe (universe, atomgrp)
 
         Returns:
-            color_scheme (array): HEX colors for each RES taken from iPlayer.universe (default) or universe.
+            color_scheme (array)
+                HEX colors for each RES taken from iPlayer.universe (default) or universe.
 
         Accepted colors (simple):
-            'red'       'black'
-            'orange'    'grey_80'
-            'yellow'    'grey_60'
-            'green'     'grey_40'
-            'cyan'      'grey_20'
-            'blue'      'white'
-            'purple'
-            'magenta'
+          | 'red'       'black'
+          | 'orange'    'grey_80'
+          | 'yellow'    'grey_60'
+          | 'green'     'grey_40'
+          | cyan'      'grey_20'
+          | 'blue'      'white'
+          | 'purple'
+          | 'magenta'
 
         Accepted colors (complex):
-            'baw': black and white
-            'b/w': black and white
-            'rainbow': red to magenta
+          | 'baw': black and white
+          | 'b/w': black and white
+          | 'rainbow': red to magenta
         """
         color_schemes = ['red', 'yellow', 'orange', 'green',
                          'cyan', 'blue', 'purple', 'magenta',
@@ -277,8 +279,9 @@ class iWidgets(object):
         def switch_FrameTime(a):
             """
             switch <iPlayer_object>.widgets.FrameTime description beetween:
-                - <iPlayer_object>.widgets.Frame.description
-                - <iPlayer_object>.widgets.Time.description
+
+              - <iPlayer_object>.widgets.Frame.description
+              - <iPlayer_object>.widgets.Time.description
             """
             if 'Frame' in self.FrameTime.description:
                 self.FrameTime.description = self.Time.description
@@ -633,9 +636,9 @@ class iPlayer(object):
         """
         init iPlayer
 
-        if universe is PDB ID (str with len = 4) -> fetch online
-        if universe is path (str with len > 4) -> create universe
-        if universe is universe -> pass universe
+          - if universe is PDB ID (str with len = 4) -> fetch online
+          - if universe is path (str with len > 4) -> create universe
+          - if universe is universe -> pass universe
         """
         # case 1: input is PDB ID -> fetch online
         if type(universe) is str and len(universe) == 4:
@@ -662,15 +665,14 @@ class iPlayer(object):
 
         Args:
             layout (str):
-                'default': default layout
-                'every other str': non-default layout
+              | 'default': default layout
+              | 'every other str': non-default layout
 
-        Alternative:
-            Execute show_player() method by calling the object.
+        .. Note:: Alternatively execute show_player() method by calling the object.
 
         Example:
-            tv = core.iPlayer(<universe>)
-            tv()   # short version of tv.show_player()
+          | tv = core.iPlayer(<universe>)
+          | tv()   # short version of tv.show_player()
         """
         self.show_player(layout)
         return
@@ -694,7 +696,7 @@ class iPlayer(object):
 
     def _update_player_layout(self, layout='default'):
         """
-        TODO DOCSTRING
+        update player layout
         """
         self.player._layout = layout  # needed for show_plot() function
         self.widgets.YValue.layout = wg.Layout(display='none')
@@ -715,8 +717,8 @@ class iPlayer(object):
 
         Args:
             layout (str):
-                'default': default layout
-                'Marie': special layout for special person
+              | 'default': default layout
+              | 'Marie': special layout for special person
 
         Alternative:
             Execute show_player() method by calling the object.
@@ -853,20 +855,19 @@ class iPlot(iPlayer):
             ylabel (str)
             title (str)
             tu (str):
-                time unit of plot. Either 'ps', 'ns' or 'frame'.
-                If 'ns' is selected, time stamps of MDAnalysis universe are converted from ps to ns.
-                Important to make the interactive red bar work properly.
+              | time unit of plot. Either 'ps', 'ns' or 'frame'.
+              | If 'ns' is selected, time stamps of MDAnalysis universe are converted from ps to ns.
+              | Important to make the interactive red bar work properly.
             figsize (tuple)
             layout (str):
-                'default': default layout
-                'every other str': non-default layout
+              | 'default': default layout
+              | 'every other str': non-default layout
 
-        Alternative:
-            Execute show_plot() method by calling the object.
+        .. Note:: Alternatively execute show_plot() method by calling the object.
 
         Example:
-            Q = core.iPlot(<universe>)
-            Q()   # short version of Q.show_plot()
+          | ip = core.iPlot(<universe>)
+          | ip()   # short version of ip.show_plot()
         """
         # special case: make the call Q('kw-layout') work as Q(layout='kw-layout')
         if type(xdata) is str:
@@ -887,7 +888,7 @@ class iPlot(iPlayer):
 
     def _update_fig_properties(self, xlabel='X', ylabel='Y', title='', tu='ps', figsize=(8, 4.5), smartlabel=True):
         """
-        TODO DOCSTRING
+        update fig properties
         """
         default = {'xlabel': 'X',
                    'ylabel': 'Y',
@@ -932,17 +933,16 @@ class iPlot(iPlayer):
             ylabel (str)
             title (str)
             tu (str):
-                time unit of plot. Either 'ps', 'ns' or 'frame'.
-                If 'ns' is selected, time stamps of MDAnalysis universe are converted from ps to ns.
-                Important to make the interactive red bar work properly.
+              | time unit of plot. Either 'ps', 'ns' or 'frame'.
+              | If 'ns' is selected, time stamps of MDAnalysis universe are converted from ps to ns.
+              | Important to make the interactive red bar work properly.
             figsize (tuple)
 
-        Alternative:
-            Execute show_plot() method by calling the object.
+        .. Note:: Alternatively execute show_plot() method by calling the object.
 
         Example:
-            Q = core.iPlot(<universe>)
-            Q()   # short version of Q.show_plot()
+            | ip = core.iPlot(<universe>)
+            | ip()   # short version of ip.show_plot()
         """
         self._update_player_layout(self.player._layout)
         self._update_fig_properties(xlabel, ylabel, title, tu, figsize)

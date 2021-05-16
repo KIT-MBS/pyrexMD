@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.05.2021</span>
+<span class="c1"># @Last modified time: 16.05.2021</span>
 
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -215,18 +215,20 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clean up gromacs backup files with the patterns #*# and .*offsets.npz</span>
 
-<span class="sd">    Note: pattern can be implemented into path variable directly.</span>
+<span class="sd">    .. Note:: pattern can be implemented into path variable directly.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        path (str): directory path</span>
-<span class="sd">        pattern (None/str): pattern</span>
-<span class="sd">            (None): check for files with path only</span>
-<span class="sd">            (str):  check for files with joined path of path + pattern</span>
-<span class="sd">            &quot;gmx_pattern&quot;: remove files with the patterns #*# and .*offsets.npz</span>
-<span class="sd">        ignore (None/str/list of str/tuple of str): one or multiple ignore pattern</span>
-<span class="sd">            (None): no ignore pattern</span>
-<span class="sd">            (str): single ignore pattern</span>
-<span class="sd">            (list of str/tuple of str): list/tuple with multiple ignore patterns</span>
+<span class="sd">        pattern (None, str):</span>
+<span class="sd">          | pattern</span>
+<span class="sd">          | None: check for files with path only</span>
+<span class="sd">          | str:  check for files with joined path of path + pattern</span>
+<span class="sd">          | &quot;gmx_pattern&quot;: remove files with the patterns #*# and .*offsets.npz</span>
+<span class="sd">        ignore (None, str, list of str, tuple of str):</span>
+<span class="sd">          | one or multiple ignore pattern</span>
+<span class="sd">          | None: no ignore pattern</span>
+<span class="sd">          | str: single ignore pattern</span>
+<span class="sd">          | list of str, tuple of str: list/tuple with multiple ignore patterns</span>
 <span class="sd">        verbose (bool): print message (&#39;removed file: ... &#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s2">&quot;gmx_pattern&quot;</span><span class="p">:</span>
@@ -260,17 +262,18 @@
 <span class="sd">    Get selection code.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        sel (str): selection string (case independant)</span>
-<span class="sd">            &quot;system&quot; or &quot;all&quot;: all atoms</span>
-<span class="sd">            &quot;protein&quot;: protein atoms</span>
-<span class="sd">            &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
-<span class="sd">            &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        sel_code (str)</span>
-<span class="sd">            &quot;0&quot;: code for system</span>
-<span class="sd">            &quot;1&quot;: code for protein</span>
-<span class="sd">            &quot;3&quot;: code for CA</span>
-<span class="sd">            &quot;4&quot;: code for BB</span>
+<span class="sd">          | &quot;0&quot;: code for system</span>
+<span class="sd">          | &quot;1&quot;: code for protein</span>
+<span class="sd">          | &quot;3&quot;: code for CA</span>
+<span class="sd">          | &quot;4&quot;: code for BB</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;system&quot;</span> <span class="ow">or</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
         <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
@@ -289,7 +292,7 @@
 <div class="viewcode-block" id="pdb2gmx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.pdb2gmx">[docs]</a><span class="k">def</span> <span class="nf">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
             <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.pdb2gmx().</span>
+<span class="sd">    Modified function of gromacs.pdb2gmx().</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        &#39;pdb2gmx&#39; reads a .pdb (or .gro) file, reads some database files, adds</span>
@@ -300,30 +303,35 @@
 <span class="sd">    Args:</span>
 <span class="sd">        f (str): input structure file: pdb gro tpr (g96 brk ent esp)</span>
 <span class="sd">        o (str): output structure file: pdb gro (g96 brk ent esp)</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
-<span class="sd">        ff (str): force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
-<span class="sd">            Protein: e.g.: amber99sb-ildn</span>
-<span class="sd">            RNA: e.g.: amber14sb_OL15</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        ff (str):</span>
+<span class="sd">          | force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
+<span class="sd">          | &quot;amber99sb-ildn&quot; etc. for proteins</span>
+<span class="sd">          | &quot;amber14sb_OL15&quot; etc. for RNAs</span>
 <span class="sd">        water (str): water model</span>
 <span class="sd">        ignh (bool): ignore hydrogen</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/pdb2gmx.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/pdb2gmx.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.pdb2gmx.help()</span>
-<span class="sd">        # or terminal -&gt; gmx pdb2gmx -h</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        p (str): topology file: topol.top</span>
 <span class="sd">        i (str): include file for topology: posre.itp</span>
 <span class="sd">        n (str): index file: index.ndx</span>
-
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.pdb2gmx.help()</span>
+<span class="sd">        - terminal -&gt; gmx pdb2gmx -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -369,39 +377,44 @@
 <span class="c1"># same function as TPR2PDB()</span>
 <div class="viewcode-block" id="editconf"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.editconf">[docs]</a><span class="k">def</span> <span class="nf">editconf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of:</span>
-<span class="sd">        TPR2PDB()</span>
-<span class="sd">        gromacs.editconf()</span>
+<span class="sd">    - Modified function of gromacs.editconf()</span>
+<span class="sd">    - Alias function of TPR2PDB()</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        &#39;gmx editconf&#39; converts generic structure format to .pdb, .gro, or .g96.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        f (str): tpr (gro g96 pdb brk ent esp)</span>
-<span class="sd">        o (str): pdb (gro g96)</span>
-<span class="sd">            &quot;default&quot;: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</span>
-<span class="sd">                       &lt;f&gt;.gro -&gt; box.gro</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | pdb (gro g96)</span>
+<span class="sd">          | &quot;default&quot;: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</span>
+<span class="sd">          | &lt;f&gt;.gro -&gt; box.gro</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/editconf.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/editconf.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.editconf.help()</span>
-<span class="sd">        # or terminal -&gt; gmx editconf -h</span>
-<span class="sd">        box (int): box vector lengths xyz (only 1 value for bt=&quot;cubic&quot;).</span>
-<span class="sd">                   requires center=False to work.</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        box (int):</span>
+<span class="sd">          | box vector lengths xyz (only 1 value for bt=&quot;cubic&quot;).</span>
+<span class="sd">          | requires center=False to work.</span>
 <span class="sd">        bt (str): box type: cubic triclinic dodecahedron octahedron</span>
 <span class="sd">        c (bool): center molecule in box</span>
 <span class="sd">        d (str): distance between the solute and the box</span>
-
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python  -&gt; gromacs.editconf.help()</span>
+<span class="sd">        - terminal -&gt; gmx editconf -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -453,35 +466,40 @@
 <span class="c1"># same function as editconf()</span>
 <div class="viewcode-block" id="convert_TPR2PDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.convert_TPR2PDB">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR2PDB</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of:</span>
-<span class="sd">        editconf()</span>
-<span class="sd">        gromacs.editconf()</span>
+<span class="sd">    - Modified function of gromacs.editconf()</span>
+<span class="sd">    - Alias function of editconf()</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        &#39;gmx editconf&#39; converts generic structure format to .pdb, .gro or .g96.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tpr (str): tpr (gro g96 pdb brk ent esp)</span>
-<span class="sd">        o (str): pdb (gro g96)</span>
-<span class="sd">            &quot;default&quot;: &lt;filename&gt;.tpr -&gt; &lt;filename&gt;.pdb</span>
-<span class="sd">                       &lt;filename&gt;.gro -&gt; box.gro</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | pdb (gro g96)</span>
+<span class="sd">          | &quot;default&quot;: &lt;filename&gt;.tpr -&gt; &lt;filename&gt;.pdb</span>
+<span class="sd">          |            &lt;filename&gt;.gro -&gt; box.gro</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/editconf.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/editconf.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.editconf.help()</span>
-<span class="sd">        # or terminal -&gt; gmx editconf -h</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        bt (str): box type: cubic triclinic dodecahedron octahedron</span>
 <span class="sd">        c (bool): center molecule in box</span>
 <span class="sd">        d (str): distance between the solute and the box</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.editconf.help()</span>
+<span class="sd">        - terminal -&gt; gmx editconf -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -532,36 +550,41 @@
 
 <div class="viewcode-block" id="convert_TPR"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.convert_TPR">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.convert_tpr().</span>
+<span class="sd">    Modified function of gromacs.convert_tpr().</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        &#39;gmx convert-tpr&#39; can edit run input files in three ways:</span>
 <span class="sd">        - modify tpr settings</span>
 <span class="sd">        - create new tpr for a subset of original tpr</span>
-<span class="sd">        - setting the charges of a specified group to zero(useful when doing</span>
-<span class="sd">          free energy estimates using the LIE (Linear Interaction Energy) method.</span>
+<span class="sd">        - setting the charges of a specified group to zero(useful when doing free energy estimates using the LIE (Linear Interaction Energy) method.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        s (str): tpr</span>
-<span class="sd">        o (str): tpr</span>
-<span class="sd">            &quot;default&quot;: &lt;s&gt;.tpr -&gt; &lt;s&gt;_&lt;sel&gt;.tpr</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
-<span class="sd">        sel (str): selection string(case independant)</span>
-<span class="sd">            &quot;system&quot; or &quot;all&quot;: all atoms</span>
-<span class="sd">            &quot;protein&quot;: protein atoms</span>
-<span class="sd">            &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
-<span class="sd">            &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | tpr</span>
+<span class="sd">          | &quot;default&quot;: &lt;s&gt;.tpr -&gt; &lt;s&gt;_&lt;sel&gt;.tpr</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string(case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.convert_tpr.help()</span>
-<span class="sd">        # or terminal -&gt; gmx convert_tpr -h</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.convert_tpr.help()</span>
+<span class="sd">        - terminal -&gt; gmx convert_tpr -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -588,7 +611,7 @@
 
 <div class="viewcode-block" id="grompp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.grompp">[docs]</a><span class="k">def</span> <span class="nf">grompp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.grompp().</span>
+<span class="sd">    Modified function of gromacs.grompp().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        f (str): input file: mdp</span>
@@ -597,20 +620,24 @@
 <span class="sd">        p (str): topology file: top</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/grompp.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/grompp.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.grompp.help()</span>
-<span class="sd">        # or terminal -&gt; gmx grompp -h</span>
-<span class="sd">        maxwarn (int): Number of allowed warnings during input processing.</span>
-<span class="sd">                       Not for normal use and may generate unstable systems.</span>
-
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        maxwarn (int):</span>
+<span class="sd">          | Number of allowed warnings during input processing.</span>
+<span class="sd">          | Not for normal use and may generate unstable systems.</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.grompp.help()</span>
+<span class="sd">        - terminal -&gt; gmx grompp -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;maxwarn&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
                <span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -662,35 +689,38 @@
 <div class="viewcode-block" id="solvate"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.solvate">[docs]</a><span class="k">def</span> <span class="nf">solvate</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="s2">&quot;spc216.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span>
             <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.solvate().</span>
-
-<span class="sd">    cp is usually &quot;box.gro&quot;</span>
+<span class="sd">    Modified function of gromacs.solvate(). cp is usually &quot;box.gro&quot;</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        cp (str): structure file ~ solute:  gro pdb tpr (g96 brk ent esp)</span>
-<span class="sd">        cs (str): structure file ~ solvent: gro pdb tpr (g96 brk ent esp)</span>
-<span class="sd">            Note: &quot;spc216.gro&quot; is used for all 3-point water models</span>
-<span class="sd">        o (str): gro pdb (g96 brk ent esp)</span>
-<span class="sd">            default case: save in same directory as cp</span>
-<span class="sd">            special case: if o is relative/absolute path -&gt; save there</span>
+<span class="sd">        cs (str):</span>
+<span class="sd">          | structure file ~ solvent: gro pdb tpr (g96 brk ent esp)</span>
+<span class="sd">          | Note: &quot;spc216.gro&quot; is used for all 3-point water models</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | gro pdb (g96 brk ent esp)</span>
+<span class="sd">          | default case: save in same directory as cp</span>
+<span class="sd">          | special case: if o is relative/absolute path -&gt; save there</span>
 <span class="sd">        p (str): topology file: topol.top</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/solvate.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/solvate.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.solvate.help()</span>
-<span class="sd">        # or terminal -&gt; gmx solvate -h</span>
-<span class="sd">        maxsol (int): maximum number of solvent molecules to add if they fit in</span>
-<span class="sd">                      the box.</span>
-<span class="sd">            0 (default): ignore this setting</span>
-
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        maxsol (int):</span>
+<span class="sd">          | maximum number of solvent molecules to add if they fit in the box.</span>
+<span class="sd">          | 0 (default): ignore this setting</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.solvate.help()</span>
+<span class="sd">        - terminal -&gt; gmx solvate -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -736,10 +766,10 @@
 <div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;13&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
            <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias fuction of gromacs.genion().</span>
+<span class="sd">    Modified fuction of gromacs.genion().</span>
 
-<span class="sd">    Note: input 13 (=SOL group) seems to be the only selection group that works</span>
-<span class="sd">          with genion.</span>
+<span class="sd">    .. Note:: input 13 (=SOL group) seems to be the only selection group that</span>
+<span class="sd">        works with genion.</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        gmx genion randomly replaces solvent molecules with monoatomic ions.</span>
@@ -750,27 +780,31 @@
 <span class="sd">        s (str): structure file: tpr</span>
 <span class="sd">        o (str): output file: gro pdb (g96 brk ent esp)</span>
 <span class="sd">        p (str): topology file: topol.top</span>
-<span class="sd">        input (str): selection grp</span>
-<span class="sd">            default: 13 (SOL)</span>
+<span class="sd">        input (str):</span>
+<span class="sd">          | selection grp</span>
+<span class="sd">          | default: 13 (SOL)</span>
 <span class="sd">        pname (str): positive ion name</span>
 <span class="sd">        nname (str): negative ion name</span>
 <span class="sd">        conc (float): add salt concentration (mol/liter) and rescale to box size</span>
 <span class="sd">        neutral (bool): add enough ions to neutralize the system. These ions are</span>
-<span class="sd">                        added on top of those specified with -np/-nn or -conc</span>
+<span class="sd">          added on top of those specified with -np/-nn or -conc</span>
 <span class="sd">        log (bool): save log file</span>
 <span class="sd">        log_overwrite (bool):</span>
-<span class="sd">            True: save log file as &lt;logs/genion.log&gt;</span>
-<span class="sd">            False: save log file as &lt;logs/genion_{i}.log&gt; for i=1,...,999</span>
+<span class="sd">          | True: save log file as &lt;logs/genion.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/genion_{i}.log&gt; for i=1,...,999</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.genion.help()</span>
-<span class="sd">        # or terminal -&gt; gmx genion -h</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.genion.help()</span>
+<span class="sd">        - terminal -&gt; gmx genion -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -819,29 +853,31 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias fuction of gromacs.mdrun().</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        output can be printed only after mdrun has finished.</span>
-<span class="sd">        To see realtime updates invoke the command using &quot;!gmx_mpi mdrun &lt;parameters&gt;&quot;</span>
+<span class="sd">    .. Note:: output can be printed only after mdrun has finished. To see</span>
+<span class="sd">      realtime updates invoke the command using &quot;!gmx_mpi mdrun &lt;parameters&gt;&quot;</span>
+<span class="sd">      instead</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.mdrun.help()</span>
-<span class="sd">        # or terminal -&gt; gmx mdrun -h</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        deffnm (str): default filename</span>
 <span class="sd">        nsteps (int): maximum number of steps (used instead of mdp setting)</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">       - python -&gt; gromacs.mdrun.help()</span>
+<span class="sd">       - terminal -&gt; gmx mdrun -h</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># GromacsWrapper</span>
     <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
         <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
     <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="trjconv"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.trjconv">[docs]</a><span class="k">def</span> <span class="nf">trjconv</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.trjconv().</span>
+<span class="sd">    Modified function of gromacs.trjconv().</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        gmx trjconv can convert trajectory files in many ways</span>
@@ -851,30 +887,36 @@
 <span class="sd">        - center atoms in the box</span>
 <span class="sd">        - fit atoms to reference structure</span>
 <span class="sd">        - reduce the number of frames</span>
-<span class="sd">        ... etc.</span>
+<span class="sd">        - etc.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        s (str): structure: tpr (gro g96 pdb brk ent)</span>
 <span class="sd">        f (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
-<span class="sd">        o (str): trajectory: xtc (trr gro g96 pdb tng)</span>
-<span class="sd">            &quot;default&quot;: &lt;f&gt;.xtc -&gt; &lt;f&gt;_&lt;sel&gt;.xtc</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
-<span class="sd">        sel (str): selection string (case independant)</span>
-<span class="sd">            &quot;system&quot; or &quot;all&quot;: all atoms</span>
-<span class="sd">            &quot;protein&quot;: protein atoms</span>
-<span class="sd">            &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
-<span class="sd">            &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        o (str): trajectory:</span>
+<span class="sd">          | xtc (trr gro g96 pdb tng)</span>
+<span class="sd">          | &quot;default&quot;: &lt;f&gt;.xtc -&gt; &lt;f&gt;_&lt;sel&gt;.xtc</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.trjconv.help()</span>
-<span class="sd">        # or terminal -&gt; gmx trjconf -h</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">       - python -&gt; gromacs.trjconv.help()</span>
+<span class="sd">       - terminal -&gt; gmx trjconv -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -928,37 +970,43 @@
 <span class="sd">    Args:</span>
 <span class="sd">        tpr (str): structure: tpr</span>
 <span class="sd">        xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
-<span class="sd">        o (str or list): filenames of new structure and new trajectory (both selection only)</span>
-<span class="sd">            &quot;default&quot; (str):</span>
-<span class="sd">                &lt;tpr&gt;.tpr -&gt; &lt;xtc&gt;_&lt;sel&gt;.tpr</span>
-<span class="sd">                &lt;xtc&gt;.xtc -&gt; &lt;xtc&gt;_&lt;sel&gt;.xtc</span>
-<span class="sd">            [os, of] (list):</span>
-<span class="sd">                os (str): filename of new structure (selection only)</span>
-<span class="sd">                of (str): filename of new trajectory (selection only)</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        o (str, list):</span>
+<span class="sd">          | filenames of new structure and new trajectory (both selection only)</span>
+<span class="sd">          | &quot;default&quot; (str):</span>
+<span class="sd">          |    &lt;tpr&gt;.tpr -&gt; &lt;xtc&gt;_&lt;sel&gt;.tpr</span>
+<span class="sd">          |    &lt;xtc&gt;.xtc -&gt; &lt;xtc&gt;_&lt;sel&gt;.xtc</span>
+<span class="sd">          | [os, of] (list):</span>
+<span class="sd">          |    os (str): filename of new structure (selection only)</span>
+<span class="sd">          |    of (str): filename of new trajectory (selection only)</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
 <span class="sd">        tu (str): time unit: fs ps ns us ms s</span>
-<span class="sd">        sel (str): selection string(case independant)</span>
-<span class="sd">            &quot;system&quot; or &quot;all&quot;: all atoms</span>
-<span class="sd">            &quot;protein&quot;: protein atoms</span>
-<span class="sd">            &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
-<span class="sd">            &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
-<span class="sd">        pbc (str): PBC treatment: none mol res atom nojump cluster whole</span>
-<span class="sd">            &quot;mol&quot;: puts the center of mass of molecules in the box.</span>
-<span class="sd">                   requires structure file s.</span>
-<span class="sd">            &quot;nojump&quot;: checks if atoms jump across the box and then puts them back</span>
-<span class="sd">                      (i.e. all molecules will remain whole)</span>
-<span class="sd">            (see gromacs help text for other descriptions)</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string(case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        pbc (str):</span>
+<span class="sd">          | PBC treatment: none mol res atom nojump cluster whole</span>
+<span class="sd">          | &quot;mol&quot;: puts the center of mass of molecules in the box. requires structure file s.</span>
+<span class="sd">          | &quot;nojump&quot;: checks if atoms jump across the box and then puts them back</span>
+<span class="sd">            (i.e. all molecules will remain whole)</span>
+<span class="sd">          | (see gromacs help text for other descriptions)</span>
 <span class="sd">        center (bool): center atoms in box</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.trjconv.help()</span>
-<span class="sd">        # or terminal -&gt; gmx trjconv -h</span>
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.trjconv.help()</span>
+<span class="sd">        - terminal -&gt; gmx trjconv -h</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tpr_file (str): realpath of new tpr file (selection only)</span>
-<span class="sd">        xtc_file (str): realpath of new xtc file (selection only)</span>
+<span class="sd">        tpr_file (str)</span>
+<span class="sd">            realpath of new tpr file (selection only)</span>
+<span class="sd">        xtc_file (str)</span>
+<span class="sd">            realpath of new xtc file (selection only)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># check if o arg is &quot;default&quot; or list</span>
     <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -995,32 +1043,37 @@
 
 <div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Alias function of gromacs.rms().</span>
-<span class="sd">    Calculate backbone RMSD.</span>
+<span class="sd">    Modified function of gromacs.rms(). Calculate backbone RMSD.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ref (str): reference structure: pdb (tpr gro g96 brk ent)</span>
 <span class="sd">        xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
-<span class="sd">        o (str): xvg</span>
-<span class="sd">            &quot;default&quot;: rmsd.xvg</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | xvg</span>
+<span class="sd">          | &quot;default&quot;: rmsd.xvg</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
 <span class="sd">        tu (str): time unit: fs ps ns us ms s</span>
-<span class="sd">        sel (str): selection string (case independant)</span>
-<span class="sd">            &quot;system&quot; or &quot;all&quot;: all atoms</span>
-<span class="sd">            &quot;protein&quot;: protein atoms</span>
-<span class="sd">            &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
-<span class="sd">            &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.rms.help()</span>
-<span class="sd">        # or terminal -&gt; gmx rms -h</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.rms.help()</span>
+<span class="sd">        - terminal -&gt; gmx rms -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1058,23 +1111,28 @@
 <span class="sd">    Args:</span>
 <span class="sd">        f (str): input structure file: pdb gro tpr (g96 brk ent esp)</span>
 <span class="sd">        o (str): output structure file: pdb gro trp (g96 brk ent esp)</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            special case: odir is ignored when o is relative/absolute path</span>
-<span class="sd">        ff (str): force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
-<span class="sd">            Protein: e.g.: amber99sb-ildn</span>
-<span class="sd">            RNA: e.g.: amber14sb_OL15</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        ff (str):</span>
+<span class="sd">          | force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
+<span class="sd">          | &quot;amber99sb-ildn&quot; etc. for proteins</span>
+<span class="sd">          | &quot;amber14sb_OL15&quot; etc. for RNAs</span>
 <span class="sd">        water (str): water model</span>
 <span class="sd">        ignh (bool): ignore hydrogen</span>
 <span class="sd">        verbose (bool): print/mute gromacs messages</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        # see python  -&gt; gromacs.pdb2gmx.help()</span>
-<span class="sd">        # or terminal -&gt; gmx pdb2gmx -h</span>
-
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 
+<span class="sd">    .. Hint:: Find valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.pdb2gmx.help()</span>
+<span class="sd">        - terminal -&gt; gmx pdb2gmx -h</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1100,8 +1158,8 @@
 
 <div class="viewcode-block" id="create_complex"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.create_complex">[docs]</a><span class="k">def</span> <span class="nf">create_complex</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="p">[],</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;complex.gro&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create complex using multiple .gro files.</span>
-<span class="sd">    First .gro file in &lt;f&gt; must have largest box.</span>
+<span class="sd">    Create complex using multiple .gro files. First .gro file in &lt;f&gt; must have</span>
+<span class="sd">    largest box.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        f (list): list of gro files</span>
@@ -1109,7 +1167,8 @@
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Wrong data type: f must be list.&quot;</span><span class="p">)</span>
@@ -1173,7 +1232,8 @@
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        o_file (str): realpath of output file</span>
+<span class="sd">        o_file (str)</span>
+<span class="sd">            realpath of output file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
@@ -1236,18 +1296,20 @@
 <span class="sd">    Create folder with position.dat files. Each file contains &lt;nmol&gt; copies of</span>
 <span class="sd">    the box center. Use in combination with &quot;gmx insert-molecule module&quot;</span>
 
-<span class="sd">    Ex:</span>
-<span class="sd">    gmx insert-molecules -f &quot;box_25.gro&quot; -ci &quot;../model_ATP/atp_ini.pdb&quot;</span>
-<span class="sd">    -o &quot;complex.gro&quot; -ip &quot;positions_dat/positions_100.dat&quot; -dr 5 5 5 -try 100</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        box_vec (list): box vectors</span>
-<span class="sd">        nmol (int/tuple/list/range): number of molecules to add (replaces -nmol from</span>
-<span class="sd">                                     insert-molecule cmd)</span>
+<span class="sd">        nmol (int, tuple, list, range): number of molecules to add (replaces -nmol from</span>
+<span class="sd">          insert-molecule cmd)</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        file_dir (str): realpath of folder containing positions.dat files</span>
+<span class="sd">        file_dir (str)</span>
+<span class="sd">            realpath of folder containing positions.dat files</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | &gt;&gt; gmx insert-molecules -f &quot;box_25.gro&quot; -ci &quot;../model_ATP/atp_ini.pdb&quot;</span>
+<span class="sd">        | -o &quot;complex.gro&quot; -ip &quot;positions_dat/positions_100.dat&quot; -dr 5 5 5 -try 100</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;./positions_dat&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nmol</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>

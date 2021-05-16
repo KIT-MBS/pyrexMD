@@ -2,9 +2,9 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 09.05.2021
+# @Last modified time: 16.05.2021
 
-import pyREX.analysis.contacts as con
+import pyrexMD.analysis.contacts as con
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose

@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.05.2021</span>
+<span class="c1"># @Last modified time: 16.05.2021</span>
 
 <span class="c1">#from __future__ import division, print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">next</span>
@@ -183,15 +183,16 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        best_decoys_dir (str): directory with</span>
-<span class="sd">            - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
-<span class="sd">            - decoy_scores.log (output of cluster.log_cluster.decoys())</span>
-<span class="sd">        odir (str): output directory</span>
-<span class="sd">            Note: if &quot;PDBID&quot; in &lt;odir&gt; and no &lt;pdbid&gt; kwarg is passed</span>
-<span class="sd">                  -&gt; find and replace &quot;PDBID&quot; in &lt;odir&gt; automatically based on filenames</span>
+
+<span class="sd">          - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
+<span class="sd">          - decoy_scores.log (output of cluster.log_cluster.decoys())</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | Note: if &quot;PDBID&quot; in &lt;odir&gt; and no &lt;pdbid&gt; kwarg is passed -&gt; find and replace &quot;PDBID&quot; in &lt;odir&gt; automatically based on filenames</span>
 <span class="sd">        create_dir (bool)</span>
 <span class="sd">        verbose (bool)</span>
 
-<span class="sd">    Kwargs:</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        pdbid (str)</span>
 <span class="sd">        logfile (str): logfile name (default: &quot;decoy_scores.log&quot;)</span>
 <span class="sd">        water (str): water model (default: &quot;tip3p&quot;)</span>
@@ -199,7 +200,8 @@
 <span class="sd">        cprint_color (str)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        odir (str): output directory with ref pdb files (forcefield is applied)</span>
+<span class="sd">        odir (str)</span>
+<span class="sd">            output directory with ref pdb files (forcefield is applied)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID&quot;</span><span class="p">,</span>
                <span class="s2">&quot;logfile&quot;</span><span class="p">:</span> <span class="s2">&quot;decoy_scores.log&quot;</span><span class="p">,</span>
@@ -253,13 +255,14 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        best_decoys_dir (str): directory with</span>
-<span class="sd">            - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
-<span class="sd">            - decoys_score.log (output of cluster.log_cluster.decoys())</span>
+
+<span class="sd">          - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
+<span class="sd">          - decoys_score.log (output of cluster.log_cluster.decoys())</span>
 <span class="sd">        rex_dir (str): rex directory with folders rex_1, rex_2, ...</span>
 <span class="sd">        create_dir (bool)</span>
 <span class="sd">        verbose (bool)</span>
 
-<span class="sd">    Kwargs:</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        cprint_color (str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -288,7 +291,8 @@
 <span class="sd">        realpath (bool): return realpath</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        REX_DIRS (list): list with REX directory paths</span>
+<span class="sd">        REX_DIRS (list)</span>
+<span class="sd">            list with REX directory paths</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
     <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">))</span>
@@ -308,7 +312,8 @@
 <span class="sd">        realpath (bool): return realpath</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        REX_PDBS (list): list with PDB paths within folders rex_1, rex_2, etc.</span>
+<span class="sd">        REX_PDBS (list)</span>
+<span class="sd">            list with PDB paths within folders rex_1, rex_2, etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
     <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">))</span>
@@ -321,19 +326,19 @@
 
 <div class="viewcode-block" id="test_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.test_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">test_REX_PDBS</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">,</span> <span class="n">ref_pdb</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Test if all REX PDBS have equal RES, ATOM, NAME arrays.</span>
-<span class="sd">    Uses ref as &quot;template PDB&quot;.</span>
+<span class="sd">    Test if all REX PDBS have equal RES, ATOM, NAME arrays. Uses ref as &quot;template PDB&quot;.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        REX_PDBS (list): output of get_REX_PDBS()</span>
-<span class="sd">        ref_pdb (str): reference pdb</span>
-<span class="sd">            if target is known: apply ff -&gt; save as ref -&gt; use as ref</span>
-<span class="sd">            if target is unknown: use one of REX_PDBS -&gt; apply ff -&gt; use as ref</span>
+<span class="sd">        ref_pdb (str):</span>
+<span class="sd">          | reference pdb</span>
+<span class="sd">          | if target is known: apply ff -&gt; save as ref -&gt; use as ref</span>
+<span class="sd">          | if target is unknown: use one of REX_PDBS -&gt; apply ff -&gt; use as ref</span>
 <span class="sd">        ignh (bool): ignore hydrogen</span>
 <span class="sd">        verbose (bool)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        cprint_color (None/str)</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -366,7 +371,8 @@
 <span class="sd">        verbose (bool)prep_REX_tpr</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        boxsize (float): suggested boxsize parameter</span>
+<span class="sd">        boxsize (float)</span>
+<span class="sd">            suggested boxsize parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">boxsize</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -397,13 +403,14 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        logfile (str): path to &lt;editconf.log&gt; containing the line &#39;system size: X Y Z&#39;</span>
-<span class="sd">        maxsol_reduce (int): reduce max solution number taken from &lt;logfile&gt;</span>
-<span class="sd">                          -&gt; guarantees fixed solution number for different</span>
-<span class="sd">                             rstart configurations</span>
+<span class="sd">        maxsol_reduce (int):</span>
+<span class="sd">          | reduce max solution number taken from &lt;logfile&gt;</span>
+<span class="sd">          | -&gt; guarantees fixed solution number for different start configurations</span>
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        maxsol (int): suggested max solution parameter</span>
+<span class="sd">        maxsol (int)</span>
+<span class="sd">            suggested max solution parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
@@ -471,9 +478,10 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())</span>
-<span class="sd">        nsteps (None/int): maximum number of steps</span>
-<span class="sd">            None: use .mdp option</span>
-<span class="sd">            int: use instead of .mdp option</span>
+<span class="sd">        nsteps (None,int):</span>
+<span class="sd">          | maximum number of steps</span>
+<span class="sd">          | None: use .mdp option</span>
+<span class="sd">          | int: use instead of .mdp option</span>
 <span class="sd">        verbose (bool): show/hide gromacs output</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">rex_dir</span> <span class="ow">in</span> <span class="n">rex_dirs</span><span class="p">:</span>
@@ -507,17 +515,22 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        fin (str): PDB file</span>
-<span class="sd">        parse (str): select which atoms should be parsed. (&quot;all&quot; or &quot;&lt;atom name&gt;&quot;)</span>
-<span class="sd">            &quot;all&quot;: parse all atoms</span>
-<span class="sd">            &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
-<span class="sd">        skiprows (int): ignore header rows of fin</span>
-<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        parse (str):</span>
+<span class="sd">          | select which atoms should be parsed. (&quot;all&quot; or &quot;&lt;atom name&gt;&quot;)</span>
+<span class="sd">          | &quot;all&quot;: parse all atoms</span>
+<span class="sd">          | &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
+<span class="sd">        skiprows (int):</span>
+<span class="sd">          | ignore header rows of fin</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
 <span class="sd">        ignh (bool): ignore hydrogen</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        RES (list): residue column of PDB</span>
-<span class="sd">        ATOM (list): atom column of PDB</span>
-<span class="sd">        NAME (list): name column of PDB</span>
+<span class="sd">        RES (list)</span>
+<span class="sd">            residue column of PDB</span>
+<span class="sd">        ATOM (list)</span>
+<span class="sd">            atom column of PDB</span>
+<span class="sd">        NAME (list)</span>
+<span class="sd">            name column of PDB</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># help function to ignh</span>
     <span class="k">def</span> <span class="nf">HELP_atom_is_hydrogen</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
@@ -591,8 +604,9 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        fin (str): PDB ref file (after applying force field)</span>
-<span class="sd">        parse (str): select which atoms should be parsed.</span>
-<span class="sd">            &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
+<span class="sd">        parse (str):</span>
+<span class="sd">          | select which atoms should be parsed.</span>
+<span class="sd">          | &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
 <span class="sd">        save_as (str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RES</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">parsePDB_RES_ATOM_NAME</span><span class="p">(</span><span class="n">fin</span><span class="o">=</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="n">parse</span><span class="p">)</span>
@@ -612,8 +626,9 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        fin (str): PDB ref file (after applying force field)</span>
-<span class="sd">        parse (str): select which atoms should be parsed.</span>
-<span class="sd">            &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
+<span class="sd">        parse (str):</span>
+<span class="sd">          | select which atoms should be parsed.</span>
+<span class="sd">          | &quot;CA&quot;: parse only CA atoms (any atom name works)</span>
 <span class="sd">        save_as (str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RES</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">parsePDB_RES_ATOM_NAME</span><span class="p">(</span><span class="n">fin</span><span class="o">=</span><span class="n">fin</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="n">parse</span><span class="p">)</span>
@@ -630,56 +645,64 @@
                             <span class="n">n_bonds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ref_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">DCA_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                             <span class="n">filter_DCA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    NOTE: all n_bonds options are currently disabled except n_bonds=1</span>
+<span class="sd">    .. Warning:: all n_bonds options are currently disabled except n_bonds=1</span>
 
-<span class="sd">    Get DCA contact mapping:</span>
-<span class="sd">    Return lists of matching RES pairs and ATOM pairs for &quot;DCA REX Workflow&quot;</span>
+<span class="sd">    Get DCA contact mapping. Return lists of matching RES pairs and ATOM pairs</span>
+<span class="sd">    for &quot;DCA REX Workflow&quot;</span>
 
 <span class="sd">    Algorithm:</span>
-<span class="sd">        - Read files line by line, skip header if skiprows is set correctly</span>
-<span class="sd">            -- ref_pdb: get RES, ATOM, NAME</span>
-<span class="sd">            -- DCA_fin: get DCA_pairs</span>
-<span class="sd">        - for IJ in DCA_pairs:</span>
-<span class="sd">            -- find matching CA atoms (CA_ij)</span>
-<span class="sd">            -- append IJ to RES_pair, CA_ij to ATOM_pair</span>
-<span class="sd">        - return RES_pair and ATOM_pair</span>
+
+<span class="sd">      - Read files line by line, skip header if skiprows is set correctly</span>
+
+<span class="sd">        - ref_pdb: get RES, ATOM, NAME</span>
+<span class="sd">        - DCA_fin: get DCA_pairs</span>
+<span class="sd">      - for IJ in DCA_pairs:</span>
+
+<span class="sd">        - find matching CA atoms (CA_ij)</span>
+<span class="sd">        - append IJ to RES_pair, CA_ij to ATOM_pair</span>
+<span class="sd">      - return RES_pair and ATOM_pair</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ref_pdb (str): reference PDB (path)</span>
-<span class="sd">        ref_skiprows (int): ignore header rows of ref</span>
-<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        ref_skiprows (int):</span>
+<span class="sd">          | ignore header rows of ref</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
 <span class="sd">        DCA_fin (str): DCA file (path)</span>
 <span class="sd">        n_DCA (int): number of DCA contacts which should be used</span>
-<span class="sd">        usecols (tuple/list): columns containing the RES pairs in DCA_fin</span>
+<span class="sd">        usecols (tuple, list): columns containing the RES pairs in DCA_fin</span>
 <span class="sd">        parse (str): select which atom(names) should be parsed. Default &quot;CA&quot;</span>
-<span class="sd">        n_bonds (int/str): number of restraints per DCA contact</span>
-<span class="sd">            &quot;all&quot;, 0 or -1: bonds between all heavy atoms of RES pair ij</span>
-<span class="sd">                    -&gt; all permutations of heavy atoms per DCA pair</span>
-<span class="sd">            1: bonds between  CA atoms of RES pair ij</span>
-<span class="sd">                    -&gt; 1 bond per DCA pair</span>
-<span class="sd">            2: bonds between CA, CB atoms of RES pair ij</span>
-<span class="sd">                    -&gt; 2 bonds per DCA pair</span>
-<span class="sd">            3: bonds between CA, CB, CG atoms of RES pair ij</span>
-<span class="sd">                    -&gt; 3 bonds per DCA pair</span>
-<span class="sd">        DCA_skiprows (int): ignore header rows of DCA_fin</span>
-<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        n_bonds (int, str):</span>
+<span class="sd">          | number of restraints per DCA contact</span>
+<span class="sd">          | &quot;all&quot;, 0 or -1: bonds between all heavy atoms of RES pair ij</span>
+<span class="sd">          |         -&gt; all permutations of heavy atoms per DCA pair</span>
+<span class="sd">          | 1: bonds between  CA atoms of RES pair ij</span>
+<span class="sd">          |         -&gt; 1 bond per DCA pair</span>
+<span class="sd">          | 2: bonds between CA, CB atoms of RES pair ij</span>
+<span class="sd">          |         -&gt; 2 bonds per DCA pair</span>
+<span class="sd">          | 3: bonds between CA, CB, CG atoms of RES pair ij</span>
+<span class="sd">          |         -&gt; 3 bonds per DCA pair</span>
+<span class="sd">        DCA_skiprows (int):</span>
+<span class="sd">          | ignore header rows of DCA_fin</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
 <span class="sd">        filter_DCA (bool):</span>
-<span class="sd">            True: ignore DCA pairs with |i-j| &lt; 3</span>
-<span class="sd">            False: use all DCA pairs w/o applying filter</span>
+<span class="sd">          | True: ignore DCA pairs with Abs(i-j) &lt; 3</span>
+<span class="sd">          | False: use all DCA pairs w/o applying filter</span>
 <span class="sd">        save_log (bool)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        cprint_color (None/str): colored print color</span>
-<span class="sd">        pdbid (str):</span>
-<span class="sd">            &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
+<span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
 <span class="sd">        default_dir (str): &quot;./&quot;</span>
-<span class="sd">        save_as (str): &quot;PDBID_DCA_used.txt&quot;</span>
-<span class="sd">            detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</span>
-<span class="sd">            if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
+<span class="sd">        save_as (str):</span>
+<span class="sd">          | &quot;PDBID_DCA_used.txt&quot;</span>
+<span class="sd">          | detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</span>
+<span class="sd">          | if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RES_PAIR (list)</span>
+<span class="sd">            list with RES pairs</span>
 <span class="sd">        ATOM_PAIR (list)</span>
+<span class="sd">            list with ATOM pairs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
                <span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
@@ -836,19 +859,22 @@
 <span class="sd">    Args:</span>
 <span class="sd">        score_fin (str): path to score file</span>
 <span class="sd">        shift_res (int): shift residues by this value</span>
-<span class="sd">        outputFileName (str): realpath to modified score file.</span>
-<span class="sd">            if &quot;PDBID_mod.score&quot; is left as default: try to automatically detect</span>
-<span class="sd">            pattern based on score_fin and add the &quot;_mod&quot; part into filename.</span>
+<span class="sd">        outputFileName (str):</span>
+<span class="sd">          | realpath to modified score file.</span>
+<span class="sd">          | if &quot;PDBID_mod.score&quot; is left as default: try to automatically detect</span>
+<span class="sd">          | pattern based on score_fin and add the &quot;_mod&quot; part into filename.</span>
 <span class="sd">        res_cols (tuple/list): score_fin columns with residue numbers</span>
 <span class="sd">        score_col (tuple/list): score_fin column with score/confidence</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        save_as (str): &quot;PDBID_mod.score&quot;</span>
-<span class="sd">            if &quot;PDBID_mod.score&quot; (default): try to automatically detect pattern</span>
-<span class="sd">            based on score_fin and insert the &quot;_mod&quot; part into filename.</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        save_as (str):</span>
+<span class="sd">          | &quot;PDBID_mod.score&quot;</span>
+<span class="sd">          | if &quot;PDBID_mod.score&quot; (default): try to automatically detect pattern</span>
+<span class="sd">          | based on score_fin and insert the &quot;_mod&quot; part into filename.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        save_as (str): realpath to modified score file</span>
+<span class="sd">        save_as (str)</span>
+<span class="sd">            realpath to modified score file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID_mod.score&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -882,23 +908,26 @@
 <span class="sd">    &quot;DCA_used.txt&quot; is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</span>
 
 <span class="sd">    Modify topology:</span>
-<span class="sd">        - top_fin (topol.top file): use as template</span>
-<span class="sd">        - DCA_used_fin (DCA_used.txt): use all contacts as restraints</span>
-<span class="sd">        - modify bond section of new topology by adding contacts with constant force constant</span>
+
+<span class="sd">      - top_fin (topol.top file): use as template</span>
+<span class="sd">      - DCA_used_fin (DCA_used.txt): use all contacts as restraints</span>
+<span class="sd">      - modify bond section of new topology by adding contacts with constant force constant</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        top_fin (str): topology file (path)</span>
 <span class="sd">        DCA_used_fin (str): DCA used file (path)</span>
 <span class="sd">        force_k (int, float): force constant of DCA pairs</span>
-<span class="sd">        DCA_skiprows (int): ignore header rows of DCA_used_fin</span>
+<span class="sd">        DCA_skiprows (int):</span>
+<span class="sd">          | ignore header rows of DCA_used_fin</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
 
-<span class="sd">            -1 or &quot;auto&quot;: auto detect</span>
-<span class="sd">    Kwargs:</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
 <span class="sd">        default_dir (str): &quot;./&quot; (default)</span>
-<span class="sd">        save_as (str): &quot;PDBID_topol_mod.top&quot;</span>
-<span class="sd">            detect and replace PDBID in save_as based on ref_PDB path</span>
-<span class="sd">            if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
+<span class="sd">        save_as (str):</span>
+<span class="sd">          | &quot;PDBID_topol_mod.top&quot;</span>
+<span class="sd">          | detect and replace PDBID in save_as based on ref_PDB path</span>
+<span class="sd">          | if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                <span class="s2">&quot;default_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
@@ -956,9 +985,7 @@
 <span class="c1">### TODO</span>
 <div class="viewcode-block" id="DCAREX_modify_topology_v2"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.DCAREX_modify_topology_v2">[docs]</a><span class="k">def</span> <span class="nf">DCAREX_modify_topology_v2</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">temp_fin</span><span class="p">,</span> <span class="n">force_range</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="n">lambda_scaling</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO</span>
-
-<span class="sd">    Modify topology with lambda scaling prop to temperature.</span>
+<span class="sd">    .. TODO :: Modify topology with lambda scaling prop to temperature.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        top_fin</span>
@@ -967,9 +994,8 @@
 <span class="sd">            T: prop. to T</span>
 <span class="sd">          1/T: prop to 1/T</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        pdbid (str):</span>
-<span class="sd">            &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
 <span class="sd">        default_dir (str): &quot;./&quot;</span>
 <span class="sd">        save_as (str) : &quot;PDBID_topol_mod.top&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1162,8 +1188,7 @@
 
 <div class="viewcode-block" id="prep_REX_mdp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_mdp">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Prepare REX mdp:</span>
-<span class="sd">    copy template and change tempereratures according to rex_temps.log</span>
+<span class="sd">    Prepare REX mdp -&gt; copy template and change tempereratures according to rex_temps.log</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        main_dir (str): main directory with rex_1, rex_2, etc.</span>
@@ -1210,13 +1235,13 @@
 <span class="sd">        n_REX (None/int): number of replica</span>
 <span class="sd">        verbose (bool)</span>
 
-<span class="sd">    Kwargs:</span>
-<span class="sd">        parameter of gmx.grompp(f,o,c,r,p)</span>
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        f (str)</span>
 <span class="sd">        o (str)</span>
 <span class="sd">        c (str)</span>
 <span class="sd">        p (str)</span>
 
+<span class="sd">    .. Note:: Keyword Args are parameter of gmx.grompp(f,o,c,r,p)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span>
                <span class="s2">&quot;o&quot;</span><span class="p">:</span> <span class="s2">&quot;rex.tpr&quot;</span><span class="p">,</span>

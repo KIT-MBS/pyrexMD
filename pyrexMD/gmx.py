@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 import os
@@ -52,18 +52,20 @@ def clean_up(path="./", pattern="gmx_pattern", ignore=None, verbose=True):
     """
     Clean up gromacs backup files with the patterns #*# and .*offsets.npz
 
-    Note: pattern can be implemented into path variable directly.
+    .. Note:: pattern can be implemented into path variable directly.
 
     Args:
         path (str): directory path
-        pattern (None/str): pattern
-            (None): check for files with path only
-            (str):  check for files with joined path of path + pattern
-            "gmx_pattern": remove files with the patterns #*# and .*offsets.npz
-        ignore (None/str/list of str/tuple of str): one or multiple ignore pattern
-            (None): no ignore pattern
-            (str): single ignore pattern
-            (list of str/tuple of str): list/tuple with multiple ignore patterns
+        pattern (None, str):
+          | pattern
+          | None: check for files with path only
+          | str:  check for files with joined path of path + pattern
+          | "gmx_pattern": remove files with the patterns #*# and .*offsets.npz
+        ignore (None, str, list of str, tuple of str):
+          | one or multiple ignore pattern
+          | None: no ignore pattern
+          | str: single ignore pattern
+          | list of str, tuple of str: list/tuple with multiple ignore patterns
         verbose (bool): print message ('removed file: ... ')
     """
     if pattern == "gmx_pattern":
@@ -97,17 +99,18 @@ def _get_sel_code(sel, **kwargs):
     Get selection code.
 
     Args:
-        sel (str): selection string (case independant)
-            "system" or "all": all atoms
-            "protein": protein atoms
-            "ca" or "calpha": CA atoms
-            "bb" or "backbone": backbone atoms
+        sel (str):
+          | selection string (case independant)
+          | "system" or "all": all atoms
+          | "protein": protein atoms
+          | "ca" or "calpha": CA atoms
+          | "bb" or "backbone": backbone atoms
     Returns:
         sel_code (str)
-            "0": code for system
-            "1": code for protein
-            "3": code for CA
-            "4": code for BB
+          | "0": code for system
+          | "1": code for protein
+          | "3": code for CA
+          | "4": code for BB
     """
     if sel.lower() == "system" or sel.lower() == "all":
         sel_code = "0"
@@ -126,7 +129,7 @@ def _get_sel_code(sel, **kwargs):
 def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
             ignh=True, log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias function of gromacs.pdb2gmx().
+    Modified function of gromacs.pdb2gmx().
 
     Gromacs info:
         'pdb2gmx' reads a .pdb (or .gro) file, reads some database files, adds
@@ -137,30 +140,35 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
     Args:
         f (str): input structure file: pdb gro tpr (g96 brk ent esp)
         o (str): output structure file: pdb gro (g96 brk ent esp)
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
-        ff (str): force field (see <gromacs_path>/top/<ff> for valid inputs)
-            Protein: e.g.: amber99sb-ildn
-            RNA: e.g.: amber14sb_OL15
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
+        ff (str):
+          | force field (see <gromacs_path>/top/<ff> for valid inputs)
+          | "amber99sb-ildn" etc. for proteins
+          | "amber14sb_OL15" etc. for RNAs
         water (str): water model
         ignh (bool): ignore hydrogen
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/pdb2gmx.log>
-            False: save log file as <logs/pdb2gmx_{i}.log> for i=1,...,999
+          | True: save log file as <logs/pdb2gmx.log>
+          | False: save log file as <logs/pdb2gmx_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.pdb2gmx.help()
-        # or terminal -> gmx pdb2gmx -h
+    Keyword Args:
         p (str): topology file: topol.top
         i (str): include file for topology: posre.itp
         n (str): index file: index.ndx
-
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.pdb2gmx.help()
+        - terminal -> gmx pdb2gmx -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -206,39 +214,44 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
 # same function as TPR2PDB()
 def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias function of:
-        TPR2PDB()
-        gromacs.editconf()
+    - Modified function of gromacs.editconf()
+    - Alias function of TPR2PDB()
 
     Gromacs info:
         'gmx editconf' converts generic structure format to .pdb, .gro, or .g96.
 
     Args:
         f (str): tpr (gro g96 pdb brk ent esp)
-        o (str): pdb (gro g96)
-            "default": <f>.tpr -> <f>.pdb
-                       <f>.gro -> box.gro
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
+        o (str):
+          | pdb (gro g96)
+          | "default": <f>.tpr -> <f>.pdb
+          | <f>.gro -> box.gro
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/editconf.log>
-            False: save log file as <logs/editconf_{i}.log> for i=1,...,999
+          | True: save log file as <logs/editconf.log>
+          | False: save log file as <logs/editconf_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.editconf.help()
-        # or terminal -> gmx editconf -h
-        box (int): box vector lengths xyz (only 1 value for bt="cubic").
-                   requires center=False to work.
+    Keyword Args:
+        box (int):
+          | box vector lengths xyz (only 1 value for bt="cubic").
+          | requires center=False to work.
         bt (str): box type: cubic triclinic dodecahedron octahedron
         c (bool): center molecule in box
         d (str): distance between the solute and the box
-
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python  -> gromacs.editconf.help()
+        - terminal -> gmx editconf -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -290,35 +303,40 @@ def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=T
 # same function as editconf()
 def convert_TPR2PDB(tpr, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias function of:
-        editconf()
-        gromacs.editconf()
+    - Modified function of gromacs.editconf()
+    - Alias function of editconf()
 
     Gromacs info:
         'gmx editconf' converts generic structure format to .pdb, .gro or .g96.
 
     Args:
         tpr (str): tpr (gro g96 pdb brk ent esp)
-        o (str): pdb (gro g96)
-            "default": <filename>.tpr -> <filename>.pdb
-                       <filename>.gro -> box.gro
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
+        o (str):
+          | pdb (gro g96)
+          | "default": <filename>.tpr -> <filename>.pdb
+          |            <filename>.gro -> box.gro
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/editconf.log>
-            False: save log file as <logs/editconf_{i}.log> for i=1,...,999
+          | True: save log file as <logs/editconf.log>
+          | False: save log file as <logs/editconf_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.editconf.help()
-        # or terminal -> gmx editconf -h
+    Keyword Args:
         bt (str): box type: cubic triclinic dodecahedron octahedron
         c (bool): center molecule in box
         d (str): distance between the solute and the box
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.editconf.help()
+        - terminal -> gmx editconf -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -369,36 +387,41 @@ def convert_TPR2PDB(tpr, o="default", odir="./", log=True, log_overwrite=False, 
 
 def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
-    Alias function of gromacs.convert_tpr().
+    Modified function of gromacs.convert_tpr().
 
     Gromacs info:
         'gmx convert-tpr' can edit run input files in three ways:
         - modify tpr settings
         - create new tpr for a subset of original tpr
-        - setting the charges of a specified group to zero(useful when doing
-          free energy estimates using the LIE (Linear Interaction Energy) method.
+        - setting the charges of a specified group to zero(useful when doing free energy estimates using the LIE (Linear Interaction Energy) method.
 
     Args:
         s (str): tpr
-        o (str): tpr
-            "default": <s>.tpr -> <s>_<sel>.tpr
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
-        sel (str): selection string(case independant)
-            "system" or "all": all atoms
-            "protein": protein atoms
-            "ca" or "calpha": CA atoms
-            "bb" or "backbone": backbone atoms
+        o (str):
+          | tpr
+          | "default": <s>.tpr -> <s>_<sel>.tpr
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
+        sel (str):
+          | selection string(case independant)
+          | "system" or "all": all atoms
+          | "protein": protein atoms
+          | "ca" or "calpha": CA atoms
+          | "bb" or "backbone": backbone atoms
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.convert_tpr.help()
-        # or terminal -> gmx convert_tpr -h
-
+    Keyword Args:
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.convert_tpr.help()
+        - terminal -> gmx convert_tpr -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -425,7 +448,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
 
 def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias function of gromacs.grompp().
+    Modified function of gromacs.grompp().
 
     Args:
         f (str): input file: mdp
@@ -434,20 +457,24 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
         p (str): topology file: top
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/grompp.log>
-            False: save log file as <logs/grompp_{i}.log> for i=1,...,999
+          | True: save log file as <logs/grompp.log>
+          | False: save log file as <logs/grompp_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.grompp.help()
-        # or terminal -> gmx grompp -h
-        maxwarn (int): Number of allowed warnings during input processing.
-                       Not for normal use and may generate unstable systems.
-
+    Keyword Args:
+        maxwarn (int):
+          | Number of allowed warnings during input processing.
+          | Not for normal use and may generate unstable systems.
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.grompp.help()
+        - terminal -> gmx grompp -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"maxwarn": 10,
                "cprint_color": "blue"}
@@ -499,35 +526,38 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
 def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
             log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias function of gromacs.solvate().
-
-    cp is usually "box.gro"
+    Modified function of gromacs.solvate(). cp is usually "box.gro"
 
     Args:
         cp (str): structure file ~ solute:  gro pdb tpr (g96 brk ent esp)
-        cs (str): structure file ~ solvent: gro pdb tpr (g96 brk ent esp)
-            Note: "spc216.gro" is used for all 3-point water models
-        o (str): gro pdb (g96 brk ent esp)
-            default case: save in same directory as cp
-            special case: if o is relative/absolute path -> save there
+        cs (str):
+          | structure file ~ solvent: gro pdb tpr (g96 brk ent esp)
+          | Note: "spc216.gro" is used for all 3-point water models
+        o (str):
+          | gro pdb (g96 brk ent esp)
+          | default case: save in same directory as cp
+          | special case: if o is relative/absolute path -> save there
         p (str): topology file: topol.top
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/solvate.log>
-            False: save log file as <logs/solvate_{i}.log> for i=1,...,999
+          | True: save log file as <logs/solvate.log>
+          | False: save log file as <logs/solvate_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.solvate.help()
-        # or terminal -> gmx solvate -h
-        maxsol (int): maximum number of solvent molecules to add if they fit in
-                      the box.
-            0 (default): ignore this setting
-
+    Keyword Args:
+        maxsol (int):
+          | maximum number of solvent molecules to add if they fit in the box.
+          | 0 (default): ignore this setting
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.solvate.help()
+        - terminal -> gmx solvate -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -573,10 +603,10 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
 def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL", conc=0.15,
            neutral=True, log=True, log_overwrite=False, verbose=True, **kwargs):
     """
-    Alias fuction of gromacs.genion().
+    Modified fuction of gromacs.genion().
 
-    Note: input 13 (=SOL group) seems to be the only selection group that works
-          with genion.
+    .. Note:: input 13 (=SOL group) seems to be the only selection group that
+        works with genion.
 
     Gromacs info:
         gmx genion randomly replaces solvent molecules with monoatomic ions.
@@ -587,27 +617,31 @@ def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL", conc=0.15,
         s (str): structure file: tpr
         o (str): output file: gro pdb (g96 brk ent esp)
         p (str): topology file: topol.top
-        input (str): selection grp
-            default: 13 (SOL)
+        input (str):
+          | selection grp
+          | default: 13 (SOL)
         pname (str): positive ion name
         nname (str): negative ion name
         conc (float): add salt concentration (mol/liter) and rescale to box size
         neutral (bool): add enough ions to neutralize the system. These ions are
-                        added on top of those specified with -np/-nn or -conc
+          added on top of those specified with -np/-nn or -conc
         log (bool): save log file
         log_overwrite (bool):
-            True: save log file as <logs/genion.log>
-            False: save log file as <logs/genion_{i}.log> for i=1,...,999
+          | True: save log file as <logs/genion.log>
+          | False: save log file as <logs/genion_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.genion.help()
-        # or terminal -> gmx genion -h
-
+    Keyword Args:
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.genion.help()
+        - terminal -> gmx genion -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -656,29 +690,31 @@ def mdrun(verbose=True, **kwargs):
     """
     Alias fuction of gromacs.mdrun().
 
-    Note:
-        output can be printed only after mdrun has finished.
-        To see realtime updates invoke the command using "!gmx_mpi mdrun <parameters>"
+    .. Note:: output can be printed only after mdrun has finished. To see
+      realtime updates invoke the command using "!gmx_mpi mdrun <parameters>"
+      instead
 
     Args:
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.mdrun.help()
-        # or terminal -> gmx mdrun -h
+    Keyword Args:
         deffnm (str): default filename
         nsteps (int): maximum number of steps (used instead of mdp setting)
+
+    .. Hint:: Find more valid Keyword Args via
+
+       - python -> gromacs.mdrun.help()
+       - terminal -> gmx mdrun -h
     """
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
         stdin, stdout, stderr = gromacs.mdrun(v=True, **kwargs)
-
     return
 
 
 def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs):
     """
-    Alias function of gromacs.trjconv().
+    Modified function of gromacs.trjconv().
 
     Gromacs info:
         gmx trjconv can convert trajectory files in many ways
@@ -688,30 +724,36 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
         - center atoms in the box
         - fit atoms to reference structure
         - reduce the number of frames
-        ... etc.
+        - etc.
 
     Args:
         s (str): structure: tpr (gro g96 pdb brk ent)
         f (str): trajectory: xtc (trr cpt gro g96 pdb tng)
-        o (str): trajectory: xtc (trr gro g96 pdb tng)
-            "default": <f>.xtc -> <f>_<sel>.xtc
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
-        sel (str): selection string (case independant)
-            "system" or "all": all atoms
-            "protein": protein atoms
-            "ca" or "calpha": CA atoms
-            "bb" or "backbone": backbone atoms
+        o (str): trajectory:
+          | xtc (trr gro g96 pdb tng)
+          | "default": <f>.xtc -> <f>_<sel>.xtc
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
+        sel (str):
+          | selection string (case independant)
+          | "system" or "all": all atoms
+          | "protein": protein atoms
+          | "ca" or "calpha": CA atoms
+          | "bb" or "backbone": backbone atoms
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.trjconv.help()
-        # or terminal -> gmx trjconf -h
-
+    Keyword Args:
         cprint_color (str)
 
+    .. Hint:: Find more valid Keyword Args via
+
+       - python -> gromacs.trjconv.help()
+       - terminal -> gmx trjconv -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -765,37 +807,43 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
     Args:
         tpr (str): structure: tpr
         xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)
-        o (str or list): filenames of new structure and new trajectory (both selection only)
-            "default" (str):
-                <tpr>.tpr -> <xtc>_<sel>.tpr
-                <xtc>.xtc -> <xtc>_<sel>.xtc
-            [os, of] (list):
-                os (str): filename of new structure (selection only)
-                of (str): filename of new trajectory (selection only)
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
+        o (str, list):
+          | filenames of new structure and new trajectory (both selection only)
+          | "default" (str):
+          |    <tpr>.tpr -> <xtc>_<sel>.tpr
+          |    <xtc>.xtc -> <xtc>_<sel>.xtc
+          | [os, of] (list):
+          |    os (str): filename of new structure (selection only)
+          |    of (str): filename of new trajectory (selection only)
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
         tu (str): time unit: fs ps ns us ms s
-        sel (str): selection string(case independant)
-            "system" or "all": all atoms
-            "protein": protein atoms
-            "ca" or "calpha": CA atoms
-            "bb" or "backbone": backbone atoms
-        pbc (str): PBC treatment: none mol res atom nojump cluster whole
-            "mol": puts the center of mass of molecules in the box.
-                   requires structure file s.
-            "nojump": checks if atoms jump across the box and then puts them back
-                      (i.e. all molecules will remain whole)
-            (see gromacs help text for other descriptions)
+        sel (str):
+          | selection string(case independant)
+          | "system" or "all": all atoms
+          | "protein": protein atoms
+          | "ca" or "calpha": CA atoms
+          | "bb" or "backbone": backbone atoms
+        pbc (str):
+          | PBC treatment: none mol res atom nojump cluster whole
+          | "mol": puts the center of mass of molecules in the box. requires structure file s.
+          | "nojump": checks if atoms jump across the box and then puts them back
+            (i.e. all molecules will remain whole)
+          | (see gromacs help text for other descriptions)
         center (bool): center atoms in box
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.trjconv.help()
-        # or terminal -> gmx trjconv -h
+    .. Hint:: Find more valid Keyword Args via
+
+        - python -> gromacs.trjconv.help()
+        - terminal -> gmx trjconv -h
 
     Returns:
-        tpr_file (str): realpath of new tpr file (selection only)
-        xtc_file (str): realpath of new xtc file (selection only)
+        tpr_file (str)
+            realpath of new tpr file (selection only)
+        xtc_file (str)
+            realpath of new xtc file (selection only)
     """
     # check if o arg is "default" or list
     if o == "default":
@@ -832,32 +880,37 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
 
 def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, **kwargs):
     """
-    Alias function of gromacs.rms().
-    Calculate backbone RMSD.
+    Modified function of gromacs.rms(). Calculate backbone RMSD.
 
     Args:
         ref (str): reference structure: pdb (tpr gro g96 brk ent)
         xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)
-        o (str): xvg
-            "default": rmsd.xvg
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
+        o (str):
+          | xvg
+          | "default": rmsd.xvg
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
         tu (str): time unit: fs ps ns us ms s
-        sel (str): selection string (case independant)
-            "system" or "all": all atoms
-            "protein": protein atoms
-            "ca" or "calpha": CA atoms
-            "bb" or "backbone": backbone atoms
+        sel (str):
+          | selection string (case independant)
+          | "system" or "all": all atoms
+          | "protein": protein atoms
+          | "ca" or "calpha": CA atoms
+          | "bb" or "backbone": backbone atoms
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.rms.help()
-        # or terminal -> gmx rms -h
-
+    Keyword Args:
         cprint_color (str)
 
+    .. Hint:: Find valid Keyword Args via
+
+        - python -> gromacs.rms.help()
+        - terminal -> gmx rms -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -895,23 +948,28 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
     Args:
         f (str): input structure file: pdb gro tpr (g96 brk ent esp)
         o (str): output structure file: pdb gro trp (g96 brk ent esp)
-        odir (str): output directory
-            special case: odir is ignored when o is relative/absolute path
-        ff (str): force field (see <gromacs_path>/top/<ff> for valid inputs)
-            Protein: e.g.: amber99sb-ildn
-            RNA: e.g.: amber14sb_OL15
+        odir (str):
+          | output directory
+          | special case: odir is ignored when o is relative/absolute path
+        ff (str):
+          | force field (see <gromacs_path>/top/<ff> for valid inputs)
+          | "amber99sb-ildn" etc. for proteins
+          | "amber14sb_OL15" etc. for RNAs
         water (str): water model
         ignh (bool): ignore hydrogen
         verbose (bool): print/mute gromacs messages
 
-    Kwargs:
-        # see python  -> gromacs.pdb2gmx.help()
-        # or terminal -> gmx pdb2gmx -h
-
+    Keyword Args:
         cprint_color (str)
 
+    .. Hint:: Find valid Keyword Args via
+
+        - python -> gromacs.pdb2gmx.help()
+        - terminal -> gmx pdb2gmx -h
+
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -937,8 +995,8 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
 
 def create_complex(f=[], o="complex.gro", verbose=True):
     """
-    Create complex using multiple .gro files.
-    First .gro file in <f> must have largest box.
+    Create complex using multiple .gro files. First .gro file in <f> must have
+    largest box.
 
     Args:
         f (list): list of gro files
@@ -946,7 +1004,8 @@ def create_complex(f=[], o="complex.gro", verbose=True):
         verbose (bool)
 
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
     if not isinstance(f, list):
         raise _misc.Error("Wrong data type: f must be list.")
@@ -1010,7 +1069,8 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
         verbose (bool)
 
     Returns:
-        o_file (str): realpath of output file
+        o_file (str)
+            realpath of output file
     """
 
     with open(top, "r") as handle:
@@ -1073,18 +1133,20 @@ def create_positions_dat(box_vec=[25, 25, 25],
     Create folder with position.dat files. Each file contains <nmol> copies of
     the box center. Use in combination with "gmx insert-molecule module"
 
-    Ex:
-    gmx insert-molecules -f "box_25.gro" -ci "../model_ATP/atp_ini.pdb"
-    -o "complex.gro" -ip "positions_dat/positions_100.dat" -dr 5 5 5 -try 100
 
     Args:
         box_vec (list): box vectors
-        nmol (int/tuple/list/range): number of molecules to add (replaces -nmol from
-                                     insert-molecule cmd)
+        nmol (int, tuple, list, range): number of molecules to add (replaces -nmol from
+          insert-molecule cmd)
         verbose (bool)
 
     Returns:
-        file_dir (str): realpath of folder containing positions.dat files
+        file_dir (str)
+            realpath of folder containing positions.dat files
+
+    Example:
+        | >> gmx insert-molecules -f "box_25.gro" -ci "../model_ATP/atp_ini.pdb"
+        | -o "complex.gro" -ip "positions_dat/positions_100.dat" -dr 5 5 5 -try 100
     """
     file_dir = _misc.mkdir("./positions_dat")
     if isinstance(nmol, int):

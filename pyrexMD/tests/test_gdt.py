@@ -2,10 +2,10 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 10.05.2021
+# @Last modified time: 16.05.2021
 
-import pyREX.analysis.gdt as gdt
-from pyREX.misc import flatten_array
+import pyrexMD.analysis.gdt as gdt
+from pyrexMD.misc import flatten_array
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose

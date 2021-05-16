@@ -2,10 +2,10 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 10.05.2021
+# @Last modified time: 16.05.2021
 
 
-import pyREX.analysis.analysis as ana
+import pyrexMD.analysis.analysis as ana
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose

@@ -2,7 +2,7 @@
 ;	File 'topol.top' was generated
 ;	By user: arthur (1000)
 ;	On host: fractal-r9
-;	At date: Tue May 11 22:14:44 2021
+;	At date: Sun May 16 04:20:33 2021
 ;
 ;	This is a standalone topology file
 ;
@@ -11,9 +11,9 @@
 ;	
 ;	Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 ;	Data prefix:  /usr/local/gromacs_2020
-;	Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex
+;	Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex
 ;	Command line:
-;	  gmx_mpi pdb2gmx -f /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/decoys/1LMB_361.pdb -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/1LMB_best_decoys_ref/1LMB_361_ref.pdb -ff amber99sb-ildn -water tip3p -ignh
+;	  gmx_mpi pdb2gmx -f /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/decoys/1LMB_361.pdb -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/1LMB_best_decoys_ref/1LMB_361_ref.pdb -ff amber99sb-ildn -water tip3p -ignh
 ;	Force field was read from the standard GROMACS share directory.
 ;
 

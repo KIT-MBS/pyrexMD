@@ -2,16 +2,16 @@
 ;	File 'mdout.mdp' was generated
 ;	By user: arthur (1000)
 ;	On host: fractal-r9
-;	At date: Tue May 11 22:22:33 2021
+;	At date: Sun May 16 04:21:54 2021
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2020.5 (-:
 ;	
 ;	Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 ;	Data prefix:  /usr/local/gromacs_2020
-;	Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_6
+;	Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_6
 ;	Command line:
-;	  gmx_mpi grompp -f ../min.mdp -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyREX/pyREX/examples/files/rex/rex_6/em.tpr -c ions.gro -p topol.top -v -maxwarn 10
+;	  gmx_mpi grompp -f ../min.mdp -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_6/em.tpr -c ions.gro -p topol.top -v -maxwarn 10
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.

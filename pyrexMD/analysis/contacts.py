@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 ################################################################################
@@ -575,7 +575,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
-    return array(FRAMES), array(QBIAS), array(CM)
+    return np.array(FRAMES), np.array(QBIAS), np.array(CM)
 
 
 def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwargs):

@@ -30,3 +30,7 @@ To run the python tests install pytest, go into pyrexMD/tests folder and run pyt
 
 ## Examples
 To run one of the short examples, go into the pyrexMD/examples folder and run jupyter notebook
+
+
+## Documentation
+Checkout the documentation under https://kit-mbs.github.io/pyrexMD/

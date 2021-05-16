@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 16.05.2021
 
 
 # miscellaneous
@@ -26,19 +26,21 @@ import termcolor
 def apply_matplotlib_rc_settings():
     """
     apply matplotlib rc settings:
-        - render math text including greek letters in italic font by default
-        - render math text including greek letters in non-italic font using \\mathrm{}
-        - does not require an external LaTeX installation
+
+      - render math text including greek letters in italic font by default
+      - render math text including greek letters in non-italic font using \\mathrm{}
+      - does not require an external LaTeX installation
 
     Code:
-        matplotlib.rcParams['font.size'] = 12
-        matplotlib.rcParams['font.weight'] = "normal"
-        matplotlib.rcParams['font.family'] = 'sans-serif'
-        matplotlib.rcParams['font.sans-serif'] = 'Arial'
-        matplotlib.rcParams['mathtext.fontset'] = 'custom'
-        matplotlib.rcParams['mathtext.rm'] = 'sans'
-        matplotlib.rcParams['mathtext.it'] = 'sans:italic'
-        matplotlib.rcParams['mathtext.default'] = 'it'
+
+      - matplotlib.rcParams['font.size'] = 12
+      - matplotlib.rcParams['font.weight'] = "normal"
+      - matplotlib.rcParams['font.family'] = 'sans-serif'
+      - matplotlib.rcParams['font.sans-serif'] = 'Arial'
+      - matplotlib.rcParams['mathtext.fontset'] = 'custom'
+      - matplotlib.rcParams['mathtext.rm'] = 'sans'
+      - matplotlib.rcParams['mathtext.it'] = 'sans:italic'
+      - matplotlib.rcParams['mathtext.default'] = 'it'
     """
     matplotlib.rcParams['font.size'] = 12
     matplotlib.rcParams['font.weight'] = "normal"
@@ -53,12 +55,14 @@ def apply_matplotlib_rc_settings():
 
 def update_alias_docstring(f1, f2):
     """
-    Use an existing docstring as template and replace 'Alias function of <alias>' part:
-        - determine docstring template based on length
-        - test if docstring template contains "Alias function of <alias>"
-        - copy and replace alias such that:
-            f1 docstring contains: Alias function of <f2.__name__>
-            f2 docstring contains: Alias function of <f1.__name__>
+    Use an existing docstring as template and replace 'Alias function of <alias>' part
+
+      - determine docstring template based on length
+      - test if docstring template contains "Alias function of <alias>"
+      - copy and replace alias such that:
+      | f1 docstring contains: Alias function of <f2.__name__>
+      | f2 docstring contains: Alias function of <f1.__name__>
+
     Args:
         f1 (function): function with docstring (template)
         f2 (function): function with no/short docstring (replace with updated template)
@@ -98,8 +102,8 @@ class dtypeError(Exception):
     Base class for dtype exceptions
 
     Example:
-        misc.dtypeError("source", "str")
-        >> TypeError: <source> must be str
+        | >> misc.dtypeError("source", "str")
+        | TypeError: <source> must be str
 
     """
 
@@ -119,14 +123,16 @@ class HiddenPrints:
 
     Args:
         verbose (bool):
-             True: show prints
-            False: hide prints (default)
+
+          | True: show prints
+          | False: hide prints (default)
 
     Example:
-        with HiddenPrints():
-            print("This print is hidden")
-        with HiddenPrints(verbose=True):
-            print("This print is shown")
+        | with HiddenPrints():
+        |   print("This print is hidden")
+        | with HiddenPrints(verbose=True):
+        |   print("This print is shown")
+        | This print is shown
     """
 
     def __init__(self, verbose=False):
@@ -224,30 +230,30 @@ class CONFIG(object):
         Update key value for an alias if alias is in kwargs.
 
         Detailed Example:
-            default = {"colors": ["g", "r"],
-                       "ms": 1}
-            alias_dict = {"color_positive": "teal",
-                          "color_negative": "orange",
-                          "markersize": 5}
-            cfg = misc.CONFIG(default, **alias_dict)
-            cfg.print_config()
-            >>  key                 value
-                colors              ['g', 'r']
-                ms                  1
-                color_positive      teal
-                color_negative      pink
-                markersize          5
-
-            cfg.update_by_alias(alias="markersize", key="ms", **alias_dict)
-            cfg.update_by_alias(alias="color_positive", key="colors", key_ndx=0, **alias_dict)
-            cfg.update_by_alias(alias="color_negative", key="colors", key_ndx=1, **alias_dict)
-            cfg.print_config()
-            >>  key                 value
-                colors              ['teal', 'orange']
-                ms                  5
-                color_positive      teal
-                color_negative      orange
-                markersize          5
+          | default = {"colors": ["g", "r"],
+          |            "ms": 1}
+          | alias_dict = {"color_positive": "teal",
+          |               "color_negative": "orange",
+          |               "markersize": 5}
+          | cfg = misc.CONFIG(default, **alias_dict)
+          | cfg.print_config()
+          | >>  key                 value
+          |     colors              ['g', 'r']
+          |     ms                  1
+          |     color_positive      teal
+          |     color_negative      pink
+          |     markersize          5
+          |
+          | cfg.update_by_alias(alias="markersize", key="ms", **alias_dict)
+          | cfg.update_by_alias(alias="color_positive", key="colors", key_ndx=0, **alias_dict)
+          | cfg.update_by_alias(alias="color_negative", key="colors", key_ndx=1, **alias_dict)
+          | cfg.print_config()
+          | >>  key                 value
+          |     colors              ['teal', 'orange']
+          |     ms                  5
+          |     color_positive      teal
+          |     color_negative      orange
+          |     markersize          5
         """
         if alias in kwargs:
             if key_ndx is None:
@@ -260,13 +266,13 @@ class CONFIG(object):
         """
         Print and return stored data in table format with "key" and "value" columns.
         """
-        str_ = f"{'key':20}{'value':20}\n\n"
+        _str = f"{'key':20}{'value':20}\n\n"
 
         for item in self.__dict__.items():
-            str_ += f"{item[0]:20}{item[1]}\n"
-        print(str_)
+            _str += f"{item[0]:20}{item[1]}\n"
+        print(_str)
 
-        return str_
+        return _str
 
 
 ################################################################################
@@ -288,17 +294,19 @@ def timeit(timer=None, msg="elapsed time:"):
     """
     Test elapsed time of a process
 
-    Arg:
-        timer (None/TIMER CLASS)
+    Args:
+        timer (None, TIMER CLASS)
+        msg (str): message
 
     Returns:
         timer (TIMER CLASS)
 
     Example:
-        t = TIMER()
-        timeit(t)
-        <code>
-        timeit(t)
+
+      | t = TIMER()
+      | timeit(t)
+      | <code>
+      | timeit(t)
     """
     if timer == None:
         timer = TIMER()
@@ -321,14 +329,14 @@ def timeit(timer=None, msg="elapsed time:"):
 
 def cwd(verbose=True):
     """
-    Alias function of pwd().
-    Get/Print current working directory
+    Alias function of pwd(). Get/Print current working directory.
 
     Args:
         verbose (bool): print cwd
 
     Returns:
-        cwd (str): current working directory
+        cwd (str)
+            current working directory
     """
     if verbose:
         cprint(f"cwd: {os.getcwd()}", "blue")
@@ -379,8 +387,7 @@ def relpath(path):
 
 def dirpath(path, realpath=True):
     """
-    Alias function of get_filedir().
-    Get realpath or relpath of the last directory of <path>.
+    Alias function of get_filedir(). Get realpath or relpath of the last directory of <path>.
 
     Args:
         path (str)
@@ -409,9 +416,9 @@ def get_filename(path, search_file=True):
     Args:
         path (str)
         search_file (bool):
-            True: use <path> as search pattern to search for existing file
-               -> remove prefix if only 1 match found to obtain existing filename
-            False: just remove prefix of given <path>
+          | True: use <path> as search pattern to search for existing file
+          | -> remove prefix if only 1 match found to obtain existing filename
+          | False: just remove prefix of given <path>
 
     Returns
         filename (str)
@@ -433,7 +440,9 @@ def joinpath(filedir, filename, create_dir=True, realpath=True):
 
     Special case:
         filename contains relative or absolute path: ignore filedir input
-    Reason: intention is to save/load file under the path "filename"
+
+    Reason:
+        intention is to save/load file under the path "filename"
 
 
     Args:
@@ -475,14 +484,15 @@ def mkdir(path, verbose=True):
         verbose (bool): print message ('New folder created: ...')
 
     Returns:
-        realpath (str): realpath to new directory
+        realpath (str)
+            realpath to new directory
 
     Example:
-        cwd = /home/user/
-        mkdir('Test1')
-        >> New folder created: /home/user/Test1
-        mkdir('../Test2')
-        >> New folder created: /home/Test2
+        | >> cwd = /home/user/
+        | >> mkdir('Test1')
+        | New folder created: /home/user/Test1
+        | >>mkdir('../Test2')
+        | New folder created: /home/Test2
     """
     realpath = os.path.realpath(path)
     if not os.path.exists(realpath):
@@ -501,7 +511,8 @@ def cd(path, verbose=True):
         verbose (bool): print message ('Changed directory to: ...')
 
     Returns:
-        realpath (str): realpath of changed directory
+        realpath (str)
+            realpath of changed directory
     """
     realpath = os.path.realpath(path)
     os.chdir(realpath)
@@ -515,14 +526,15 @@ def cp(source, target, mode="-rp", create_dir=True, verbose=True):
     Copy file(s) from <source> to <target>.
 
     Args:
-        source (str/list/array): source path or list of source paths
+        source (str, list, array): source path or list of source paths
         target (str): target path
         mode (str): copy mode flags (see cp --help in linux OS)
         create_dir (bool)
         verbose (bool)
 
     Returns:
-        target (str): target realpath
+        target (str)
+            target realpath
     """
     if not isinstance(target, str):
         raise dtypeError("Wrong datatype: <target> must be str (path/realpath).")
@@ -546,16 +558,16 @@ def cp(source, target, mode="-rp", create_dir=True, verbose=True):
 
 def rm(path, pattern=None, verbose=True):
     """
-    Alias function of remove().
-    Remove file(s) from path.
+    Alias function of remove(). Remove file(s) from path.
 
-    Note: pattern can be implemented into path variable directly.
+    .. Note:: pattern can be implemented into path variable directly.
 
     Args:
         path (str): directory path
-        pattern (None/str): pattern
-            (None): check for files with path only
-            (str):  check for files with joined path of path + pattern
+        pattern (None, str):
+          | pattern
+          | None: check for files with path only
+          | str:  check for files with joined path of path + pattern
         verbose (bool): print message ('removed file: ... ')
     """
     if pattern is None:
@@ -583,18 +595,17 @@ def bash_cmd(cmd, verbose=False):
     """
     Execte any bash command via python.
 
-    Note: works with pipe.
+    .. Note:: works with pipe.
 
     Args:
         cmd (str): bash cmd
         verbose (bool): print executed shell command
 
     Example:
-    bash_cmd("ls")
-    >>
-    bash_cmd("touch test")
-    bash_cmd("ls")
-    >> test
+        | >> bash_cmd("ls")
+        | >> bash_cmd("touch test")
+        | >> bash_cmd("ls")
+        | test
     """
     if verbose:
         print("executing shell command:", cmd)
@@ -616,17 +627,20 @@ def bash_cmd(cmd, verbose=False):
 
 def convert_image(fin, fout, format="auto", **kwargs):
     """
-    Converts image type. Currently ONLY tested for:
-        tif -> png
-        pdf -> png
+    Converts image type. Currently ONLY tested for
+
+      - tif -> png
+      - pdf -> png
 
     Args:
         fin (str): file path for file in (including extension)
         fout (str): file path for file out (including extension)
-        format (str): fout format/extension
-            "auto"
-            "png"
-    Kwargs:
+        format (str):
+          | fout format/extension
+          | "auto"
+          | "png"
+
+    Keyword Args:
         dpi (tuple): dpi for each direction
         quality (int): compression quality:  0 to 100
     """
@@ -648,14 +662,17 @@ def convert_image(fin, fout, format="auto", **kwargs):
 
 def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
     """
+    convert multiple images
+
     Args:
         folder_in (str):  file path for folder with input  images
         folder_out (str): file path for folder with output images
-        format (str): fout format/extension
-            "auto"
-            "png"
+        format (str):
+          | fout format/extension
+          | "auto"
+          | "png"
 
-    Kwargs:
+    Keyword Args:
         dpi (tuple): dpi for each direction
         quality (int): compression quality:  0 to 100
     """
@@ -677,25 +694,22 @@ def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
 
 def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
     """
-    Alias function of termcolor.cprint().
-    Apply colored print.
+    Alias function of termcolor.cprint(). Apply colored print.
 
     Args:
         msg (str)
-        color (None/str)
-            grey, red, green, yellow, blue, magenta, cyan, white
-        on_color (None/str):
-            on_grey, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white
-        attr (None/list): attributes list
-            bold, dark, underline, blink, reverse, concealed
+        color (None, str): "grey", "red", "green", "yellow", "blue", "magenta", "cyan", "white"
+        on_color (None, str): "on_grey", "on_red", "on_green", "on_yellow", "on_blue", "on_magenta", "on_cyan", "on_white"
+        attr (None, list):
+          | attributes list
+          | bold, dark, underline, blink, reverse, concealed
 
-    Kwargs:
-        cprint_color (None/str): alias for color (with higher priority)
-        # see help(print)
-        sep: string inserted between values, default a space.
-        end: string appended after the last value, default a newline.
-        file: a file-like object (stream); defaults to the current sys.stdout.
-        flush: whether to forcibly flush the stream.
+    Keyword Args:
+        cprint_color (None, str): alias for color (with higher priority)
+        sep (str): string inserted between values, default a space.
+        end (str): string appended after the last value, default a newline.
+        file (str): a file-like object (stream); defaults to the current sys.stdout.
+        flush (bool): whether to forcibly flush the stream.
     """
     if "cprint_color" in kwargs:
         color = kwargs["cprint_color"]
@@ -706,13 +720,13 @@ def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
 
 def unzip(iterable):
     """
-    alias function of zip(*iterable)
+    alias function of zip(\*iterable)
 
     Args:
         iterable
 
     Returns:
-        zip(*iterable)
+        zip(\*iterable)
     """
     return zip(*iterable)
 
@@ -732,7 +746,8 @@ def input_python_x(msg):
         msg (str): promt message
 
     Returns:
-        msg (str): user input message
+        msg (str)
+            user input message
     """
     if sys.version_info[0] == 2:
         return raw_input(msg + "\n")
@@ -768,19 +783,19 @@ def round_down(number, base=1):
         base (float/int)
 
     Example:
-        for i in range(11):
-            print(i, round_down(i,5))
-        >> (0, 0)
-           (1, 0)
-           (2, 0)
-           (3, 0)
-           (4, 0)
-           (5, 5)   # does not round down if remainder is zero
-           (6, 5)
-           (7, 5)
-           (8, 5)
-           (9, 5)
-           (10, 10)
+      | for i in range(11):
+      |     print(i, round_down(i,5))
+      | (0, 0)
+      | (1, 0)
+      | (2, 0)
+      | (3, 0)
+      | (4, 0)
+      | (5, 5)   # does not round down if remainder is zero
+      | (6, 5)
+      | (7, 5)
+      | (8, 5)
+      | (9, 5)
+      | (10, 10)
     """
     return number - (number % base)
 
@@ -792,19 +807,19 @@ def round_up(number, base=1):
         base (float/int)
 
     Example:
-        for i in range(11):
-            print(i, round_up(i,5))
-        >> (0, 0)
-           (1, 5)
-           (2, 5)
-           (3, 5)
-           (4, 5)
-           (5, 5)   # does not round up if remainder is zero
-           (6, 10)
-           (7, 10)
-           (8, 10)
-           (9, 10)
-           (10, 10)
+      | for i in range(11):
+      |     print(i, round_up(i,5))
+      | (0, 0)
+      | (1, 5)
+      | (2, 5)
+      | (3, 5)
+      | (4, 5)
+      | (5, 5)   # does not round up if remainder is zero
+      | (6, 10)
+      | (7, 10)
+      | (8, 10)
+      | (9, 10)
+      | (10, 10)
     """
     if (number % base) == 0:
         return number
@@ -831,15 +846,15 @@ def round_to_base(number, base=1):
 def round_object(object, prec=3):
     """
     Args:
-        object (list/array): can be any of these:
-              - single list/array
-              - list of lists/arrays
-              - array of lists/arrays
+        object (list, array):
+          | single list/array
+          | list of lists/arrays
+          | array of lists/arrays
         prec (int): rounding precission
 
     Returns:
-        new_object (list/array): same structure as object, but with rounded values.
-
+        new_object (list, array)
+            same structure as object, but with rounded values.
     """
     # single list/array (if error occurs, maybe add more np.<data types> to this case)
     if isinstance(object[0], (int, float, np.float32, np.int32)):
@@ -879,13 +894,14 @@ def get_substrings(string, seperators=["/", "_", ".", ":", ";", " "], reverse=Fa
         reverse (bool): return substrings in reversed order
 
     Returns:
-        substrings (list): list of substrings
+        substrings (list)
+            list of substrings
 
     Example:
-        >> get_substrings("split/this_string.into:parts")
-        ['split', 'this', 'string', 'into', 'parts']
-        >> get_substrings("split/this_string.into:parts", reverse=True)
-        ['parts', 'into', 'string', 'this', 'split']
+        | >> get_substrings("split/this_string.into:parts")
+        | ['split', 'this', 'string', 'into', 'parts']
+        | >> get_substrings("split/this_string.into:parts", reverse=True)
+        | ['parts', 'into', 'string', 'this', 'split']
     """
     for sep in seperators:
         string = string.replace(sep, " ")
@@ -897,22 +913,23 @@ def get_substrings(string, seperators=["/", "_", ".", ":", ";", " "], reverse=Fa
 
 def split_lists(A, n, remap=False):
     """
-    split list A into two lists B1 and B2 according to
-        A = B1 + B2
+    split list A into two lists B1 and B2 according to A = B1 + B2,
     where B2 contains every n-th element of A.
 
-
     Args:
-        A (int/list/np.array):
-            (int): initialize A according to: A = list(range(A))
-            (list/np.array): input list A which should be split
+        A (int, list, array):
+          | int: initialize A according to: A = list(range(A))
+          | list, array: input list A which should be split
         n (int): split every n-th element of A into B2
         remap (bool): remap Bi according to: Bi = range(0, len(Bi))
 
     Returns:
-       A (list): input list A
-       B1 (list): partial list B1
-       B2 (list): partial list B2 (contains every n-th element of A)
+        A (list)
+            input list A
+        B1 (list)
+            partial list B1
+        B2 (list)
+            partial list B2 (contains every n-th element of A)
     """
     if isinstance(A, int):
         A = list(range(A))
@@ -935,7 +952,7 @@ def flatten_array(x):
     Returns flattened array of x.
 
     Args:
-        x (array/array of arrays)
+        x (array, array of arrays)
 
     Returns:
         flattened_array (array)
@@ -949,15 +966,16 @@ def flatten_array(x):
 
 def norm_array(array, start_value=0):
     """
-    normed array:
-        - starts with <start_value>
-        - deltaValue is fixed to 1 (i.e. array[i]- array[i+1] = 1)
+    norm array
+
+      - starts with <start_value>
+      - deltaValue is fixed to 1 (i.e. array[i]- array[i+1] = 1)
 
     Args:
-        array (list/array)
+        array (list, array)
 
     Returns:
-        normed_array (list/array)
+        normed_array (list, array)
     """
     l = len(array)
     normed_array = [0]*l
@@ -972,21 +990,20 @@ def get_precision(number):
     """
     Returns leading precission of number.
 
-    Algorithm:
-        - convert float to string
-        - find position of decimal point relative to the length of the string
+      - convert float to string
+      - find position of decimal point relative to the length of the string
 
     Args:
-        number (int/float)
+        number (int, float)
 
     Returns:
         precission (int)
 
     Example:
-        >> get_precission(5.00000)
-        1
-        >> get_precission(5.12300)
-        3
+        | >> get_precission(5.00000)
+        | 1
+        | >> get_precission(5.12300)
+        | 3
     """
     if type(number) is str:
         number = number.rstrip("0")
@@ -995,41 +1012,43 @@ def get_precision(number):
     return precission
 
 
-def get_base(str_):
+def get_base(_str):
     """
-    Get base (i.e. everything except extension) of string "str_".
+    Get base (i.e. everything except extension) of string "_str".
 
     Args:
-        str_ (str)
+        _str (str)
 
     Returns:
-        base (str): base of str_
+        base (str)
+            base of _str
 
     Example:
-        >>get_base("random_plot.png")
-        "random_plot"
+        | >> get_base("random_plot.png")
+        | "random_plot"
     """
-    str_ = str(str_).rsplit("/", 1)[-1]
-    base = str_.rsplit(".", 1)[0]
+    _str = str(_str).rsplit("/", 1)[-1]
+    base = _str.rsplit(".", 1)[0]
     return base
 
 
-def get_extension(str_):
+def get_extension(_str):
     """
-    Get ".ext" (extension) of string "str_".
+    Get ".ext" (extension) of string "_str".
 
     Args:
-        str_ (str)
+        _str (str)
 
     Returns:
-        ext (str): extension of str_
+        ext (str)
+            extension of _str
 
     Example:
-        >> get_extension("random_plot.png")
-        ".png"
+        | >> get_extension("random_plot.png")
+        | ".png"
     """
-    str_ = str(str_).rsplit("/", 1)[-1]
-    ext = "."+str_.rsplit(".", 1)[-1]
+    _str = str(_str).rsplit("/", 1)[-1]
+    ext = "."+_str.rsplit(".", 1)[-1]
     return ext
 
 
@@ -1044,24 +1063,26 @@ def insert_str(str1, str2, sep, loc="after"):
         loc (str): insert location: 'before' or 'after' first seperator in str1
 
     Returns:
-        str_ (str): new string
+        _str (str)
+
+            new string
     """
     if loc == "after":
-        str_ = str1.split(sep)[0] + sep + str2 + f"{sep}".join(str1.split(sep)[1:])
+        _str = str1.split(sep)[0] + sep + str2 + f"{sep}".join(str1.split(sep)[1:])
     elif loc == "before":
-        str_ = str1.split(sep)[0] + str2 + sep + f"{sep}".join(str1.split(sep)[1:])
+        _str = str1.split(sep)[0] + str2 + sep + f"{sep}".join(str1.split(sep)[1:])
     else:
         raise _misc.Error("loc argument must be either 'before' or 'after'.")
-    return str_
+    return _str
 
 
 def autodetect_header(fin):
     """
-    Autodetects header. Header ends when line start with one of following characters:
-    {'\t', '\n', ' ', ',', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
+    Autodetects header.
 
     Args:
         fin (str): input file (path)
+
     Returns:
         header_rows (int)
     """
@@ -1095,33 +1116,33 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=float):
 
     Args:
         fin (str): input file (path)
-        sep (None/str): seperator of columns.
-            None: whitespace
-        usecols (int or sequence): data columns
-        skiprows ('auto'/int): ignore header rows of fin
-            'auto' or -1: auto detect
-        dtype (dtype cls/list/tuple): data type of returned np.array
-            (dtype cls): all data types are same
-            (list/tuple of dtype cls): specify dtype of each data column
-
-            valid dtypes:
-                str, int, float, complex
-                np.int_, np.int32, np.int64
-                np.float_, np.float32, np.float64
-                np.complex_, np.complex64, np.complex128
+        sep (None, str):
+          | seperator of columns.
+          | None: whitespace
+        usecols (int, sequence): data columns
+        skiprows ('auto', int):
+          | ignore header rows of fin
+          | 'auto' or -1: auto detect
+        dtype (dtype cls, list, tuple):
+          | data type of returned np.array
+          | dtype cls: all data types are same
+          | list/tuple of dtype cls: specify dtype of each data column
+          |
+          | valid dtypes:
+          |     str, int, float, complex
 
     Returns:
-        if usecols==int:
-            <np.array>: data of one column specified in usecols
-        if usecols==sequence:
-            list(<np.array>,<np.array>,...): data of each column specified in usecols
+        data_array (array)
+            if usecols is int ~ data of one column specified in usecols
+        data_list (list)
+            if usecols is list ~ data of each column specified in usecols
 
     Example:
-        # single columns per fin
-        X = read_file('data.txt', usecols=0)
-        Y = read_file('data.txt', usecols=1)
-        # multiple columns per fin
-        X,Y = read_file('data.txt', usecols=(0,1))
+        | # single columns per fin
+        | X = read_file('data.txt', usecols=0)
+        | Y = read_file('data.txt', usecols=1)
+        | # multiple columns per fin
+        | X,Y = read_file('data.txt', usecols=(0,1))
     """
     if skiprows == "auto" or skiprows == -1:
         skiprows = autodetect_header(fin)
@@ -1147,18 +1168,22 @@ def read_DCA_file(DCA_fin, n_DCA, usecols=(0, 1), skiprows='auto', filter_DCA=Tr
     Args:
         DCA_fin (str): DCA input file (path)
         n_DCA (int): number of used DCA contacts
-        usecols (tuple/list): columns containing the RES pairs in DCA_fin
-        skiprows ('auto'/int): ignore header rows of DCA_fin
-            'auto' or -1: auto detect
+        usecols (tuple, list): columns containing the RES pairs in DCA_fin
+        skiprows ('auto', int):
+          | ignore header rows of DCA_fin
+          | 'auto' or -1: auto detect
         filter_DCA (bool):
-            True: ignore DCA pairs with |i-j| < 4
-            False: use all DCA pairs w/o applying filter
-        RES_range (None):  [RES_min, RES_max] range. Ignore invalid RES ids
-            None: do not narrow down RES range
+          | True: ignore DCA pairs with abs(i-j) < 4
+          | False: use all DCA pairs w/o applying filter
+        RES_range (None):
+          | Use RES within [RES_min, RES_max] range.
+          | None: do not narrow down RES range
 
     Returns:
-        DCA_PAIRS (list): DCA pairs IJ
-        DCA_PAIRS_RES_range (list): [RES_min, RES_max] of DCA_PAIRS (not input RES_range values)
+        DCA_PAIRS (list)
+            DCA pairs IJ
+        DCA_PAIRS_RES_range (list)
+            [RES_min, RES_max] of DCA_PAIRS (not input RES_range values)
     """
     I, J = read_file(DCA_fin, usecols=usecols, skiprows=skiprows, dtype=np.int_)
     DCA_PAIRS = []
@@ -1190,16 +1215,15 @@ def get_PDBid(ref):
     Obtains PDB id from ref by splitting its path and searching for alpha numerical (alnum) strings with length 4.
 
     Args:
-        ref (str): reference path
-        ref (MDA universe/atomgrp): reference structure
+        ref (str, universe, atomgrp): reference structure
 
     Returns:
-        if ref path contains one unique alnum string with length 4:
-            return PDBid (str)
-        if ref path contains multiple unique alnum strings with length 4:
-            return PDBid (list)
-        else:
-            return
+        PDBid (str)
+            if ref path contains one unique alnum string with length 4
+        PDBid (list)
+            if ref path contains multiple unique alnum strings with length 4
+        None (None)
+            else
     """
     if type(ref) is str:
         ref = ref.replace('.', '/')
@@ -1245,28 +1269,30 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
 
     Args:
         data (list of lists): table content, where each list corresponds to one column
-        prec(None/int):
-            (None): rounding off
-            (int):  rounding on
-        spacing (int): spacing between columns (via "".expandtabs(spacing))
-            8: default \\t width
+        prec(None,int):
+          | None: rounding off
+          | int:  rounding on
+        spacing (int):
+          | spacing between columns (via "".expandtabs(spacing))
+          | 8: default \\t width
         verbose (bool): print table
-        verbose_stop (None/int): stop printing after N lines
+        verbose_stop (None, int): stop printing after N lines
 
     Returns:
-        table_str (str): table formatted string. Can be used to save log files.
+        table_str (str)
+            table formatted string. Can be used to save log files.
 
     Example:
-        letters = ["A", "B", "C"]
-        numbers = [1, 2, 3]
-        table = misc.print_table([letters, numbers])
-        >>  A   1
-            B   2
-            C   3
-
-        # save table as log file:
-        with open("table.log", "w") as fout:
-            fout.write(table)
+        | letters = ["A", "B", "C"]
+        | numbers = [1, 2, 3]
+        | table = misc.print_table([letters, numbers])
+        | >>  A   1
+        |     B   2
+        |     C   3
+        |
+        | # save table as log file:
+        | with open("table.log", "w") as fout:
+        |     fout.write(table)
     """
     # apply precission to input
     if prec is not None:
@@ -1347,16 +1373,17 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, ve
         data (list of lists): table content, where each list corresponds to one column
         header (str): header for log file, e.g. column descriptions
         default_dir (str)
-        prec (None/int):
-            (None): rounding off
-            (int):  rounding on
+        prec (None, int):
+          | None: rounding off
+          | int:  rounding on
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         save_as (str): alias of filename
 
     Return:
-        realpath (str): path to log file
+        realpath (str)
+            path to log file
     """
     if "save_as" in kwargs:
         filename = kwargs["save_as"]
@@ -1392,12 +1419,14 @@ def get_slice_indices(list1, list2):
     sublist = mainlist[slice_ndx1:slice_ndx2]
 
     Args:
-        list1 (list/array): mainlist or sublist
-        list2 (list/array): mainlist or sublist
+        list1 (list, array): mainlist or sublist
+        list2 (list, array): mainlist or sublist
 
     Returns:
-        slice_ndx1 (int): first slice index ("start")
-        slice_ndx2 (int): second slice index ("end")
+        slice_ndx1 (int)
+            first slice index ("start")
+        slice_ndx2 (int)
+            second slice index ("end")
     """
     if len(list1) > len(list2):
         mainlist = list1
@@ -1422,25 +1451,28 @@ def get_slice_indices(list1, list2):
 
 def get_cutoff_array(array, cut_min=None, cut_max=None):
     """
-    Applies cutoff on array and returns it as well as the corresponding indices.
+    Applies cutoff on array and returns array with values within cutoff range
+    as well as the corresponding indices.
 
     Args:
         array (array/list)
-        cut_min (None/int/float): min value for cutoff
-        cut_max (None/int/float): max value for cutoff
+        cut_min (None, int, float): min value for cutoff
+        cut_max (None, int, float): max value for cutoff
 
     Returns:
-        cutoff_array (array/list)
-        cutoff_array_ndx (array/list)
+        cutoff_array (array, list)
+            array with values within cutoff
+        cutoff_array_ndx (array, list)
+            coresponding indices to map correctly
 
     Example:
-        array = list(range(10,20))
-        cut_min, cut_max = 12, 16
-        cutoff_array, cutoff_array_ndx = get_cutoff_array(array, cut_min, cut_max)
-        print(cutoff_array)
-        >> [12, 13, 14, 15, 16]
-        print(cutoff_array_ndx)
-        >> [2, 3, 4, 5, 6]
+        | array = list(range(10,20))
+        | cut_min, cut_max = 12, 16
+        | cutoff_array, cutoff_array_ndx = get_cutoff_array(array, cut_min, cut_max)
+        | print(cutoff_array)
+        | >> [12, 13, 14, 15, 16]
+        | print(cutoff_array_ndx)
+        | >> [2, 3, 4, 5, 6]
     """
     # no cutoff
     if cut_min is None and cut_max is None:
@@ -1468,13 +1500,13 @@ def get_subarray_start_ndx(array, subarray):
     Returns start index of <array> at which <subarray> matches.
 
     Args:
-        array (list/array)
-        subarray (list/arr)
+        array (list, array)
+        subarray (list, arr)
 
     Returns:
-        start_ndx (None/int):
-            None: arrays do not match
-            int: starting index of <array> at which <subarray> matches
+        start_ndx (None, int)
+          | None: arrays do not match
+          | int: starting index of <array> at which <subarray> matches
     """
     if len(array) < len(subarray):
         raise ValueError("get_subarray_start(array, subarray): lenght(array) < length(subarray).")
@@ -1493,14 +1525,15 @@ def get_subarray_start_ndx(array, subarray):
 
 def get_subarray(array, ndx_sel):
     """
-    Returns sub array of <array> for items with indices <ndx_sel>.
+    Returns subarray of <array> for items with indices <ndx_sel>.
 
     Args:
-        array (array/list): array-like object
-        ndx_sel (array/list): index selection
+        array (array, list): array-like object
+        ndx_sel (array, list): index selection
 
     Returns:
-        subarray (array): sub array of array
+        subarray (array)
+            subarray of array
     """
     subarray = []
     for ndx in ndx_sel:
@@ -1510,19 +1543,22 @@ def get_subarray(array, ndx_sel):
 
 def get_sorted_array(array):
     """
-    Returns sorted array (increasing order) and the coresponding element indices of the input array.
+    Returns sorted array (increasing order) and the coresponding element indices
+    of the input array.
 
     Args:
-        array (array/list): array-like object
+        array (array, list): array-like object
 
     Returns:
         SORTED_VALUES (array)
+            sorted array
         SORTED_NDX (array)
+            corresponding indices
 
     Example:
-        >> A = np.array([1, 3, 2, 4])
-        >> get_sorted_array(A)
-        (array([1, 2, 3, 4]), array([0, 2, 1, 3]))
+        | >> A = np.array([1, 3, 2, 4])
+        | >> get_sorted_array(A)
+        | (array([1, 2, 3, 4]), array([0, 2, 1, 3]))
     """
     if not isinstance(array, np.ndarray):
         array = np.array(array)
@@ -1538,29 +1574,31 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
     Returns ranked array (decreasing order) and the corresponding element indices of the input array.
 
     Args:
-        array (array/list): array-like object
+        array (array, list): array-like object
         reverse (bool):
-            True:  ascending ranking order (low to high)
-            False: decending ranking order (high to low)
+          | True:  ascending ranking order (low to high)
+          | False: decending ranking order (high to low)
         verbose (bool): print table with RANKED_VALUES, RANKED_NDX
 
-    Kwargs:
-        # see help(misc.print_table)
-        prec(None/int):
-            (None): rounding off
-            (int):  rounding on
-        spacing (int): spacing between columns (via "".expandtabs(spacing))
-            8: default \\t width
-        verbose_stop (None/int): stop printing after N lines
+    Keyword Args:
+        prec(None, int):
+          | None: rounding off
+          | int:  rounding on
+        spacing (int):
+          | spacing between columns (via "".expandtabs(spacing))
+          | 8: default \\t width
+        verbose_stop (None, int): stop printing after N lines
 
     Returns:
         RANKED_VALUES (array)
+            ranked values
         RANKED_NDX (array)
+            corresponding indices
 
     Example:
-        >> A = np.array([1, 3, 2, 4])
-        >> get_ranked_array(A, verbose=False)
-        (array([4, 3, 2, 1]), array([3, 1, 2, 0]))
+        | >> A = np.array([1, 3, 2, 4])
+        | >> get_ranked_array(A, verbose=False)
+        | (array([4, 3, 2, 1]), array([3, 1, 2, 0]))
     """
     if not isinstance(array, np.ndarray):
         array = np.array(array)
@@ -1580,16 +1618,16 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
 
 def get_quantile(data, p, prec=2, **kwargs):
     """
-    Alias function of np.quantile()
-    Get value (or score) below which p% of the observations may be found.
+    Alias function of np.quantile(). Get value (or score) below which p% of the
+    observations may be found.
 
     Args:
         data (array-like)
-        p (int/float): percent value ~ range 0-1
-        prec (None/int): rounding precission
+        p (int, float): percent value ~ range 0-1
+        prec (None, int): rounding precission
 
     Returns:
-        quantile (int/float)
+        quantile (int, float)
     """
     quantile = round(np.quantile(data, p, **kwargs), prec)
     return quantile
@@ -1597,16 +1635,16 @@ def get_quantile(data, p, prec=2, **kwargs):
 
 def get_percentile(data, p, prec=2, **kwargs):
     """
-    Alias function of np.percentile()
-    Get value (or score) below which p% of the observations may be found.
+    Alias function of np.percentile(). Get value (or score) below which p% of
+    the observations may be found.
 
     Args:
         data (array-like)
-        p (int/float): percent value ~ range 0-100
-        prec (None/int): rounding precission
+        p (int, float): percent value ~ range 0-100
+        prec (None, int): rounding precission
 
     Returns:
-        percentile (int/float)
+        percentile (int, float)
     """
     percentile = round(np.percentile(data, p, **kwargs), prec)
     return percentile
@@ -1620,56 +1658,63 @@ def figure(num=None, figsize=(6.5, 4), dpi=None, grid=[1, 1], hr=[], wr=[],
            context='notebook', style='ticks', font_scale=0,
            despine=True, offset=0, **kwargs):
     """
-    Top level container for all the plot elements.
-    Modified version of plt.figure() with gridspec and seaborn elements.
-    "Example" below shows how to plot data by using misc.figure() and plt.sca() # set current axis
+    Top level container for all the plot elements. Modified version of plt.figure()
+    with gridspec and seaborn elements. "Example" below shows how to plot data
+    by using misc.figure() and plt.sca() # set current axis
 
     Args:
         num (int): figure.number (to reuse the figure canvas)
         figsize (tuple)
-        dpi (None/int): dpi settings of figure
-            if monitor dpi is 100 and figure dpi is 300, then figure will be displayed
-            on the monitor 3x larger (compared to printed version with e.g. 300 dpi printer).
+        dpi (None, int):
+          | dpi settings of figure
+          | if monitor dpi is 100 and figure dpi is 300, then figure will be displayed
+          | on the monitor 3x larger (compared to printed version with e.g. 300 dpi printer).
         grid (list): nrows, ncols ~ height x width
         hr (list): height ratio of rows
         wr (list) width ratio of columns
         font_scale (float)
-        palette (None/str/list/tuple):
-            (None): use current palette
-            (str): name of the palette, see seaborn documentation
-            (list): list of colors
-            (tuple): tuple of colors
-        n_colors (None/int):
-            (None): use default number of color cycles based on palette
-            (int): remap number of color cycles for the palette
-        context (None, dict, str): Affects sizes and widths of the plot, e.g. labelsize,
-            linesize, etc. See return values of sns.plotting_context() to get all valid dict settings.
-            (str):
-                'notebook': scaled by 1.0
-                'paper': scaled by 0.8
-                'talk': scaled by 1.3
-                'poster': scaled by 1.6
-        style (None, dict, str): Affects aesthetic style of the plots, e.g. axes color,
-            grid display, etc. See return values of sns.axes_style() to get all valid dict settings.
-            (str):
-                'ticks', 'dark', 'white', 'darkgrid', 'whitegrid'
-        despine (bool): Remove the top and right spines from all axes. See sns.despine() documentation
-            for individual axis spine removal.
-        offset (dict/int): Absolute distance of spines. Use a dict to offset individual spines,
-            e.g. offset={"bottom":0, "left":20}.
+        palette (None, str, list, tuple):
+          | None: use current palette
+          | str: name of the palette, see seaborn documentation
+          | list: list of colors
+          | tuple: tuple of colors
+        n_colors (None, int):
+          | None: use default number of color cycles based on palette
+          | int: remap number of color cycles for the palette
+        context (None, dict, str):
+          | Affects sizes and widths of the plot, e.g. labelsize,
+          | linesize, etc. See return values of sns.plotting_context() to get
+          | all valid dict settings.
+          | str:'notebook': scaled by 1.0
+          |     'paper': scaled by 0.8
+          |     'talk': scaled by 1.3
+          |     'poster': scaled by 1.6
+        style (None, dict, str):
+          | Affects aesthetic style of the plots, e.g. axes color,
+          | grid display, etc. See return values of sns.axes_style() to get all
+          | valid dict settings.
+          | str:'ticks', 'dark', 'white', 'darkgrid', 'whitegrid'
+        despine (bool):
+          | Remove the top and right spines from all axes. See sns.despine()
+          | documentation for individual axis spine removal.
+        offset (dict/int):
+          | Absolute distance of spines. Use a dict to offset individual spines,
+          | e.g. offset={"bottom":0, "left":20}.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
 
     Example:
-        fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])
-        plt.sca(ax[0])
-        plt.plot([0,1,2], [0,4,4])
-        plt.plot([0,1,2], [0,10,10])
-        plt.sca(ax[2])
-        plt.plot([0,-1,-2], [0,-4,-4])
-        plt.plot([0,-1,-2], [0,-10,-10])
+        | fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])
+        | plt.sca(ax[0])
+        | plt.plot([0,1,2], [0,4,4])
+        | plt.plot([0,1,2], [0,10,10])
+        | plt.sca(ax[2])
+        | plt.plot([0,-1,-2], [0,-4,-4])
+        | plt.plot([0,-1,-2], [0,-10,-10])
     """
     if grid[0] == 1:
         hr = [1]
@@ -1716,10 +1761,12 @@ def set_pad(fig_or_ax, xpad=None, ypad=None):
 
     Args:
         fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
-        xpad (None/float): spacing between xaxis and its labels
-            None: use current settings
-        ypad (None/float): spacing between yaxis and its labels
-            None: use current settings
+        xpad (None, float):
+          | spacing between xaxis and its labels
+          | None: use current settings
+        ypad (None, float):
+          | spacing between yaxis and its labels
+          | None: use current settings
     """
     default = {"xpad": 3.5,
                "ypad": 3.5}
@@ -1755,28 +1802,26 @@ def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, l
         handlelength (None/int/float)
         handletextpad (None/int/float)
         loc (str):
+          | Location String   Location Code
+          | -------------------------------
+          | 'best'            0
+          | 'upper right'     1
+          | 'upper left'      2
+          | 'lower left'      3
+          | 'lower right'     4
+          | 'right'           5
+          | 'center left'     6
+          | 'center right'    7
+          | 'lower center'    8
+          | 'upper center'    9
+          | 'center'          10
 
-            Location String   Location Code
-            -------------------------------
-            'best'            0
-            'upper right'     1
-            'upper left'      2
-            'lower left'      3
-            'lower right'     4
-            'right'           5
-            'center left'     6
-            'center right'    7
-            'lower center'    8
-            'upper center'    9
-            'center'          10
-
-    Kwargs:
-        # see help(plt.legend)
+    Keyword Args:
         title (str)
         edgecolor (str)
         fancybox (bool):
-            True:  legendbox with round edges
-            False: legendbox with normal edges
+          | True:  legendbox with round edges
+          | False: legendbox with normal edges
     """
     legend = plt.legend(labels=labels,
                         handlelength=handlelength,
@@ -1790,20 +1835,22 @@ def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, l
 
 def savefig(filename, filedir="", create_dir=True, dpi=300):
     """
-    general helpfunction:
-        - save current figure
-        - print message "Saved figure as: ..."
+    general helpfunction
+
+      - save current figure
+      - print message "Saved figure as: ..."
 
     Args:
-        filename (None/str):
-            (None): do not save figure
-            (str): file name or realpath to file
+        filename (None, str):
+          | None: do not save figure
+          | str: file name or realpath to file
         filedir (str): file directory
         create_dir (bool): create directory if it does not exist yet
         dpi (int): dpi settings
 
     Returns:
-        realpath (str): realpath to saved figure
+        realpath (str)
+            realpath to saved figure
     """
     if filename == "" or filename is None:
         return
@@ -1820,9 +1867,10 @@ def autoapply_limits(fig_or_ax, margin=0.05):
     """
     Apply plt.xlim() and plt.ylim() to each axis object based on its xmin, xmax, ymin, ymax values.
 
-    NOTES:
-        - use only after plotting data
-        - currently works only with Line2D data
+    .. NOTE::
+
+      - use only after plotting data
+      - currently works only with Line2D data
 
     Args:
         fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
@@ -1837,13 +1885,13 @@ def autoapply_limits(fig_or_ax, margin=0.05):
             YLIM (list of lists)
 
     Example:
-        fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])
-        plt.sca(ax[0])
-        plt.plot([0,1,2], [0,4,4])
-        plt.plot([0,1,2], [0,10,10])
-        autoapply_limits(fig, margin=0.05)
-        >> ([[0, 2.1], [0, 0], [0, 0], [0, 0]],
-            [[0,10.5], [0, 0], [0, 0], [0, 0]])
+        | >> fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])
+        | >> plt.sca(ax[0])
+        | >> plt.plot([0,1,2], [0,4,4])
+        | >> plt.plot([0,1,2], [0,10,10])
+        | >> autoapply_limits(fig, margin=0.05)
+        | ([[0, 2.1], [0, 0], [0, 0], [0, 0]],
+        | [[0,10.5], [0, 0], [0, 0], [0, 0]])
     """
     # Test if object is figure or axis
     if isinstance(fig_or_ax, matplotlib.figure.Figure):
@@ -1916,24 +1964,29 @@ def pickle_dump(obj, filename='', pickledir='./pickle',
     Create pickle directory and pickle.dump object as "<pickledir>/<filename>.pickle"
 
     Special cases:
-        filename contains relative path: ignores pickledir input
-        filename contains absolute path: ignores pickledir input
 
-    Reason: intention is to dump file under the path "filename"
+      - filename contains relative path: ignores pickledir input
+      - filename contains absolute path: ignores pickledir input
+
+    Reason:
+
+        intention is to dump file under the path "filename"
 
     Args:
         obj (matplotlib.figure.Figure/<any object>)
-        filename (str): filename, hardcoded to add ".pickle" extension.
-                        Can be relative or absolute path including the filename.
+        filename (str):
+          | filename, hardcoded to add ".pickle" extension.
+          | Can be relative or absolute path including the filename.
         pickledir (str): default pickle directory
         overwrite (bool): overwrite pickle dumped file if it already exists
         verbose (bool)
 
-    Kwargs:
+    Keyword Args:
         save_as (str): alias of filename
 
     Returns:
-        filepath (str): realpath of dumped .pickle file
+        filepath (str)
+            realpath of dumped .pickle file
     """
     if "save_as" in kwargs:
         filename = kwargs["save_as"]
@@ -1968,9 +2021,9 @@ def _pickle_get_ax_type(fig_or_ax):
 
     Returns:
         ax_type (str):
-            "line plot": ax was created using plt.plot()
-            "bar plot":  ax was created using plt.bar()
-            "barh plot": ax was created using plt.barh()
+          | "line plot": ax was created using plt.plot()
+          | "bar plot":  ax was created using plt.bar()
+          | "barh plot": ax was created using plt.barh()
     """
     artists = fig_or_ax.get_default_bbox_extra_artists()
 
@@ -2005,10 +2058,11 @@ def _pickle_get_ax_type(fig_or_ax):
 def _pickle_get_ax_data(fig_or_ax):
     """
     Get specific axis data:
-        - limits
-        - scaling
-        - ticks
-        - ticklabels
+
+      - limits
+      - scaling
+      - ticks
+      - ticklabels
 
     Args:
         fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
@@ -2189,8 +2243,7 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
     contains figure data, auto detects the figure type (i.e. it created using
     plt.plot(), plt.bar() or plt.barh()).
 
-    Bug: %matplotlib notebook backend leaves empty space below when closing figs
-         which were loaded via pickle.
+    .. Warning:: %matplotlib notebook backend leaves empty space below when closing figs which were loaded via pickle.
 
     Args:
         filename (str): realpath to .pickle file or filename within pickledir
@@ -2198,13 +2251,14 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
         plot (bool)
 
     Returns:
-        if pickle file is a figure object:
-            ax_data (dict)
-            line_data (list)
-            rect_data (list)
-
-        else:
-            object (?)
+        ax_data (dict)
+            if pickle file is a figure object
+        line_data (list)
+            if pickle file is a figure object
+        rect_data (list)
+            if pickle file is a figure object
+        object (?)
+            else
 
     Notes:"""
     # NOTE 1: End this docstring with |Notes:"""| to remove trailing newline
@@ -2233,10 +2287,10 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
 
 __pickle_load___example_doc__ = """
     Example:
-        ax_data, line_data, rect_data = pickle_load( < ... > )
-        # acces data
-        line_data[0]["xdata"]
-        line_data[0]["color"]
+      | ax_data, line_data, rect_data = pickle_load( < ... > )
+      | # acces data
+      | line_data[0]["xdata"]
+      | line_data[0]["color"]
 """
 
 
@@ -2245,29 +2299,32 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
     """
     Creates multifigure from loading pickle_files
 
-    Bug: data is first loaded -> creates a figure -> closed. However in jupyter
-         %matplotlib notebook backend leaves empty space below when closing figs
-         which were loaded via pickle.
+    .. Warning:: data is first loaded -> creates a figure -> closed. However in jupyter
+        %matplotlib notebook backend leaves empty space below when closing figs
+        which were loaded via pickle.
 
-    Note2: Code for "align" parameter is currently only intended for figures with
-           grid = [<any>, 2], i.e. width of 2 figures.
+    .. Note: Code for "align" parameter is currently only intended for figures with
+        grid = [<any>, 2], i.e. width of 2 figures.
 
     Args:
-        pickle_files (str/list of str): path to pickle file(s) containing the (sub)figure data
+        pickle_files (str,list of str): path to pickle file(s) containing the (sub)figure data
         import_settings (bool): apply settings (for line and rectangle objects) from imported pickle_files
-        xscale (str): 'auto', 'linear', 'log', 'symlog', 'logit'
-            'auto': apply xscale of the used pickle_files
-        yscale (str): 'auto', 'linear', 'log', 'symlog', 'logit'
-            'auto': apply yscale of the used pickle_files
+        xscale (str):
+          | 'auto', 'linear', 'log', 'symlog', 'logit'
+          | 'auto': apply xscale of the used pickle_files
+        yscale (str):
+          | 'auto', 'linear', 'log', 'symlog', 'logit'
+          | 'auto': apply yscale of the used pickle_files
         align_ylim (bool): align y axis limits of figures on the same row
         hist_minorticks (bool): turns minorticks (~logscale) for hist figure on/off
 
-    Kwargs:
-        # see args of misc.figure()
+    .. Hint:: Args and Keyword Args of misc.figure() are valid.
 
     Returns:
-        fig (matplotlib.figure.Figure)
-        ax (ax/list of axes ~ matplotlib.axes._subplots.Axes)
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     default = {"grid": [1, 1]}
     cfg = CONFIG(default, **kwargs)
@@ -2380,13 +2437,12 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
 
 def hide_figure(fig_or_ax=None, num=None, close=True):
     """
-    Alias function of hide_plot()
-    "Hide" figure by setting its size to (0, 0) inches.
-    If number is passed, apply
+    Alias function of hide_plot(). "Hide" figure by setting its size to (0, 0)
+    inches. If number is passed, apply on figure with that number.
 
     Args:
-        fig_or_ax (None/matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
-        num (None/int): if integer is passed, hide figure with this number
+        fig_or_ax (None, matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
+        num (None, int): if integer is passed, hide figure with this number
         close (bool): if True, close figure instead of just hiding
     """
     if isinstance(fig_or_ax, matplotlib.figure.Figure):
@@ -2533,8 +2589,10 @@ def apply_shared_axes(ax, grid):
     - removes yticklabels of all axes except for left column.
 
     Args:
-        ax (list of axes ~ matplotlib.axes._subplots.Axes)
-        grid (list): nrows, ncols ~ height x width
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
     ndx = list(range(grid[0]*grid[1]))
 
@@ -2558,9 +2616,10 @@ def convert_ticklabels(axes, multiplier, apply_on='y', prec=0):
         axes (list of matplotlib.axes._subplots.Axes)
         multiplier (int/float): multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue
         apply_on (str): 'x', 'y', 'xy'
-        prec (int): precission
-            0: int precission
-            n: float with n decimal precission
+        prec (int):
+          | precission
+          | 0: use integers with no decimal precission
+          | n: float with n decimal precission
     """
     for ax in axes:
         if "x" in apply_on:
@@ -2598,13 +2657,13 @@ class number_base_factorization():
     e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2
 
     Example:
-        x = number_base_factorization(123)
-        x() # show content of x
-        >> self.number: 123
-           self.sign: +
-           self.digits: [1, 2, 3]
-           self.pos_base10_factors: [3, 2, 1]
-           self.neg_base10_factors: None
+      | >> x = number_base_factorization(123)
+      | >> x() # show content of x
+      | self.number: 123
+      | self.sign: +
+      | self.digits: [1, 2, 3]
+      | self.pos_base10_factors: [3, 2, 1]
+      | self.neg_base10_factors: None
     """
 
     def __init__(self, num):
@@ -2635,7 +2694,9 @@ class number_base_factorization():
 
             Returns:
                 pos_base10_factors (list)
+                    list with positive factors
                 neg_base10_factors (list)
+                    list with negative factors
             """
             if "." in digits:
                 temp = digits.index(".")
@@ -2670,14 +2731,16 @@ def setup_ticks(vmin, vmax, major_base, minor_base=None):
     Setup axis ticks of a plot in vmin <= ticks <= vmax.
 
     Args:
-        vmin (int/float)
-        vmax (int/float)
-        major_base (int/float)
-        minor_base (int/float)
+        vmin (int, float)
+        vmax (int, float)
+        major_base (int, float)
+        minor_base (int, float)
 
     Returns:
         majorticks (list)
+            list with majorticks
         minorticks (list)
+            list with minorticks
     """
     min_ = round_down(vmin, base=major_base)
     max_ = round_up(vmax, base=major_base)
@@ -2697,13 +2760,13 @@ def setup_logscale_ticks(vmax):
     Setup majorticks and minorticks for logscale with ticks <= vmax.
 
     Args:
-        vmax (int/float)
+        vmax (int, float)
 
     Returns:
-        majorticks (list): ticks at 1, 10, 100, 1000, ....
-        minorticks (list): ticks at 2, 3, 4,..., 8, 9,
-                                   20,30,40,...,80,90,
-                                   ...
+        majorticks (list)
+            ticks at 1, 10, 100, 1000, etc.
+        minorticks (list):
+            ticks at 2, 3, 4,..., 8, 9, 20,30,40,...,80,90, etc.
     """
     vmax_factorized = number_base_factorization(vmax)
     majorticks = [[1]]
@@ -2727,14 +2790,14 @@ def set_logscale_ticks(ax, axis="x", vmax=None, minorticks=True, **kwargs):
     Args:
         ax (matplotlib.axes._subplots.Axes)
         axis (str): "x", "y", "xy"
-        vmin (None/int/float): highest logscale tick value
+        vmin (None, int, float): highest logscale tick value
         minorticks (bool): display minorticks on/off
 
-    Kwargs:
-        xmin (None/int/float)
-        xmax (None/int/float)
-        ymin (None/int/float)
-        ymax (None/int/float)
+    Keyword Args:
+        xmin (None, int, float)
+        xmax (None, int, float)
+        ymin (None, int, float)
+        ymax (None, int, float)
     """
     default = {"vmax": vmax,
                "xmin": None,
@@ -2796,15 +2859,16 @@ def add_cbar_ax(ax, bounds="auto", location="right", orientation="vertical"):
 
     Args:
         ax (matplotlib.axes._subplots.Axes)
-        bounds (str/list):
-            (str): "auto": apply bounds based on kws 'orientation' and 'location'.
-            (list): [x0, y0, height, width] using axes coordinates.
-                    Ignores kws 'orientation' and 'location'.
+        bounds (str,list):
+          | str: "auto": apply bounds based on kws 'orientation' and 'location'.
+          | list: [x0, y0, height, width] using axes coordinates.
+          |       Ignores kws 'orientation' and 'location'.
         location (str): "right", "bottom", "left", "top"
         orientation (str): "vertical", "horizontal"
 
     Returns:
-        cbar_ax (matplotlib.axes._axes.Axes): colorbar ax
+        cbar_ax (matplotlib.axes._axes.Axes)
+            colorbar ax
     """
     # apply passed bounds and ignore kws 'orientation' and 'location'
     if bounds != "auto":
@@ -2838,17 +2902,18 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
 
     Args:
         ax (matplotlib.axes._subplots.Axes)
-        cbar_ax (None/matplotlib.axes._axes.Axes): colorbar ax
-            (None): add new cbar_ax relative to existing ax
-            (matplotlib.axes._axes.Axes): use passed cbar_ax (can be created using misc.add_cbar_ax()).
-        bounds (str/list):
-            (str): "auto": apply bounds based on kws 'orientation' and 'location'.
-            (list): [x0, y0, height, width] using axes coordinates.
-                    Ignores kws 'orientation' and 'location'.
+        cbar_ax (None/matplotlib.axes._axes.Axes):
+          | colorbar ax
+          | None: add new cbar_ax relative to existing ax
+          | matplotlib.axes._axes.Axes: use passed cbar_ax (can be created using misc.add_cbar_ax()).
+        bounds (str, list):
+          | str: "auto": apply bounds based on kws 'orientation' and 'location'.
+          | list: [x0, y0, height, width] using axes coordinates.
+          |       Ignores kws 'orientation' and 'location'.
         location (str): "right", "bottom", "left", "top"
         orientation (str): "vertical", "horizontal"
 
-    Kwargs:
+    Keyword Args:
         cbar_label/label (str)
         cbar_fontweight/fontweight (str): "normal", "bold"
         cbar_location/location (str): "right", "bottom", "left", "top"
@@ -2856,6 +2921,7 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
 
     Returns:
         cbar (matplotlib.colorbar.Colorbar)
+            color bar
     """
     default = {"cbar_label": "",
                "cbar_fontweight": "normal",
