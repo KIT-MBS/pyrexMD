@@ -40,7 +40,9 @@ movements of all atoms can be 'viewed' like a movie and analyzed to improve the
 understanding of specific interactions or complement experimental measurements.
 Replica Exchange (REX) [@sugita1999replica; @zhang2005convergence] is a powerful
 method used to enhance the sampling of protein conformations and generates large
-amounts of data. `pyrexMD` is designed as an interactive 'all-purpose' toolkit for
+amounts of data.
+
+`pyrexMD` is designed as an interactive 'all-purpose' toolkit for
 research projects which rely on (contact-guided) Replica Exchange Molecular
 Dynamics using `GROMACS` [@van2005gromacs]. Due to its workflow-orientated
 design, it is possible to rapidly create whole setup or analysis workflows,
