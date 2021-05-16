@@ -33,4 +33,4 @@ To run one of the short examples, go into the pyrexMD/examples folder and run ju
 
 
 ## Documentation
-Checkout the documentation under https://kit-mbs.github.io/pyrexMD/
+You can access the documentation via https://kit-mbs.github.io/pyrexMD/
