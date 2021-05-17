@@ -35,13 +35,15 @@ version = packageversion
 # ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
               'sphinx.ext.viewcode', 'sphinx.ext.napoleon',
-              'sphinx.ext.todo', "sphinx_rtd_theme"]
+              'sphinx.ext.todo', 'sphinx_rtd_theme', 'm2r2'
+              ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
 # source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'

@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,8 +166,49 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 17.05.2021</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions to interact with `GROMACS` to setup systems and</span>
+<span class="sd">run MD simulations.</span>
+
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyrexMD.gmx as gmx</span>
+<span class="sd">    </span>
+<span class="sd">    # create ref pdb:</span>
+<span class="sd">    pdb = &quot;./1l2y.pdb&quot;</span>
+<span class="sd">    ref = gmx.get_ref_structure(pdb, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
+
+<span class="sd">    # generate topology &amp; box</span>
+<span class="sd">    gmx.pdb2gmx(f=ref, o=&quot;protein.gro&quot;, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
+<span class="sd">    gmx.editconf(f=&quot;protein.gro&quot;, o=&quot;box.gro&quot;, d=2.0, c=True, bt=&quot;cubic&quot;)</span>
+
+<span class="sd">    # generate solvent &amp; ions</span>
+<span class="sd">    gmx.solvate(cp=&quot;box.gro&quot;, o=&quot;solvent.gro&quot;)</span>
+<span class="sd">    gmx.grompp(f=&quot;ions.mdp&quot;, o=&quot;ions.tpr&quot;,c=&quot;solvent.gro&quot;)</span>
+<span class="sd">    gmx.genion(s=&quot;ions.tpr&quot;, o=&quot;ions.gro&quot;, neutral=True, input=&quot;SOL&quot;)</span>
+
+<span class="sd">    # minimize</span>
+<span class="sd">    gmx.grompp(f=&quot;min.mdp&quot;, o=&quot;min.tpr&quot;, c=&quot;ions.gro&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;min&quot;)</span>
+
+<span class="sd">    # NVT equilibration</span>
+<span class="sd">    gmx.grompp(f=&quot;nvt.mdp&quot;, o=&quot;nvt.tpr&quot;, c=&quot;min.gro&quot;, r=&quot;min.gro&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;nvt&quot;)</span>
+
+<span class="sd">    # NPT equilibration</span>
+<span class="sd">    gmx.grompp(f=&quot;npt.mdp&quot;, o=&quot;npt.tpr&quot;, c=&quot;nvt.gro&quot;, r=&quot;nvt.gro&quot;, t=&quot;nvt.cpt&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;npt&quot;)</span>
+
+<span class="sd">    # MD run</span>
+<span class="sd">    gmx.grompp(-f&quot;md.mdp&quot;, o=&quot;traj.tpr&quot;, c=&quot;npt.gro&quot;, t=&quot;npt.cpt&quot;)</span>
+<span class="sd">    gmx.mdrun(deffn=&quot;traj&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -763,13 +805,10 @@
     <span class="k">return</span> <span class="n">o_file</span></div>
 
 
-<div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;13&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+<div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
            <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modified fuction of gromacs.genion().</span>
-
-<span class="sd">    .. Note:: input 13 (=SOL group) seems to be the only selection group that</span>
-<span class="sd">        works with genion.</span>
 
 <span class="sd">    Gromacs info:</span>
 <span class="sd">        gmx genion randomly replaces solvent molecules with monoatomic ions.</span>
@@ -872,6 +911,9 @@
     <span class="c1"># GromacsWrapper</span>
     <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
         <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 

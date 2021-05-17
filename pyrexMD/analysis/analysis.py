@@ -2,7 +2,31 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
+
+"""
+This module contains functions related to topology modifications (e.g.
+norm_universe(), align_universe()) and general trajectory analyses.
+
+
+Example:
+--------
+
+.. code-block:: python
+
+    import MDAnalysis as mda
+    import pyrexMD.analysis.analysis as ana
+
+    ref = mda.Universe("<pdb_file>")
+    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+
+    # get RMSD
+    ana.norm_and_align_universe(mobile, ref)
+    FRAME, TIME, RMSD = ana.get_RMSD(mobile, ref)
+
+    # plot
+    ana.PLOT(xdata=FRAME, ydata=RMSD, alpha=1, marker=None, xlabel="frame", ylabel=r"RMSD ($\AA$)")
+"""
 
 import pyrexMD.misc as _misc
 from pyrexMD.misc import get_PDBid
@@ -949,11 +973,11 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
         ylim (None, list)
 
     Keyword Args:
-        "alpha": 0.3
-        "color": "r"
-        "lw": 1.5
-        "ms": 1
-        "marker": "."
+        alpha (float): 1.0
+        color (str): "r"
+        lw (float): 1.5
+        ms (int): 1
+        marker (None, str): None
 
     .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
@@ -1553,7 +1577,7 @@ def _HELP_convert_xticks_frame2time(ax, delta_t=0.002):
     return xticks_time
 
 
-def plot_HEATMAP(data, save_as="", **kwargs):
+def plot_HEATMAP(data, **kwargs):
     """
     plot heatmap
 
@@ -1578,6 +1602,7 @@ def plot_HEATMAP(data, save_as="", **kwargs):
         xticklabels (None, list)
         yticklabels (None, list)
         show_ticks (bool): toggle (label) ticks
+        save_as (None, str)
 
     .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
@@ -1603,7 +1628,8 @@ def plot_HEATMAP(data, save_as="", **kwargs):
                "ylabel": None,
                "xticklabels": None,
                "yticklabels": None,
-               "show_ticks": False}
+               "show_ticks": False,
+               "save_as": None}
     cfg = _misc.CONFIG(default, **kwargs)
     cfg.update_by_alias(alias="cbar_min", key="vmin", **kwargs)
     cfg.update_by_alias(alias="cbar_max", key="vmax", **kwargs)
@@ -1641,12 +1667,12 @@ def plot_HEATMAP(data, save_as="", **kwargs):
 
     plt.tight_layout()
 
-    if save_as != "":
-        if ".pdf" in save_as:
+    if cfg.save_as != None:
+        if ".pdf" in cfg.save_as:
             print("""Too much data within the heatmap to save it as a .pdf file.
     (vector graphic ~ number of objects too high)
     Saving figure as .png with 300 dpi instead...""")
-            save_as = f"{_misc.dirpath(save_as)}/{_misc.get_base(save_as)}.png"
+            save_as = f"{_misc.dirpath(cfg.save_as)}/{_misc.get_base(cfg.save_as)}.png"
         _misc.savefig(filename=save_as)
 
     return(fig, ax)

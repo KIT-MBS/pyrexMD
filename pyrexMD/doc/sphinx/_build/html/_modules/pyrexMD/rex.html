@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,7 +166,47 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 17.05.2021</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions related to (contact-guided) Replica Exchange</span>
+<span class="sd">Molecular Dynamics. It contains mainly functions to speed-up the process of</span>
+<span class="sd">generating REX simulations and modify topologies to include contact bias etc.</span>
+
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyrexMD.rex as rex</span>
+
+<span class="sd">    decoy_dir = &quot;path/to/decoy/directory&quot;</span>
+
+<span class="sd">    # create rex directories and assign decoys</span>
+<span class="sd">    rex.assign_best_decoys(decoy_dir)</span>
+<span class="sd">    rex_dirs = rex.get_REX_DIRS()</span>
+
+<span class="sd">    # create systems for each replica</span>
+<span class="sd">    rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)</span>
+
+<span class="sd">    # minimize</span>
+<span class="sd">    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=100, verbose=False)</span>
+
+<span class="sd">    # add bias contacts</span>
+<span class="sd">    rex.DCAREX_res2atom_mapping(ref_pdb=&lt;ref_pdb&gt;, DCA_fin=&lt;file_path&gt;, n_DCA=50, usecols=(0,1))</span>
+<span class="sd">    rex.DCAREX_modify_topology(top_fin=&quot;topol.top&quot;, DCA_used_fin=&lt;file_path&gt; , force_k=10, save_as=&quot;topol_mod.top&quot;)</span>
+
+<span class="sd">    # prepare temperature distribution</span>
+<span class="sd">    rex.prep_REX_temps(T_0=300, n_REX=len(rex_dirs), k=0.006)</span>
+
+<span class="sd">    # create mdp and tpr files</span>
+<span class="sd">    rex.prep_REX_mdp(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
+<span class="sd">    rex.prep_REX_tpr(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
+
+<span class="sd">    # upload files on HPC and execute production run</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">#from __future__ import division, print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">next</span>

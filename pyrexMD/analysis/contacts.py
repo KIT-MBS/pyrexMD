@@ -2,12 +2,35 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
+
+"""
+This module contains functions related to native contact and bias contact analyses.
 
 
-################################################################################
-################################################################################
-# Native Contacts & Bias Contacts Analyses
+Example:
+--------
+
+.. code-block:: python
+
+    import MDAnalysis as mda
+    import pyrexMD.analysis.contacts as con
+
+    ref = mda.Universe("<pdb_file>")
+    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+
+    # get and plot native contacts
+    con.get_Native_Contacts(ref, sel="protein")
+    con.plot_Contact_Map(ref, sel="protein")
+
+    # compare contact map for n bias contacts
+    n = 50
+    con.plot_Contact_Map(ref, DCA_fin="path/to/bias/contacts", n_DCA=n)
+
+    # check true positive rate for n bias contacts
+    n = 50
+    con.plot_DCA_TPR(ref, DCA_fin="path/to/bias/contacts", n_DCA=n)
+"""
 
 import pyrexMD.analysis.analysis as _ana
 import pyrexMD.misc as _misc

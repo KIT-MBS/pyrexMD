@@ -2,8 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 18.05.2021
 
+"""
+This module is a collection of miscellaneous functions.
+"""
 
 # miscellaneous
 import PIL
@@ -593,7 +596,7 @@ update_alias_docstring(rm, remove)
 
 def bash_cmd(cmd, verbose=False):
     """
-    Execte any bash command via python.
+    Execute any bash command via python.
 
     .. Note:: works with pipe.
 
@@ -757,16 +760,16 @@ def input_python_x(msg):
 
 def percent(num, div, prec=2):
     """
-    Returns the percentage of num/div as float:
-        p = 100 * num/div
+    Returns the percentage of num/div as float
 
     Args:
         num (int): numerator
         div (int): divisor
-        prec (None/int): rounding precission
+        prec (None, int): rounding precission
 
     Returns:
-        p (float): num/div as percentage
+        p (float)
+            p = 100 * num/div
     """
     num = float(num)
     div = float(div)
@@ -1865,7 +1868,8 @@ def savefig(filename, filedir="", create_dir=True, dpi=300):
 
 def autoapply_limits(fig_or_ax, margin=0.05):
     """
-    Apply plt.xlim() and plt.ylim() to each axis object based on its xmin, xmax, ymin, ymax values.
+    Apply plt.xlim() and plt.ylim() on each axis object based on its xmin, xmax,
+    ymin, ymax values.
 
     .. NOTE::
 
@@ -1877,12 +1881,14 @@ def autoapply_limits(fig_or_ax, margin=0.05):
         margin (float): extra margin on upper limits, where margin=0.01 equals 1% of xmax and ymax
 
     Returns:
-        if fig_or_ax is axis:
-            xlim (list)
-            ylim (list)
-        if fig_or_ax is figure:
-            XLIM (list of lists)
-            YLIM (list of lists)
+        xlim (list)
+            if fig_or_ax is axis
+        ylim (list)
+            if fig_or_ax is axis
+        XLIM (list of lists)
+            if fig_or_ax is figure
+        YLIM (list of lists)
+            if fig_or_ax is figure
 
     Example:
         | >> fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])
@@ -2020,10 +2026,10 @@ def _pickle_get_ax_type(fig_or_ax):
         fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)
 
     Returns:
-        ax_type (str):
-          | "line plot": ax was created using plt.plot()
-          | "bar plot":  ax was created using plt.bar()
-          | "barh plot": ax was created using plt.barh()
+        ax_type (str)
+            | "line plot" ~ ax was created using plt.plot()
+            | "bar plot"  ~ ax was created using plt.bar()
+            | "barh plot" ~ ax was created using plt.barh()
     """
     artists = fig_or_ax.get_default_bbox_extra_artists()
 
@@ -2105,16 +2111,26 @@ def _pickle_get_ax_data(fig_or_ax):
 
 
 __pickle_get_ax_data___append_doc__ = """
-        ax_data (dict): dict containing specific axis data
-            dict keys:
-                ax_type: "line plot": ax was created using plt.plot()
-                         "bar plot":  ax was created using plt.bar()
-                         "barh plot": ax was created using plt.barh()
+        ax_data (dict)
+            dictionary containing specific axis data, see table below
 
-                xlim            ylim
-                xscale          yscale
-                xticks          yticks
-                xticklabels     yticklabels
+            +-------------+--------------+-------------------------------------+
+            | key         | value        | description                         |
+            +-------------+--------------+-------------------------------------+
+            |ax_type (str)| "line plot"  | ax was created using plt.plot()     |
+            +             +--------------+-------------------------------------+
+            |             | "bar plot"   | ax was created using plt.bar()      |
+            +             +--------------+-------------------------------------+
+            |             | "barh plot"  | ax was created using plt.barh()     |
+            +-------------+--------------+-------------------------------------+
+            |xlim/ylim    | tuple        | content of ax.get_xlim()            |
+            +-------------+--------------+-------------------------------------+
+            |xscale/yscale| str          | content of ax.get_xscale()          |
+            +-------------+--------------+-------------------------------------+
+            |xticks/yticks| array        | content of ax.get_xticks()          |
+            +-------------+--------------+-------------------------------------+
+            |x/yticklabels| list         | text content of ax.get_xticklabels()|
+            +-------------+--------------+-------------------------------------+
 """
 
 
@@ -2155,13 +2171,17 @@ def _pickle_get_line_data(fig_or_ax):
 
 
 __pickle_get_line_data___append_doc__ = """
-        line_data (list): list of dicts, which contain data about <matplotlib.lines.Line2D> objects.
-            dict keys:
-                __description__: "line data ~ plt.plot()"
+        line_data (list)
+            list of dicts, which contain data about <matplotlib.lines.Line2D>
+            objects with viable Keyword Args as shown in the table below
 
-                alpha   ls (linestyle)  mac (marker edgecolor)  xdata
-                color   lw (linewidth)  mfc (marker facecolor)  ydata
-                label   marker          ms (markersize)
+            +---------+----------------+-------------------------+--------+
+            | alpha   | ls (linestyle) | mac (marker edgecolor)  | xdata  |
+            +---------+----------------+-------------------------+--------+
+            | color   | lw (linewidth) | mfc (marker facecolor)  | ydata  |
+            +---------+----------------+-------------------------+--------+
+            | label   | marker         | ms (markersize)         |        |
+            +---------+----------------+-------------------------+--------+
 """
 
 
@@ -2208,17 +2228,24 @@ def _pickle_get_rectangle_data(fig_or_ax):
 
 
 __pickle_get_rectangle_data___append_doc__ = """
-        rect_data (list): list of dicts, which contain data about <matplotlib.patches.Rectangle> objects.
-            dict keys:
-                __description__: "rectangle data ~ plt.bar()"
-                xy: userland coordinates of bottom left rectangle corner
-                    (rectangle is defined by xy, width, height)
+        rect_data (list)
+            list of dicts, which contain data about <matplotlib.patches.Rectangle>
+            objects with viable Keyword Args as shown in the table below
 
-                alpha               fill                width
-                bbox                height
-                bbox_points         label
-                ec (edgecolor)      ls (linestyle)
-                fc (facecolor)      lw (linewidth)
+            +----------------+--------+--------+
+            | alpha          | fill   | width  |
+            +----------------+--------+--------+
+            | bbox           | height |  xy    |
+            +----------------+--------+--------+
+            | bbox_points    | label  |        |
+            +----------------+--------+--------+
+            | ec (edgecolor) | ls (linestyle)  |
+            +----------------+-----------------+
+            | fc (facecolor) | lw (linewidth)  |
+            +----------------+-----------------+
+
+        .. Hint:: xy are the userland coordinates starting from bottom left
+           rectangle corner (rectangle is defined by xy, width, height)
 """
 __pickle_get_rectangle_data___bugs_doc__ = """
     Current bugs/problems:
@@ -2243,7 +2270,8 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
     contains figure data, auto detects the figure type (i.e. it created using
     plt.plot(), plt.bar() or plt.barh()).
 
-    .. Warning:: %matplotlib notebook backend leaves empty space below when closing figs which were loaded via pickle.
+    .. Warning:: %matplotlib notebook backend leaves empty space below figure in
+       jupyter notebook when closing figs which were loaded via pickle files.
 
     Args:
         filename (str): realpath to .pickle file or filename within pickledir
@@ -2260,7 +2288,7 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
         object (?)
             else
 
-    Notes:"""
+    .. Note ::"""
     # NOTE 1: End this docstring with |Notes:"""| to remove trailing newline
     # NOTE 2: Missing doc string part is coded right after this function.
     #         It will be appended once here and to other docstrings during
@@ -2285,12 +2313,12 @@ def pickle_load(filename, pickledir="./pickle", plot=False):
             return obj
 
 
-__pickle_load___example_doc__ = """
+__pickle_load___append_doc__ = """
     Example:
-      | ax_data, line_data, rect_data = pickle_load( < ... > )
-      | # acces data
-      | line_data[0]["xdata"]
-      | line_data[0]["color"]
+        | ax_data, line_data, rect_data = pickle_load( < filename > )
+        |  # acces data
+        | line_data[0]["xdata"]
+        | line_data[0]["color"]
 """
 
 
@@ -2299,9 +2327,10 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
     """
     Creates multifigure from loading pickle_files
 
-    .. Warning:: data is first loaded -> creates a figure -> closed. However in jupyter
-        %matplotlib notebook backend leaves empty space below when closing figs
-        which were loaded via pickle.
+    .. Warning:: data is first loaded -> creates a figure -> closed. However in
+       jupyter %matplotlib notebook backend leaves empty space below figure when
+       closing figs which were loaded via pickle. The empty space is only visible
+       in the notebook (i.e. saving a pickle_plot figure is working fine.)
 
     .. Note: Code for "align" parameter is currently only intended for figures with
         grid = [<any>, 2], i.e. width of 2 figures.
@@ -2987,7 +3016,7 @@ def INIT_append_docstrings():
     for item in [__pickle_get_ax_data___append_doc__,
                  __pickle_get_line_data___append_doc__,
                  __pickle_get_rectangle_data___append_doc__,
-                 __pickle_load___example_doc__]:
+                 __pickle_load___append_doc__]:
         pickle_load.__doc__ += item
     return
 

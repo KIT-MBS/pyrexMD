@@ -2,8 +2,53 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
 
+
+"""
+This module contains functions related to the Global Distance Test.
+
+
+Example:
+--------
+
+.. code-block:: python
+
+    import MDAnalysis as mda
+    import pyrexMD.misc as misc
+    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.gdt as gdt
+
+    ref = mda.Universe("<pdb_file>")
+    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+
+    # first norm and align universes
+    ana.norm_and_align_universe(mobile, ref)
+
+    # run GDT
+    GDT = gdt.GDT(mobile, ref)
+    GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT
+
+    # get individual scores
+    GDT_TS = gdt.get_GDT_TS(GDT_percent)
+    GDT_HA = gdt.get_GDT_HA(GDT_percent)
+    frames = [i for i in range(len(GDT_TS))]
+    misc.cprint("GDT TS    GDT HA    frame", "blue")
+    _ = misc.print_table([GDT_TS, GDT_HA, frames], verbose_stop=10, spacing=10)
+
+    # rank scores
+    SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", verbose=False)
+    GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
+    misc.cprint("GDT TS    GDT HA    frame", "blue")
+    _ = misc.print_table([GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked], spacing=10, verbose_stop=10)
+
+
+    # plot local accuracy
+    text_pos_kws = {"text_pos_Frame": [-8.8, -0.3],
+                    "text_pos_TS": [-14.2, -0.3],
+                    "text_pos_HA": [-6, -0.3]}
+    _ = gdt.plot_LA(mobile, ref, GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked, **text_pos_kws)
+"""
 
 import pyrexMD.misc as _misc
 import pyrexMD.analysis.analysis as _ana

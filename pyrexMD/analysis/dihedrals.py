@@ -2,7 +2,30 @@
 # @Date:   06.05.2021
 # @Filename: dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 17.05.2021
+
+"""
+This module contains functions related to dihedral analyses.
+
+
+Example:
+--------
+
+.. code-block:: python
+
+    import MDAnalysis as mda
+    import pyrexMD.analysis.dihedrals as dih
+
+    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+
+    # get dihedral angles of current frame
+    phi = dih.get_phi_values(u, sel="protein and resid 1-3")
+    psi = dih.get_psi_values(u, sel="protein and resid 1-3")
+    omega = dih.get_omega_values(u, sel="protein and resid 1-3")
+
+    # plot ramachandran
+    rama = dih.get_ramachandran(mobile)
+"""
 
 
 import pyrexMD.misc as _misc

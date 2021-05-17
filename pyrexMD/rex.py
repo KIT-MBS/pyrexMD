@@ -2,7 +2,47 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
+
+
+"""
+This module contains functions related to (contact-guided) Replica Exchange
+Molecular Dynamics. It contains mainly functions to speed-up the process of
+generating REX simulations and modify topologies to include contact bias etc.
+
+
+Example:
+--------
+
+.. code-block:: python
+
+    import pyrexMD.rex as rex
+
+    decoy_dir = "path/to/decoy/directory"
+
+    # create rex directories and assign decoys
+    rex.assign_best_decoys(decoy_dir)
+    rex_dirs = rex.get_REX_DIRS()
+
+    # create systems for each replica
+    rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)
+
+    # minimize
+    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=100, verbose=False)
+
+    # add bias contacts
+    rex.DCAREX_res2atom_mapping(ref_pdb=<ref_pdb>, DCA_fin=<file_path>, n_DCA=50, usecols=(0,1))
+    rex.DCAREX_modify_topology(top_fin="topol.top", DCA_used_fin=<file_path> , force_k=10, save_as="topol_mod.top")
+
+    # prepare temperature distribution
+    rex.prep_REX_temps(T_0=300, n_REX=len(rex_dirs), k=0.006)
+
+    # create mdp and tpr files
+    rex.prep_REX_mdp(main_dir="./", n_REX=len(rex_dirs))
+    rex.prep_REX_tpr(main_dir="./", n_REX=len(rex_dirs))
+
+    # upload files on HPC and execute production run
+"""
 
 #from __future__ import division, print_function
 from builtins import next

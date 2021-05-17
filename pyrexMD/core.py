@@ -2,7 +2,37 @@
 # @Date:   17.04.2021
 # @Filename: core.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
+
+"""
+This module contains functions to enable interactive analyses. Its main purpose
+are the iPlayer and iPlot classes.
+
+Example:
+--------
+
+.. code-block:: python
+
+    import MDAnalysis as mda
+    import pyrexMD.misc as misc
+    import pyrexMD.core as core
+    import pyrexMD.analysis.contacts as con
+
+    ref = mda.Universe("<pdb_file>")
+    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+
+    # show ref structure in trajectory viewer
+    tv = core.iPlayer(ref)
+    tv()
+
+    # check for formed bias contacts
+    bias = misc.read_file("path/to/bias/contacts", usecols=(0,1))
+    FRAMES, QBIAS, CM = con.get_Qbias(mobile, bias)
+
+    # interactive plot (ctrl-click into the plot to jump to frame)
+    ip = core.iPlot(u1, xdata=FRAMES, ydata=QBIAS, xlabel="frame", ylabel="Qbias")
+    ip()
+"""
 
 
 # core module

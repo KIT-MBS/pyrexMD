@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,7 +166,31 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 17.05.2021</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions related to topology modifications (e.g.</span>
+<span class="sd">norm_universe(), align_universe()) and general trajectory analyses.</span>
+
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import MDAnalysis as mda</span>
+<span class="sd">    import pyrexMD.analysis.analysis as ana</span>
+
+<span class="sd">    ref = mda.Universe(&quot;&lt;pdb_file&gt;&quot;)</span>
+<span class="sd">    mobile = mda.Universe(&quot;&lt;tpr_file&gt;&quot;, &quot;&lt;xtc_file&gt;&quot;)</span>
+
+<span class="sd">    # get RMSD</span>
+<span class="sd">    ana.norm_and_align_universe(mobile, ref)</span>
+<span class="sd">    FRAME, TIME, RMSD = ana.get_RMSD(mobile, ref)</span>
+
+<span class="sd">    # plot</span>
+<span class="sd">    ana.PLOT(xdata=FRAME, ydata=RMSD, alpha=1, marker=None, xlabel=&quot;frame&quot;, ylabel=r&quot;RMSD ($\AA$)&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">from</span> <span class="nn">pyrexMD.misc</span> <span class="kn">import</span> <span class="n">get_PDBid</span>
@@ -1112,11 +1137,11 @@
 <span class="sd">        ylim (None, list)</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        &quot;alpha&quot;: 0.3</span>
-<span class="sd">        &quot;color&quot;: &quot;r&quot;</span>
-<span class="sd">        &quot;lw&quot;: 1.5</span>
-<span class="sd">        &quot;ms&quot;: 1</span>
-<span class="sd">        &quot;marker&quot;: &quot;.&quot;</span>
+<span class="sd">        alpha (float): 1.0</span>
+<span class="sd">        color (str): &quot;r&quot;</span>
+<span class="sd">        lw (float): 1.5</span>
+<span class="sd">        ms (int): 1</span>
+<span class="sd">        marker (None, str): None</span>
 
 <span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
 
@@ -1716,7 +1741,7 @@
     <span class="k">return</span> <span class="n">xticks_time</span>
 
 
-<div class="viewcode-block" id="plot_HEATMAP"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_HEATMAP">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_HEATMAP"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_HEATMAP">[docs]</a><span class="k">def</span> <span class="nf">plot_HEATMAP</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    plot heatmap</span>
 
@@ -1741,6 +1766,7 @@
 <span class="sd">        xticklabels (None, list)</span>
 <span class="sd">        yticklabels (None, list)</span>
 <span class="sd">        show_ticks (bool): toggle (label) ticks</span>
+<span class="sd">        save_as (None, str)</span>
 
 <span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
 
@@ -1766,7 +1792,8 @@
                <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                <span class="s2">&quot;xticklabels&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                <span class="s2">&quot;yticklabels&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-               <span class="s2">&quot;show_ticks&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+               <span class="s2">&quot;show_ticks&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">update_by_alias</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;cbar_min&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;vmin&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">cfg</span><span class="o">.</span><span class="n">update_by_alias</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;cbar_max&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;vmax&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1804,12 +1831,12 @@
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">save_as</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;.pdf&quot;</span> <span class="ow">in</span> <span class="n">save_as</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;.pdf&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Too much data within the heatmap to save it as a .pdf file.</span>
 <span class="s2">    (vector graphic ~ number of objects too high)</span>
 <span class="s2">    Saving figure as .png with 300 dpi instead...&quot;&quot;&quot;</span><span class="p">)</span>
-            <span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">dirpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">dirpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">save_as</span><span class="p">)</span>
 
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>

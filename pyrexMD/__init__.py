@@ -2,20 +2,21 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 18.05.2021
 
 
 import pyrexMD.misc as misc
 import pyrexMD.core as core
 import pyrexMD.analysis as analysis
 import warnings
-# MDAnalysis throws many unnecessary warnings when warnings module is used
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Element information is absent or missing for a few")
 warnings.filterwarnings("ignore", message="Failed to guess the mass for the following atom types")
 warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 warnings.filterwarnings("ignore", message="1 A\^3 CRYST1 record,")
 warnings.filterwarnings("ignore", message="Found no information for attr:")
+# MDAnalysis throws many unnecessary warnings when warnings module is used
+
 
 __version__ = 1.0
 
@@ -46,7 +47,7 @@ import pyrexMD.core as core
 import pyrexMD.analysis.analysis as ana
 #import pyrexMD.analysis.contacts as con
 #import pyrexMD.analysis.dihedrals as dih
-#import pyrexMD.analysis.GDT as gdt
+#import pyrexMD.analysis.gdt as gdt
 #import pyrexMD.decoy.abinitio as abi
 #import pyrexMD.decoy.cluster as clu
 #import pyrexMD.gmx as gmx

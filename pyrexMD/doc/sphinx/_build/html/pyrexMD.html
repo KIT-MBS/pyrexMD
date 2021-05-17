@@ -94,6 +94,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyrexMD</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pyrexMD package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
@@ -102,10 +103,19 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.core">pyrexMD.core module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.core">pyrexMD.core module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Example:</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.misc">pyrexMD.misc module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Example:</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pyrexMD">Module contents</a></li>
 </ul>
 </li>
@@ -188,10 +198,22 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.analysis">pyrexMD.analysis.analysis module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.contacts">pyrexMD.analysis.contacts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.dihedrals">pyrexMD.analysis.dihedrals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.gdt">pyrexMD.analysis.gdt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.analysis">pyrexMD.analysis.analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html#example">Example:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.contacts">pyrexMD.analysis.contacts module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html#id1">Example:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.dihedrals">pyrexMD.analysis.dihedrals module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html#id2">Example:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.gdt">pyrexMD.analysis.gdt module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html#id3">Example:</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis">Module contents</a></li>
 </ul>
 </li>
@@ -210,6 +232,31 @@
 </div>
 <div class="section" id="module-pyrexMD.core">
 <span id="pyrexmd-core-module"></span><h2>pyrexMD.core module<a class="headerlink" href="#module-pyrexMD.core" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functions to enable interactive analyses. Its main purpose
+are the iPlayer and iPlot classes.</p>
+<div class="section" id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
+
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+
+<span class="c1"># show ref structure in trajectory viewer</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlayer</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+<span class="n">tv</span><span class="p">()</span>
+
+<span class="c1"># check for formed bias contacts</span>
+<span class="n">bias</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;path/to/bias/contacts&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">CM</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">get_Qbias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bias</span><span class="p">)</span>
+
+<span class="c1"># interactive plot (ctrl-click into the plot to jump to frame)</span>
+<span class="n">ip</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlot</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">QBIAS</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Qbias&quot;</span><span class="p">)</span>
+<span class="n">ip</span><span class="p">()</span>
+</pre></div>
+</div>
 <dl class="py data">
 <dt class="sig sig-object py" id="pyrexMD.core.cp">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[(0.12156862745098039,</span> <span class="pre">0.4666666666666667,</span> <span class="pre">0.7058823529411765),</span> <span class="pre">(1.0,</span> <span class="pre">0.4980392156862745,</span> <span class="pre">0.054901960784313725),</span> <span class="pre">(0.17254901960784313,</span> <span class="pre">0.6274509803921569,</span> <span class="pre">0.17254901960784313),</span> <span class="pre">(0.8392156862745098,</span> <span class="pre">0.15294117647058825,</span> <span class="pre">0.1568627450980392),</span> <span class="pre">(0.5803921568627451,</span> <span class="pre">0.403921568627451,</span> <span class="pre">0.7411764705882353),</span> <span class="pre">(0.5490196078431373,</span> <span class="pre">0.33725490196078434,</span> <span class="pre">0.29411764705882354),</span> <span class="pre">(0.8901960784313725,</span> <span class="pre">0.4666666666666667,</span> <span class="pre">0.7607843137254902),</span> <span class="pre">(0.4980392156862745,</span> <span class="pre">0.4980392156862745,</span> <span class="pre">0.4980392156862745),</span> <span class="pre">(0.7372549019607844,</span> <span class="pre">0.7411764705882353,</span> <span class="pre">0.13333333333333333),</span> <span class="pre">(0.09019607843137255,</span> <span class="pre">0.7450980392156863,</span> <span class="pre">0.8117647058823529)]</span></em><a class="headerlink" href="#pyrexMD.core.cp" title="Permalink to this definition">¶</a></dt>
@@ -390,8 +437,45 @@ Interactive red bar can be moved by pressing any key.</p>
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-pyrexMD.gmx">
 <span id="pyrexmd-gmx-module"></span><h2>pyrexMD.gmx module<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functions to interact with <cite>GROMACS</cite> to setup systems and
+run MD simulations.</p>
+<div class="section" id="id1">
+<h3>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+
+<span class="c1"># create ref pdb:</span>
+<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># generate topology &amp; box</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
+
+<span class="c1"># generate solvent &amp; ions</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
+
+<span class="c1"># NVT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;nvt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;nvt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;nvt&quot;</span><span class="p">)</span>
+
+<span class="c1"># NPT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;npt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;npt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;nvt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
+
+<span class="c1"># MD run</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.clean_up">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gmx_pattern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.clean_up" title="Permalink to this definition">¶</a></dt>
@@ -780,13 +864,8 @@ insert-molecule cmd)</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.genion">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'13'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SOL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified fuction of gromacs.genion().</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>input 13 (=SOL group) seems to be the only selection group that
-works with genion.</p>
-</div>
 <dl class="simple">
 <dt>Gromacs info:</dt><dd><p>gmx genion randomly replaces solvent molecules with monoatomic ions.
 The group of solvent molecules should be continuous and all molecules
@@ -1254,8 +1333,10 @@ can subsequently be processed to generate a run input file.</p>
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-pyrexMD.misc">
 <span id="pyrexmd-misc-module"></span><h2>pyrexMD.misc module<a class="headerlink" href="#module-pyrexMD.misc" title="Permalink to this headline">¶</a></h2>
+<p>This module is a collection of miscellaneous functions.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyrexMD.misc.CONFIG">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">CONFIG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#CONFIG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.CONFIG" title="Permalink to this definition">¶</a></dt>
@@ -1300,7 +1381,7 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">“color_negative”: “orange”,</div>
 <div class="line">“markersize”: 5}</div>
 </div>
-<div class="line">cfg = misc.CONFIG(default, <a href="#id1"><span class="problematic" id="id2">**</span></a>alias_dict)</div>
+<div class="line">cfg = misc.CONFIG(default, <a href="#id2"><span class="problematic" id="id3">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -1311,9 +1392,9 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">markersize          5</div>
 <div class="line"><br /></div>
 </div>
-<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id3"><span class="problematic" id="id4">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id5"><span class="problematic" id="id6">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id7"><span class="problematic" id="id8">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id4"><span class="problematic" id="id5">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id6"><span class="problematic" id="id7">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id8"><span class="problematic" id="id9">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -1569,7 +1650,8 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.autoapply_limits">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">autoapply_limits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig_or_ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#autoapply_limits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.autoapply_limits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply plt.xlim() and plt.ylim() to each axis object based on its xmin, xmax, ymin, ymax values.</p>
+<dd><p>Apply plt.xlim() and plt.ylim() on each axis object based on its xmin, xmax,
+ymin, ymax values.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -1586,16 +1668,16 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>xlim (list)</dt><dd><p>ylim (list)</p>
+<dt>xlim (list)</dt><dd><p>if fig_or_ax is axis</p>
 </dd>
-<dt>if fig_or_ax is figure:</dt><dd><p>XLIM (list of lists)
-YLIM (list of lists)</p>
+<dt>ylim (list)</dt><dd><p>if fig_or_ax is axis</p>
+</dd>
+<dt>XLIM (list of lists)</dt><dd><p>if fig_or_ax is figure</p>
+</dd>
+<dt>YLIM (list of lists)</dt><dd><p>if fig_or_ax is figure</p>
 </dd>
 </dl>
 </p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>if fig_or_ax is axis</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1627,7 +1709,7 @@ YLIM (list of lists)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.bash_cmd">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">bash_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#bash_cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.bash_cmd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execte any bash command via python.</p>
+<dd><p>Execute any bash command via python.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>works with pipe.</p>
@@ -2575,23 +2657,21 @@ e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.percent">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">div</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#percent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.percent" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Returns the percentage of num/div as float:</dt><dd><p>p = 100 * num/div</p>
-</dd>
-</dl>
+<dd><p>Returns the percentage of num/div as float</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num</strong> (<em>int</em>) – numerator</p></li>
 <li><p><strong>div</strong> (<em>int</em>) – divisor</p></li>
-<li><p><strong>prec</strong> (<em>None/int</em>) – rounding precission</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>num/div as percentage</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>p (float)</dt><dd><p>p = 100 * num/div</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>p (float)</p>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2650,7 +2730,8 @@ contains figure data, auto detects the figure type (i.e. it created using
 plt.plot(), plt.bar() or plt.barh()).</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>%matplotlib notebook backend leaves empty space below when closing figs which were loaded via pickle.</p>
+<p>%matplotlib notebook backend leaves empty space below figure in
+jupyter notebook when closing figs which were loaded via pickle files.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2674,48 +2755,121 @@ plt.plot(), plt.bar() or plt.barh()).</p>
 </p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <dl>
-<dt>ax_data (dict): dict containing specific axis data</dt><dd><dl>
-<dt>dict keys:</dt><dd><dl class="simple">
-<dt>ax_type: “line plot”: ax was created using plt.plot()</dt><dd><p>“bar plot”:  ax was created using plt.bar()
-“barh plot”: ax was created using plt.barh()</p>
+<dt>ax_data (dict)</dt><dd><p>dictionary containing specific axis data, see table below</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 22%" />
+<col style="width: 58%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>key</p></td>
+<td><p>value</p></td>
+<td><p>description</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>ax_type (str)</p></td>
+<td><p>“line plot”</p></td>
+<td><p>ax was created using plt.plot()</p></td>
+</tr>
+<tr class="row-odd"><td><p>“bar plot”</p></td>
+<td><p>ax was created using plt.bar()</p></td>
+</tr>
+<tr class="row-even"><td><p>“barh plot”</p></td>
+<td><p>ax was created using plt.barh()</p></td>
+</tr>
+<tr class="row-odd"><td><p>xlim/ylim</p></td>
+<td><p>tuple</p></td>
+<td><p>content of ax.get_xlim()</p></td>
+</tr>
+<tr class="row-even"><td><p>xscale/yscale</p></td>
+<td><p>str</p></td>
+<td><p>content of ax.get_xscale()</p></td>
+</tr>
+<tr class="row-odd"><td><p>xticks/yticks</p></td>
+<td><p>array</p></td>
+<td><p>content of ax.get_xticks()</p></td>
+</tr>
+<tr class="row-even"><td><p>x/yticklabels</p></td>
+<td><p>list</p></td>
+<td><p>text content of ax.get_xticklabels()</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>line_data (list)</dt><dd><p>list of dicts, which contain data about &lt;matplotlib.lines.Line2D&gt;
+objects with viable Keyword Args as shown in the table below</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 28%" />
+<col style="width: 43%" />
+<col style="width: 14%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>alpha</p></td>
+<td><p>ls (linestyle)</p></td>
+<td><p>mac (marker edgecolor)</p></td>
+<td><p>xdata</p></td>
+</tr>
+<tr class="row-even"><td><p>color</p></td>
+<td><p>lw (linewidth)</p></td>
+<td><p>mfc (marker facecolor)</p></td>
+<td><p>ydata</p></td>
+</tr>
+<tr class="row-odd"><td><p>label</p></td>
+<td><p>marker</p></td>
+<td><p>ms (markersize)</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>rect_data (list)</dt><dd><p>list of dicts, which contain data about &lt;matplotlib.patches.Rectangle&gt;
+objects with viable Keyword Args as shown in the table below</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>alpha</p></td>
+<td><p>fill</p></td>
+<td><p>width</p></td>
+</tr>
+<tr class="row-even"><td><p>bbox</p></td>
+<td><p>height</p></td>
+<td><p>xy</p></td>
+</tr>
+<tr class="row-odd"><td><p>bbox_points</p></td>
+<td><p>label</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ec (edgecolor)</p></td>
+<td colspan="2"><p>ls (linestyle)</p></td>
+</tr>
+<tr class="row-odd"><td><p>fc (facecolor)</p></td>
+<td colspan="2"><p>lw (linewidth)</p></td>
+</tr>
+</tbody>
+</table>
 </dd>
 </dl>
-<p>xlim            ylim
-xscale          yscale
-xticks          yticks
-xticklabels     yticklabels</p>
-</dd>
-</dl>
-</dd>
-<dt>line_data (list): list of dicts, which contain data about &lt;matplotlib.lines.Line2D&gt; objects.</dt><dd><dl>
-<dt>dict keys:</dt><dd><p>__description__: “line data ~ plt.plot()”</p>
-<p>alpha   ls (linestyle)  mac (marker edgecolor)  xdata
-color   lw (linewidth)  mfc (marker facecolor)  ydata
-label   marker          ms (markersize)</p>
-</dd>
-</dl>
-</dd>
-<dt>rect_data (list): list of dicts, which contain data about &lt;matplotlib.patches.Rectangle&gt; objects.</dt><dd><dl>
-<dt>dict keys:</dt><dd><p>__description__: “rectangle data ~ plt.bar()”
-xy: userland coordinates of bottom left rectangle corner</p>
-<blockquote>
-<div><p>(rectangle is defined by xy, width, height)</p>
-</div></blockquote>
-<p>alpha               fill                width
-bbox                height
-bbox_points         label
-ec (edgecolor)      ls (linestyle)
-fc (facecolor)      lw (linewidth)</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>xy are the userland coordinates starting from bottom left
+rectangle corner (rectangle is defined by xy, width, height)</p>
+</div>
+</div>
 <p class="rubric">Example</p>
 <div class="line-block">
-<div class="line">ax_data, line_data, rect_data = pickle_load( &lt; … &gt; )</div>
+<div class="line">ax_data, line_data, rect_data = pickle_load( &lt; filename &gt; )</div>
+<div class="line-block">
 <div class="line"># acces data</div>
+</div>
 <div class="line">line_data[0][“xdata”]</div>
 <div class="line">line_data[0][“color”]</div>
 </div>
@@ -2727,9 +2881,10 @@ fc (facecolor)      lw (linewidth)</p>
 <dd><p>Creates multifigure from loading pickle_files</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>data is first loaded -&gt; creates a figure -&gt; closed. However in jupyter
-%matplotlib notebook backend leaves empty space below when closing figs
-which were loaded via pickle.</p>
+<p>data is first loaded -&gt; creates a figure -&gt; closed. However in
+jupyter %matplotlib notebook backend leaves empty space below figure when
+closing figs which were loaded via pickle. The empty space is only visible
+in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3342,6 +3497,39 @@ where B2 contains every n-th element of A.</p>
 </div>
 <div class="section" id="module-pyrexMD.rex">
 <span id="pyrexmd-rex-module"></span><h2>pyrexMD.rex module<a class="headerlink" href="#module-pyrexMD.rex" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functions related to (contact-guided) Replica Exchange
+Molecular Dynamics. It contains mainly functions to speed-up the process of
+generating REX simulations and modify topologies to include contact bias etc.</p>
+<div class="section" id="id10">
+<h3>Example:<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
+
+<span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
+
+<span class="c1"># create rex directories and assign decoys</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">assign_best_decoys</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
+<span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">get_REX_DIRS</span><span class="p">()</span>
+
+<span class="c1"># create systems for each replica</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># add bias contacts</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">DCAREX_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">DCAREX_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">force_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
+
+<span class="c1"># prepare temperature distribution</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
+
+<span class="c1"># create mdp and tpr files</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+
+<span class="c1"># upload files on HPC and execute production run</span>
+</pre></div>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_modify_scoreFile">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_modify_scoreFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_modify_scoreFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
@@ -3891,12 +4079,13 @@ Removes column entries which consist only of whitespace or newlines.</p>
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-pyrexMD">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyrexMD" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.Universe">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.</span></span><span class="sig-name descname"><span class="pre">Universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tpr_resid_from_one</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD.html#Universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.Universe" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, <a href="#id10"><span class="problematic" id="id11">**</span></a>kwargs)</p>
+<dd><p>returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, <a href="#id12"><span class="problematic" id="id13">**</span></a>kwargs)</p>
 </dd></dl>
 
 <dl class="py function">

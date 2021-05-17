@@ -2,8 +2,49 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 17.05.2021
 
+"""
+This module contains functions to interact with `GROMACS` to setup systems and
+run MD simulations.
+
+
+Example:
+--------
+
+.. code-block:: python
+
+    import pyrexMD.gmx as gmx
+    
+    # create ref pdb:
+    pdb = "./1l2y.pdb"
+    ref = gmx.get_ref_structure(pdb, ff='amber99sb-ildn', water='tip3p', ignh=True)
+
+    # generate topology & box
+    gmx.pdb2gmx(f=ref, o="protein.gro", ff='amber99sb-ildn', water='tip3p', ignh=True)
+    gmx.editconf(f="protein.gro", o="box.gro", d=2.0, c=True, bt="cubic")
+
+    # generate solvent & ions
+    gmx.solvate(cp="box.gro", o="solvent.gro")
+    gmx.grompp(f="ions.mdp", o="ions.tpr",c="solvent.gro")
+    gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")
+
+    # minimize
+    gmx.grompp(f="min.mdp", o="min.tpr", c="ions.gro")
+    gmx.mdrun(deffnm="min")
+
+    # NVT equilibration
+    gmx.grompp(f="nvt.mdp", o="nvt.tpr", c="min.gro", r="min.gro")
+    gmx.mdrun(deffnm="nvt")
+
+    # NPT equilibration
+    gmx.grompp(f="npt.mdp", o="npt.tpr", c="nvt.gro", r="nvt.gro", t="nvt.cpt")
+    gmx.mdrun(deffnm="npt")
+
+    # MD run
+    gmx.grompp(-f"md.mdp", o="traj.tpr", c="npt.gro", t="npt.cpt")
+    gmx.mdrun(deffn="traj")
+"""
 
 import os
 import glob
@@ -600,13 +641,10 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
     return o_file
 
 
-def genion(s, o, p="topol.top", input="13", pname="NA", nname="CL", conc=0.15,
+def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
            neutral=True, log=True, log_overwrite=False, verbose=True, **kwargs):
     """
     Modified fuction of gromacs.genion().
-
-    .. Note:: input 13 (=SOL group) seems to be the only selection group that
-        works with genion.
 
     Gromacs info:
         gmx genion randomly replaces solvent molecules with monoatomic ions.
@@ -709,6 +747,9 @@ def mdrun(verbose=True, **kwargs):
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
         stdin, stdout, stderr = gromacs.mdrun(v=True, **kwargs)
+        print(stderr)
+        print()
+        print(stdout)
     return
 
 
