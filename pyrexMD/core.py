@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: core.py
 # @Last modified by:   arthur
-# @Last modified time: 17.05.2021
+# @Last modified time: 18.05.2021
 
 """
 This module contains functions to enable interactive analyses. Its main purpose
@@ -51,14 +51,13 @@ import time
 
 # global update for plots
 matplotlib.rcParams.update({'font.family': "sans-serif", 'font.weight': "normal", 'font.size': 16})
-cp = sns.color_palette()  # access seaborn colors via cp[0] - cp[9]
+cp = sns.color_palette()
+"""
+access seaborn colors via core.cp[0] - core.cp[9]
+"""
 
 # TODO: get_color_scheme for any component after checking the lengh of the component (instead of universe?)
 # TODO: if if if -> if elif else
-"""
-if sys.version_info[0] < 3:
-    raise Exception("Must be using Python 3")
-"""
 
 
 class iColor(object):
