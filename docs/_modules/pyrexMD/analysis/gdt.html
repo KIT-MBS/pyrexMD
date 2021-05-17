@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,8 +166,53 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: gdt.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 17.05.2021</span>
 
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions related to the Global Distance Test.</span>
+
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import MDAnalysis as mda</span>
+<span class="sd">    import pyrexMD.misc as misc</span>
+<span class="sd">    import pyrexMD.analysis.analysis as ana</span>
+<span class="sd">    import pyrexMD.analysis.gdt as gdt</span>
+
+<span class="sd">    ref = mda.Universe(&quot;&lt;pdb_file&gt;&quot;)</span>
+<span class="sd">    mobile = mda.Universe(&quot;&lt;tpr_file&gt;&quot;, &quot;&lt;xtc_file&gt;&quot;)</span>
+
+<span class="sd">    # first norm and align universes</span>
+<span class="sd">    ana.norm_and_align_universe(mobile, ref)</span>
+
+<span class="sd">    # run GDT</span>
+<span class="sd">    GDT = gdt.GDT(mobile, ref)</span>
+<span class="sd">    GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = GDT</span>
+
+<span class="sd">    # get individual scores</span>
+<span class="sd">    GDT_TS = gdt.get_GDT_TS(GDT_percent)</span>
+<span class="sd">    GDT_HA = gdt.get_GDT_HA(GDT_percent)</span>
+<span class="sd">    frames = [i for i in range(len(GDT_TS))]</span>
+<span class="sd">    misc.cprint(&quot;GDT TS    GDT HA    frame&quot;, &quot;blue&quot;)</span>
+<span class="sd">    _ = misc.print_table([GDT_TS, GDT_HA, frames], verbose_stop=10, spacing=10)</span>
+
+<span class="sd">    # rank scores</span>
+<span class="sd">    SCORES = gdt.GDT_rank_scores(GDT_percent, ranking_order=&quot;GDT_TS&quot;, verbose=False)</span>
+<span class="sd">    GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES</span>
+<span class="sd">    misc.cprint(&quot;GDT TS    GDT HA    frame&quot;, &quot;blue&quot;)</span>
+<span class="sd">    _ = misc.print_table([GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked], spacing=10, verbose_stop=10)</span>
+
+
+<span class="sd">    # plot local accuracy</span>
+<span class="sd">    text_pos_kws = {&quot;text_pos_Frame&quot;: [-8.8, -0.3],</span>
+<span class="sd">                    &quot;text_pos_TS&quot;: [-14.2, -0.3],</span>
+<span class="sd">                    &quot;text_pos_HA&quot;: [-6, -0.3]}</span>
+<span class="sd">    _ = gdt.plot_LA(mobile, ref, GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked, **text_pos_kws)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>

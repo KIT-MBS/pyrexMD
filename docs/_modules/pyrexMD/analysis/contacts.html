@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,12 +166,35 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: contacts.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 17.05.2021</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions related to native contact and bias contact analyses.</span>
 
 
-<span class="c1">################################################################################</span>
-<span class="c1">################################################################################</span>
-<span class="c1"># Native Contacts &amp; Bias Contacts Analyses</span>
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import MDAnalysis as mda</span>
+<span class="sd">    import pyrexMD.analysis.contacts as con</span>
+
+<span class="sd">    ref = mda.Universe(&quot;&lt;pdb_file&gt;&quot;)</span>
+<span class="sd">    mobile = mda.Universe(&quot;&lt;tpr_file&gt;&quot;, &quot;&lt;xtc_file&gt;&quot;)</span>
+
+<span class="sd">    # get and plot native contacts</span>
+<span class="sd">    con.get_Native_Contacts(ref, sel=&quot;protein&quot;)</span>
+<span class="sd">    con.plot_Contact_Map(ref, sel=&quot;protein&quot;)</span>
+
+<span class="sd">    # compare contact map for n bias contacts</span>
+<span class="sd">    n = 50</span>
+<span class="sd">    con.plot_Contact_Map(ref, DCA_fin=&quot;path/to/bias/contacts&quot;, n_DCA=n)</span>
+
+<span class="sd">    # check true positive rate for n bias contacts</span>
+<span class="sd">    n = 50</span>
+<span class="sd">    con.plot_DCA_TPR(ref, DCA_fin=&quot;path/to/bias/contacts&quot;, n_DCA=n)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>

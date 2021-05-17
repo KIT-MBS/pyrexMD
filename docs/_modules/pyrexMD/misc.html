@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -165,8 +166,11 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 16.05.2021</span>
+<span class="c1"># @Last modified time: 18.05.2021</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module is a collection of miscellaneous functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># miscellaneous</span>
 <span class="kn">import</span> <span class="nn">PIL</span>
@@ -756,7 +760,7 @@
 
 <div class="viewcode-block" id="bash_cmd"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.bash_cmd">[docs]</a><span class="k">def</span> <span class="nf">bash_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Execte any bash command via python.</span>
+<span class="sd">    Execute any bash command via python.</span>
 
 <span class="sd">    .. Note:: works with pipe.</span>
 
@@ -920,16 +924,16 @@
 
 <div class="viewcode-block" id="percent"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.percent">[docs]</a><span class="k">def</span> <span class="nf">percent</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">div</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the percentage of num/div as float:</span>
-<span class="sd">        p = 100 * num/div</span>
+<span class="sd">    Returns the percentage of num/div as float</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num (int): numerator</span>
 <span class="sd">        div (int): divisor</span>
-<span class="sd">        prec (None/int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precission</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        p (float): num/div as percentage</span>
+<span class="sd">        p (float)</span>
+<span class="sd">            p = 100 * num/div</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">num</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
     <span class="n">div</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">div</span><span class="p">)</span>
@@ -2028,7 +2032,8 @@
 
 <div class="viewcode-block" id="autoapply_limits"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.autoapply_limits">[docs]</a><span class="k">def</span> <span class="nf">autoapply_limits</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Apply plt.xlim() and plt.ylim() to each axis object based on its xmin, xmax, ymin, ymax values.</span>
+<span class="sd">    Apply plt.xlim() and plt.ylim() on each axis object based on its xmin, xmax,</span>
+<span class="sd">    ymin, ymax values.</span>
 
 <span class="sd">    .. NOTE::</span>
 
@@ -2040,12 +2045,14 @@
 <span class="sd">        margin (float): extra margin on upper limits, where margin=0.01 equals 1% of xmax and ymax</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        if fig_or_ax is axis:</span>
-<span class="sd">            xlim (list)</span>
-<span class="sd">            ylim (list)</span>
-<span class="sd">        if fig_or_ax is figure:</span>
-<span class="sd">            XLIM (list of lists)</span>
-<span class="sd">            YLIM (list of lists)</span>
+<span class="sd">        xlim (list)</span>
+<span class="sd">            if fig_or_ax is axis</span>
+<span class="sd">        ylim (list)</span>
+<span class="sd">            if fig_or_ax is axis</span>
+<span class="sd">        XLIM (list of lists)</span>
+<span class="sd">            if fig_or_ax is figure</span>
+<span class="sd">        YLIM (list of lists)</span>
+<span class="sd">            if fig_or_ax is figure</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        | &gt;&gt; fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])</span>
@@ -2183,10 +2190,10 @@
 <span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ax_type (str):</span>
-<span class="sd">          | &quot;line plot&quot;: ax was created using plt.plot()</span>
-<span class="sd">          | &quot;bar plot&quot;:  ax was created using plt.bar()</span>
-<span class="sd">          | &quot;barh plot&quot;: ax was created using plt.barh()</span>
+<span class="sd">        ax_type (str)</span>
+<span class="sd">            | &quot;line plot&quot; ~ ax was created using plt.plot()</span>
+<span class="sd">            | &quot;bar plot&quot;  ~ ax was created using plt.bar()</span>
+<span class="sd">            | &quot;barh plot&quot; ~ ax was created using plt.barh()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">artists</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">()</span>
 
@@ -2268,16 +2275,26 @@
 
 
 <span class="n">__pickle_get_ax_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        ax_data (dict): dict containing specific axis data</span>
-<span class="s2">            dict keys:</span>
-<span class="s2">                ax_type: &quot;line plot&quot;: ax was created using plt.plot()</span>
-<span class="s2">                         &quot;bar plot&quot;:  ax was created using plt.bar()</span>
-<span class="s2">                         &quot;barh plot&quot;: ax was created using plt.barh()</span>
+<span class="s2">        ax_data (dict)</span>
+<span class="s2">            dictionary containing specific axis data, see table below</span>
 
-<span class="s2">                xlim            ylim</span>
-<span class="s2">                xscale          yscale</span>
-<span class="s2">                xticks          yticks</span>
-<span class="s2">                xticklabels     yticklabels</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            | key         | value        | description                         |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |ax_type (str)| &quot;line plot&quot;  | ax was created using plt.plot()     |</span>
+<span class="s2">            +             +--------------+-------------------------------------+</span>
+<span class="s2">            |             | &quot;bar plot&quot;   | ax was created using plt.bar()      |</span>
+<span class="s2">            +             +--------------+-------------------------------------+</span>
+<span class="s2">            |             | &quot;barh plot&quot;  | ax was created using plt.barh()     |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xlim/ylim    | tuple        | content of ax.get_xlim()            |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xscale/yscale| str          | content of ax.get_xscale()          |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xticks/yticks| array        | content of ax.get_xticks()          |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |x/yticklabels| list         | text content of ax.get_xticklabels()|</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 
@@ -2318,13 +2335,17 @@
 
 
 <span class="n">__pickle_get_line_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        line_data (list): list of dicts, which contain data about &lt;matplotlib.lines.Line2D&gt; objects.</span>
-<span class="s2">            dict keys:</span>
-<span class="s2">                __description__: &quot;line data ~ plt.plot()&quot;</span>
+<span class="s2">        line_data (list)</span>
+<span class="s2">            list of dicts, which contain data about &lt;matplotlib.lines.Line2D&gt;</span>
+<span class="s2">            objects with viable Keyword Args as shown in the table below</span>
 
-<span class="s2">                alpha   ls (linestyle)  mac (marker edgecolor)  xdata</span>
-<span class="s2">                color   lw (linewidth)  mfc (marker facecolor)  ydata</span>
-<span class="s2">                label   marker          ms (markersize)</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | alpha   | ls (linestyle) | mac (marker edgecolor)  | xdata  |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | color   | lw (linewidth) | mfc (marker facecolor)  | ydata  |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | label   | marker         | ms (markersize)         |        |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 
@@ -2371,17 +2392,24 @@
 
 
 <span class="n">__pickle_get_rectangle_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        rect_data (list): list of dicts, which contain data about &lt;matplotlib.patches.Rectangle&gt; objects.</span>
-<span class="s2">            dict keys:</span>
-<span class="s2">                __description__: &quot;rectangle data ~ plt.bar()&quot;</span>
-<span class="s2">                xy: userland coordinates of bottom left rectangle corner</span>
-<span class="s2">                    (rectangle is defined by xy, width, height)</span>
+<span class="s2">        rect_data (list)</span>
+<span class="s2">            list of dicts, which contain data about &lt;matplotlib.patches.Rectangle&gt;</span>
+<span class="s2">            objects with viable Keyword Args as shown in the table below</span>
 
-<span class="s2">                alpha               fill                width</span>
-<span class="s2">                bbox                height</span>
-<span class="s2">                bbox_points         label</span>
-<span class="s2">                ec (edgecolor)      ls (linestyle)</span>
-<span class="s2">                fc (facecolor)      lw (linewidth)</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | alpha          | fill   | width  |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | bbox           | height |  xy    |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | bbox_points    | label  |        |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | ec (edgecolor) | ls (linestyle)  |</span>
+<span class="s2">            +----------------+-----------------+</span>
+<span class="s2">            | fc (facecolor) | lw (linewidth)  |</span>
+<span class="s2">            +----------------+-----------------+</span>
+
+<span class="s2">        .. Hint:: xy are the userland coordinates starting from bottom left</span>
+<span class="s2">           rectangle corner (rectangle is defined by xy, width, height)</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">__pickle_get_rectangle_data___bugs_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    Current bugs/problems:</span>
@@ -2406,7 +2434,8 @@
 <span class="sd">    contains figure data, auto detects the figure type (i.e. it created using</span>
 <span class="sd">    plt.plot(), plt.bar() or plt.barh()).</span>
 
-<span class="sd">    .. Warning:: %matplotlib notebook backend leaves empty space below when closing figs which were loaded via pickle.</span>
+<span class="sd">    .. Warning:: %matplotlib notebook backend leaves empty space below figure in</span>
+<span class="sd">       jupyter notebook when closing figs which were loaded via pickle files.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename (str): realpath to .pickle file or filename within pickledir</span>
@@ -2423,7 +2452,7 @@
 <span class="sd">        object (?)</span>
 <span class="sd">            else</span>
 
-<span class="sd">    Notes:&quot;&quot;&quot;</span>
+<span class="sd">    .. Note ::&quot;&quot;&quot;</span>
     <span class="c1"># NOTE 1: End this docstring with |Notes:&quot;&quot;&quot;| to remove trailing newline</span>
     <span class="c1"># NOTE 2: Missing doc string part is coded right after this function.</span>
     <span class="c1">#         It will be appended once here and to other docstrings during</span>
@@ -2448,12 +2477,12 @@
             <span class="k">return</span> <span class="n">obj</span></div>
 
 
-<span class="n">__pickle_load___example_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">__pickle_load___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    Example:</span>
-<span class="s2">      | ax_data, line_data, rect_data = pickle_load( &lt; ... &gt; )</span>
-<span class="s2">      | # acces data</span>
-<span class="s2">      | line_data[0][&quot;xdata&quot;]</span>
-<span class="s2">      | line_data[0][&quot;color&quot;]</span>
+<span class="s2">        | ax_data, line_data, rect_data = pickle_load( &lt; filename &gt; )</span>
+<span class="s2">        |  # acces data</span>
+<span class="s2">        | line_data[0][&quot;xdata&quot;]</span>
+<span class="s2">        | line_data[0][&quot;color&quot;]</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 
@@ -2462,9 +2491,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates multifigure from loading pickle_files</span>
 
-<span class="sd">    .. Warning:: data is first loaded -&gt; creates a figure -&gt; closed. However in jupyter</span>
-<span class="sd">        %matplotlib notebook backend leaves empty space below when closing figs</span>
-<span class="sd">        which were loaded via pickle.</span>
+<span class="sd">    .. Warning:: data is first loaded -&gt; creates a figure -&gt; closed. However in</span>
+<span class="sd">       jupyter %matplotlib notebook backend leaves empty space below figure when</span>
+<span class="sd">       closing figs which were loaded via pickle. The empty space is only visible</span>
+<span class="sd">       in the notebook (i.e. saving a pickle_plot figure is working fine.)</span>
 
 <span class="sd">    .. Note: Code for &quot;align&quot; parameter is currently only intended for figures with</span>
 <span class="sd">        grid = [&lt;any&gt;, 2], i.e. width of 2 figures.</span>
@@ -3150,7 +3180,7 @@
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="n">__pickle_get_ax_data___append_doc__</span><span class="p">,</span>
                  <span class="n">__pickle_get_line_data___append_doc__</span><span class="p">,</span>
                  <span class="n">__pickle_get_rectangle_data___append_doc__</span><span class="p">,</span>
-                 <span class="n">__pickle_load___example_doc__</span><span class="p">]:</span>
+                 <span class="n">__pickle_load___append_doc__</span><span class="p">]:</span>
         <span class="n">pickle_load</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">item</span>
     <span class="k">return</span></div>
 

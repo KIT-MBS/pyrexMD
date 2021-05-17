@@ -92,6 +92,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">pyrexMD</a></li>
 </ul>
 
@@ -163,20 +164,21 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: __init__.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.05.2021</span>
+<span class="c1"># @Last modified time: 18.05.2021</span>
 
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis</span> <span class="k">as</span> <span class="nn">analysis</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="c1"># MDAnalysis throws many unnecessary warnings when warnings module is used</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Element information is absent or missing for a few&quot;</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to guess the mass for the following atom types&quot;</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Unit cell dimensions not found.&quot;</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;1 A\^3 CRYST1 record,&quot;</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Found no information for attr:&quot;</span><span class="p">)</span>
+<span class="c1"># MDAnalysis throws many unnecessary warnings when warnings module is used</span>
+
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="mf">1.0</span>
 
@@ -207,7 +209,7 @@
 <span class="s2">import pyrexMD.analysis.analysis as ana</span>
 <span class="s2">#import pyrexMD.analysis.contacts as con</span>
 <span class="s2">#import pyrexMD.analysis.dihedrals as dih</span>
-<span class="s2">#import pyrexMD.analysis.GDT as gdt</span>
+<span class="s2">#import pyrexMD.analysis.gdt as gdt</span>
 <span class="s2">#import pyrexMD.decoy.abinitio as abi</span>
 <span class="s2">#import pyrexMD.decoy.cluster as clu</span>
 <span class="s2">#import pyrexMD.gmx as gmx</span>
