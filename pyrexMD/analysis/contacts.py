@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 17.05.2021
+# @Last modified time: 18.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -30,6 +30,9 @@ Example:
     # check true positive rate for n bias contacts
     n = 50
     con.plot_DCA_TPR(ref, DCA_fin="path/to/bias/contacts", n_DCA=n)
+
+Module contents:
+----------------
 """
 
 import pyrexMD.analysis.analysis as _ana

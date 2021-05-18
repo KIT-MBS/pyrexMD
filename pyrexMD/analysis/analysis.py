@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 17.05.2021
+# @Last modified time: 18.05.2021
 
 """
 This module contains functions related to topology modifications (e.g.
@@ -26,6 +26,9 @@ Example:
 
     # plot
     ana.PLOT(xdata=FRAME, ydata=RMSD, alpha=1, marker=None, xlabel="frame", ylabel=r"RMSD ($\AA$)")
+
+Module contents:
+----------------
 """
 
 import pyrexMD.misc as _misc

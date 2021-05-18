@@ -2,10 +2,13 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 15.05.2021
+# @Last modified time: 18.05.2021
+
+"""
+This module contains functions for clustering of decoys.
+"""
 
 
-#from __future__ import division, print_function
 import numpy as np
 import heat as ht
 import h5py

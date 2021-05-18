@@ -1,17 +1,12 @@
-pyrexMD package
-===============
 
-Subpackages
------------
+contents
+--------
 
-.. toctree::
-   :maxdepth: 4
+.. automodule:: pyrexMD
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-   pyrexMD.analysis
-   pyrexMD.decoy
-
-Submodules
-----------
 
 pyrexMD.core module
 -------------------
@@ -45,10 +40,11 @@ pyrexMD.rex module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+Subpackages
+-----------
 
-.. automodule:: pyrexMD
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+   :maxdepth: 2
+
+   pyrexMD.analysis
+   pyrexMD.decoy

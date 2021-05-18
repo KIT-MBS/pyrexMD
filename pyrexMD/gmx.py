@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 17.05.2021
+# @Last modified time: 18.05.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -15,7 +15,7 @@ Example:
 .. code-block:: python
 
     import pyrexMD.gmx as gmx
-    
+
     # create ref pdb:
     pdb = "./1l2y.pdb"
     ref = gmx.get_ref_structure(pdb, ff='amber99sb-ildn', water='tip3p', ignh=True)
@@ -44,6 +44,9 @@ Example:
     # MD run
     gmx.grompp(-f"md.mdp", o="traj.tpr", c="npt.gro", t="npt.cpt")
     gmx.mdrun(deffn="traj")
+
+Module contents:
+----------------
 """
 
 import os

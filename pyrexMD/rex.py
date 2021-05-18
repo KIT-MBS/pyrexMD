@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 17.05.2021
+# @Last modified time: 18.05.2021
 
 
 """
@@ -42,6 +42,9 @@ Example:
     rex.prep_REX_tpr(main_dir="./", n_REX=len(rex_dirs))
 
     # upload files on HPC and execute production run
+
+Module contents:
+----------------
 """
 
 #from __future__ import division, print_function

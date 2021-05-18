@@ -32,6 +32,9 @@ Example:
     # interactive plot (ctrl-click into the plot to jump to frame)
     ip = core.iPlot(u1, xdata=FRAMES, ydata=QBIAS, xlabel="frame", ylabel="Qbias")
     ip()
+
+Module contents:
+----------------
 """
 
 

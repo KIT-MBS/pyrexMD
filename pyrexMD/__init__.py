@@ -30,8 +30,8 @@ def Universe(top, traj=None, tpr_resid_from_one=True, **kwargs):
 
 def init():
     """
-    Init important modules of pyrexMD and other packages
-    by copy pasting the printed message.
+    Init modules of pyrexMD and other important packages into new jupyter notebook
+    session by copy&pasting the printed message.
     """
     print("""
 copy&paste in jupyter notebook:

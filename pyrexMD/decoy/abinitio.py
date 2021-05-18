@@ -2,7 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 18.05.2021
+
+"""
+This module contains functions for decoy creation using `PyRosetta`.
+"""
 
 
 from tqdm.notebook import tqdm
@@ -25,17 +29,17 @@ def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, v
     get torsion angles of object.
 
     Args:
-        obj (pose, str): pyrosetta pose object or pdb path
-        mol_type (str):
+        obj(pose, str): pyrosetta pose object or pdb path
+        mol_type(str):
           | molecule type
           | "auto": detect "protein" or "rna" by checking if pose.phi(1) exists.
-          | "protein": protein molecule with torsion angles (phi, psi)
-          | "rna": rna molecule with torsion angles (alpha, beta, gamma, delta)
-        prec (int): rounding precission
-        verbose (bool): print table with torsion angles
+          | "protein": protein molecule with torsion angles(phi, psi)
+          | "rna": rna molecule with torsion angles(alpha, beta, gamma, delta)
+        prec(int): rounding precission
+        verbose(bool): print table with torsion angles
 
     Returns:
-        TORSION_ANGLES (tuple)
+        TORSION_ANGLES(tuple)
           | tuple containing lists with torsion angles of each residue
           | if mol_type == "protein":
           | TORSION_ANGLES = (phi, psi)
@@ -89,17 +93,17 @@ def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, v
 
 def apply_relative_torsion_angle(pose_ref, pose, resid=1, angle="alpha", shift=0, verbose=True):
     """
-    Apply relative torsion angle (use pose_ref angle and apply relative shift).
+    Apply relative torsion angle(use pose_ref angle and apply relative shift).
 
     Args:
-        pose_ref (pose)
-        pose (pose)
-        resid (int)
-        angle (str)
+        pose_ref(pose)
+        pose(pose)
+        resid(int)
+        angle(str)
           | protein: "phi", "psi"
-          | rna:  "alpha", "beta", "gamma", "delta"
-        shift (float): relative shift value
-        verbose (bool): print applied changes to torsion angle.
+          | rna: "alpha", "beta", "gamma", "delta"
+        shift(float): relative shift value
+        verbose(bool): print applied changes to torsion angle.
     """
     with _misc.HiddenPrints(verbose=verbose):
         if angle.lower() == "phi":
@@ -140,27 +144,27 @@ def setup_abinitio_cfg(pdbid, fasta_seq, frag3mer, frag9mer, **kwargs):
     Setup config file for abinitio functions.
 
     Args:
-        pdbid (str): pdb id / pdb name
-        fasta_seq (str): fasta sequence
-        frag3mer (str): 3mer file path (get via robetta server)
-        frag9mer (str): 9mer file path (get via robetta server)
+        pdbid(str): pdb id / pdb name
+        fasta_seq(str): fasta sequence
+        frag3mer(str): 3mer file path(get via robetta server)
+        frag9mer(str): 9mer file path(get via robetta server)
 
     Keyword Args:
-        fasta_seq_len (int): fasta sequence length
-        frag3inserts (int): number of frag3 inserts
-        frag9inserts (int): number of frag9 inserts
-        folding_cycles (int): folding move cycles
-        folding_repeats (int): folding move repeats
-        job_name (str)
-        n_decoys (int): total number of decoys
-        n_cores (int): -np option for multiprocessing
-        decoy_ndx_shift (int):
-          | shift decoy index (output filename) by this value
+        fasta_seq_len(int): fasta sequence length
+        frag3inserts(int): number of frag3 inserts
+        frag9inserts(int): number of frag9 inserts
+        folding_cycles(int): folding move cycles
+        folding_repeats(int): folding move repeats
+        job_name(str)
+        n_decoys(int): total number of decoys
+        n_cores(int): -np option for multiprocessing
+        decoy_ndx_shift(int):
+          | shift decoy index(output filename) by this value
           | required for multiprocessing to fix names of decoys
-        kT (float): kT parameter during Monte-Carlo simulation
+        kT(float): kT parameter during Monte-Carlo simulation
 
     Returns:
-        abinitio_cfg (CONFIG class)
+        abinitio_cfg(CONFIG class)
             configs used as input for abinitio.create_decoys()
     """
     default = {"pdbid": pdbid,
@@ -188,16 +192,15 @@ def create_decoys(abinitio_cfg, output_dir="./output",
     """
     Create decoys within pyrosetta framework.
 
-    .. Warning:: this function is currently broken (but abinitio._create_decoys()
+    .. Warning: : this function is currently broken (but abinitio._create_decoys()
                  is working with 1 core)
 
-
     Args:
-        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
-        output_dir (str): output directory for decoys
-        stream2pymol (bool): stream decoys to pymol
-        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
-        save_log (bool): save scores to logfile at <output_dir/scores.txt>
+        abinitio_cfg(CONFIG class): output of abinitio.setup_abinitio_cfg()
+        output_dir(str): output directory for decoys
+        stream2pymol(bool): stream decoys to pymol
+        fastrelax(bool): apply fastrelax protocol on decoys before dumping them as pdb
+        save_log(bool): save scores to logfile at < output_dir/scores.txt >
     """
     cfg = abinitio_cfg
 
@@ -213,8 +216,8 @@ def create_decoys(abinitio_cfg, output_dir="./output",
         print(f">>> Decoy creation will be distributed to {cfg.n_cores} cores.")
     else:
         print(f"""CFG file issue:
-<n_decoys parameter>: {cfg.n_decoys}
-<n_cores parameter>: {cfg.n_cores}""")
+<n_decoys parameter >: {cfg.n_decoys}
+<n_cores parameter >: {cfg.n_cores}""")
         print(f">>> Decoy creation will be distributed to use only {cfg.n_decoys} cores.")
         cfg.n_cores = cfg.n_decoys
 
@@ -235,19 +238,19 @@ def _create_decoys(abinitio_cfg, output_dir="./output",
     Create decoys within pyrosetta framework.
 
     Args:
-        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()
-        output_dir (str): output directory for decoys
-        stream2pymol (bool): stream decoys to pymol
-        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb
-        save_log (bool): save scores to logfile at <output_dir/scores.txt>
+        abinitio_cfg(CONFIG class): output of abinitio.setup_abinitio_cfg()
+        output_dir(str): output directory for decoys
+        stream2pymol(bool): stream decoys to pymol
+        fastrelax(bool): apply fastrelax protocol on decoys before dumping them as pdb
+        save_log(bool): save scores to logfile at < output_dir/scores.txt >
 
     Keyword Args:
-        cprint_color (None, str): colored print color
+        cprint_color(None, str): colored print color
 
     Returns:
-        SCORES_low (list)
+        SCORES_low(list)
             centroid scores ~ score 3
-        SCORES_high (list)
+        SCORES_high(list)
             fa scores ~ ref2015
     """
     default = {"cprint_color": "blue"}
@@ -389,16 +392,16 @@ def _HELP_decoypath_to_decoyid(list_):
 def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
     """
     | Alias function of get_structure_list().
-    | get decoy list (sorted by a numeric part at any position of the filename,
-    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+    | get decoy list(sorted by a numeric part at any position of the filename,
+    | e.g. 1LMB_1.pdb, 1LMB_2.pdb, ...)
 
     Args:
-        decoy_dir (str): decoy directory
-        pattern (str): pattern of decoy filenames
-        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
+        decoy_dir(str): decoy directory
+        pattern(str): pattern of decoy filenames
+        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]
 
     Returns:
-        DECOY_LIST (list)
+        DECOY_LIST(list)
             list with decoy filenames
     """
     if decoy_dir is None:
@@ -445,16 +448,16 @@ def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
 def get_structure_list(structure_dir, pattern="*.pdb", ndx_range=(None, None)):
     """
     | Alias function of get_decoy_list().
-    | get structure list (sorted by a numeric part at any position of the filename,
-    | e.g. 1LMB_1.pdb, 1LMB_2.pdb,...)
+    | get structure list(sorted by a numeric part at any position of the filename,
+    | e.g. 1LMB_1.pdb, 1LMB_2.pdb, ...)
 
     Args:
-        structure_dir (str): structure directory
-        pattern (str): pattern of structure filenames
-        ndx_range (tuple, list): limit structure index range to [ndx_min, ndx_max]
+        structure_dir(str): structure directory
+        pattern(str): pattern of structure filenames
+        ndx_range(tuple, list): limit structure index range to[ndx_min, ndx_max]
 
     Returns:
-        STRUCTURE_LIST (list)
+        STRUCTURE_LIST(list)
             list with structure filenames
     """
     return(get_decoy_list(decoy_dir=structure_dir, pattern=pattern, ndx_range=ndx_range))
@@ -464,34 +467,34 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
                      ndx_range=(None, None), n_rank=None, reverse=True,
                      verbose=True, **kwargs):
     """
-    Get decoy scores of <decoy_list> or <decoy_dir>.
+    Get decoy scores of < decoy_list > or < decoy_dir > .
 
-      - If <n_rank> is None: return unranked decoys, ids and scores.
-      - If <n_rank> is int: return ranked decoys, ids and scores for best <n_rank> decoys.
+      - If < n_rank > is None: return unranked decoys, ids and scores.
+      - If < n_rank > is int: return ranked decoys, ids and scores for best < n_rank > decoys.
 
     Args:
-        decoy_list (None, list): list with decoy paths
-        decoy_dir (None, str): decoy directory
-        pattern (str): pattern of decoy filenames
-        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
-        n_rank (None, int):
+        decoy_list(None, list): list with decoy paths
+        decoy_dir(None, str): decoy directory
+        pattern(str): pattern of decoy filenames
+        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]
+        n_rank(None, int):
           | None: return unranked decoys, ids and scores.
-          | int: return ranked decoys, ids and scores for best <n_rank> decoys.
-        reverse (bool):
-          | True:  ascending ranking order (low to high)
-          | False: decending ranking order (high to low)
-        verbose (bool)
+          | int: return ranked decoys, ids and scores for best < n_rank > decoys.
+        reverse(bool):
+          | True: ascending ranking order(low to high)
+          | False: decending ranking order(high to low)
+        verbose(bool)
 
     Keyword Args:
-        cprint_color (None, str): colored print color
+        cprint_color(None, str): colored print color
 
     Returns:
-        DECOY_LIST (list)
+        DECOY_LIST(list)
             list with decoy paths
-        DECOY_ID   (list)
+        DECOY_ID(list)
             list with decoy ids
-        SCORE (list)
-            list with corresponding scores (ref 2015)
+        SCORE(list)
+            list with corresponding scores(ref 2015)
     """
     default = {"cprint_color": "blue"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -530,34 +533,34 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
                    ndx_range=(None, None), n_rank=None, reverse=True,
                    sel='backbone', verbose=True, **kwargs):
     """
-    Get decoy RMSD of <decoy_list> or <decoy_dir>.
+    Get decoy RMSD of < decoy_list > or < decoy_dir > .
 
-      - If <n_rank> is None: return unranked decoys, ids and RMSD.
-      - If <n_rank> is int: return ranked decoys, ids and RMSD for best <n_rank> decoys.
+      - If < n_rank > is None: return unranked decoys, ids and RMSD.
+      - If < n_rank > is int: return ranked decoys, ids and RMSD for best < n_rank > decoys.
 
     Args:
-        ref (universe): reference structure
-        decoy_list (None, list): list with decoy paths
-        decoy_dir (None, str): decoy directory
-        pattern (str): pattern of decoy filenames
-        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
-        n_rank (None,int):
+        ref(universe): reference structure
+        decoy_list(None, list): list with decoy paths
+        decoy_dir(None, str): decoy directory
+        pattern(str): pattern of decoy filenames
+        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]
+        n_rank(None, int):
           | None: return unranked decoys, ids and scores.
-          | int: return ranked decoys, ids and scores for best <n_rank> decoys.
-        reverse (bool):
-          | True:  ascending ranking order (low to high)
-          | False: decending ranking order (high to low)
-        verbose (bool)
+          | int: return ranked decoys, ids and scores for best < n_rank > decoys.
+        reverse(bool):
+          | True: ascending ranking order(low to high)
+          | False: decending ranking order(high to low)
+        verbose(bool)
 
     Keyword Args:
-        cprint_color (None, str): colored print color
+        cprint_color(None, str): colored print color
 
     Returns:
-        DECOY_LIST (list)
+        DECOY_LIST(list)
             list with decoy names
-        DECOY_ID (list)
+        DECOY_ID(list)
             list with decoy ids
-        RMSD (list)
+        RMSD(list)
             list with decoy RMSDs
     """
     default = {"cprint_color": "blue"}
@@ -602,21 +605,21 @@ def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     get decoy precission
 
     Args:
-        ref (universe): reference structure
-        decoy_dir (str): decoy directory
-        pattern (str): pattern of decoy filenames
-        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
-        sel (str): selection string (for RMSD calculation)
-        verbose (bool)
+        ref(universe): reference structure
+        decoy_dir(str): decoy directory
+        pattern(str): pattern of decoy filenames
+        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]
+        sel(str): selection string(for RMSD calculation)
+        verbose(bool)
 
     Returns:
-        DECOY_LIST (list)
+        DECOY_LIST(list)
             list with decoy paths
-        DECOY_ID (list)
+        DECOY_ID(list)
             list with decoy ids
-        SCORE (list)
-            list with corresponding scores (ref 2015)
-        RMSD (list)
+        SCORE(list)
+            list with corresponding scores(ref 2015)
+        RMSD(list)
             list with corresponding RMSD values
     """
     DECOY_LIST, DECOY_ID, SCORE = get_decoy_scores(decoy_dir=decoy_dir, pattern=pattern, ndx_range=ndx_range, verbose=verbose)
@@ -629,23 +632,23 @@ def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
     rank decoy precission
 
     Args:
-        data (list):
+        data(list):
           | output of abinitio.get_decoy_precission()
           | data[0]: DECOY_LIST
           | data[1]: DECOY_ID
           | data[2]: SCORE
           | data[3]: RMSD
-        rank_by (str): "SCORE", "RMSD"
-        verbose (bool)
+        rank_by(str): "SCORE", "RMSD"
+        verbose(bool)
 
     Returns:
-        DECOY_LIST_ranked (array)
+        DECOY_LIST_ranked(array)
             ranked list with decoy paths
-        DECOY_ID_ranked (array)
+        DECOY_ID_ranked(array)
             ranked list with decoy ids
-        SCORE_ranked (array)
-            ranked list with corresponding scores (ref 2015)
-        RMSD_ranked (array)
+        SCORE_ranked(array)
+            ranked list with corresponding scores(ref 2015)
+        RMSD_ranked(array)
             ranked list with corresponding RMSD values
     """
     DECOY_LIST, DECOY_ID, SCORE, RMSD = data
@@ -668,15 +671,15 @@ def precission_scatterplot(SCORE, RMSD, **kwargs):
     create a precission scatter plot.
 
     Args:
-        SCORE (list, array)
-        RMSD (list, array)
+        SCORE(list, array)
+        RMSD(list, array)
 
-    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
+    .. Hint: : Args and Keyword Args of misc.figure() are valid Keyword Args.
 
     Returns:
-        fig (class)
+        fig(class)
             matplotlib.figure.Figure
-        ax (class, list)
+        ax(class, list)
             ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
 
