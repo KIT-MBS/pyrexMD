@@ -1,9 +1,6 @@
 pyrexMD.analysis package
 ========================
 
-Submodules
-----------
-
 pyrexMD.analysis.analysis module
 --------------------------------
 
@@ -32,14 +29,6 @@ pyrexMD.analysis.gdt module
 ---------------------------
 
 .. automodule:: pyrexMD.analysis.gdt
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: pyrexMD.analysis
    :members:
    :undoc-members:
    :show-inheritance:

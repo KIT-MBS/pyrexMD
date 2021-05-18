@@ -90,8 +90,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
 </ul>
@@ -166,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 17.05.2021</span>
+<span class="c1"># @Last modified time: 18.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions to interact with `GROMACS` to setup systems and</span>
@@ -179,7 +178,7 @@
 <span class="sd">.. code-block:: python</span>
 
 <span class="sd">    import pyrexMD.gmx as gmx</span>
-<span class="sd">    </span>
+
 <span class="sd">    # create ref pdb:</span>
 <span class="sd">    pdb = &quot;./1l2y.pdb&quot;</span>
 <span class="sd">    ref = gmx.get_ref_structure(pdb, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
@@ -208,6 +207,9 @@
 <span class="sd">    # MD run</span>
 <span class="sd">    gmx.grompp(-f&quot;md.mdp&quot;, o=&quot;traj.tpr&quot;, c=&quot;npt.gro&quot;, t=&quot;npt.cpt&quot;)</span>
 <span class="sd">    gmx.mdrun(deffn=&quot;traj&quot;)</span>
+
+<span class="sd">Module contents:</span>
+<span class="sd">----------------</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
