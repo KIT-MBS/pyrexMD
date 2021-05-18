@@ -18,7 +18,7 @@ https://manual.gromacs.org/documentation/current/index.html
 
     git clone https://github.com/KIT-MBS/pyrexMD.git
     cd pyrexMD
-    python -m pip -e install .
+    python -m pip install -e .
 
 
 (3) enable trajectory viewer for `jupyter`:
