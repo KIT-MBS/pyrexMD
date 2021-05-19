@@ -144,19 +144,20 @@ def nucleic_DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows=
     return RES_PAIR, ATOM_PAIR
 
 
-def nucleic_modify_topology(top_fin, DCA_fin, force_k=2, skiprows="auto", **kwargs):
+def nucleic_modify_topology(top_fin, DCA_used_fin, force_k=2, skiprows="auto", **kwargs):
     """
-    Modifies topology by using the contacts written in <DCA_fin> file.
+    Modifies topology by using the contacts written in "DCA_used.txt" file.
+    "DCA_used.txt" is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.
 
     Modify topology:
 
       - top_fin (topol.top file): use as template
-      - DCA_fin: use all contacts as restraints
+      - DCA_used_fin (DCA_used.txt): use all contacts as restraints
       - modify bond section of new topology by adding contacts with force constant
 
     Args:
         top_fin (str): topology file (path)
-        DCA_fin (str): DCA file (path)
+        DCA_used_fin (str): DCA file (path)
         force_k (int, float): force constant of contact pairs
         skiprows (int):
           | ignore header rows of DCA_used_fin
@@ -176,10 +177,10 @@ def nucleic_modify_topology(top_fin, DCA_fin, force_k=2, skiprows="auto", **kwar
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     # DCA_used_fin has 4 cols with RESi, RESj, ATOMi, ATOMj -> usecols=(2,3)
-    ATOM_I, ATOM_J = _misc.read_file(fin=DCA_fin, usecols=(2, 3), skiprows=skiprows, dtype=int)
+    ATOM_I, ATOM_J = _misc.read_file(fin=DCA_used_fin, usecols=(2, 3), skiprows=skiprows, dtype=int)
 
     # get n_DCA from DCA_used_fin
-    with open(DCA_fin, "r") as read:
+    with open(DCA_used_fin, "r") as read:
         WORDS = read.readline().split()
         for item in WORDS:
             if "top" in item:
@@ -190,7 +191,7 @@ def nucleic_modify_topology(top_fin, DCA_fin, force_k=2, skiprows="auto", **kwar
         cfg.save_as = cfg.save_as.lstrip("/")
         cfg.save_as = cfg.save_as.lstrip("./")
     if cfg.pdbid == "auto":
-        cfg.pdbid = _misc.get_PDBid(DCA_fin)
+        cfg.pdbid = _misc.get_PDBid(DCA_used_fin)
     if "PDBID" in cfg.save_as:
         cfg.save_as = f"{cfg.pdbid}_topol_mod.top"
 

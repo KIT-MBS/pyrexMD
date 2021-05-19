@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 19.05.2021
 
 """
 This module contains functions related to topology modifications (e.g.
@@ -175,9 +175,9 @@ def alignto(mobile, ref, sel1, sel2, weights='mass', tol_mass=0.1, strict=False)
 
 def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot=False, alt_return=True, **kwargs):
     """
-    Calculates the RMSD between mobile and ref after superimposing (translation
-    and rotation). Alias function of MDAnalysis.analysis.rms.RMSD. See
-    help(MDAnalysis.analysis.rms.RMSD) for more information.
+    Calculates the RMSD between mobile and ref. Alias function of
+    MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for
+    more information.
 
     Args:
         mobile (universe, atomgrp): mobile structure
@@ -195,6 +195,12 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
         alt_return (bool): toggle alternative return datatype. See example below
 
     .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        superimpose (bool): translate + rotate before RMSD calculation
 
     Returns:
         ftr_tuple (tuple)
@@ -214,6 +220,12 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
         | >> rmsd = ftr_array[:,2]
 
     """
+    default = {"start": None,
+               "stop": None,
+               "step": None,
+               "superimpose": True}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if not (isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup))
             and isinstance(ref, (mda.core.universe.Universe, mda.core.groups.AtomGroup))):
         raise TypeError(f'''{get_RMSD.__module__}.{get_RMSD.__name__}():\
@@ -221,8 +233,11 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
         return
 
     else:
+        if cfg.superimpose:
+            for ts in mobile.trajectory[cfg.start:cfg.stop:cfg.step]:
+                alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights, strict=False)
         RMSD = _rms.RMSD(mobile.select_atoms(sel1), ref.select_atoms(sel2), weights=weights)
-        RMSD.run()
+        RMSD.run(start=cfg.start, stop=cfg.stop, step=cfg.step)
         RMSD.rmsd[0]
 
         ftr_array = RMSD.rmsd
@@ -238,6 +253,35 @@ def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot
         return frame, time, rmsd
     else:
         return ftr_array
+
+
+def get_rmsd(mobile, ref, sel1, sel2, weights='mass', prec=3, superposition=True):
+    """
+    Returns rmsd for single frame.
+
+    Args:
+        mobile (universe, atomgrp): mobile structure
+        ref (universe, atomgrp): reference structure
+        sel1 (str): selection string of mobile structure
+        sel2 (str): selection string of reference structure
+        weights (bool, str, array_like):
+          | weights during superposition of mobile and reference
+          | None: no weights
+          | "mass": atom masses as weights
+          | array_like: If a float array of the same length as "mobile" is
+            provided, use each element of the "array_like" as a weight for the
+            corresponding atom in "mobile".
+        prec (None, int): rounding precission
+        superposition (bool)
+
+    Returns:
+        rmsd (float)
+            rmsd value in Å
+    """
+    mobile_atoms = mobile.select_atoms(sel1)
+    ref_atoms = ref.select_atoms(sel2)
+    rmsd = _rms.rmsd(mobile_atoms.positions, ref_atoms.positions, superposition=superposition)
+    return round(rmsd, prec)
 
 
 def get_RMSF(mobile, sel='protein and name CA', plot=False):
