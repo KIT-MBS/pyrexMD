@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.rna &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../pyrexMD.html">pyrexMD</a> &raquo;</li>
+        
+      <li>pyrexMD.rna</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrexMD.rna</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
+<span class="c1"># @Date:   17.04.2021</span>
+<span class="c1"># @Filename: rna.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 19.05.2021</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions to modify RNA/DNA topologies and include contact bias etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+
+
+<div class="viewcode-block" id="nucleic_parsePDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rna.nucleic_parsePDB">[docs]</a><span class="k">def</span> <span class="nf">nucleic_parsePDB</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name N1 or name N3&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads PDB file and returns the columns for residue id, residue name,</span>
+<span class="sd">    atom id and atom name as lists.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fin (str): PDB file</span>
+<span class="sd">        sel (str): selection str</span>
+<span class="sd">        filter (bool): True ~ return only N1 atoms for A,G and N3 atoms for T,C,U</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RESID (list)</span>
+<span class="sd">            residue id column of PDB</span>
+<span class="sd">        RESNAME (list)</span>
+<span class="sd">            residue name column of PDB</span>
+<span class="sd">        ID (list)</span>
+<span class="sd">            atom id column of PDB</span>
+<span class="sd">        NAME (list)</span>
+<span class="sd">            atom name column of PDB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;ADE&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;GUA&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;THY&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;CYT&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;URA&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">}</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">RESID</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">RESNAME</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ID</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="nb">map</span><span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">resname</span><span class="p">]:</span>
+                <span class="n">RESID</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+                <span class="n">RESNAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">resname</span><span class="p">)</span>
+                <span class="n">ID</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">NAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">RESID</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+            <span class="n">RESNAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">resname</span><span class="p">)</span>
+            <span class="n">ID</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">NAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">NAME</span></div>
+
+
+<div class="viewcode-block" id="nucleic_DCA_res2atom_mapping"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rna.nucleic_DCA_res2atom_mapping">[docs]</a><span class="k">def</span> <span class="nf">nucleic_DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="p">,</span> <span class="n">DCA_skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+                                 <span class="n">filter_DCA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get RNA/DNA contact mapping. Uses either N1 or N3 atoms for contact based on</span>
+<span class="sd">    nucleotide. Returns lists of matching RES pairs and ATOM pairs for contacts</span>
+<span class="sd">    specified in DCA_fin file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_pdb (str): reference PDB (path)</span>
+<span class="sd">        DCA_fin (str): DCA file (path)</span>
+<span class="sd">        n_DCA (int): number of DCA contacts which should be used</span>
+<span class="sd">        usecols (tuple, list): columns containing the RES pairs in DCA_fin</span>
+<span class="sd">        DCA_skiprows (int):</span>
+<span class="sd">          | ignore header rows of DCA_fin</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
+<span class="sd">        filter_DCA (bool):</span>
+<span class="sd">          | True: ignore DCA pairs with abs(i-j) &lt; 3</span>
+<span class="sd">          | False: use all DCA pairs w/o applying filter</span>
+<span class="sd">        save_log (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
+<span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
+<span class="sd">        default_dir (str): &quot;./&quot;</span>
+<span class="sd">        save_as (str):</span>
+<span class="sd">          | &quot;PDBID_DCA_used.txt&quot;</span>
+<span class="sd">          | detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</span>
+<span class="sd">          | if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RES_PAIR (list)</span>
+<span class="sd">            list with RES pairs</span>
+<span class="sd">        ATOM_PAIR (list)</span>
+<span class="sd">            list with ATOM pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;default_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID_DCA_used.txt&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s1">&#39;ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added atoms will shift the atom numbers.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+
+    <span class="c1"># read pdb file and filter for mapping atoms (hardcoded for sel = &quot;name N1 or name N3&quot;)</span>
+    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">nucleic_parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name N1 or name N3&quot;</span><span class="p">)</span>
+
+    <span class="c1"># read contact pairs</span>
+    <span class="n">DCA_PAIR</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">usecols</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">DCA_skiprows</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="n">filter_DCA</span><span class="p">)</span>
+
+    <span class="n">RES_PAIR</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ATOM_PAIR</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">IJ</span> <span class="ow">in</span> <span class="n">DCA_PAIR</span><span class="p">:</span>
+        <span class="n">RES_PAIR</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">ATOM_PAIR</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ID</span><span class="p">[</span><span class="n">RESID</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">ID</span><span class="p">[</span><span class="n">RESID</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">])]))</span>
+
+    <span class="k">if</span> <span class="n">save_log</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">)</span>
+            <span class="n">new_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">default_dir</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">_DCA_used.txt&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved log as:&quot;</span><span class="p">,</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#DCA contacts top</span><span class="si">{</span><span class="n">n_DCA</span><span class="si">}</span><span class="s2"> (1 bond per contact)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;#RESi&quot;</span><span class="p">,</span> <span class="s2">&quot;RESj&quot;</span><span class="p">,</span> <span class="s2">&quot;ATOMi&quot;</span><span class="p">,</span> <span class="s2">&quot;ATOMj&quot;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RES_PAIR</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ATOM_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RES_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">RES_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">ATOM_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ATOM_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ATOM_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RES_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">RES_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">RES_PAIR</span><span class="p">,</span> <span class="n">ATOM_PAIR</span></div>
+
+
+<div class="viewcode-block" id="nucleic_modify_topology"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rna.nucleic_modify_topology">[docs]</a><span class="k">def</span> <span class="nf">nucleic_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">force_k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modifies topology by using the contacts written in &lt;DCA_fin&gt; file.</span>
+
+<span class="sd">    Modify topology:</span>
+
+<span class="sd">      - top_fin (topol.top file): use as template</span>
+<span class="sd">      - DCA_fin: use all contacts as restraints</span>
+<span class="sd">      - modify bond section of new topology by adding contacts with force constant</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        top_fin (str): topology file (path)</span>
+<span class="sd">        DCA_fin (str): DCA file (path)</span>
+<span class="sd">        force_k (int, float): force constant of contact pairs</span>
+<span class="sd">        skiprows (int):</span>
+<span class="sd">          | ignore header rows of DCA_used_fin</span>
+<span class="sd">          | -1 or &quot;auto&quot;: auto detect</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
+<span class="sd">        default_dir (str): &quot;./&quot; (default)</span>
+<span class="sd">        save_as (str):</span>
+<span class="sd">          | &quot;PDBID_topol_mod.top&quot;</span>
+<span class="sd">          | detect and replace PDBID in save_as based on ref_PDB path</span>
+<span class="sd">          | if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;default_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID_topol_mod.top&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="c1"># DCA_used_fin has 4 cols with RESi, RESj, ATOMi, ATOMj -&gt; usecols=(2,3)</span>
+    <span class="n">ATOM_I</span><span class="p">,</span> <span class="n">ATOM_J</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">fin</span><span class="o">=</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># get n_DCA from DCA_used_fin</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">read</span><span class="p">:</span>
+        <span class="n">WORDS</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">WORDS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;top&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                <span class="n">n_DCA</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+    <span class="c1"># lstrip ./ or / from save_as</span>
+    <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_topol_mod.top&quot;</span>
+
+    <span class="c1"># read and write files</span>
+    <span class="n">new_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">default_dir</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="c1"># default case: copy paste topology file</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="c1"># add DCA bonds into bonds section</span>
+            <span class="k">if</span> <span class="s2">&quot;[ bonds ]&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;; DCA bonds top</span><span class="si">{</span><span class="n">n_DCA</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;;  ai    aj funct            c0            c1            c2            c3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">force_k</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ATOM_J</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">force_k</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">force_k</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_float_precision</span><span class="p">(</span><span class="n">force_k</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="s2"> {:13.d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ATOM_J</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">force_k</span><span class="p">)))</span>
+                        <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_float_precision</span><span class="p">(</span><span class="n">force_k</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="s2"> </span><span class="si">{:13.1f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ATOM_J</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">force_k</span><span class="p">)))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="s2"> </span><span class="si">{:13.2f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ATOM_J</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">force_k</span><span class="p">)))</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;; native bonds</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved modified topology as:&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
