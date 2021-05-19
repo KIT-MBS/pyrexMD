@@ -21,13 +21,6 @@ warnings.filterwarnings("ignore", message="Found no information for attr:")
 __version__ = 1.0
 
 
-def Universe(top, traj=None, tpr_resid_from_one=True, **kwargs):
-    """
-    returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, **kwargs)
-    """
-    return mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, **kwargs)
-
-
 def init():
     """
     Init modules of pyrexMD and other important packages into new jupyter notebook

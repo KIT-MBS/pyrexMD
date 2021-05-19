@@ -565,7 +565,7 @@ def DCAREX_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, parse="CA",
           | ignore header rows of DCA_fin
           | -1 or "auto": auto detect
         filter_DCA (bool):
-          | True: ignore DCA pairs with Abs(i-j) < 3
+          | True: ignore DCA pairs with abs(i-j) < 3
           | False: use all DCA pairs w/o applying filter
         save_log (bool)
 
