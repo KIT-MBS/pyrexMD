@@ -6,7 +6,7 @@
 
 
 """
-This module contains functions modify RNA/DNA topologies to include contact bias etc.
+This module contains functions to modify RNA/DNA topologies and include contact bias etc.
 """
 
 import pyrexMD.misc as _misc

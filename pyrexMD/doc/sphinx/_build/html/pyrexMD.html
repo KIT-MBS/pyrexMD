@@ -102,16 +102,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Example:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Module contents:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Example:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Module contents:</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.misc">pyrexMD.misc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id13">Example:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id14">Module contents:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Example:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Module contents:</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rna">pyrexMD.rna module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrexMD.decoy.html">pyrexMD.decoy package</a></li>
@@ -190,12 +191,6 @@
             
   <div class="section" id="module-pyrexMD">
 <span id="contents"></span><h1>contents<a class="headerlink" href="#module-pyrexMD" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.Universe">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.</span></span><span class="sig-name descname"><span class="pre">Universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tpr_resid_from_one</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD.html#Universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.Universe" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns mda.Universe(top, traj, tpr_resid_from_one=tpr_resid_from_one, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.init">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD.html#init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.init" title="Permalink to this definition">¶</a></dt>
@@ -418,8 +413,8 @@ Interactive red bar can be moved by pressing any key.</p>
 <span id="pyrexmd-gmx-module"></span><h1>pyrexMD.gmx module<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline">¶</a></h1>
 <p>This module contains functions to interact with <cite>GROMACS</cite> to setup systems and
 run MD simulations.</p>
-<div class="section" id="id3">
-<h2>Example:<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
 
 <span class="c1"># create ref pdb:</span>
@@ -453,8 +448,8 @@ run MD simulations.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>Module contents:<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>Module contents:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.clean_up">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gmx_pattern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.clean_up" title="Permalink to this definition">¶</a></dt>
@@ -1360,7 +1355,7 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">“color_negative”: “orange”,</div>
 <div class="line">“markersize”: 5}</div>
 </div>
-<div class="line">cfg = misc.CONFIG(default, <a href="#id5"><span class="problematic" id="id6">**</span></a>alias_dict)</div>
+<div class="line">cfg = misc.CONFIG(default, <a href="#id3"><span class="problematic" id="id4">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -1371,9 +1366,9 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">markersize          5</div>
 <div class="line"><br /></div>
 </div>
-<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id7"><span class="problematic" id="id8">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id9"><span class="problematic" id="id10">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id11"><span class="problematic" id="id12">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id5"><span class="problematic" id="id6">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id7"><span class="problematic" id="id8">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id9"><span class="problematic" id="id10">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -3479,8 +3474,8 @@ where B2 contains every n-th element of A.</p>
 <p>This module contains functions related to (contact-guided) Replica Exchange
 Molecular Dynamics. It contains mainly functions to speed-up the process of
 generating REX simulations and modify topologies to include contact bias etc.</p>
-<div class="section" id="id13">
-<h2>Example:<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>Example:<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
 
 <span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
@@ -3510,8 +3505,8 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 </pre></div>
 </div>
 </div>
-<div class="section" id="id14">
-<h2>Module contents:<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>Module contents:<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_modify_scoreFile">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_modify_scoreFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_modify_scoreFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
@@ -3678,7 +3673,7 @@ for “DCA REX Workflow”</p>
 </div>
 </p></li>
 <li><p><strong>filter_DCA</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: ignore DCA pairs with Abs(i-j) &lt; 3</div>
+<div class="line">True: ignore DCA pairs with abs(i-j) &lt; 3</div>
 <div class="line">False: use all DCA pairs w/o applying filter</div>
 </div>
 </p></li>
@@ -4061,6 +4056,130 @@ Removes column entries which consist only of whitespace or newlines.</p>
 </dd></dl>
 
 </div>
+</div>
+<div class="section" id="module-pyrexMD.rna">
+<span id="pyrexmd-rna-module"></span><h1>pyrexMD.rna module<a class="headerlink" href="#module-pyrexMD.rna" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions to modify RNA/DNA topologies and include contact bias etc.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_DCA_res2atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_DCA_res2atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_DCA_res2atom_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_DCA_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get RNA/DNA contact mapping. Uses either N1 or N3 atoms for contact based on
+nucleotide. Returns lists of matching RES pairs and ATOM pairs for contacts
+specified in DCA_fin file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – reference PDB (path)</p></li>
+<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>n_DCA</strong> (<em>int</em>) – number of DCA contacts which should be used</p></li>
+<li><p><strong>usecols</strong> (<em>tuple</em><em>, </em><em>list</em>) – columns containing the RES pairs in DCA_fin</p></li>
+<li><p><strong>DCA_skiprows</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">ignore header rows of DCA_fin</div>
+<div class="line">-1 or “auto”: auto detect</div>
+</div>
+</p></li>
+<li><p><strong>filter_DCA</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: ignore DCA pairs with abs(i-j) &lt; 3</div>
+<div class="line">False: use all DCA pairs w/o applying filter</div>
+</div>
+</p></li>
+<li><p><strong>save_log</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p></li>
+<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – “./”</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_DCA_used.txt”</div>
+<div class="line">detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</div>
+<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>RES_PAIR (list)</dt><dd><p>list with RES pairs</p>
+</dd>
+<dt>ATOM_PAIR (list)</dt><dd><p>list with ATOM pairs</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_modify_topology">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_modify_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies topology by using the contacts written in &lt;DCA_fin&gt; file.</p>
+<p>Modify topology:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>top_fin (topol.top file): use as template</p></li>
+<li><p>DCA_fin: use all contacts as restraints</p></li>
+<li><p>modify bond section of new topology by adding contacts with force constant</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
+<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>force_k</strong> (<em>int</em><em>, </em><em>float</em>) – force constant of contact pairs</p></li>
+<li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">ignore header rows of DCA_used_fin</div>
+<div class="line">-1 or “auto”: auto detect</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – “./” (default)</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_topol_mod.top”</div>
+<div class="line">detect and replace PDBID in save_as based on ref_PDB path</div>
+<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_parsePDB">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">N1</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">N3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_parsePDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads PDB file and returns the columns for residue id, residue name,
+atom id and atom name as lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection str</p></li>
+<li><p><strong>filter</strong> (<em>bool</em>) – True ~ return only N1 atoms for A,G and N3 atoms for T,C,U</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>RESID (list)</dt><dd><p>residue id column of PDB</p>
+</dd>
+<dt>RESNAME (list)</dt><dd><p>residue name column of PDB</p>
+</dd>
+<dt>ID (list)</dt><dd><p>atom id column of PDB</p>
+</dd>
+<dt>NAME (list)</dt><dd><p>atom name column of PDB</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="subpackages">
 <h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h1>

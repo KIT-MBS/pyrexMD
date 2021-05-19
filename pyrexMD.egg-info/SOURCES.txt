@@ -8,6 +8,7 @@ pyrexMD/core.py
 pyrexMD/gmx.py
 pyrexMD/misc.py
 pyrexMD/rex.py
+pyrexMD/rna.py
 pyrexMD.egg-info/PKG-INFO
 pyrexMD.egg-info/SOURCES.txt
 pyrexMD.egg-info/dependency_links.txt

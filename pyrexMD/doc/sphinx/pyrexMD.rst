@@ -40,6 +40,14 @@ pyrexMD.rex module
    :undoc-members:
    :show-inheritance:
 
+pyrexMD.rna module
+------------------
+
+.. automodule:: pyrexMD.rna
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
