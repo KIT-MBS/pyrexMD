@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 20.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions related to topology modifications (e.g.</span>
@@ -336,17 +336,16 @@
     <span class="k">return</span> <span class="n">old_rmsd</span><span class="p">,</span> <span class="n">new_rmsd</span></div>
 
 
-<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt_return</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_rmsd"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_rmsd">[docs]</a><span class="k">def</span> <span class="nf">get_rmsd</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the RMSD between mobile and ref after superimposing (translation</span>
-<span class="sd">    and rotation). Alias function of MDAnalysis.analysis.rms.RMSD. See</span>
-<span class="sd">    help(MDAnalysis.analysis.rms.RMSD) for more information.</span>
+<span class="sd">    Returns rmsd for single frame.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        mobile (universe, atomgrp): mobile structure</span>
 <span class="sd">        ref (universe, atomgrp): reference structure</span>
 <span class="sd">        sel1 (str): selection string of mobile structure</span>
 <span class="sd">        sel2 (str): selection string of reference structure</span>
+<span class="sd">        prec (None, int): rounding precission</span>
 <span class="sd">        weights (bool, str, array_like):</span>
 <span class="sd">          | weights during superposition of mobile and reference</span>
 <span class="sd">          | None: no weights</span>
@@ -354,53 +353,152 @@
 <span class="sd">          | array_like: If a float array of the same length as &quot;mobile&quot; is</span>
 <span class="sd">            provided, use each element of the &quot;array_like&quot; as a weight for the</span>
 <span class="sd">            corresponding atom in &quot;mobile&quot;.</span>
-<span class="sd">        plot (bool):</span>
-<span class="sd">        alt_return (bool): toggle alternative return datatype. See example below</span>
-
-<span class="sd">    .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
+<span class="sd">        superposition (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ftr_tuple (tuple)</span>
-<span class="sd">            returns ftr tuple if alt_return is True (see example below)</span>
-<span class="sd">        ftr_array (array)</span>
-<span class="sd">            returns ftr_array if alt_return is False (see example below)</span>
-
-<span class="sd">    Example:</span>
-<span class="sd">        | # return type case 1</span>
-<span class="sd">        | &gt;&gt; ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )</span>
-<span class="sd">        | &gt;&gt; frame, time, rmsd = ftr_tuple</span>
-<span class="sd">        |</span>
-<span class="sd">        | # return type case 2</span>
-<span class="sd">        | &gt;&gt; ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)</span>
-<span class="sd">        | &gt;&gt; frame= ftr_array[:,0]</span>
-<span class="sd">        | &gt;&gt; time = ftr_array[:,1]</span>
-<span class="sd">        | &gt;&gt; rmsd = ftr_array[:,2]</span>
-
+<span class="sd">        rmsd (float)</span>
+<span class="sd">            rmsd value in Å</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">))</span>
-            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">))):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">get_RMSD</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">get_RMSD</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">():</span><span class="se">\</span>
-<span class="s1">        </span><span class="se">\n</span><span class="s1">mobile and ref must be MDA universe or atomgrp!&#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
+    <span class="n">mobile_atoms</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span>
+    <span class="n">ref_atoms</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span>
+    <span class="n">rmsd</span> <span class="o">=</span> <span class="n">_rms</span><span class="o">.</span><span class="n">rmsd</span><span class="p">(</span><span class="n">mobile_atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">ref_atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="n">superposition</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">rmsd</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span></div>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">RMSD</span> <span class="o">=</span> <span class="n">_rms</span><span class="o">.</span><span class="n">RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">),</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
-        <span class="n">RMSD</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-        <span class="n">RMSD</span><span class="o">.</span><span class="n">rmsd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">ftr_array</span> <span class="o">=</span> <span class="n">RMSD</span><span class="o">.</span><span class="n">rmsd</span>
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">RMSD</span><span class="o">.</span><span class="n">rmsd</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">RMSD</span><span class="o">.</span><span class="n">rmsd</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">rmsd</span> <span class="o">=</span> <span class="n">RMSD</span><span class="o">.</span><span class="n">rmsd</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+             <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns rmsd for multiple frames.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mobile (universe, atomgrp): mobile structure</span>
+<span class="sd">        ref (universe, atomgrp): reference structure</span>
+<span class="sd">        sel1 (str): selection string of mobile structure</span>
+<span class="sd">        sel2 (str): selection string of reference structure</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        weights (bool, str, array_like):</span>
+<span class="sd">          | weights during superposition of mobile and reference</span>
+<span class="sd">          | None: no weights</span>
+<span class="sd">          | &quot;mass&quot;: atom masses as weights</span>
+<span class="sd">          | array_like: If a float array of the same length as &quot;mobile&quot; is</span>
+<span class="sd">            provided, use each element of the &quot;array_like&quot; as a weight for the</span>
+<span class="sd">            corresponding atom in &quot;mobile&quot;.</span>
+<span class="sd">        superposition (bool)</span>
+<span class="sd">        plot (bool)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of analysis.PLOT() are valid Keyword Args.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FRAME (array)</span>
+<span class="sd">            frame array</span>
+<span class="sd">        TIME (array)</span>
+<span class="sd">            time array in ps</span>
+<span class="sd">        RMSD (array)</span>
+<span class="sd">            rmsd array in Å</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">]):</span>
+        <span class="n">FRAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">TIME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">RMSD</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_rmsd</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="n">sel2</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="n">superposition</span><span class="p">))</span>
+
+    <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">FRAME</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">TIME</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">RMSD</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
-        <span class="c1">#PLOT(xdata=frame, ydata=rmsd, xlabel=&#39;Frame&#39;, ylabel=f&#39;RMSD ($\AA$)&#39;, **kwargs)</span>
-        <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">rmsd</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (ps)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;RMSD ($\AA$)&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1">#PLOT(xdata=FRAME, ydata=RMSD, xlabel=&#39;Frame&#39;, ylabel=f&#39;RMSD ($\AA$)&#39;, **kwargs)</span>
+        <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">TIME</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (ps)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;RMSD ($\AA$)&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span></div>
 
-    <span class="k">if</span> <span class="n">alt_return</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">frame</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">rmsd</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ftr_array</span></div>
+    <span class="c1"># def get_RMSD(mobile, ref, sel1=&#39;backbone&#39;, sel2=&#39;backbone&#39;, weights=&#39;mass&#39;, plot=False, alt_return=True, **kwargs):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Calculates the RMSD between mobile and ref. Alias function of</span>
+    <span class="c1">#     MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for</span>
+    <span class="c1">#     more information.</span>
+    <span class="c1">#</span>
+    <span class="c1">#     Args:</span>
+    <span class="c1">#         mobile (universe, atomgrp): mobile structure</span>
+    <span class="c1">#         ref (universe, atomgrp): reference structure</span>
+    <span class="c1">#         sel1 (str): selection string of mobile structure</span>
+    <span class="c1">#         sel2 (str): selection string of reference structure</span>
+    <span class="c1">#         weights (bool, str, array_like):</span>
+    <span class="c1">#           | weights during superposition of mobile and reference</span>
+    <span class="c1">#           | None: no weights</span>
+    <span class="c1">#           | &quot;mass&quot;: atom masses as weights</span>
+    <span class="c1">#           | array_like: If a float array of the same length as &quot;mobile&quot; is</span>
+    <span class="c1">#             provided, use each element of the &quot;array_like&quot; as a weight for the</span>
+    <span class="c1">#             corresponding atom in &quot;mobile&quot;.</span>
+    <span class="c1">#         plot (bool):</span>
+    <span class="c1">#         alt_return (bool): toggle alternative return datatype. See example below</span>
+    <span class="c1">#</span>
+    <span class="c1">#     .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
+    <span class="c1">#</span>
+    <span class="c1">#     Keyword Args:</span>
+    <span class="c1">#         start (None, int): start frame</span>
+    <span class="c1">#         stop (None, int): stop frame</span>
+    <span class="c1">#         step (None, int): step size</span>
+    <span class="c1">#         superimpose (bool): translate + rotate before RMSD calculation</span>
+    <span class="c1">#</span>
+    <span class="c1">#     Returns:</span>
+    <span class="c1">#         ftr_tuple (tuple)</span>
+    <span class="c1">#             returns ftr tuple if alt_return is True (see example below)</span>
+    <span class="c1">#         ftr_array (array)</span>
+    <span class="c1">#             returns ftr_array if alt_return is False (see example below)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     Example:</span>
+    <span class="c1">#         | # return type case 1</span>
+    <span class="c1">#         | &gt;&gt; ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )</span>
+    <span class="c1">#         | &gt;&gt; frame, time, rmsd = ftr_tuple</span>
+    <span class="c1">#         |</span>
+    <span class="c1">#         | # return type case 2</span>
+    <span class="c1">#         | &gt;&gt; ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)</span>
+    <span class="c1">#         | &gt;&gt; frame= ftr_array[:,0]</span>
+    <span class="c1">#         | &gt;&gt; time = ftr_array[:,1]</span>
+    <span class="c1">#         | &gt;&gt; rmsd = ftr_array[:,2]</span>
+    <span class="c1">#</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     default = {&quot;start&quot;: None,</span>
+    <span class="c1">#                &quot;stop&quot;: None,</span>
+    <span class="c1">#                &quot;step&quot;: None,</span>
+    <span class="c1">#                &quot;superimpose&quot;: True}</span>
+    <span class="c1">#     cfg = _misc.CONFIG(default, **kwargs)</span>
+    <span class="c1">#     ############################################################################</span>
+    <span class="c1">#     if not (isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup))</span>
+    <span class="c1">#             and isinstance(ref, (mda.core.universe.Universe, mda.core.groups.AtomGroup))):</span>
+    <span class="c1">#         raise TypeError(f&#39;&#39;&#39;{get_RMSD.__module__}.{get_RMSD.__name__}():\</span>
+    <span class="c1">#         \nmobile and ref must be MDA universe or atomgrp!&#39;&#39;&#39;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         if cfg.superimpose:</span>
+    <span class="c1">#             for ts in mobile.trajectory[cfg.start:cfg.stop:cfg.step]:</span>
+    <span class="c1">#                 alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights, strict=False)</span>
+    <span class="c1">#         RMSD = _rms.RMSD(mobile.select_atoms(sel1), ref.select_atoms(sel2), weights=weights)</span>
+    <span class="c1">#         RMSD.run(start=cfg.start, stop=cfg.stop, step=cfg.step)</span>
+    <span class="c1">#         RMSD.rmsd[0]</span>
+    <span class="c1">#</span>
+    <span class="c1">#         ftr_array = RMSD.rmsd</span>
+    <span class="c1">#         frame = RMSD.rmsd[:, 0]</span>
+    <span class="c1">#         time = RMSD.rmsd[:, 1]</span>
+    <span class="c1">#         rmsd = RMSD.rmsd[:, 2]</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if plot:</span>
+    <span class="c1">#         #PLOT(xdata=frame, ydata=rmsd, xlabel=&#39;Frame&#39;, ylabel=f&#39;RMSD ($\AA$)&#39;, **kwargs)</span>
+    <span class="c1">#         PLOT(xdata=time, ydata=rmsd, xlabel=&#39;Time (ps)&#39;, ylabel=f&#39;RMSD ($\AA$)&#39;, **kwargs)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if alt_return:</span>
+    <span class="c1">#         return frame, time, rmsd</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         return ftr_array</span>
 
 
 <div class="viewcode-block" id="get_RMSF"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_RMSF">[docs]</a><span class="k">def</span> <span class="nf">get_RMSF</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein and name CA&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

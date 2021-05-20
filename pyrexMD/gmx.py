@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 20.05.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -472,7 +472,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     ############################################################################
     sel_code = _get_sel_code(sel)
     if o == "default":
-        o = _misc.joinoath(odir, f"{_misc.get_base(s)}_{sel.lower()}.tpr")
+        o = _misc.joinpath(odir, f"{_misc.get_base(s)}_{sel.lower()}.tpr")
     else:
         o = _misc.joinpath(odir, o)  # special case for joinpath
 

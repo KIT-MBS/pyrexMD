@@ -4113,13 +4113,14 @@ specified in DCA_fin file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rna.nucleic_modify_topology">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_modify_topology" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modifies topology by using the contacts written in &lt;DCA_fin&gt; file.</p>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_modify_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
+“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
 <p>Modify topology:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>top_fin (topol.top file): use as template</p></li>
-<li><p>DCA_fin: use all contacts as restraints</p></li>
+<li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
 <li><p>modify bond section of new topology by adding contacts with force constant</p></li>
 </ul>
 </div></blockquote>
@@ -4127,7 +4128,7 @@ specified in DCA_fin file.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
-<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>DCA_used_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
 <li><p><strong>force_k</strong> (<em>int</em><em>, </em><em>float</em>) – force constant of contact pairs</p></li>
 <li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
 <div class="line">ignore header rows of DCA_used_fin</div>
