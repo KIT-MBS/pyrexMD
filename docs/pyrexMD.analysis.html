@@ -448,10 +448,8 @@ be prepended to the extension</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_RMSD">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'backbone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'backbone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_return</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_RMSD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the RMSD between mobile and ref after superimposing (translation
-and rotation). Alias function of MDAnalysis.analysis.rms.RMSD. See
-help(MDAnalysis.analysis.rms.RMSD) for more information.</p>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">superposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_RMSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns rmsd for multiple frames.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -459,6 +457,14 @@ help(MDAnalysis.analysis.rms.RMSD) for more information.</p>
 <li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – reference structure</p></li>
 <li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
 <li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step]</div>
+<div class="line">start (None, int): start frame</div>
+<div class="line">stop (None, int): stop frame</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
 <li><p><strong>weights</strong> (<em>bool</em><em>, </em><em>str</em><em>, </em><em>array_like</em>) – <div class="line-block">
 <div class="line">weights during superposition of mobile and reference</div>
 <div class="line">None: no weights</div>
@@ -468,38 +474,28 @@ provided, use each element of the “array_like” as a weight for the
 corresponding atom in “mobile”.</div>
 </div>
 </p></li>
+<li><p><strong>superposition</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>alt_return</strong> (<em>bool</em>) – toggle alternative return datatype. See example below</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>Args and Keyword Args of misc.figure() are valid Keyword Args.</p>
+<p>Args and Keyword Args of analysis.PLOT() are valid Keyword Args.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>ftr_tuple (tuple)</dt><dd><p>returns ftr tuple if alt_return is True (see example below)</p>
+<dt>FRAME (array)</dt><dd><p>frame array</p>
 </dd>
-<dt>ftr_array (array)</dt><dd><p>returns ftr_array if alt_return is False (see example below)</p>
+<dt>TIME (array)</dt><dd><p>time array in ps</p>
+</dd>
+<dt>RMSD (array)</dt><dd><p>rmsd array in Å</p>
 </dd>
 </dl>
 </p>
 </dd>
 </dl>
-<p class="rubric">Example</p>
-<div class="line-block">
-<div class="line"># return type case 1</div>
-<div class="line">&gt;&gt; ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )</div>
-<div class="line">&gt;&gt; frame, time, rmsd = ftr_tuple</div>
-<div class="line"><br /></div>
-<div class="line"># return type case 2</div>
-<div class="line">&gt;&gt; ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)</div>
-<div class="line">&gt;&gt; frame= ftr_array[:,0]</div>
-<div class="line">&gt;&gt; time = ftr_array[:,1]</div>
-<div class="line">&gt;&gt; rmsd = ftr_array[:,2]</div>
-</div>
 </dd></dl>
 
 <dl class="py function">
@@ -566,6 +562,40 @@ resids shift.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>shift (int)</dt><dd><p>shift value of ref residues to match mobile residues</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_rmsd">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_rmsd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">superposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_rmsd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_rmsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns rmsd for single frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – mobile structure</p></li>
+<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – reference structure</p></li>
+<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure</p></li>
+<li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+<li><p><strong>weights</strong> (<em>bool</em><em>, </em><em>str</em><em>, </em><em>array_like</em>) – <div class="line-block">
+<div class="line">weights during superposition of mobile and reference</div>
+<div class="line">None: no weights</div>
+<div class="line">”mass”: atom masses as weights</div>
+<div class="line">array_like: If a float array of the same length as “mobile” is
+provided, use each element of the “array_like” as a weight for the
+corresponding atom in “mobile”.</div>
+</div>
+</p></li>
+<li><p><strong>superposition</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>rmsd (float)</dt><dd><p>rmsd value in Å</p>
 </dd>
 </dl>
 </p>
