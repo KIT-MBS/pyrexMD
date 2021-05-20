@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 20.05.2021
 
 
 """
@@ -382,7 +382,7 @@ def get_GDT_HA(GDT_percent):
     return GDT_HA
 
 
-def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
+def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True, **kwargs):
     """
     rank scores
 
@@ -400,6 +400,9 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
           | int: rounding on to this number of decimals
         verbose (bool)
 
+    Keyword Args:
+        verbose_stop (None, int): stop printing after N lines
+
     Returns:
         GDT_TS_ranked (array)
             ranked array with GDT_TS scores
@@ -415,12 +418,12 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
         if verbose:
             print(f"Output ranking ordered by FRAME number")
     elif ranking_order.upper() == "GDT_TS":
-        GDT_TS_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_TS, verbose=verbose)
+        GDT_TS_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_TS, verbose=verbose, **kwargs)
         GDT_HA_ranked = np.array([GDT_HA[ndx] for ndx in GDT_ndx_ranked])
         if verbose:
             print(f"Output ranking ordered by GDT_TS")
     elif ranking_order.upper() == "GDT_HA":
-        GDT_HA_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_HA, verbose=verbose)
+        GDT_HA_ranked, GDT_ndx_ranked = _misc.get_ranked_array(GDT_HA, verbose=verbose, **kwargs)
         GDT_TS_ranked = np.array([GDT_TS[ndx] for ndx in GDT_ndx_ranked])
         if verbose:
             print(f"Output ranking ordered by GDT_HA")
@@ -435,7 +438,7 @@ def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True):
     return(GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked)
 
 
-def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
+def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True, **kwargs):
     """
     rank scores.
 
@@ -451,6 +454,9 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
           | -1 or None: rounding off
           | int: rounding on to this number of decimals
         verbose (bool)
+
+    Keyword Args:
+        verbose_stop (None, int): stop printing after N lines
 
     Returns:
         GDT_TS_ranked (array)
@@ -468,7 +474,8 @@ def GDT_rank_scores(GDT_percent, ranking_order="GDT_TS", prec=3, verbose=True):
     """
     GDT_TS = get_GDT_TS(GDT_percent)
     GDT_HA = get_GDT_HA(GDT_percent)
-    SCORES = rank_scores(GDT_TS, GDT_HA, ranking_order=ranking_order, prec=prec, verbose=verbose)
+    SCORES = rank_scores(GDT_TS, GDT_HA, ranking_order=ranking_order, prec=prec,
+                         verbose=verbose, **kwargs)
     GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked = SCORES
     return(GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked)
 
