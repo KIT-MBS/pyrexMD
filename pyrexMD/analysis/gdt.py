@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 20.05.2021
+# @Last modified time: 21.05.2021
 
 
 """
@@ -16,6 +16,7 @@ Example:
 
     import MDAnalysis as mda
     import pyrexMD.misc as misc
+    import pyrexMD.topology as top
     import pyrexMD.analysis.analysis as ana
     import pyrexMD.analysis.gdt as gdt
 
@@ -23,7 +24,7 @@ Example:
     mobile = mda.Universe("<tpr_file>", "<xtc_file>")
 
     # first norm and align universes
-    ana.norm_and_align_universe(mobile, ref)
+    top.norm_and_align_universe(mobile, ref)
 
     # run GDT
     GDT = gdt.GDT(mobile, ref)
@@ -567,7 +568,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
             sel1="protein and name CA", sel2="protein and name CA",
             ndx_offset=0, rank_num=30, cmap="GDT_HA",
             show_cbar=True, show_frames=False, show_scores=True,
-            save_as="", **kwargs):
+            save_as=None, **kwargs):
     """
     Create LocalAccuracy Plot (heatmap) with
 
@@ -598,7 +599,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
             https://matplotlib.org/examples/color/colormaps_reference.html
         show_cbar (bool): show/hide colorbar
         show_scores (bool): show/hide GDT_TS and GDT_HA scores
-        save_as (str): save name or realpath to save file
+        save_as (None, str): save name or realpath to save file
 
     Keyword Args:
         prec (None, int):
@@ -744,7 +745,7 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     plt.tight_layout()
     plt.tight_layout()
 
-    if save_as != "":
+    if save_as != None:
         _misc.savefig(save_as)
 
     if len(FRAMES) > 50:

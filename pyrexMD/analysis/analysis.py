@@ -2,11 +2,10 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 20.05.2021
+# @Last modified time: 21.05.2021
 
 """
-This module contains functions related to topology modifications (e.g.
-norm_universe(), align_universe()) and general trajectory analyses.
+This module contains functions various functions for trajectory analysis.
 
 
 Example:
@@ -15,13 +14,14 @@ Example:
 .. code-block:: python
 
     import MDAnalysis as mda
+    import pyrexMD.topology as top
     import pyrexMD.analysis.analysis as ana
 
     ref = mda.Universe("<pdb_file>")
     mobile = mda.Universe("<tpr_file>", "<xtc_file>")
 
     # get RMSD
-    ana.norm_and_align_universe(mobile, ref)
+    top.norm_and_align_universe(mobile, ref)
     FRAME, TIME, RMSD = ana.get_RMSD(mobile, ref)
 
     # plot
@@ -32,6 +32,7 @@ Module contents:
 """
 
 import pyrexMD.misc as _misc
+import pyrexMD.topology as _top
 from pyrexMD.misc import get_PDBid
 from tqdm.notebook import tqdm
 from Bio.PDB import PDBParser, Polypeptide
@@ -503,373 +504,7 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
     return DM
 ################################################################################
 ################################################################################
-### analysis.py "universe modify" functions
-
-
-def get_resids_shift(mobile, ref):
-    """
-    Compares universe.residues.resnames between mobile and ref in order to get
-    resids shift.
-
-    Args:
-        mobile (universe)
-        ref (universe)
-
-    Returns:
-        shift (int)
-            shift value of ref residues to match mobile residues
-    """
-    # compare resnames to get start_ndx
-    start_ndx = _misc.get_subarray_start_ndx(mobile.residues.resnames, ref.residues.resnames)
-
-    # start_ndx is static, but shift value should be either start_ndx or 0 (after previous shift)
-    # test if shift already performed
-    if min(ref.residues.resids) == 1:
-        shift = start_ndx
-    else:
-        shift = 0
-
-    # test if resnames match (due to same length) but resids are shifted
-    if len(mobile.residues.resids) == len(ref.residues.resids):
-        diff = min(mobile.residues.resids)-min(ref.residues.resids)
-        if diff != shift:
-            shift = diff
-
-    return shift
-
-
-def shift_resids(u, shift=None, verbose=True):
-    """
-    Shift mda.universe.residues by <shift> value.
-
-    Args:
-        u (universe)
-        shift (None, int): shift value
-        verbose (bool)
-    """
-    if shift == None or shift == 0:
-        return
-
-    for item in u._topology.attrs:
-        if isinstance(item, mda.core.topologyattrs.Resids):
-            before = u.residues.resids
-            item.set_residues(u.residues, item.get_residues(u.residues)+shift)
-            after = u.residues.resids
-        if isinstance(item, mda.core.topologyattrs.Resnums):
-            item.set_residues(u.residues, item.get_residues(u.residues)+shift)
-
-    if verbose:
-        print(f"Shifting resids from:\n{before}")
-        print(f"\nto:\n{after}")
-    return
-
-
-def align_resids(mobile, ref, norm=True, verbose=True, **kwargs):
-    """
-    Align resids of mobile and ref by comparing universe.residues.resnames and
-    shifting the resids of reference (usually smaller than mobile).
-
-    Args:
-        mobile (universe)
-        ref (universe)
-        norm (bool): apply analysis.norm_resids()
-        verbose (bool)
-
-    Keyword Args:
-        cprint_color (None, str): colored print color
-    """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
-    ############################################################################
-    if norm:
-        norm_resids(mobile, 'mobile', verbose=verbose)
-        norm_resids(ref, 'reference', verbose=verbose)
-
-    shift = get_resids_shift(mobile, ref)
-    if shift != 0:
-        _misc.cprint("Aligning reference res ids...\n", cfg.cprint_color)
-        shift_resids(ref, shift, verbose=verbose)
-    return
-
-
-def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, verbose=True):
-    """
-    Get matching selection strings of mobile and reference after resids alignment.
-
-    Args:
-        mobile (universe)
-        ref (universe)
-        sel (str): selection string
-        norm (bool): apply analysis.norm_resids()
-        verbose (bool)
-
-    Returns:
-        sel1 (str)
-            matching selection string of mobile
-        sel2 (str)
-            matching selection string of ref
-    """
-    if get_resids_shift(mobile, ref) != 0:
-        align_resids(mobile, ref, norm=norm, verbose=verbose)
-    sel1 = f"{sel} and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}"
-    sel2 = f"{sel}"
-
-    if np.all(ref.select_atoms(sel1).residues.resnames == ref.select_atoms(sel2).residues.resnames):
-        pass
-    else:
-        raise ValueError("No matching selection found.")
-    return sel1, sel2
-
-
-def norm_ids(u, info='', verbose=True):
-    """
-    Modify existing MDA universe/atomgrp and normalize ids according to
-    min(universe.atoms.ids) = 1
-
-    Args:
-        u (universe, atomgrp): structure
-        info (str):
-          | additional info for print message
-          | 'reference'
-          | 'mobile'
-        verbose (bool)
-
-    Example:
-        | >> ref = mda.Universe(<top>)
-        | >> print(ref.atoms.ids)
-        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
-        |
-        | >> norm_ids(ref, 'reference')
-        | Norming atom ids of reference...
-        |
-        | >> print(ref.atoms.ids)
-        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
-    """
-    def __HELP_print(info='', verbose=True):
-        if verbose:
-            if info == '':
-                print('Norming atom ids...')
-            else:
-                print(f'Norming {info} atom ids...')
-        else:
-            return
-
-    if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
-        raise TypeError('''{norm_ids.__module__}.{norm_ids.__name__}():\
-        \nInvalid input. u must be MDA universe/atomgrp.''')
-        return
-
-    if min(u.atoms.ids) != 1:
-        shift = 1 - min(u.atoms.ids)
-        u.atoms.ids += shift
-        __HELP_print(info, verbose)
-    return
-
-
-def norm_resids(u, info='', verbose=True):
-    """
-    Modify existing MDA universe/atomgrp and normalize resids according to
-    min(universe.residues.resids) = 1
-
-    Args:
-        u (universe, atomgrp): structure
-        info (str):
-          | additional info for print message
-          | 'reference'
-          | 'topology'
-
-    Example:
-        | >> ref = mda.Universe(<top>)
-        | >> print(ref.residues.resids)
-        | [0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
-        |
-        | >> norm_resids(u, 'reference')
-        | Norming resids of reference...
-        |
-        | >> print(ref.residues.resids)
-        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
-    """
-    def __HELP_print(info='', verbose=True):
-        if verbose:
-            if info == '':
-                print('Norming res ids...')
-            else:
-                print(f'Norming {info} res ids...')
-        else:
-            return
-
-    if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
-        raise TypeError('''{norm_resids.__module__}.{name_resids.__name__}():\
-        \nInvalid input. u must be MDA universe/atomgrp.''')
-        return
-
-    if min(u.residues.resids) != 1:
-        shift = 1 - min(u.residues.resids)
-        shift_resids(u, shift, verbose=False)
-        __HELP_print(info, verbose)
-    return
-
-
-def norm_universe(u, info='', verbose=True):
-    """
-    Executes the functions
-
-      - norm_ids(u, info)
-      - norm_resids(u, info)
-
-    Args:
-        u (universe, atomgrp): structure
-        info (str):
-          | additional info for print message
-          | 'reference'
-          | 'mobile'
-        verbose (bool)
-    """
-    norm_ids(u, info, verbose)
-    norm_resids(u, info, verbose)
-    return
-
-
-def norm_and_align_universe(mobile, ref, verbose=True):
-    """
-    - Norm reference and mobile universe
-    - Align mobile universe on reference universe (matching atom ids and res ids)
-
-    Args:
-        mobile (universe, atomgrp)
-        ref    (universe, atomgrp)
-        verbose (bool)
-    """
-
-    if len(ref.atoms.ids) != len(mobile.atoms.ids):
-        raise ValueError(f'''{norm_and_align_universe.__module__}.{norm_and_align_universe.__name__}():\
-        \nNumber of atoms doesn't match! Cannot align atom ids.''')
-        return
-
-    if min(ref.atoms.ids) < 1:
-        norm_ids(ref, 'reference')
-
-    if min(mobile.atoms.ids) < 1:
-        norm_ids(mobile, 'mobile')
-
-    if np.any(ref.atoms.ids != mobile.atoms.ids):
-        print('Reference and mobile atom ids are inconsistent! Aligning mobile atom ids to match with reference structure...')
-        shift = ref.atoms.ids - mobile.atoms.ids
-        mobile.atoms.ids += shift
-
-    if len(ref.residues.resids) != len(mobile.residues.resids):
-        raise ValueError(f'''{norm_and_align_universe.__module__}.{norm_and_align_universe.__name__}()::\
-        \nResidues number doesn't match! Cannot align resids.''')
-        return
-
-    if min(ref.residues.resids) < 1:
-        norm_resids(ref, 'reference')
-
-    if min(mobile.residues.resids) < 1:
-        norm_resids(mobile, 'mobile')
-
-    if np.any(ref.residues.resids != mobile.residues.resids):
-        print('Reference and mobile resids are inconsistent! Aligning mobile resids to match with reference structure...')
-        shift = ref.residues.resids - mobile.residues.resids
-        shift_resids(mobile, shift=shift, verbose=verbose)
-
-    print("Both universes are normed and aligned (atom ids + resids).")
-    return
-
-
-def true_select_atoms(u, sel='protein', ignh=True, norm=True):
-    """
-    Create "true selection" (atomgroup copy in NEW universe) after applying
-
-      - norm_ids()
-      - norm_resids()
-
-    Note that atom indices are reassigned according to range(0, len(u.atoms))
-
-    Args:
-        u (str, universe, atomgrp): structure path (PDB id) or universe with structure
-        sel (str): selection string
-        ignh (bool): ignore hydrogen (mass < 1.2)
-        norm (bool): apply analysis.norm_universe()
-
-    Returns:
-        a (atomgrp)
-            "true selection" ~ atomgroup copy in NEW universe
-
-    .. Note:: mda.select_atoms() remembers information about the original
-       universe configuration which is sometimes NOT WANTED.
-
-    EXAMPLE:
-      | # Init universe
-      | >> u = mda.Universe(<top>)
-      |
-      | # select_atoms() behaviour
-      | >> a = u.select_atoms("protein and type C")
-      | >> a
-      | <AtomGroup with 72 atoms>
-      | >> a.residues.atoms
-      | <AtomGroup with 964 atoms>
-      |
-      | # true_select_atoms() behaviour
-      | >> a = ana.true_select_atoms(u, sel="protein and type C")
-      | >> a
-      | <Universe with 72 atoms>
-      | >> a.residue.atoms
-      | <AtomGroup with 72 atoms>
-    """
-    # case 1: input is PDB ID -> fetch online
-    if type(u) is str and len(u) == 4:
-        u = mda.fetch_mmtf(u)
-    # case 2: input is path -> create MDA Universe
-    elif type(u) is str and len(u) > 4:
-        u = mda.Universe(u)
-    # case 3: input is MDA Universe -> just use it
-
-    if norm:
-        norm_universe(u)
-    a0 = u.select_atoms(sel)
-    if ignh:
-        a0 = u.select_atoms(sel + ' and prop mass > 1.2')
-    u = mda.core.universe.Merge(a0)
-    a = u.atoms
-    return a
-
-
-def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"):
-    """
-    Dump structures for a list of frames with the file name "save_as".
-    Automatically prepends frame number to the extension.
-
-    Args:
-        u (universe, atomgrp): universe containing the structure
-        frames (array, list)
-        save_as (str): save name or realpath to save file. frame number will
-          be prepended to the extension
-        default_dir (str)
-        sel (str): selection string
-
-    Returns:
-        dirpath (str)
-            realpath to directory with dumped structures
-    """
-    if "." in save_as:
-        realpath = _misc.joinpath(default_dir, save_as, create_dir=True)
-        dirpath = _misc.dirpath(realpath)
-        base = _misc.get_base(realpath)
-        ext = _misc.get_extension(realpath)
-
-    else:
-        print("specify a file format within the 'save_as' string!")
-        return
-
-    # save structures
-    for ts in u.trajectory[frames]:
-        frame = u.trajectory.frame
-        structure = u.select_atoms(sel)
-        temp_save_as = f"{dirpath}/{base}_{frame}{ext}"
-        structure.write(temp_save_as)
-    print("Dumped structures into:", dirpath)
-    return dirpath
+#
 
 
 def shortest_RES_distances(u, sel):
@@ -901,8 +536,8 @@ def shortest_RES_distances(u, sel):
         uc = u.copy()
     elif isinstance(u, mda.AtomGroup):
         uc = u.universe.copy()
-    norm_resids(uc, verbose=True)
-    a = true_select_atoms(uc, sel)
+    _top.norm_resids(uc, verbose=True)
+    a = _top.true_select_atoms(uc, sel)
     dim = len(a.residues.resids)
     SD = np.zeros(shape=(dim, dim))
     SD_d = []

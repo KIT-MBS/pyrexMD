@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 21.05.2021
 
 
 import pyrexMD.analysis.analysis as ana
@@ -56,28 +56,6 @@ def test_get_Distance_Matrices():
     val = ana.get_Distance_Matrices(mobile)
     expected = np.load(pre + "get_Distance_Matrices.npy")
     assert assert_allclose(val, expected) == None
-    return
-
-
-def test_get_resids_shift():
-    ref = mda.Universe(pdb)
-    ref_shifted = mda.Universe(pre + "1l2y_ref_shifted.pdb", tpr_resid_from_one=False)
-    assert ana.get_resids_shift(ref_shifted, ref) == 4
-    return
-
-
-def test_get_matching_selection():
-    mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=False)
-    ref = mda.Universe(pdb)
-    val = ana.get_matching_selection(mobile, ref, "backbone", norm=False)
-    expected = ('backbone and resid 0-19', 'backbone')
-    assert val == expected
-
-    mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
-    ref = mda.Universe(pdb)
-    val = ana.get_matching_selection(mobile, ref, "backbone", norm=True)
-    expected = ('backbone and resid 1-20', 'backbone')
-    assert val == expected
     return
 
 

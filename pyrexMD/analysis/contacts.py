@@ -37,6 +37,7 @@ Module contents:
 
 import pyrexMD.analysis.analysis as _ana
 import pyrexMD.misc as _misc
+import pyrexMD.topology as _top
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -47,7 +48,7 @@ from tqdm.notebook import tqdm
 import operator
 
 
-def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", target="protein", verbose=True, **kwargs):
+def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     """
     Get list of unique RES pairs and list of detailed RES pairs with native contacts.
 
@@ -59,17 +60,17 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", target="protein", verb
         ref (str, universe, atomgrp): reference structure
         d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
-        target (str): "protein", "rna", "dna", "nucleic"
-        verbose (bool): print "Note: Please verify that your selection is
 
     Keyword Args:
         method (str):
           | '1' or 'Contact_Matrix': mda.contact_matrix() with d_cutoff
           | '2' or 'Shadow_Map' #TODO
-        norm (bool): apply analysis.norm_universe()
+        norm (bool): apply topology.norm_universe()
         ignh (bool): ignore hydrogen
-        save_as (None, str): save NC and mapping atoms to file
-
+        save_as (None, str):
+          | save RES pairs and ATOM pairs of native contacts to a log file.
+          | selection is hardcoded to "protein and name CA" for proteins
+          | and "name N1 or name N3" for RNA/DNA.
 
     Returns:
         NC (list)
@@ -92,9 +93,9 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", target="protein", verb
     else:
         u = ref
     if cfg.norm:
-        _ana.norm_universe(u)
+        _top.norm_universe(u)
     if cfg.ignh:
-        a = _ana.true_select_atoms(u, sel, ignh=cfg.ignh, norm=cfg.norm)
+        a = _top.true_select_atoms(u, sel, ignh=cfg.ignh, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
 
@@ -116,12 +117,23 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", target="protein", verb
         # TODO method 2: SHADOWMAP
         pass
 
-    # if cfg.save_as != None:
-    #     if target == "protein":
-    #         _res, _atom, _name = rex.parsePDB_RES_ATOM_NAME(ref, ignh=cfg.ignh)
-    #         with open(cfg.save_as, "w") as fout:
-    #             fout.write(f"#RESi\tRESj\tATOMi\tATOMj\n")
-    #             for IJ in NC:
+    # sort
+    NC = sorted(NC)
+    NC_d = sorted(NC_d)
+
+    if cfg.save_as != None:
+        cfg.save_as = _misc.realpath(cfg.save_as)
+        _misc.cprint(f"Saved file as: {cfg.save_as}")
+        if len(a.select_atoms("nucleic")) == 0:
+            # hardcoded protein selection
+            resid, resname, id, name = _top.parsePDB(u.filename, sel="protein and name CA")
+        else:
+            # hardcoded nucleic selection
+            resid, resname, id, name = _top.parsePDB(u.filename, sel="name N1 or name N3")
+        with open(cfg.save_as, "w") as fout:
+            fout.write("#RESi\tRESj\tATOMi\tATOMj\n")
+            for IJ in NC:
+                fout.write(f"{IJ[0]}\t{IJ[1]}\t{id[resid.index(IJ[0])]}\t{id[resid.index(IJ[1])]}\n")
 
     return(NC, NC_d)
 
@@ -152,7 +164,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
           | include RES only within [RES_min, RES_max] range
           | None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
-        norm (bool): apply analysis.norm_universe()
+        norm (bool): apply topology.norm_universe()
         save_plot (bool)
 
     .. hint:: Args and Keyword Args of misc.figure() are also valid.
@@ -183,9 +195,9 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     else:
         u = ref
     if cfg.norm:
-        _ana.norm_universe(u)
+        _top.norm_universe(u)
     if cfg.ignh:
-        a = _ana.true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
+        a = _top.true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
     res_min = min(a.resids)
@@ -273,7 +285,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
           | [RES_min, RES_max] range. Ignore invalid RES ids
           | None: do not narrow down RES range
         ignh (bool): ignore hydrogen (mass < 1.2)
-        norm (bool): apply analysis.norm_universe()
+        norm (bool): apply topology.norm_universe()
         TPR_layer (str):
           | plot TPR curve in foreground or background layer
           | "fg", "foreground", "bg", "background"
@@ -334,9 +346,9 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     else:
         u = ref
     if cfg.norm:
-        _ana.norm_universe(u)
+        _top.norm_universe(u)
     if cfg.ignh:
-        a = _ana.true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
+        a = _top.true_select_atoms(u, sel, ignh=True, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
     # read DCA and calculate TPR
@@ -484,7 +496,7 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     if cfg.sel1 == None or cfg.sel2 == None:
         _misc.Error("Set either sel (arg) or both sel1 and sel2 (kwargs).")
     #####################################################################
-    _ana.norm_and_align_universe(mobile, ref)
+    _top.norm_and_align_universe(mobile, ref)
 
     ref1 = ref.select_atoms(cfg.sel1)  # reference group 1 in reference conformation
     ref2 = ref.select_atoms(cfg.sel2)  # reference group 2 in reference conformation
@@ -580,7 +592,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
         _misc.cprint("Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated Qbias value artificially (e.g. even when all used bias contacts are never formed, Qbias will not be zero due to the selfcontact counts)", "red")
 
     if norm:
-        _ana.norm_universe(mobile)
+        _top.norm_universe(mobile)
 
     QBIAS = []  # QBias value (fraction of formed bias contacts)
     CM = []     # Contact Matrices
@@ -640,7 +652,7 @@ def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwarg
     cfg = _misc.CONFIG(default, **kwargs)
     ########################################################
     if norm:
-        _ana.norm_universe(u)
+        _top.norm_universe(u)
     RES = u.select_atoms(sel).resids   # get RESIDS information
     CP = []  # list with contact pairs
 
@@ -662,118 +674,3 @@ def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwarg
                 if cm[i][j] == True:
                     CP.append((RES[i], RES[j]))
     return CP
-
-# Note: seems buggy
-# def Contact_Analysis_CA(ref, top, traj, d_cutoff=6.0, sel='protein and name CA',
-#                         pdbid='pdbid', plot=True, save_plot=False, **kwargs):
-#     """
-#     Works currently only for CA level. All atom version is very slow.
-#
-#     Args:
-#         ref (str): reference path
-#         ref (MDA universe/atomgrp): reference structure
-#         top (str): topology path
-#         top (MDA universe/atomgrp): topology
-#         traj (str): trajectory path
-#         traj (MDA universe/atomgrp): trajectory
-#         sel (str): selection string
-#         pdbid (str): pdbid; used for plot title and figure name
-#         plot (bool): create plot
-#         save_plot (bool)
-#
-#     Kwargs:
-#         # see args of misc.figure()
-#
-#     Returns:
-#         TIME (list): time in ps
-#         QValues (list): fraction of nat. contacts
-#         C (list): unique contact pairs IJ
-#         C_NperRes (list): contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)
-#
-#     """
-#     # load universe and shift residues if needed
-#
-#     if pdbid == 'pdbid':
-#         pdbid = _misc.get_PDBid(ref)
-#     if type(ref) is str:
-#         ref = mda.Universe(ref)
-#     if type(top) is str and type(traj) is str:
-#         u = mda.Universe(top, traj)
-#     elif type(top) is str and type(traj) is not str:
-#         u = mda.Universe(top, traj.filename)
-#     elif type(top) is not str and type(traj) is str:
-#         u = mda.Universe(top.filename, traj)
-#     else:
-#         u = mda.Universe(top.filename, traj.filename)
-#
-#     _ana.norm_universe(u)
-#     a = u.select_atoms(sel)
-#     _ana.norm_and_align_universe(ref, u)  # u is eq. to top
-#
-#     # calculate nat. contacts for ref structure
-#     NC, NC_d = get_Native_Contacts(ref, d_cutoff, sel)
-#
-#     # calculate contacts for trajectory
-#     TIME = []  # time
-#     QValues = []
-#     C = []  # unique contact pairs (RES/IJ pairs)
-#     C_NperRES = []  # contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)
-#
-#     print("Performing contact analysis for trajectory.")
-#     for ts in tqdm(u.trajectory):
-#         TIME.append(u.trajectory.time)
-#         dist_array = _distances.distance_array(a.positions, a.positions)
-#
-#         ignore_asr = 3  # asr: adjecent sequence residues
-#         for i in range(ignore_asr + 1):  # left half of main diag
-#             np.fill_diagonal(dist_array[i:], 999999999)
-#         dist_array = np.matrix.transpose(dist_array)  # right half of main diag
-#         for i in range(ignore_asr + 1):
-#             np.fill_diagonal(dist_array[i:], 999999999)
-#         dist_array = np.matrix.transpose(dist_array)
-#
-#         C_NperRES_now = np.sum(d <= d_cutoff for d in dist_array)
-#         C_NperRES.append(C_NperRES_now)
-#
-#         # get unique contact pairs
-#         IJ = np.where(dist_array <= d_cutoff)
-#         IJ = np.transpose(IJ)
-#         IJ = [(item[0] + 1, item[1] + 1) for item in IJ if item[0] < item[1]]  # index shift for resids: 0..n-1 --> 1..n
-#         C.append(IJ)
-#
-#         # get QValues
-#         num = 0.0
-#         div = len(NC)
-#         for item in IJ:
-#             if item in NC:
-#                 num += 1
-#         QValues.append(round(num / div, 2))
-#
-#     # PLOT
-#     if plot:
-#         TIME_ns = [item * 0.001 for item in TIME]
-#         C_perFrame = [len(item) for item in C]
-#
-#         fig, ax = _misc.figure(**kwargs)
-#         plt.plot(TIME_ns, QValues, "r.", ms=1)
-#         plt.plot(TIME_ns, QValues, "r", lw=1.5, alpha=0.3)
-#         # ax.set_ylim(_misc.round_down(min(QValues), 0.1), _misc.round_up(max(QValues), 0.1))
-#         ax.set(xlabel="Time (ns)", ylabel="Q")
-#         plt.title("QValues, avg = {:.2f}".format(np.mean(QValues)), fontweight="bold")
-#         plt.tight_layout()
-#         if save_plot:
-#             _misc.savefig(filename=f"{pdbid}_Fig_QValues.png", filedir="./plots")
-#         plt.show()
-#
-#         fig, ax = _misc.figure()
-#         plt.plot(TIME_ns, C_perFrame, "r.", ms=1)
-#         plt.plot(TIME_ns, C_perFrame, "r", lw=1.5, alpha=0.3)
-#         ax.set_ylim(_misc.round_down(min(C_perFrame), 5), _misc.round_up(max(C_perFrame), 5))
-#         ax.set(xlabel="Time (ns)", ylabel="Contacts")
-#         plt.title("Contacts, avg = {:.2f}".format(np.mean(C_perFrame)), fontweight="bold")
-#         plt.tight_layout()
-#         if save_plot:
-#             _misc.savefig(filename=f"{pdbid}_Fig_Contacts.png", filedir="./plots")
-#         plt.show()
-#
-#     return(TIME, QValues, C, C_NperRES)

@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: contacts.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 21.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions related to native contact and bias contact analyses.</span>
@@ -200,6 +200,7 @@
 
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">_top</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -210,7 +211,7 @@
 <span class="kn">import</span> <span class="nn">operator</span>
 
 
-<div class="viewcode-block" id="get_Native_Contacts"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_Native_Contacts">[docs]</a><span class="k">def</span> <span class="nf">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_Native_Contacts"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_Native_Contacts">[docs]</a><span class="k">def</span> <span class="nf">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get list of unique RES pairs and list of detailed RES pairs with native contacts.</span>
 
@@ -222,13 +223,17 @@
 <span class="sd">        ref (str, universe, atomgrp): reference structure</span>
 <span class="sd">        d_cutoff (float): cutoff distance for native contacts</span>
 <span class="sd">        sel (str): selection string</span>
+
+<span class="sd">    Keyword Args:</span>
 <span class="sd">        method (str):</span>
-<span class="sd">            &#39;1&#39; or &#39;Contact_Matrix&#39;: mda.contact_matrix() with d_cutoff</span>
-<span class="sd">            &#39;2&#39; or &#39;Capped_Distance&#39;: mda.lib.distances.capped_distance() with d_cutoff #TODO</span>
-<span class="sd">            &#39;3&#39; or &#39;Shadow_Map&#39; #TODO</span>
-<span class="sd">        norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">          | &#39;1&#39; or &#39;Contact_Matrix&#39;: mda.contact_matrix() with d_cutoff</span>
+<span class="sd">          | &#39;2&#39; or &#39;Shadow_Map&#39; #TODO</span>
+<span class="sd">        norm (bool): apply topology.norm_universe()</span>
 <span class="sd">        ignh (bool): ignore hydrogen</span>
-<span class="sd">        verbose (bool): print &quot;Note: Please verify that your selection is</span>
+<span class="sd">        save_as (None, str):</span>
+<span class="sd">          | save RES pairs and ATOM pairs of native contacts to a log file.</span>
+<span class="sd">          | selection is hardcoded to &quot;protein and name CA&quot; for proteins</span>
+<span class="sd">          | and &quot;name N1 or name N3&quot; for RNA/DNA.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        NC (list)</span>
@@ -236,25 +241,31 @@
 <span class="sd">        NC_d (list)</span>
 <span class="sd">            detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;ignh&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">method</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
 
     <span class="c1"># load universe</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
-    <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
-        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ignh</span><span class="p">:</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="n">ignh</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
 
     <span class="n">NC</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># list with unique NC pairs</span>
     <span class="n">NC_d</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># detailed list with NCs containing (RES pairs), (ATOM pairs), (NAME pairs)</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Contact_Matrix&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Contact_Matrix&#39;</span><span class="p">,</span> <span class="s1">&#39;contact_matrix&#39;</span><span class="p">]:</span>
         <span class="n">RES</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">resids</span>
         <span class="n">NAMES</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">names</span>
 
@@ -265,12 +276,27 @@
                     <span class="n">NC</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
                     <span class="n">NC_d</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="p">(</span><span class="n">NAMES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">NAMES</span><span class="p">[</span><span class="n">j</span><span class="p">])])</span>
 
-    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;Capped_Distance&#39;</span><span class="p">]:</span>
-        <span class="c1"># TODO method 2: Capped distance</span>
+    <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;Shadow_Map&#39;</span><span class="p">,</span> <span class="s1">&#39;shadow_map&#39;</span><span class="p">]:</span>
+        <span class="c1"># TODO method 2: SHADOWMAP</span>
         <span class="k">pass</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;Shadow_Map&#39;</span><span class="p">]:</span>
-        <span class="c1"># TODO method 3: SHADOWMAP</span>
-        <span class="k">pass</span>
+
+    <span class="c1"># sort</span>
+    <span class="n">NC</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">NC</span><span class="p">)</span>
+    <span class="n">NC_d</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">NC_d</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;nucleic&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># hardcoded protein selection</span>
+            <span class="n">resid</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># hardcoded nucleic selection</span>
+            <span class="n">resid</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name N1 or name N3&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#RESi</span><span class="se">\t</span><span class="s2">RESj</span><span class="se">\t</span><span class="s2">ATOMi</span><span class="se">\t</span><span class="s2">ATOMj</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">IJ</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="nb">id</span><span class="p">[</span><span class="n">resid</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="nb">id</span><span class="p">[</span><span class="n">resid</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span><span class="p">(</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span><span class="p">)</span></div>
 
@@ -301,7 +327,7 @@
 <span class="sd">          | include RES only within [RES_min, RES_max] range</span>
 <span class="sd">          | None: do not narrow down RES range</span>
 <span class="sd">        ignh (bool): ignore hydrogen (mass &lt; 1.2)</span>
-<span class="sd">        norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">        norm (bool): apply topology.norm_universe()</span>
 <span class="sd">        save_plot (bool)</span>
 
 <span class="sd">    .. hint:: Args and Keyword Args of misc.figure() are also valid.</span>
@@ -332,9 +358,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
-        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">:</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
     <span class="n">res_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
@@ -422,7 +448,7 @@
 <span class="sd">          | [RES_min, RES_max] range. Ignore invalid RES ids</span>
 <span class="sd">          | None: do not narrow down RES range</span>
 <span class="sd">        ignh (bool): ignore hydrogen (mass &lt; 1.2)</span>
-<span class="sd">        norm (bool): apply analysis.norm_universe()</span>
+<span class="sd">        norm (bool): apply topology.norm_universe()</span>
 <span class="sd">        TPR_layer (str):</span>
 <span class="sd">          | plot TPR curve in foreground or background layer</span>
 <span class="sd">          | &quot;fg&quot;, &quot;foreground&quot;, &quot;bg&quot;, &quot;background&quot;</span>
@@ -483,9 +509,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">ref</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
-        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">:</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">true_select_atoms</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
     <span class="c1"># read DCA and calculate TPR</span>
@@ -633,7 +659,7 @@
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Set either sel (arg) or both sel1 and sel2 (kwargs).&quot;</span><span class="p">)</span>
     <span class="c1">#####################################################################</span>
-    <span class="n">_ana</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+    <span class="n">_top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
 
     <span class="n">ref1</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sel1</span><span class="p">)</span>  <span class="c1"># reference group 1 in reference conformation</span>
     <span class="n">ref2</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sel2</span><span class="p">)</span>  <span class="c1"># reference group 2 in reference conformation</span>
@@ -729,7 +755,7 @@
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 2: MDAnalysis&#39; qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated Qbias value artificially (e.g. even when all used bias contacts are never formed, Qbias will not be zero due to the selfcontact counts)&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
-        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
+        <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
 
     <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># QBias value (fraction of formed bias contacts)</span>
     <span class="n">CM</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># Contact Matrices</span>
@@ -789,7 +815,7 @@
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1">########################################################</span>
     <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
-        <span class="n">_ana</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
     <span class="n">RES</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">resids</span>   <span class="c1"># get RESIDS information</span>
     <span class="n">CP</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list with contact pairs</span>
 
@@ -811,121 +837,6 @@
                 <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
                     <span class="n">CP</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">RES</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RES</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">CP</span></div>
-
-<span class="c1"># Note: seems buggy</span>
-<span class="c1"># def Contact_Analysis_CA(ref, top, traj, d_cutoff=6.0, sel=&#39;protein and name CA&#39;,</span>
-<span class="c1">#                         pdbid=&#39;pdbid&#39;, plot=True, save_plot=False, **kwargs):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     Works currently only for CA level. All atom version is very slow.</span>
-<span class="c1">#</span>
-<span class="c1">#     Args:</span>
-<span class="c1">#         ref (str): reference path</span>
-<span class="c1">#         ref (MDA universe/atomgrp): reference structure</span>
-<span class="c1">#         top (str): topology path</span>
-<span class="c1">#         top (MDA universe/atomgrp): topology</span>
-<span class="c1">#         traj (str): trajectory path</span>
-<span class="c1">#         traj (MDA universe/atomgrp): trajectory</span>
-<span class="c1">#         sel (str): selection string</span>
-<span class="c1">#         pdbid (str): pdbid; used for plot title and figure name</span>
-<span class="c1">#         plot (bool): create plot</span>
-<span class="c1">#         save_plot (bool)</span>
-<span class="c1">#</span>
-<span class="c1">#     Kwargs:</span>
-<span class="c1">#         # see args of misc.figure()</span>
-<span class="c1">#</span>
-<span class="c1">#     Returns:</span>
-<span class="c1">#         TIME (list): time in ps</span>
-<span class="c1">#         QValues (list): fraction of nat. contacts</span>
-<span class="c1">#         C (list): unique contact pairs IJ</span>
-<span class="c1">#         C_NperRes (list): contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</span>
-<span class="c1">#</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     # load universe and shift residues if needed</span>
-<span class="c1">#</span>
-<span class="c1">#     if pdbid == &#39;pdbid&#39;:</span>
-<span class="c1">#         pdbid = _misc.get_PDBid(ref)</span>
-<span class="c1">#     if type(ref) is str:</span>
-<span class="c1">#         ref = mda.Universe(ref)</span>
-<span class="c1">#     if type(top) is str and type(traj) is str:</span>
-<span class="c1">#         u = mda.Universe(top, traj)</span>
-<span class="c1">#     elif type(top) is str and type(traj) is not str:</span>
-<span class="c1">#         u = mda.Universe(top, traj.filename)</span>
-<span class="c1">#     elif type(top) is not str and type(traj) is str:</span>
-<span class="c1">#         u = mda.Universe(top.filename, traj)</span>
-<span class="c1">#     else:</span>
-<span class="c1">#         u = mda.Universe(top.filename, traj.filename)</span>
-<span class="c1">#</span>
-<span class="c1">#     _ana.norm_universe(u)</span>
-<span class="c1">#     a = u.select_atoms(sel)</span>
-<span class="c1">#     _ana.norm_and_align_universe(ref, u)  # u is eq. to top</span>
-<span class="c1">#</span>
-<span class="c1">#     # calculate nat. contacts for ref structure</span>
-<span class="c1">#     NC, NC_d = get_Native_Contacts(ref, d_cutoff, sel)</span>
-<span class="c1">#</span>
-<span class="c1">#     # calculate contacts for trajectory</span>
-<span class="c1">#     TIME = []  # time</span>
-<span class="c1">#     QValues = []</span>
-<span class="c1">#     C = []  # unique contact pairs (RES/IJ pairs)</span>
-<span class="c1">#     C_NperRES = []  # contact number per RES (eg: RES1 has 0 contacts, RES2 has 2 contacts etc)</span>
-<span class="c1">#</span>
-<span class="c1">#     print(&quot;Performing contact analysis for trajectory.&quot;)</span>
-<span class="c1">#     for ts in tqdm(u.trajectory):</span>
-<span class="c1">#         TIME.append(u.trajectory.time)</span>
-<span class="c1">#         dist_array = _distances.distance_array(a.positions, a.positions)</span>
-<span class="c1">#</span>
-<span class="c1">#         ignore_asr = 3  # asr: adjecent sequence residues</span>
-<span class="c1">#         for i in range(ignore_asr + 1):  # left half of main diag</span>
-<span class="c1">#             np.fill_diagonal(dist_array[i:], 999999999)</span>
-<span class="c1">#         dist_array = np.matrix.transpose(dist_array)  # right half of main diag</span>
-<span class="c1">#         for i in range(ignore_asr + 1):</span>
-<span class="c1">#             np.fill_diagonal(dist_array[i:], 999999999)</span>
-<span class="c1">#         dist_array = np.matrix.transpose(dist_array)</span>
-<span class="c1">#</span>
-<span class="c1">#         C_NperRES_now = np.sum(d &lt;= d_cutoff for d in dist_array)</span>
-<span class="c1">#         C_NperRES.append(C_NperRES_now)</span>
-<span class="c1">#</span>
-<span class="c1">#         # get unique contact pairs</span>
-<span class="c1">#         IJ = np.where(dist_array &lt;= d_cutoff)</span>
-<span class="c1">#         IJ = np.transpose(IJ)</span>
-<span class="c1">#         IJ = [(item[0] + 1, item[1] + 1) for item in IJ if item[0] &lt; item[1]]  # index shift for resids: 0..n-1 --&gt; 1..n</span>
-<span class="c1">#         C.append(IJ)</span>
-<span class="c1">#</span>
-<span class="c1">#         # get QValues</span>
-<span class="c1">#         num = 0.0</span>
-<span class="c1">#         div = len(NC)</span>
-<span class="c1">#         for item in IJ:</span>
-<span class="c1">#             if item in NC:</span>
-<span class="c1">#                 num += 1</span>
-<span class="c1">#         QValues.append(round(num / div, 2))</span>
-<span class="c1">#</span>
-<span class="c1">#     # PLOT</span>
-<span class="c1">#     if plot:</span>
-<span class="c1">#         TIME_ns = [item * 0.001 for item in TIME]</span>
-<span class="c1">#         C_perFrame = [len(item) for item in C]</span>
-<span class="c1">#</span>
-<span class="c1">#         fig, ax = _misc.figure(**kwargs)</span>
-<span class="c1">#         plt.plot(TIME_ns, QValues, &quot;r.&quot;, ms=1)</span>
-<span class="c1">#         plt.plot(TIME_ns, QValues, &quot;r&quot;, lw=1.5, alpha=0.3)</span>
-<span class="c1">#         # ax.set_ylim(_misc.round_down(min(QValues), 0.1), _misc.round_up(max(QValues), 0.1))</span>
-<span class="c1">#         ax.set(xlabel=&quot;Time (ns)&quot;, ylabel=&quot;Q&quot;)</span>
-<span class="c1">#         plt.title(&quot;QValues, avg = {:.2f}&quot;.format(np.mean(QValues)), fontweight=&quot;bold&quot;)</span>
-<span class="c1">#         plt.tight_layout()</span>
-<span class="c1">#         if save_plot:</span>
-<span class="c1">#             _misc.savefig(filename=f&quot;{pdbid}_Fig_QValues.png&quot;, filedir=&quot;./plots&quot;)</span>
-<span class="c1">#         plt.show()</span>
-<span class="c1">#</span>
-<span class="c1">#         fig, ax = _misc.figure()</span>
-<span class="c1">#         plt.plot(TIME_ns, C_perFrame, &quot;r.&quot;, ms=1)</span>
-<span class="c1">#         plt.plot(TIME_ns, C_perFrame, &quot;r&quot;, lw=1.5, alpha=0.3)</span>
-<span class="c1">#         ax.set_ylim(_misc.round_down(min(C_perFrame), 5), _misc.round_up(max(C_perFrame), 5))</span>
-<span class="c1">#         ax.set(xlabel=&quot;Time (ns)&quot;, ylabel=&quot;Contacts&quot;)</span>
-<span class="c1">#         plt.title(&quot;Contacts, avg = {:.2f}&quot;.format(np.mean(C_perFrame)), fontweight=&quot;bold&quot;)</span>
-<span class="c1">#         plt.tight_layout()</span>
-<span class="c1">#         if save_plot:</span>
-<span class="c1">#             _misc.savefig(filename=f&quot;{pdbid}_Fig_Contacts.png&quot;, filedir=&quot;./plots&quot;)</span>
-<span class="c1">#         plt.show()</span>
-<span class="c1">#</span>
-<span class="c1">#     return(TIME, QValues, C, C_NperRES)</span>
 </pre></div>
 
            </div>

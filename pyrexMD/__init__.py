@@ -7,6 +7,8 @@
 
 import pyrexMD.misc as misc
 import pyrexMD.core as core
+import pyrexMD.gmx as gmx
+import pyrexMD.topology as topology
 import pyrexMD.analysis as analysis
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -37,15 +39,13 @@ import seaborn as sns
 import MDAnalysis as mda
 import pyrexMD.misc as misc
 import pyrexMD.core as core
+import pyrexMD.topology as top
+import pyrexMD.gmx as gmx
 import pyrexMD.analysis.analysis as ana
 #import pyrexMD.analysis.contacts as con
 #import pyrexMD.analysis.dihedrals as dih
 #import pyrexMD.analysis.gdt as gdt
-#import pyrexMD.decoy.abinitio as abi
-#import pyrexMD.decoy.cluster as clu
-#import pyrexMD.gmx as gmx
 #import pyrexMD.rex as rex
-#import pyrexMD.rna as rna
 
 from tqdm.notebook import tqdm
 misc.apply_matplotlib_rc_settings()

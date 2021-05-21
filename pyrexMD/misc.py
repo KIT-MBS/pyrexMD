@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 21.05.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -1113,7 +1113,7 @@ def autodetect_header(fin):
     return header_rows
 
 
-def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=float):
+def read_file(fin, sep=None, usecols=(0, 1), n_rows=None, skiprows='auto', dtype=float):
     """
     Read file and return tuple of np.arrays with data for specified columns.
 
@@ -1123,6 +1123,7 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=float):
           | seperator of columns.
           | None: whitespace
         usecols (int, sequence): data columns
+        n_rows (None, int): lenght of returned data (AFTER skipping rows)
         skiprows ('auto', int):
           | ignore header rows of fin
           | 'auto' or -1: auto detect
@@ -1152,14 +1153,17 @@ def read_file(fin, sep=None, usecols=(0, 1), skiprows='auto', dtype=float):
 
     if type(usecols) == int:
         col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols, dtype=dtype)
+        col = col[:n_rows]
         return col
     else:
         DATA = []
         for i in range(len(usecols)):
             if isinstance(dtype, (list, tuple)):
                 col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols[i], dtype=dtype[i])
+                col = col[:n_rows]
             else:
                 col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols[i], dtype=dtype)
+                col = col[:n_rows]
             DATA.append(col)
         return DATA
 

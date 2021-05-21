@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: gdt.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 21.05.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -179,6 +179,7 @@
 
 <span class="sd">    import MDAnalysis as mda</span>
 <span class="sd">    import pyrexMD.misc as misc</span>
+<span class="sd">    import pyrexMD.topology as top</span>
 <span class="sd">    import pyrexMD.analysis.analysis as ana</span>
 <span class="sd">    import pyrexMD.analysis.gdt as gdt</span>
 
@@ -186,7 +187,7 @@
 <span class="sd">    mobile = mda.Universe(&quot;&lt;tpr_file&gt;&quot;, &quot;&lt;xtc_file&gt;&quot;)</span>
 
 <span class="sd">    # first norm and align universes</span>
-<span class="sd">    ana.norm_and_align_universe(mobile, ref)</span>
+<span class="sd">    top.norm_and_align_universe(mobile, ref)</span>
 
 <span class="sd">    # run GDT</span>
 <span class="sd">    GDT = gdt.GDT(mobile, ref)</span>
@@ -545,7 +546,7 @@
     <span class="k">return</span> <span class="n">GDT_HA</span></div>
 
 
-<div class="viewcode-block" id="rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.rank_scores">[docs]</a><span class="k">def</span> <span class="nf">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.rank_scores">[docs]</a><span class="k">def</span> <span class="nf">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    rank scores</span>
 
@@ -563,6 +564,9 @@
 <span class="sd">          | int: rounding on to this number of decimals</span>
 <span class="sd">        verbose (bool)</span>
 
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        verbose_stop (None, int): stop printing after N lines</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_TS_ranked (array)</span>
 <span class="sd">            ranked array with GDT_TS scores</span>
@@ -578,12 +582,12 @@
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output ranking ordered by FRAME number&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">ranking_order</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GDT_TS&quot;</span><span class="p">:</span>
-        <span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">GDT_HA_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">GDT_HA</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">GDT_ndx_ranked</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output ranking ordered by GDT_TS&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">ranking_order</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GDT_HA&quot;</span><span class="p">:</span>
-        <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">GDT_HA</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">GDT_HA</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">GDT_TS_ranked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">GDT_TS</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">GDT_ndx_ranked</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output ranking ordered by GDT_HA&quot;</span><span class="p">)</span>
@@ -598,7 +602,7 @@
     <span class="k">return</span><span class="p">(</span><span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GDT_rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_rank_scores">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_scores</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GDT_rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.GDT_rank_scores">[docs]</a><span class="k">def</span> <span class="nf">GDT_rank_scores</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    rank scores.</span>
 
@@ -614,6 +618,9 @@
 <span class="sd">          | -1 or None: rounding off</span>
 <span class="sd">          | int: rounding on to this number of decimals</span>
 <span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        verbose_stop (None, int): stop printing after N lines</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_TS_ranked (array)</span>
@@ -631,7 +638,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
     <span class="n">GDT_HA</span> <span class="o">=</span> <span class="n">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
-    <span class="n">SCORES</span> <span class="o">=</span> <span class="n">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="n">ranking_order</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">SCORES</span> <span class="o">=</span> <span class="n">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="n">ranking_order</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">SCORES</span>
     <span class="k">return</span><span class="p">(</span><span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span><span class="p">)</span></div>
 
@@ -723,7 +731,7 @@
             <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
             <span class="n">ndx_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rank_num</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;GDT_HA&quot;</span><span class="p">,</span>
             <span class="n">show_cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create LocalAccuracy Plot (heatmap) with</span>
 
@@ -754,7 +762,7 @@
 <span class="sd">            https://matplotlib.org/examples/color/colormaps_reference.html</span>
 <span class="sd">        show_cbar (bool): show/hide colorbar</span>
 <span class="sd">        show_scores (bool): show/hide GDT_TS and GDT_HA scores</span>
-<span class="sd">        save_as (str): save name or realpath to save file</span>
+<span class="sd">        save_as (None, str): save name or realpath to save file</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        prec (None, int):</span>
@@ -900,7 +908,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">save_as</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">save_as</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
