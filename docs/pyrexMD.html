@@ -112,7 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#id12">Module contents:</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rna">pyrexMD.rna module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.topology">pyrexMD.topology module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrexMD.decoy.html">pyrexMD.decoy package</a></li>
@@ -3005,7 +3005,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.read_file">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">read_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fin</span></em>, <em class="sig-param"><span class="pre">sep=None</span></em>, <em class="sig-param"><span class="pre">usecols=(0</span></em>, <em class="sig-param"><span class="pre">1)</span></em>, <em class="sig-param"><span class="pre">skiprows='auto'</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#read_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.read_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">read_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fin</span></em>, <em class="sig-param"><span class="pre">sep=None</span></em>, <em class="sig-param"><span class="pre">usecols=(0</span></em>, <em class="sig-param"><span class="pre">1)</span></em>, <em class="sig-param"><span class="pre">n_rows=None</span></em>, <em class="sig-param"><span class="pre">skiprows='auto'</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#read_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.read_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read file and return tuple of np.arrays with data for specified columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3017,6 +3017,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </div>
 </p></li>
 <li><p><strong>usecols</strong> (<em>int</em><em>, </em><em>sequence</em>) – data columns</p></li>
+<li><p><strong>n_rows</strong> (<em>None</em><em>, </em><em>int</em>) – lenght of returned data (AFTER skipping rows)</p></li>
 <li><p><strong>skiprows</strong> (<em>'auto'</em><em>, </em><em>int</em>) – <div class="line-block">
 <div class="line">ignore header rows of fin</div>
 <div class="line">’auto’ or -1: auto detect</div>
@@ -3476,7 +3477,8 @@ Molecular Dynamics. It contains mainly functions to speed-up the process of
 generating REX simulations and modify topologies to include contact bias etc.</p>
 <div class="section" id="id11">
 <h2>Example:<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
 
 <span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
 
@@ -3491,8 +3493,8 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 <span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># add bias contacts</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">DCAREX_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">DCAREX_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">force_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
 
 <span class="c1"># prepare temperature distribution</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
@@ -3507,204 +3509,6 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 </div>
 <div class="section" id="id12">
 <h2>Module contents:<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_modify_scoreFile">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_modify_scoreFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_modify_scoreFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify score file (MSA scores) by shifting residues.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>score_fin</strong> (<em>str</em>) – path to score file</p></li>
-<li><p><strong>shift_res</strong> (<em>int</em>) – shift residues by this value</p></li>
-<li><p><strong>outputFileName</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">realpath to modified score file.</div>
-<div class="line">if “PDBID_mod.score” is left as default: try to automatically detect</div>
-<div class="line">pattern based on score_fin and add the “_mod” part into filename.</div>
-</div>
-</p></li>
-<li><p><strong>res_cols</strong> (<em>tuple/list</em>) – score_fin columns with residue numbers</p></li>
-<li><p><strong>score_col</strong> (<em>tuple/list</em>) – score_fin column with score/confidence</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">“PDBID_mod.score”</div>
-<div class="line">if “PDBID_mod.score” (default): try to automatically detect pattern</div>
-<div class="line">based on score_fin and insert the “_mod” part into filename.</div>
-</div>
-</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>save_as (str)</dt><dd><p>realpath to modified score file</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_modify_topology">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_modify_topology" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
-“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
-<p>Modify topology:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>top_fin (topol.top file): use as template</p></li>
-<li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
-<li><p>modify bond section of new topology by adding contacts with constant force constant</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
-<li><p><strong>DCA_used_fin</strong> (<em>str</em>) – DCA used file (path)</p></li>
-<li><p><strong>force_k</strong> (<em>int</em><em>, </em><em>float</em>) – force constant of DCA pairs</p></li>
-<li><p><strong>DCA_skiprows</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">ignore header rows of DCA_used_fin</div>
-<div class="line">-1 or “auto”: auto detect</div>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
-<li><p><strong>default_dir</strong> (<em>str</em>) – “./” (default)</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">“PDBID_topol_mod.top”</div>
-<div class="line">detect and replace PDBID in save_as based on ref_PDB path</div>
-<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
-</div>
-</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_modify_topology_v2">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_modify_topology_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">40]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_modify_topology_v2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_modify_topology_v2" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>top_fin</strong> – </p></li>
-<li><p><strong>temps_fin</strong> – </p></li>
-<li><p><strong>lambda_scaling</strong> – T: prop. to T
-1/T: prop to 1/T</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
-<li><p><strong>default_dir</strong> (<em>str</em>) – “./”</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – “PDBID_topol_mod.top”</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.DCAREX_res2atom_mapping">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">DCAREX_res2atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bonds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#DCAREX_res2atom_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.DCAREX_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>all n_bonds options are currently disabled except n_bonds=1</p>
-</div>
-<p>Get DCA contact mapping. Return lists of matching RES pairs and ATOM pairs
-for “DCA REX Workflow”</p>
-<p>Algorithm:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Read files line by line, skip header if skiprows is set correctly</p>
-<ul>
-<li><p>ref_pdb: get RES, ATOM, NAME</p></li>
-<li><p>DCA_fin: get DCA_pairs</p></li>
-</ul>
-</li>
-<li><p>for IJ in DCA_pairs:</p>
-<ul>
-<li><p>find matching CA atoms (CA_ij)</p></li>
-<li><p>append IJ to RES_pair, CA_ij to ATOM_pair</p></li>
-</ul>
-</li>
-<li><p>return RES_pair and ATOM_pair</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ref_pdb</strong> (<em>str</em>) – reference PDB (path)</p></li>
-<li><p><strong>ref_skiprows</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">ignore header rows of ref</div>
-<div class="line">-1 or “auto”: auto detect</div>
-</div>
-</p></li>
-<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
-<li><p><strong>n_DCA</strong> (<em>int</em>) – number of DCA contacts which should be used</p></li>
-<li><p><strong>usecols</strong> (<em>tuple</em><em>, </em><em>list</em>) – columns containing the RES pairs in DCA_fin</p></li>
-<li><p><strong>parse</strong> (<em>str</em>) – select which atom(names) should be parsed. Default “CA”</p></li>
-<li><p><strong>n_bonds</strong> (<em>int</em><em>, </em><em>str</em>) – <div class="line-block">
-<div class="line">number of restraints per DCA contact</div>
-<div class="line">”all”, 0 or -1: bonds between all heavy atoms of RES pair ij</div>
-<div class="line-block">
-<div class="line">-&gt; all permutations of heavy atoms per DCA pair</div>
-</div>
-<div class="line">1: bonds between  CA atoms of RES pair ij</div>
-<div class="line-block">
-<div class="line">-&gt; 1 bond per DCA pair</div>
-</div>
-<div class="line">2: bonds between CA, CB atoms of RES pair ij</div>
-<div class="line-block">
-<div class="line">-&gt; 2 bonds per DCA pair</div>
-</div>
-<div class="line">3: bonds between CA, CB, CG atoms of RES pair ij</div>
-<div class="line-block">
-<div class="line">-&gt; 3 bonds per DCA pair</div>
-</div>
-</div>
-</p></li>
-<li><p><strong>DCA_skiprows</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">ignore header rows of DCA_fin</div>
-<div class="line">-1 or “auto”: auto detect</div>
-</div>
-</p></li>
-<li><p><strong>filter_DCA</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: ignore DCA pairs with abs(i-j) &lt; 3</div>
-<div class="line">False: use all DCA pairs w/o applying filter</div>
-</div>
-</p></li>
-<li><p><strong>save_log</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p></li>
-<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
-<li><p><strong>default_dir</strong> (<em>str</em>) – “./”</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">“PDBID_DCA_used.txt”</div>
-<div class="line">detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</div>
-<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>RES_PAIR (list)</dt><dd><p>list with RES pairs</p>
-</dd>
-<dt>ATOM_PAIR (list)</dt><dd><p>list with ATOM pairs</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.WF_REX_setup">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_gmx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup" title="Permalink to this definition">¶</a></dt>
@@ -3858,17 +3662,13 @@ to each rex subdirectory rex_1, rex_2, …</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.create_pull_groups_ndx">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_pull_groups_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_groups.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_pull_groups_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_pull_groups_ndx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_pull_groups_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_groups.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_pull_groups_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_pull_groups_ndx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create index file for pull groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fin</strong> (<em>str</em>) – PDB ref file (after applying force field)</p></li>
-<li><p><strong>parse</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">select which atoms should be parsed.</div>
-<div class="line">”CA”: parse only CA atoms (any atom name works)</div>
-</div>
-</p></li>
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – PDB file (after applying force field)</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
@@ -3877,17 +3677,13 @@ to each rex subdirectory rex_1, rex_2, …</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.create_special_group_ndx">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_special_group_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'special_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_special_group_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_special_group_ndx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_special_group_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'special_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_special_group_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_special_group_ndx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create index file for special group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fin</strong> (<em>str</em>) – PDB ref file (after applying force field)</p></li>
-<li><p><strong>parse</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">select which atoms should be parsed.</div>
-<div class="line">”CA”: parse only CA atoms (any atom name works)</div>
-</div>
-</p></li>
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – PDB file (after applying force field)</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
@@ -3929,43 +3725,6 @@ to each rex subdirectory rex_1, rex_2, …</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>REX_PDBS (list)</dt><dd><p>list with PDB paths within folders rex_1, rex_2, etc.</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.parsePDB_RES_ATOM_NAME">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">parsePDB_RES_ATOM_NAME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#parsePDB_RES_ATOM_NAME"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.parsePDB_RES_ATOM_NAME" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads PDB file and returns the columns for residue, atom-number and atom-name as lists.
-Removes column entries which consist only of whitespace or newlines.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
-<li><p><strong>parse</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">select which atoms should be parsed. (“all” or “&lt;atom name&gt;”)</div>
-<div class="line">”all”: parse all atoms</div>
-<div class="line">”CA”: parse only CA atoms (any atom name works)</div>
-</div>
-</p></li>
-<li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">ignore header rows of fin</div>
-<div class="line">-1 or “auto”: auto detect</div>
-</div>
-</p></li>
-<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>RES (list)</dt><dd><p>residue column of PDB</p>
-</dd>
-<dt>ATOM (list)</dt><dd><p>atom column of PDB</p>
-</dd>
-<dt>NAME (list)</dt><dd><p>name column of PDB</p>
 </dd>
 </dl>
 </p>
@@ -4033,7 +3792,7 @@ Removes column entries which consist only of whitespace or newlines.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.test_REX_PDBS">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">test_REX_PDBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">REX_PDBS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#test_REX_PDBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.test_REX_PDBS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">test_REX_PDBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">REX_PDBS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#test_REX_PDBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.test_REX_PDBS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if all REX PDBS have equal RES, ATOM, NAME arrays. Uses ref as “template PDB”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -4045,7 +3804,7 @@ Removes column entries which consist only of whitespace or newlines.</p>
 <div class="line">if target is unknown: use one of REX_PDBS -&gt; apply ff -&gt; use as ref</div>
 </div>
 </p></li>
-<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
@@ -4057,15 +3816,104 @@ Removes column entries which consist only of whitespace or newlines.</p>
 
 </div>
 </div>
-<div class="section" id="module-pyrexMD.rna">
-<span id="pyrexmd-rna-module"></span><h1>pyrexMD.rna module<a class="headerlink" href="#module-pyrexMD.rna" title="Permalink to this headline">¶</a></h1>
-<p>This module contains functions to modify RNA/DNA topologies and include contact bias etc.</p>
+<div class="section" id="module-pyrexMD.topology">
+<span id="pyrexmd-topology-module"></span><h1>pyrexMD.topology module<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions to modify universe topologies and include contact bias etc.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_DCA_res2atom_mapping">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_DCA_res2atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_DCA_res2atom_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_DCA_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get RNA/DNA contact mapping. Uses either N1 or N3 atoms for contact based on
-nucleotide. Returns lists of matching RES pairs and ATOM pairs for contacts
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_scoreFile">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_modify_scoreFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_modify_scoreFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify score file (MSA scores) by shifting residues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>score_fin</strong> (<em>str</em>) – path to score file</p></li>
+<li><p><strong>shift_res</strong> (<em>int</em>) – shift residues by this value</p></li>
+<li><p><strong>outputFileName</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">realpath to modified score file.</div>
+<div class="line">if “PDBID_mod.score” is left as default: try to automatically detect</div>
+<div class="line">pattern based on score_fin and add the “_mod” part into filename.</div>
+</div>
+</p></li>
+<li><p><strong>res_cols</strong> (<em>tuple/list</em>) – score_fin columns with residue numbers</p></li>
+<li><p><strong>score_col</strong> (<em>tuple/list</em>) – score_fin column with score/confidence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_mod.score”</div>
+<div class="line">if “PDBID_mod.score” (default): try to automatically detect pattern</div>
+<div class="line">based on score_fin and insert the “_mod” part into filename.</div>
+</div>
+</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>save_as (str)</dt><dd><p>realpath to modified score file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_topology">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_modify_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
+“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
+<p>Modify topology:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>top_fin (topol.top file): use as template</p></li>
+<li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
+<li><p>modify bond section of new topology by adding contacts with force constant</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
+<li><p><strong>DCA_used_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>n_DCA</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">number of used DCA contacts</div>
+<div class="line">None: search header of <cite>DCA_used_fin</cite> for entry with topn_DCA</div>
+</div>
+</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>float</em>) – force coefficient of contact pairs</p></li>
+<li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">ignore header rows of DCA_used_fin</div>
+<div class="line">-1 or “auto”: auto detect</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – “./” (default)</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_topol_mod.top”</div>
+<div class="line">detect and replace PDBID in save_as based on ref_PDB path</div>
+<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_res2atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_res2atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_res2atom_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get contact mapping. Returns lists of matching RES pairs and ATOM pairs for contacts
 specified in DCA_fin file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>maps only CA atoms if ref_pdb is protein.</p></li>
+<li><p>maps only N1 or N3 atoms if ref_pdb is nucleic.</p></li>
+</ul>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -4083,7 +3931,7 @@ specified in DCA_fin file.</p>
 <div class="line">False: use all DCA pairs w/o applying filter</div>
 </div>
 </p></li>
-<li><p><strong>save_log</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>save_log</strong> (<em>bool</em>) – create log file with contact mapping</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -4112,49 +3960,211 @@ specified in DCA_fin file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_modify_topology">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_modify_topology" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
-“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
-<p>Modify topology:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>top_fin (topol.top file): use as template</p></li>
-<li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
-<li><p>modify bond section of new topology by adding contacts with force constant</p></li>
-</ul>
-</div></blockquote>
+<dt class="sig sig-object py" id="pyrexMD.topology.align_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">align_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#align_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.align_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align resids of mobile and ref by comparing universe.residues.resnames and
+shifting the resids of reference (usually smaller than mobile).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
-<li><p><strong>DCA_used_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
-<li><p><strong>force_k</strong> (<em>int</em><em>, </em><em>float</em>) – force constant of contact pairs</p></li>
-<li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">ignore header rows of DCA_used_fin</div>
-<div class="line">-1 or “auto”: auto detect</div>
-</div>
-</p></li>
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_resids()</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
-<li><p><strong>default_dir</strong> (<em>str</em>) – “./” (default)</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">“PDBID_topol_mod.top”</div>
-<div class="line">detect and replace PDBID in save_as based on ref_PDB path</div>
-<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
-</div>
-</p></li>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.dump_structure">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">dump_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./structures'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#dump_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.dump_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump structures for a list of frames with the file name “save_as”.
+Automatically prepends frame number to the extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – universe containing the structure</p></li>
+<li><p><strong>frames</strong> (<em>array</em><em>, </em><em>list</em>) – </p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file. frame number will
+be prepended to the extension</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dirpath (str)</dt><dd><p>realpath to directory with dumped structures</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.get_matching_selection">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">get_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#get_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.get_matching_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get matching selection strings of mobile and reference after resids alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_resids()</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>sel1 (str)</dt><dd><p>matching selection string of mobile</p>
+</dd>
+<dt>sel2 (str)</dt><dd><p>matching selection string of ref</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.get_resids_shift">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">get_resids_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#get_resids_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.get_resids_shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares universe.residues.resnames between mobile and ref in order to get
+resids shift.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>shift (int)</dt><dd><p>shift value of ref residues to match mobile residues</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_and_align_universe">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_and_align_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_and_align_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_and_align_universe" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Norm reference and mobile universe</p></li>
+<li><p>Align mobile universe on reference universe (matching atom ids and res ids)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rna.nucleic_parsePDB">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rna.</span></span><span class="sig-name descname"><span class="pre">nucleic_parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">N1</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">N3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rna.html#nucleic_parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rna.nucleic_parsePDB" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_ids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify existing MDA universe/atomgrp and normalize ids according to
+min(universe.atoms.ids) = 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’mobile’</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
+<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
+<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; norm_ids(ref, ‘reference’)</div>
+<div class="line">Norming atom ids of reference…</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
+<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify existing MDA universe/atomgrp and normalize resids according to
+min(universe.residues.resids) = 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’topology’</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
+<div class="line">&gt;&gt; print(ref.residues.resids)</div>
+<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; norm_resids(u, ‘reference’)</div>
+<div class="line">Norming resids of reference…</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; print(ref.residues.resids)</div>
+<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_universe">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_universe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the functions</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>norm_ids(u, info)</p></li>
+<li><p>norm_resids(u, info)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’mobile’</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.parsePDB">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads PDB file and returns the columns for residue id, residue name,
 atom id and atom name as lists.</p>
 <dl class="field-list simple">
@@ -4162,7 +4172,7 @@ atom id and atom name as lists.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection str</p></li>
-<li><p><strong>filter</strong> (<em>bool</em>) – True ~ return only N1 atoms for A,G and N3 atoms for T,C,U</p></li>
+<li><p><strong>filter_rna</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4179,6 +4189,75 @@ atom id and atom name as lists.</p>
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.shift_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">shift_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#shift_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.shift_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift mda.universe.residues by &lt;shift&gt; value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>shift</strong> (<em>None</em><em>, </em><em>int</em>) – shift value</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.true_select_atoms">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">true_select_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#true_select_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.true_select_atoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create “true selection” (atomgroup copy in NEW universe) after applying</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>norm_ids()</p></li>
+<li><p>norm_resids()</p></li>
+</ul>
+</div></blockquote>
+<p>Note that atom indices are reassigned according to range(0, len(u.atoms))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>str</em><em>, </em><em>universe</em><em>, </em><em>atomgrp</em>) – structure path (PDB id) or universe with structure</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>a (atomgrp)</dt><dd><p>”true selection” ~ atomgroup copy in NEW universe</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>mda.select_atoms() remembers information about the original
+universe configuration which is sometimes NOT WANTED.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line"># Init universe</div>
+<div class="line">&gt;&gt; u = mda.Universe(&lt;top&gt;)</div>
+<div class="line"><br /></div>
+<div class="line"># select_atoms() behaviour</div>
+<div class="line">&gt;&gt; a = u.select_atoms(“protein and type C”)</div>
+<div class="line">&gt;&gt; a</div>
+<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
+<div class="line">&gt;&gt; a.residues.atoms</div>
+<div class="line">&lt;AtomGroup with 964 atoms&gt;</div>
+<div class="line"><br /></div>
+<div class="line"># true_select_atoms() behaviour</div>
+<div class="line">&gt;&gt; a = topology.true_select_atoms(u, sel=”protein and type C”)</div>
+<div class="line">&gt;&gt; a</div>
+<div class="line">&lt;Universe with 72 atoms&gt;</div>
+<div class="line">&gt;&gt; a.residue.atoms</div>
+<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
+</div>
 </dd></dl>
 
 </div>

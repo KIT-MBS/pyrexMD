@@ -40,10 +40,10 @@ pyrexMD.rex module
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.rna module
-------------------
+pyrexMD.topology module
+-----------------------
 
-.. automodule:: pyrexMD.rna
+.. automodule:: pyrexMD.topology
    :members:
    :undoc-members:
    :show-inheritance:

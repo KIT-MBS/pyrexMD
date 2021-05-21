@@ -100,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.misc">pyrexMD.misc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.rex">pyrexMD.rex module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.rna">pyrexMD.rna module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.topology">pyrexMD.topology module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pyrexMD.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pyrexMD.analysis package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-pyrexMD.analysis.analysis">pyrexMD.analysis.analysis module</a><ul>
@@ -205,18 +205,18 @@
 <h1>pyrexMD.analysis package<a class="headerlink" href="#pyrexmd-analysis-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-pyrexMD.analysis.analysis">
 <span id="pyrexmd-analysis-analysis-module"></span><h2>pyrexMD.analysis.analysis module<a class="headerlink" href="#module-pyrexMD.analysis.analysis" title="Permalink to this headline">¶</a></h2>
-<p>This module contains functions related to topology modifications (e.g.
-norm_universe(), align_universe()) and general trajectory analyses.</p>
+<p>This module contains functions various functions for trajectory analysis.</p>
 <div class="section" id="example">
 <h3>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 
 <span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
 <span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
 
 <span class="c1"># get RMSD</span>
-<span class="n">ana</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
 <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
 
 <span class="c1"># plot</span>
@@ -277,26 +277,6 @@ norm_universe(), align_universe()) and general trajectory analyses.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.align_resids">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">align_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#align_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.align_resids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align resids of mobile and ref by comparing universe.residues.resnames and
-shifting the resids of reference (usually smaller than mobile).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_resids()</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.alignto">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">alignto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#alignto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.alignto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified version of MDAnalysis.analysis.align.alignto() which works properly
@@ -350,32 +330,6 @@ with non-matching atoms.</div>
 <dt>old_rmsd (float)</dt><dd><p>RMSD before spatial alignment</p>
 </dd>
 <dt>new_rmsd (float)</dt><dd><p>RMSD after spatial alignment</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.dump_structure">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">dump_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./structures'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#dump_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.dump_structure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dump structures for a list of frames with the file name “save_as”.
-Automatically prepends frame number to the extension.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – universe containing the structure</p></li>
-<li><p><strong>frames</strong> (<em>array</em><em>, </em><em>list</em>) – </p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file. frame number will
-be prepended to the extension</p></li>
-<li><p><strong>default_dir</strong> (<em>str</em>) – </p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>dirpath (str)</dt><dd><p>realpath to directory with dumped structures</p>
 </dd>
 </dl>
 </p>
@@ -522,54 +476,6 @@ See help(MDAnalysis.analysis.rms.get_RMSF) for more information.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_matching_selection">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_matching_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get matching selection strings of mobile and reference after resids alignment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_resids()</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>sel1 (str)</dt><dd><p>matching selection string of mobile</p>
-</dd>
-<dt>sel2 (str)</dt><dd><p>matching selection string of ref</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_resids_shift">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_resids_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_resids_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_resids_shift" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares universe.residues.resnames between mobile and ref in order to get
-resids shift.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>shift (int)</dt><dd><p>shift value of ref residues to match mobile residues</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_rmsd">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_rmsd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">superposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_rmsd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_rmsd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns rmsd for single frame.</p>
@@ -639,115 +545,6 @@ corresponding atom in “mobile”.</div>
 </dd>
 </dl>
 </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.norm_and_align_universe">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">norm_and_align_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#norm_and_align_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.norm_and_align_universe" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Norm reference and mobile universe</p></li>
-<li><p>Align mobile universe on reference universe (matching atom ids and res ids)</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
-<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.norm_ids">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">norm_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#norm_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.norm_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify existing MDA universe/atomgrp and normalize ids according to
-min(universe.atoms.ids) = 1</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
-<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">additional info for print message</div>
-<div class="line">’reference’</div>
-<div class="line">’mobile’</div>
-</div>
-</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="line-block">
-<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
-<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
-<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
-<div class="line"><br /></div>
-<div class="line">&gt;&gt; norm_ids(ref, ‘reference’)</div>
-<div class="line">Norming atom ids of reference…</div>
-<div class="line"><br /></div>
-<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
-<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.norm_resids">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">norm_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#norm_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.norm_resids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify existing MDA universe/atomgrp and normalize resids according to
-min(universe.residues.resids) = 1</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
-<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">additional info for print message</div>
-<div class="line">’reference’</div>
-<div class="line">’topology’</div>
-</div>
-</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="line-block">
-<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
-<div class="line">&gt;&gt; print(ref.residues.resids)</div>
-<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
-<div class="line"><br /></div>
-<div class="line">&gt;&gt; norm_resids(u, ‘reference’)</div>
-<div class="line">Norming resids of reference…</div>
-<div class="line"><br /></div>
-<div class="line">&gt;&gt; print(ref.residues.resids)</div>
-<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.norm_universe">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">norm_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#norm_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.norm_universe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes the functions</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>norm_ids(u, info)</p></li>
-<li><p>norm_resids(u, info)</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
-<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">additional info for print message</div>
-<div class="line">’reference’</div>
-<div class="line">’mobile’</div>
-</div>
-</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1113,21 +910,6 @@ requires 1 extra bin.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.shift_resids">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">shift_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#shift_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.shift_resids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shift mda.universe.residues by &lt;shift&gt; value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em>) – </p></li>
-<li><p><strong>shift</strong> (<em>None</em><em>, </em><em>int</em>) – shift value</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.shortest_RES_distances">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">shortest_RES_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#shortest_RES_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.shortest_RES_distances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates shortest RES distances for selection of universe u.</p>
@@ -1163,60 +945,6 @@ requires 1 extra bin.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.true_select_atoms">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">true_select_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#true_select_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.true_select_atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create “true selection” (atomgroup copy in NEW universe) after applying</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>norm_ids()</p></li>
-<li><p>norm_resids()</p></li>
-</ul>
-</div></blockquote>
-<p>Note that atom indices are reassigned according to range(0, len(u.atoms))</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>str</em><em>, </em><em>universe</em><em>, </em><em>atomgrp</em>) – structure path (PDB id) or universe with structure</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>a (atomgrp)</dt><dd><p>”true selection” ~ atomgroup copy in NEW universe</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>mda.select_atoms() remembers information about the original
-universe configuration which is sometimes NOT WANTED.</p>
-</div>
-<p class="rubric">Example</p>
-<div class="line-block">
-<div class="line"># Init universe</div>
-<div class="line">&gt;&gt; u = mda.Universe(&lt;top&gt;)</div>
-<div class="line"><br /></div>
-<div class="line"># select_atoms() behaviour</div>
-<div class="line">&gt;&gt; a = u.select_atoms(“protein and type C”)</div>
-<div class="line">&gt;&gt; a</div>
-<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
-<div class="line">&gt;&gt; a.residues.atoms</div>
-<div class="line">&lt;AtomGroup with 964 atoms&gt;</div>
-<div class="line"><br /></div>
-<div class="line"># true_select_atoms() behaviour</div>
-<div class="line">&gt;&gt; a = ana.true_select_atoms(u, sel=”protein and type C”)</div>
-<div class="line">&gt;&gt; a</div>
-<div class="line">&lt;Universe with 72 atoms&gt;</div>
-<div class="line">&gt;&gt; a.residue.atoms</div>
-<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
-</div>
-</dd></dl>
-
 </div>
 </div>
 <div class="section" id="module-pyrexMD.analysis.contacts">
@@ -1248,7 +976,7 @@ universe configuration which is sometimes NOT WANTED.</p>
 <h3>Module contents:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_Native_Contacts">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_Native_Contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_Native_Contacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_Native_Contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_Native_Contacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get list of unique RES pairs and list of detailed RES pairs with native contacts.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1261,16 +989,27 @@ whereas NC_d contains each ATOM pair.</p>
 <li><p><strong>ref</strong> (<em>str</em><em>, </em><em>universe</em><em>, </em><em>atomgrp</em>) – reference structure</p></li>
 <li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance for native contacts</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-<li><p><strong>method</strong> (<em>str</em>) – ‘1’ or ‘Contact_Matrix’: mda.contact_matrix() with d_cutoff
-‘2’ or ‘Capped_Distance’: mda.lib.distances.capped_distance() with d_cutoff #TODO
-‘3’ or ‘Shadow_Map’ #TODO</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
-<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print “Note: Please verify that your selection is</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">‘1’ or ‘Contact_Matrix’: mda.contact_matrix() with d_cutoff</div>
+<div class="line">’2’ or ‘Shadow_Map’ #TODO</div>
+</div>
+</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">save RES pairs and ATOM pairs of native contacts to a log file.</div>
+<div class="line">selection is hardcoded to “protein and name CA” for proteins</div>
+<div class="line">and “name N1 or name N3” for RNA/DNA.</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
 <dt>NC (list)</dt><dd><p>list with unique RES pairs</p>
 </dd>
 <dt>NC_d (list)</dt><dd><p>detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</p>
@@ -1476,7 +1215,7 @@ If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
 </div>
 </p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
@@ -1537,7 +1276,7 @@ If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
 </div>
 </p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
-<li><p><strong>norm</strong> (<em>bool</em>) – apply analysis.norm_universe()</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
 <li><p><strong>TPR_layer</strong> (<em>str</em>) – <div class="line-block">
 <div class="line">plot TPR curve in foreground or background layer</div>
 <div class="line">”fg”, “foreground”, “bg”, “background”</div>
@@ -1902,6 +1641,7 @@ dihedrals for more information.</p></li>
 <h3>Example:<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.gdt</span> <span class="k">as</span> <span class="nn">gdt</span>
 
@@ -1909,7 +1649,7 @@ dihedrals for more information.</p></li>
 <span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
 
 <span class="c1"># first norm and align universes</span>
-<span class="n">ana</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
 
 <span class="c1"># run GDT</span>
 <span class="n">GDT</span> <span class="o">=</span> <span class="n">gdt</span><span class="o">.</span><span class="n">GDT</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
@@ -2092,7 +1832,7 @@ instead of specific ones</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.GDT_rank_scores">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">GDT_rank_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#GDT_rank_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.GDT_rank_scores" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">GDT_rank_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#GDT_rank_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.GDT_rank_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>rank scores.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2116,8 +1856,11 @@ instead of specific ones</p>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>verbose_stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop printing after N lines</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
 <dt>GDT_TS_ranked (array)</dt><dd><p>ranked array with GDT_TS scores</p>
 </dd>
 <dt>GDT_HA_ranked (array)</dt><dd><p>ranked array with GDT_HA scores</p>
@@ -2302,7 +2045,7 @@ instead of specific ones</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.plot_LA">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">plot_LA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#plot_LA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.plot_LA" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">plot_LA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#plot_LA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.plot_LA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create LocalAccuracy Plot (heatmap) with</p>
 <blockquote>
 <div><ul class="simple">
@@ -2342,7 +2085,7 @@ and vmin, vmax = (0, 5).</div>
 </p></li>
 <li><p><strong>show_cbar</strong> (<em>bool</em>) – show/hide colorbar</p></li>
 <li><p><strong>show_scores</strong> (<em>bool</em>) – show/hide GDT_TS and GDT_HA scores</p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – save name or realpath to save file</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -2409,7 +2152,7 @@ and vmin, vmax = (0, 5).</div>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.rank_scores">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">rank_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#rank_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.rank_scores" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">rank_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_TS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#rank_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.rank_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>rank scores</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2434,8 +2177,11 @@ and vmin, vmax = (0, 5).</div>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>verbose_stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop printing after N lines</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
 <dt>GDT_TS_ranked (array)</dt><dd><p>ranked array with GDT_TS scores</p>
 </dd>
 <dt>GDT_HA_ranked (array)</dt><dd><p>ranked array with GDT_HA scores</p>

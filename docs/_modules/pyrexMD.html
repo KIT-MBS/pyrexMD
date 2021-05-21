@@ -163,11 +163,13 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: __init__.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 21.05.2021</span>
 
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">topology</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis</span> <span class="k">as</span> <span class="nn">analysis</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
@@ -198,13 +200,12 @@
 <span class="s2">import MDAnalysis as mda</span>
 <span class="s2">import pyrexMD.misc as misc</span>
 <span class="s2">import pyrexMD.core as core</span>
+<span class="s2">import pyrexMD.topology as top</span>
+<span class="s2">import pyrexMD.gmx as gmx</span>
 <span class="s2">import pyrexMD.analysis.analysis as ana</span>
 <span class="s2">#import pyrexMD.analysis.contacts as con</span>
 <span class="s2">#import pyrexMD.analysis.dihedrals as dih</span>
 <span class="s2">#import pyrexMD.analysis.gdt as gdt</span>
-<span class="s2">#import pyrexMD.decoy.abinitio as abi</span>
-<span class="s2">#import pyrexMD.decoy.cluster as clu</span>
-<span class="s2">#import pyrexMD.gmx as gmx</span>
 <span class="s2">#import pyrexMD.rex as rex</span>
 
 <span class="s2">from tqdm.notebook import tqdm</span>
