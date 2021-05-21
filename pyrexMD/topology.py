@@ -1,19 +1,19 @@
 # @Author: Arthur Voronin
 # @Date:   17.04.2021
-# @Filename: rna.py
+# @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 19.05.2021
+# @Last modified time: 21.05.2021
 
 
 """
-This module contains functions to modify RNA/DNA topologies and include contact bias etc.
+This module contains functions to modify topologies and include contact bias etc.
 """
 
 import pyrexMD.misc as _misc
 import MDAnalysis as mda
 
 
-def nucleic_parsePDB(fin, sel="name N1 or name N3", filter=True):
+def parsePDB(fin, sel="protein", filter_rna=True):
     """
     Reads PDB file and returns the columns for residue id, residue name,
     atom id and atom name as lists.
@@ -21,7 +21,7 @@ def nucleic_parsePDB(fin, sel="name N1 or name N3", filter=True):
     Args:
         fin (str): PDB file
         sel (str): selection str
-        filter (bool): True ~ return only N1 atoms for A,G and N3 atoms for T,C,U
+        filter_rna (bool):
 
     Returns:
         RESID (list)
@@ -33,6 +33,7 @@ def nucleic_parsePDB(fin, sel="name N1 or name N3", filter=True):
         NAME (list)
             atom name column of PDB
     """
+    # filter_rna mapping selection
     map = {"A": "N1",
            "ADE": "N1",
            "G": "N1",
@@ -44,16 +45,13 @@ def nucleic_parsePDB(fin, sel="name N1 or name N3", filter=True):
            "U": "N3",
            "URA": "N3"}
     ############################################################################
-    RESID = []
-    RESNAME = []
-    ID = []
-    NAME = []
+    RESID, RESNAME, ID, NAME = [], [], [], []
 
     u = mda.Universe(fin)
     a = u.select_atoms(sel)
 
     for item in a:
-        if filter is True:
+        if filter_rna is True and len(a.select_atoms("nucleic")) != 0:
             if item.name == map[item.resname]:
                 RESID.append(item.resid)
                 RESNAME.append(item.resname)
@@ -69,8 +67,8 @@ def nucleic_parsePDB(fin, sel="name N1 or name N3", filter=True):
     return RESID, RESNAME, ID, NAME
 
 
-def nucleic_DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows="auto",
-                                 filter_DCA=True, save_log=True, **kwargs):
+def DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows="auto",
+                         filter_DCA=True, save_log=True, **kwargs):
     """
     Get RNA/DNA contact mapping. Uses either N1 or N3 atoms for contact based on
     nucleotide. Returns lists of matching RES pairs and ATOM pairs for contacts
@@ -87,7 +85,7 @@ def nucleic_DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows=
         filter_DCA (bool):
           | True: ignore DCA pairs with abs(i-j) < 3
           | False: use all DCA pairs w/o applying filter
-        save_log (bool)
+        save_log (bool): True ~ return only N1 atoms for A,G and N3 atoms for T,C,U
 
     Keyword Args:
         cprint_color (None, str): colored print color
@@ -112,8 +110,12 @@ def nucleic_DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows=
     ############################################################################
     _misc.cprint('ATTENTION: Make sure that ref_pdb is the reference PDB taken after applying a forcefield, since added atoms will shift the atom numbers.\n', cfg.cprint_color)
 
-    # read pdb file and filter for mapping atoms (hardcoded for sel = "name N1 or name N3")
-    RESID, RESNAME, ID, NAME = nucleic_parsePDB(ref_pdb, sel="name N1 or name N3")
+    # check if ref_pdb is protein or nucleic and apply hardcoded mapping
+    ref = mda.Universe(ref_pdb)
+    if len(ref.select_atoms("nucleic")) == 0:
+        RESID, RESNAME, ID, NAME = parsePDB(ref_pdb, sel="protein and name CA")
+    else:
+        RESID, RESNAME, ID, NAME = parsePDB(ref_pdb, sel="name N1 or name N3")
 
     # read contact pairs
     DCA_PAIR, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=usecols, skiprows=DCA_skiprows, filter_DCA=filter_DCA)
@@ -144,7 +146,7 @@ def nucleic_DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows=
     return RES_PAIR, ATOM_PAIR
 
 
-def nucleic_modify_topology(top_fin, DCA_used_fin, force_k=2, skiprows="auto", **kwargs):
+def modify_topology(top_fin, DCA_used_fin, force_k=10, skiprows="auto", **kwargs):
     """
     Modifies topology by using the contacts written in "DCA_used.txt" file.
     "DCA_used.txt" is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.

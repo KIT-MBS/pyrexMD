@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 21.05.2021
 
 
 import pyrexMD.misc as misc
@@ -45,6 +45,7 @@ import pyrexMD.analysis.analysis as ana
 #import pyrexMD.decoy.cluster as clu
 #import pyrexMD.gmx as gmx
 #import pyrexMD.rex as rex
+#import pyrexMD.rna as rna
 
 from tqdm.notebook import tqdm
 misc.apply_matplotlib_rc_settings()

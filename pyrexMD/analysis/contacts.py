@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 21.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -47,7 +47,7 @@ from tqdm.notebook import tqdm
 import operator
 
 
-def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True, ignh=True, verbose=True):
+def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", target="protein", verbose=True, **kwargs):
     """
     Get list of unique RES pairs and list of detailed RES pairs with native contacts.
 
@@ -59,13 +59,17 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True,
         ref (str, universe, atomgrp): reference structure
         d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
+        target (str): "protein", "rna", "dna", "nucleic"
+        verbose (bool): print "Note: Please verify that your selection is
+
+    Keyword Args:
         method (str):
-            '1' or 'Contact_Matrix': mda.contact_matrix() with d_cutoff
-            '2' or 'Capped_Distance': mda.lib.distances.capped_distance() with d_cutoff #TODO
-            '3' or 'Shadow_Map' #TODO
+          | '1' or 'Contact_Matrix': mda.contact_matrix() with d_cutoff
+          | '2' or 'Shadow_Map' #TODO
         norm (bool): apply analysis.norm_universe()
         ignh (bool): ignore hydrogen
-        verbose (bool): print "Note: Please verify that your selection is
+        save_as (None, str): save NC and mapping atoms to file
+
 
     Returns:
         NC (list)
@@ -73,25 +77,31 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True,
         NC_d (list)
             detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)
     """
-    if type(method) is int:
-        method = str(method)
+    default = {"method": "1",
+               "norm": True,
+               "ignh": True,
+               "save_as": None}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    if type(cfg.method) is int:
+        cfg.method = str(cfg.method)
 
     # load universe
     if type(ref) is str:
         u = mda.Universe(ref)
     else:
         u = ref
-    if norm:
+    if cfg.norm:
         _ana.norm_universe(u)
-    if ignh:
-        a = _ana.true_select_atoms(u, sel, ignh=ignh, norm=norm)
+    if cfg.ignh:
+        a = _ana.true_select_atoms(u, sel, ignh=cfg.ignh, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
 
     NC = []     # list with unique NC pairs
     NC_d = []   # detailed list with NCs containing (RES pairs), (ATOM pairs), (NAME pairs)
 
-    if method in ['1', 'Contact_Matrix']:
+    if cfg.method in ['1', 'Contact_Matrix', 'contact_matrix']:
         RES = a.resids
         NAMES = a.names
 
@@ -102,12 +112,16 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel='protein', method='1', norm=True,
                     NC.append((RES[i], RES[j]))
                     NC_d.append([(RES[i], RES[j]), (i, j), (NAMES[i], NAMES[j])])
 
-    elif method in ['2', 'Capped_Distance']:
-        # TODO method 2: Capped distance
+    elif cfg.method in ['2', 'Shadow_Map', 'shadow_map']:
+        # TODO method 2: SHADOWMAP
         pass
-    elif method in ['3', 'Shadow_Map']:
-        # TODO method 3: SHADOWMAP
-        pass
+
+    # if cfg.save_as != None:
+    #     if target == "protein":
+    #         _res, _atom, _name = rex.parsePDB_RES_ATOM_NAME(ref, ignh=cfg.ignh)
+    #         with open(cfg.save_as, "w") as fout:
+    #             fout.write(f"#RESi\tRESj\tATOMi\tATOMj\n")
+    #             for IJ in NC:
 
     return(NC, NC_d)
 
