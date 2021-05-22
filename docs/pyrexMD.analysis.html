@@ -1881,6 +1881,24 @@ instead of specific ones</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.gdt.GDT_rna">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">GDT_rna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nucleic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nucleic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">40,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_resids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#GDT_rna"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.GDT_rna" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns gdt.GDT() with RNA default values after converting selection strings
+to selection id strings.</p>
+<dl>
+<dt>Code:</dt><dd><div class="line-block">
+<div class="line">selid1 = pyrexMD.topology.sel2selid(mobile, sel=sel1)</div>
+<div class="line">selid2 = pyrexMD.topology.sel2selid(ref, sel=sel2)</div>
+<div class="line">return GDT(mobile=mobile, ref=ref, sel1=selid1, sel2=selid2, sss=sss,</div>
+<div class="line-block">
+<div class="line">cutoff=cutoff, true_resids=true_resids, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs)</div>
+</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.get_GDT_HA">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_GDT_HA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_GDT_HA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_GDT_HA" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition note">
@@ -1936,6 +1954,10 @@ instead of specific ones</p>
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.get_Pair_Distances">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_Pair_Distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_Pair_Distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_Pair_Distances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aligns mobile to ref and calculates pair distances (e.g. CA-CA distances).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>single frame function.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2045,7 +2067,7 @@ instead of specific ones</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.plot_LA">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">plot_LA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#plot_LA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.plot_LA" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">plot_LA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GDT_HA'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#plot_LA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.plot_LA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create LocalAccuracy Plot (heatmap) with</p>
 <blockquote>
 <div><ul class="simple">
@@ -2063,29 +2085,22 @@ instead of specific ones</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – mobile structure with trajectory</p></li>
 <li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – reference structure</p></li>
-<li><p><strong>GDT_TS</strong> (<em>array</em>) – array with GDT_TS scores</p></li>
-<li><p><strong>GDT_HA</strong> (<em>array</em>) – array with GDT_HA scores</p></li>
-<li><p><strong>GTD_ndx</strong> (<em>array</em>) – array with corresponding index values (representative for frame numbers)</p></li>
+<li><p><strong>GDT_TS</strong> (<em>array</em>) – array with GDT_TS scores.</p></li>
+<li><p><strong>GDT_HA</strong> (<em>array</em>) – array with GDT_HA scores.</p></li>
+<li><p><strong>GTD_ndx</strong> (<em>array</em>) – array with corresponding index values (representative for frame numbers).</p></li>
 <li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile structure (calculation of pair distances)</p></li>
 <li><p><strong>sel2</strong> (<em>str</em>) – selection string of reference structure (calculation of pair distances)</p></li>
-<li><p><strong>ndx_offset</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">offset/shift of GDT_ndx to match real “mobile” frames.</div>
-<div class="line">Look up “start” parameter during execution of gdt.GDT()</div>
-</div>
-</p></li>
-<li><p><strong>rank_num</strong> (<em>int</em>) – plot only &lt;rank_num&gt; best ranked frames</p></li>
 <li><p><strong>cmap</strong> (<em>str</em>) – <div class="line-block">
 <div class="line">“GDT_TS” or “TS”: color map with new colors at values (0,  1, 2, 4, 8)
 and vmin, vmax = (0, 10).</div>
 <div class="line">”GDT_HA” or “HA”: color map with new colors at values (0, .5, 1, 2, 4)
 and vmin, vmax = (0, 5).</div>
+<div class="line">”nucleic” or “RNA” or “DNA”: color map with new colors at values (0, .5, 1, 2, 4)
+and vmin, vmax = (0, 20).</div>
 <div class="line">other cmap names: see help(plt.colormaps) or alternatively
 <a class="reference external" href="https://matplotlib.org/examples/color/colormaps_reference.html">https://matplotlib.org/examples/color/colormaps_reference.html</a></div>
 </div>
 </p></li>
-<li><p><strong>show_cbar</strong> (<em>bool</em>) – show/hide colorbar</p></li>
-<li><p><strong>show_scores</strong> (<em>bool</em>) – show/hide GDT_TS and GDT_HA scores</p></li>
-<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – save name or realpath to save file</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -2096,15 +2111,29 @@ and vmin, vmax = (0, 5).</div>
 <div class="line">int:  rounding on to &lt;int&gt; decimals</div>
 </div>
 </p></li>
+<li><p><strong>ndx_offset</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">offset/shift of GDT_ndx to match real “mobile” frames. Defaults to 0.</div>
+<div class="line">Look up “start” parameter during execution of gdt.GDT()</div>
+</div>
+</p></li>
+<li><p><strong>rank_num</strong> (<em>int</em>) – plot only &lt;rank_num&gt; best ranked frames. Defaults to 30.</p></li>
+<li><p><strong>show_cbar</strong> (<em>bool</em>) – show/hide colorbar. Defaults to True.</p></li>
+<li><p><strong>show_frames</strong> (<em>bool</em>) – show/hide frame numbers. Defaults to False.</p></li>
+<li><p><strong>show_scores</strong> (<em>bool</em>) – show/hide GDT_TS and GDT_HA scores. Defaults to True.</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – save name or realpath to save file. Defaults to None.</p></li>
+<li><p><strong>cbar_ticks</strong> (<em>None</em><em>, </em><em>list</em>) – color bar tick positions. Defaults to None.</p></li>
 <li><p><strong>cbar_label/label</strong> (<em>str</em>) – </p></li>
 <li><p><strong>cbar_fontweight/fontweight</strong> (<em>str</em>) – “normal”, “bold”</p></li>
 <li><p><strong>cbar_location/location</strong> (<em>str</em>) – “right”, “bottom”, “left”, “top”</p></li>
 <li><p><strong>cbar_orientation/orientation</strong> (<em>str</em>) – “horizontal”, “vertical”</p></li>
-<li><p><strong>cbar_min/vmin</strong> (<em>None</em><em>, </em><em>int</em>) – min value of colorbar and heatmap</p></li>
-<li><p><strong>cbar_max/vmax</strong> (<em>None</em><em>, </em><em>int</em>) – max value of colorbar and heatmap</p></li>
+<li><p><strong>cbar_min/vmin</strong> (<em>None</em><em>, </em><em>int</em>) – min value of colorbar and heatmap. Gets
+overwritten by cmaps such as “GDT_TS”, “GDT_HA”, “RNA” etc.</p></li>
+<li><p><strong>cbar_max/vmax</strong> (<em>None</em><em>, </em><em>int</em>) – max value of colorbar and heatmap. Gets
+overwritten by cmaps such as “GDT_TS”, “GDT_HA”, “RNA” etc.</p></li>
 <li><p><strong>text_pos_Frame</strong> (<em>list</em>) – [x0, y0] position of the “Frame” text box (label)</p></li>
 <li><p><strong>text_pos_TS</strong> (<em>list</em>) – [x0, y0] position of the “TS” text box (label)</p></li>
 <li><p><strong>text_pos_HA</strong> (<em>list</em>) – [x0, y0] position of the “HA” text box (label)</p></li>
+<li><p><strong>font_scale</strong> (<em>float</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -2146,8 +2175,25 @@ and vmin, vmax = (0, 5).</div>
 <div class="line"><br /></div>
 </div>
 <div class="line"># plot</div>
-<div class="line">&gt;&gt; gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], <a href="#id7"><span class="problematic" id="id8">**</span></a>text_pos_kws)</div>
+<div class="line">&gt;&gt; gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], <a href="#id9"><span class="problematic" id="id10">**</span></a>text_pos_kws)</div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.gdt.plot_LA_rna">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">plot_LA_rna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_TS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_HA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDT_ndx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nucleic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nucleic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RNA'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#plot_LA_rna"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.plot_LA_rna" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot_LA() with RNA default values after converting selection strings to selection id strings.</p>
+<dl>
+<dt>Code:</dt><dd><div class="line-block">
+<div class="line">selid1 = pyrexMD.topology.sel2selid(mobile, sel=sel1)</div>
+<div class="line">selid2 = pyrexMD.topology.sel2selid(ref, sel=sel2)</div>
+<div class="line">return plot_LA(mobile, ref, GDT_TS=GDT_TS, GDT_HA=GDT_HA, GDT_ndx=GDT_ndx,</div>
+<div class="line-block">
+<div class="line">sel1=selid1, sel2=selid2, cmap=cmap, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)</div>
+</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

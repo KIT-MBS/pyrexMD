@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 21.05.2021</span>
+<span class="c1"># @Last modified time: 22.05.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -265,35 +265,6 @@
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Aligning reference res ids...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
         <span class="n">shift_resids</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">return</span></div>
-
-
-<div class="viewcode-block" id="get_matching_selection"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.get_matching_selection">[docs]</a><span class="k">def</span> <span class="nf">get_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get matching selection strings of mobile and reference after resids alignment.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        mobile (universe)</span>
-<span class="sd">        ref (universe)</span>
-<span class="sd">        sel (str): selection string</span>
-<span class="sd">        norm (bool): apply topology.norm_resids()</span>
-<span class="sd">        verbose (bool)</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        sel1 (str)</span>
-<span class="sd">            matching selection string of mobile</span>
-<span class="sd">        sel2 (str)</span>
-<span class="sd">            matching selection string of ref</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-    <span class="n">sel1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2"> and resid </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">sel2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2">&quot;</span>
-
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">):</span>
-        <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No matching selection found.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span></div>
 
 
 <div class="viewcode-block" id="norm_ids"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.norm_ids">[docs]</a><span class="k">def</span> <span class="nf">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -510,6 +481,83 @@
     <span class="k">return</span> <span class="n">a</span></div>
 
 
+<div class="viewcode-block" id="get_matching_selection"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.get_matching_selection">[docs]</a><span class="k">def</span> <span class="nf">get_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get matching selection strings of mobile and reference after resids alignment.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mobile (universe)</span>
+<span class="sd">        ref (universe)</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        norm (bool): apply topology.norm_resids()</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        sel1 (str)</span>
+<span class="sd">            matching selection string of mobile</span>
+<span class="sd">        sel2 (str)</span>
+<span class="sd">            matching selection string of ref</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">sel1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2"> and resid </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">sel2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No matching selection found.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span></div>
+
+
+<div class="viewcode-block" id="sel2selid"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.sel2selid">[docs]</a><span class="k">def</span> <span class="nf">sel2selid</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">filter_rna</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts selection string to selection id string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        u (universe, str): structure universe or path to structure pdb</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        selid (str)</span>
+<span class="sd">            selection id string</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | &gt;&gt; u = mda.Universe(&quot;path/to/pdb&quot;)</span>
+<span class="sd">        | &gt;&gt; selid = sel2selid(u, sel=&quot;protein and name CA&quot;)</span>
+<span class="sd">        | &gt;&gt; selid</span>
+<span class="sd">        | &#39;index 4 18 37 58 77 94 118 137 159 171 178 193 199 210 221 228 260 274 288 294&#39;</span>
+<span class="sd">        | &gt;&gt; u.select_atoms(&quot;protein and name CA&quot;) == u.selectg_atoms(selid)</span>
+<span class="sd">        | True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># filter_rna mapping selection</span>
+    <span class="nb">map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;ADE&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;GUA&quot;</span><span class="p">:</span> <span class="s2">&quot;N1&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;THY&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;CYT&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;URA&quot;</span><span class="p">:</span> <span class="s2">&quot;N3&quot;</span><span class="p">}</span>
+    <span class="c1">########################################################</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filter_rna</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;nucleic&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="nb">map</span><span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">resname</span><span class="p">]:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">item</span>    <span class="c1"># remove atoms which are not in map</span>
+
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="o">-</span><span class="mi">1</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
+    <span class="n">selid</span> <span class="o">=</span> <span class="s2">&quot;index &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">selid</span></div>
+
+
 <div class="viewcode-block" id="dump_structure"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.dump_structure">[docs]</a><span class="k">def</span> <span class="nf">dump_structure</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./structures&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dump structures for a list of frames with the file name &quot;save_as&quot;.</span>
@@ -551,15 +599,15 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### Include contact bias</span>
 
-<div class="viewcode-block" id="parsePDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.parsePDB">[docs]</a><span class="k">def</span> <span class="nf">parsePDB</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">filter_rna</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="parsePDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.parsePDB">[docs]</a><span class="k">def</span> <span class="nf">parsePDB</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">filter_rna</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads PDB file and returns the columns for residue id, residue name,</span>
 <span class="sd">    atom id and atom name as lists.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        fin (str): PDB file</span>
-<span class="sd">        sel (str): selection str</span>
-<span class="sd">        filter_rna (bool):</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RESID (list)</span>

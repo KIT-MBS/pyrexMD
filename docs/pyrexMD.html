@@ -4164,15 +4164,15 @@ min(universe.residues.resids) = 1</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.parsePDB">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads PDB file and returns the columns for residue id, residue name,
 atom id and atom name as lists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection str</p></li>
-<li><p><strong>filter_rna</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4189,6 +4189,37 @@ atom id and atom name as lists.</p>
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.sel2selid">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">sel2selid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#sel2selid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.sel2selid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts selection string to selection id string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – structure universe or path to structure pdb</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>selid (str)</dt><dd><p>selection id string</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; u = mda.Universe(“path/to/pdb”)</div>
+<div class="line">&gt;&gt; selid = sel2selid(u, sel=”protein and name CA”)</div>
+<div class="line">&gt;&gt; selid</div>
+<div class="line">‘index 4 18 37 58 77 94 118 137 159 171 178 193 199 210 221 228 260 274 288 294’</div>
+<div class="line">&gt;&gt; u.select_atoms(“protein and name CA”) == u.selectg_atoms(selid)</div>
+<div class="line">True</div>
+</div>
 </dd></dl>
 
 <dl class="py function">
