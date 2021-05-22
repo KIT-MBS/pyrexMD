@@ -2,7 +2,7 @@
 # @Date:   21.05.2021
 # @Filename: test_topology.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 22.05.2021
 
 
 import pyrexMD.topology as top
@@ -36,4 +36,17 @@ def test_get_matching_selection():
     val = top.get_matching_selection(mobile, ref, "backbone", norm=True)
     expected = ('backbone and resid 1-20', 'backbone')
     assert val == expected
+    return
+
+
+def test_sel2selid():
+    ref = mda.Universe(pdb)
+    sel = "protein and name CA"
+    selid = top.sel2selid(ref, sel)
+    assert (ref.select_atoms(sel) == ref.select_atoms(selid))
+
+    ref = mda.Universe(pdb)
+    sel = "type O"
+    selid = top.sel2selid(ref, sel)
+    assert (ref.select_atoms(sel) == ref.select_atoms(selid))
     return

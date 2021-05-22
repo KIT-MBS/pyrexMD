@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 22.05.2021
 
 import pyrexMD.analysis.contacts as con
 import MDAnalysis as mda
