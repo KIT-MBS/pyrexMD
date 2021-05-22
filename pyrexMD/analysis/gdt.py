@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 22.05.2021
 
 
 """
@@ -55,6 +55,7 @@ Module contents:
 """
 
 import pyrexMD.misc as _misc
+import pyrexMD.topology as _top
 import pyrexMD.analysis.analysis as _ana
 import MDAnalysis as mda
 import numpy as np
@@ -91,6 +92,8 @@ def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein an
     """
     Aligns mobile to ref and calculates pair distances (e.g. CA-CA distances).
 
+    .. Note:: single frame function.
+
     Args:
         mobile (universe, atomgrp): mobile structure with trajectory
         ref (universe, atomgrp): reference structure
@@ -111,8 +114,6 @@ def get_Pair_Distances(mobile, ref, sel1="protein and name CA", sel2="protein an
     ref_atoms = ref.atoms.select_atoms(sel2)
     weights = "mass"  # hard coded weights
     #################################################
-
-    # get_Pair_Distances function
     RMSD = _ana.alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
     _resids_mobile, _resids_ref, PAIR_DISTANCES = mda.analysis.distances.dist(mobile_atoms, ref_atoms)
     return(PAIR_DISTANCES, RMSD, _resids_mobile, _resids_ref)
@@ -240,8 +241,6 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
           list of analyzed frames
     """
     ############################################################################
-    #sel_mobile = mobile.select_atoms(sel1)
-    #sel_ref = ref.select_atoms(sel2)
     weights = "mass"  # hardcoded weights for alignment
     ############################################################################
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
@@ -288,6 +287,24 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
         raise ValueError(f'''{GDT.__module__}.{GDT.__name__}():\
         \nGDT_resids: Residue IDs of mobile and reference don't match! Norm and align universe first.''')
     return(GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME)
+
+
+def GDT_rna(mobile, ref, sel1="nucleic", sel2="nucleic", sss=[None, None, None],
+            cutoff=[2, 40, 2], true_resids=True, **kwargs):
+    """
+    returns gdt.GDT() with RNA default values after converting selection strings
+    to selection id strings.
+
+    Code:
+      | selid1 = pyrexMD.topology.sel2selid(mobile, sel=sel1)
+      | selid2 = pyrexMD.topology.sel2selid(ref, sel=sel2)
+      | return GDT(mobile=mobile, ref=ref, sel1=selid1, sel2=selid2, sss=sss,
+      |            cutoff=cutoff, true_resids=true_resids, **kwargs)
+    """
+    selid1 = _top.sel2selid(mobile, sel=sel1)
+    selid2 = _top.sel2selid(ref, sel=sel2)
+    return GDT(mobile=mobile, ref=ref, sel1=selid1, sel2=selid2, sss=sss,
+               cutoff=cutoff, true_resids=true_resids, **kwargs)
 
 
 def GDT_match_cutoff_dim(GDT_percent, GDT_cutoff):
@@ -564,11 +581,9 @@ def GDT_continuous_segments(GDT_resids):
     return SEGMENTS
 
 
-def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
+def plot_LA(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
             sel1="protein and name CA", sel2="protein and name CA",
-            ndx_offset=0, rank_num=30, cmap="GDT_HA",
-            show_cbar=True, show_frames=False, show_scores=True,
-            save_as=None, **kwargs):
+            cmap="GDT_HA", **kwargs):
     """
     Create LocalAccuracy Plot (heatmap) with
 
@@ -581,40 +596,48 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     Args:
         mobile (universe, atomgrp): mobile structure with trajectory
         ref (universe, atomgrp): reference structure
-        GDT_TS (array): array with GDT_TS scores
-        GDT_HA (array): array with GDT_HA scores
-        GTD_ndx (array): array with corresponding index values (representative for frame numbers)
+        GDT_TS (array): array with GDT_TS scores.
+        GDT_HA (array): array with GDT_HA scores.
+        GTD_ndx (array): array with corresponding index values (representative for frame numbers).
         sel1 (str): selection string of mobile structure (calculation of pair distances)
         sel2 (str): selection string of reference structure (calculation of pair distances)
-        ndx_offset (int):
-          | offset/shift of GDT_ndx to match real "mobile" frames.
-          | Look up "start" parameter during execution of gdt.GDT()
-        rank_num (int): plot only <rank_num> best ranked frames
         cmap (str):
           | "GDT_TS" or "TS": color map with new colors at values (0,  1, 2, 4, 8)
             and vmin, vmax = (0, 10).
           | "GDT_HA" or "HA": color map with new colors at values (0, .5, 1, 2, 4)
             and vmin, vmax = (0, 5).
+          | "nucleic" or "RNA" or "DNA": color map with new colors at values (0, .5, 1, 2, 4)
+            and vmin, vmax = (0, 20).
           | other cmap names: see help(plt.colormaps) or alternatively
             https://matplotlib.org/examples/color/colormaps_reference.html
-        show_cbar (bool): show/hide colorbar
-        show_scores (bool): show/hide GDT_TS and GDT_HA scores
-        save_as (None, str): save name or realpath to save file
+
 
     Keyword Args:
         prec (None, int):
           | rounding precission of scores
           | None: rounding off
           | int:  rounding on to <int> decimals
+        ndx_offset (int):
+          | offset/shift of GDT_ndx to match real "mobile" frames. Defaults to 0.
+          | Look up "start" parameter during execution of gdt.GDT()
+        rank_num (int): plot only <rank_num> best ranked frames. Defaults to 30.
+        show_cbar (bool): show/hide colorbar. Defaults to True.
+        show_frames (bool): show/hide frame numbers. Defaults to False.
+        show_scores (bool): show/hide GDT_TS and GDT_HA scores. Defaults to True.
+        save_as (None, str): save name or realpath to save file. Defaults to None.
+        cbar_ticks (None, list): color bar tick positions. Defaults to None.
         cbar_label/label (str)
         cbar_fontweight/fontweight (str): "normal", "bold"
         cbar_location/location (str): "right", "bottom", "left", "top"
         cbar_orientation/orientation (str): "horizontal", "vertical"
-        cbar_min/vmin (None, int): min value of colorbar and heatmap
-        cbar_max/vmax (None, int): max value of colorbar and heatmap
+        cbar_min/vmin (None, int): min value of colorbar and heatmap. Gets
+          overwritten by cmaps such as "GDT_TS", "GDT_HA", "RNA" etc.
+        cbar_max/vmax (None, int): max value of colorbar and heatmap. Gets
+          overwritten by cmaps such as "GDT_TS", "GDT_HA", "RNA" etc.
         text_pos_Frame (list): [x0, y0] position of the "Frame" text box (label)
         text_pos_TS (list): [x0, y0] position of the "TS" text box (label)
         text_pos_HA (list): [x0, y0] position of the "HA" text box (label)
+        font_scale (float)
 
     .. Hint:: Args and Keyword of misc.figure() are also valid.
 
@@ -646,14 +669,23 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     # init CONFIG object with default parameter and overwrite them if kwargs contain the same keywords.
     default = {"figsize": (7.5, 6),
                "font_scale": 1.2,
+               "ndx_offset": 0,
+               "rank_num": 30,
+               "show_cbar": True,
+               "show_frames": False,
+               "show_scores": True,
+               "save_as": None,
                "prec": 2,
                "cmap": cmap,
+               "cbar_ticks": None,
                "cbar_label": r"mobile-reference CA-CA distances ($\AA$)",
                "cbar_fontweight": "bold",
                "cbar_location": 'right',
                "cbar_orientation": 'vertical',
                "cbar_min": None,
                "cbar_max": None,
+               "vmin": None,
+               "vmax": None,
                "text_pos_Frame": [-8.8, -0.3],
                "text_pos_TS": [-3.8, -0.3],
                "text_pos_HA": [-1.7, -0.3]}
@@ -668,26 +700,26 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     ############################################################################
     ### load data
     PAIR_DISTANCES = []
-    FRAMES = [i+ndx_offset for i in GDT_ndx[:rank_num]]
+    FRAMES = [i+cfg.ndx_offset for i in GDT_ndx[:cfg.rank_num]]
 
     for ts in mobile.trajectory[FRAMES]:
         PD, *_ = get_Pair_Distances(mobile, ref, sel1=sel1, sel2=sel2)
         PAIR_DISTANCES.append(PD)
 
     if cfg.prec != None and cfg.prec != -1:
-        GDT_TS = np.around(GDT_TS[: rank_num], cfg.prec)
-        GDT_HA = np.around(GDT_HA[: rank_num], cfg.prec)
+        GDT_TS = np.around(GDT_TS[: cfg.rank_num], cfg.prec)
+        GDT_HA = np.around(GDT_HA[: cfg.rank_num], cfg.prec)
 
     xticks = mobile.select_atoms(sel1).residues.resids
     xticks = [x if x % 5 == 0 else "." for x in xticks]
     xticklabels = xticks
 
-    if show_frames and show_scores:
+    if cfg.show_frames and cfg.show_scores:
         yticks = [f"{FRAMES[i]:>9}{GDT_TS[i]:>10.2f}{GDT_HA[i]:>8.2f} " if GDT_TS[i] != 100 else
                   f"{FRAMES[i]:>9}{GDT_TS[i]:>9.2f}{GDT_HA[i]:>8.2f} " for i in range(len(FRAMES))]
-    elif show_frames:
+    elif cfg.show_frames:
         yticks = FRAMES
-    elif show_scores:
+    elif cfg.show_scores:
         yticks = [f"{GDT_TS[i]:>10.2f}{GDT_HA[i]:>8.2f} " if GDT_TS[i] != 100 else
                   f"{GDT_TS[i]:>9.2f}{GDT_HA[i]:>8.2f} " for i in range(len(FRAMES))]
 
@@ -696,20 +728,34 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
     ### heatmap/cbar settings
     cmap_GDT = ["lightblue", "lightgreen", "yellow", "yellow", "orange", "orange",
                 "orange", "orange", "red", "red"]
+    cmap_RNA = ["lightblue", "lightblue", "lightgreen", "lightgreen",
+                "yellow", "yellow", "orange", "orange", "red", "red"]
 
-    if cfg.cmap == "GDT_HA" or cfg.cmap == "HA":
-        vmin = 0.0
-        vmax = 5.0
-    elif cfg.cmap == "GDT_TS" or cfg.cmap == "TS":
-        vmin = 0.0
-        vmax = 10.0
-    else:
-        vmin = cfg.cbar_min
-        vmax = cfg.cbar_max
+    # apply color bar limits if passed (vmin and vmax have higher priority than cbar_min and cbar_max)
+    if cfg.cbar_min is not None:
+        cfg.vmin = cfg.cbar_min
+    if cfg.cbar_max is not None:
+        cfg.vmax = cfg.cbar_max
+    # if no limits passed: apply pre-defined limits
+    if cfg.cmap in ["GDT_HA", "HA"]:
+        if cfg.vmin is None:
+            cfg.vmin = 0.0
+        if cfg.vmax is None:
+            cfg.vmax = 5.0
+    elif cfg.cmap in ["GDT_TS", "TS"]:
+        if cfg.vmin is None:
+            cfg.vmin = 0.0
+        if cfg.vmax is None:
+            cfg.vmax = 10.0
+    elif cfg.cmap in ["nucleic", "rna", "dna", "RNA", "DNA"]:
+        if cfg.vmin is None:
+            cfg.vmin = 0.0
+        if cfg.vmax is None:
+            cfg.vmax = 20.0
     ############################################################################
     ### plot
     fig, ax = _misc.figure(**cfg)
-    if show_cbar:
+    if cfg.show_cbar:
         cbar_ax = _misc.add_cbar_ax(ax, location=cfg.cbar_location,
                                     orientation=cfg.cbar_orientation)
         cbar_kws = {'orientation': cfg.cbar_orientation}
@@ -717,36 +763,45 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
         cbar_ax = None
         cbar_kws = dict()(7.5, 6)
 
-    if cfg.cmap == "GDT_HA" or cfg.cmap == "GDT_TS":
-        hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_GDT, vmin=vmin, vmax=vmax,
+    if cfg.cmap in ["GDT_TS", "TS", "GDT_HA", "HA"]:
+        hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_GDT, vmin=cfg.vmin, vmax=cfg.vmax,
                          xticklabels=xticklabels, yticklabels=yticklabels,
                          square=False, annot=False, linewidths=1.0,
-                         ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=show_cbar)
+                         ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=cfg.show_cbar)
+    if cfg.cmap in ["nucleic", "rna", "dna", "RNA", "DNA"]:
+        hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_RNA, vmin=cfg.vmin, vmax=cfg.vmax,
+                         xticklabels=xticklabels, yticklabels=yticklabels,
+                         square=False, annot=False, linewidths=1.0,
+                         ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=cfg.show_cbar)
     else:
-        hm = sns.heatmap(PAIR_DISTANCES, cmap=cfg.cmap, vmin=vmin, vmax=vmax,
+        hm = sns.heatmap(PAIR_DISTANCES, cmap=cfg.cmap, vmin=cfg.vmin, vmax=cfg.vmax,
                          xticklabels=xticklabels, yticklabels=yticklabels,
                          square=False, annot=False, linewidths=1.0,
-                         ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=show_cbar)
-    if show_cbar:
+                         ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=cfg.show_cbar)
+    if cfg.show_cbar:
         cbar = hm.collections[0].colorbar
         cbar.set_label(label=cfg.cbar_label, fontweight=cfg.cbar_fontweight)
         _misc.cbar_set_ticks_position(cbar, cfg.cbar_location)
+        if cfg.cbar_ticks is None and cfg.cmap in ["nucleic", "rna", "dna", "RNA", "DNA"]:
+            cbar.set_ticks(np.arange(0, 22, 2))
+        if cfg.cbar_ticks is not None:
+            cbar.set_ticks(cfg.cbar_ticks)
 
     ax.tick_params(left=False, bottom=False)  # hide ticks of heatmap
     plt.title("Local Accuracy", fontweight='bold')
     plt.xlabel("Residue ID", fontweight='bold')
 
     # table labels
-    if show_frames:
+    if cfg.show_frames:
         ax.text(cfg.text_pos_Frame[0], cfg.text_pos_Frame[1], 'Frame', fontweight='bold')
-    if show_scores:
+    if cfg.show_scores:
         ax.text(cfg.text_pos_TS[0], cfg.text_pos_TS[1], 'TS', fontweight='bold')
         ax.text(cfg.text_pos_HA[0], cfg.text_pos_HA[1], 'HA', fontweight='bold')
     plt.tight_layout()
     plt.tight_layout()
 
-    if save_as != None:
-        _misc.savefig(save_as)
+    if cfg.save_as != None:
+        _misc.savefig(cfg.save_as)
 
     if len(FRAMES) > 50:
         print("Displaying data for more than 50 frames...")
@@ -754,3 +809,20 @@ def plot_LA(mobile, ref, GDT_TS=[], GDT_HA=[], GDT_ndx=[],
 
     LA_data = (PAIR_DISTANCES, FRAMES)
     return(fig, ax, LA_data)
+
+
+def plot_LA_rna(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
+                sel1="nucleic", sel2="nucleic", cmap="RNA", **kwargs):
+    """
+    plot_LA() with RNA default values after converting selection strings to selection id strings.
+
+    Code:
+      | selid1 = pyrexMD.topology.sel2selid(mobile, sel=sel1)
+      | selid2 = pyrexMD.topology.sel2selid(ref, sel=sel2)
+      | return plot_LA(mobile, ref, GDT_TS=GDT_TS, GDT_HA=GDT_HA, GDT_ndx=GDT_ndx,
+      |               sel1=selid1, sel2=selid2, cmap=cmap, **kwargs)
+    """
+    selid1 = _top.sel2selid(mobile, sel=sel1)
+    selid2 = _top.sel2selid(ref, sel=sel2)
+    return plot_LA(mobile, ref, GDT_TS=GDT_TS, GDT_HA=GDT_HA, GDT_ndx=GDT_ndx,
+                   sel1=selid1, sel2=selid2, cmap=cmap, **kwargs)

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 22.05.2021
 
 
 """
@@ -102,35 +102,6 @@ def align_resids(mobile, ref, norm=True, verbose=True, **kwargs):
         _misc.cprint("Aligning reference res ids...\n", cfg.cprint_color)
         shift_resids(ref, shift, verbose=verbose)
     return
-
-
-def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, verbose=True):
-    """
-    Get matching selection strings of mobile and reference after resids alignment.
-
-    Args:
-        mobile (universe)
-        ref (universe)
-        sel (str): selection string
-        norm (bool): apply topology.norm_resids()
-        verbose (bool)
-
-    Returns:
-        sel1 (str)
-            matching selection string of mobile
-        sel2 (str)
-            matching selection string of ref
-    """
-    if get_resids_shift(mobile, ref) != 0:
-        align_resids(mobile, ref, norm=norm, verbose=verbose)
-    sel1 = f"{sel} and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}"
-    sel2 = f"{sel}"
-
-    if np.all(ref.select_atoms(sel1).residues.resnames == ref.select_atoms(sel2).residues.resnames):
-        pass
-    else:
-        raise ValueError("No matching selection found.")
-    return sel1, sel2
 
 
 def norm_ids(u, info='', verbose=True):
@@ -347,6 +318,83 @@ def true_select_atoms(u, sel='protein', ignh=True, norm=True):
     return a
 
 
+def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, verbose=True):
+    """
+    Get matching selection strings of mobile and reference after resids alignment.
+
+    Args:
+        mobile (universe)
+        ref (universe)
+        sel (str): selection string
+        norm (bool): apply topology.norm_resids()
+        verbose (bool)
+
+    Returns:
+        sel1 (str)
+            matching selection string of mobile
+        sel2 (str)
+            matching selection string of ref
+    """
+    if get_resids_shift(mobile, ref) != 0:
+        align_resids(mobile, ref, norm=norm, verbose=verbose)
+    sel1 = f"{sel} and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}"
+    sel2 = f"{sel}"
+
+    if np.all(ref.select_atoms(sel1).residues.resnames == ref.select_atoms(sel2).residues.resnames):
+        pass
+    else:
+        raise ValueError("No matching selection found.")
+    return sel1, sel2
+
+
+def sel2selid(u, sel, filter_rna=True):
+    """
+    Converts selection string to selection id string.
+
+    Args:
+        u (universe, str): structure universe or path to structure pdb
+        sel (str): selection string
+        filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues
+
+    Returns:
+        selid (str)
+            selection id string
+
+    Example:
+        | >> u = mda.Universe("path/to/pdb")
+        | >> selid = sel2selid(u, sel="protein and name CA")
+        | >> selid
+        | 'index 4 18 37 58 77 94 118 137 159 171 178 193 199 210 221 228 260 274 288 294'
+        | >> u.select_atoms("protein and name CA") == u.selectg_atoms(selid)
+        | True
+    """
+    # filter_rna mapping selection
+    map = {"A": "N1",
+           "ADE": "N1",
+           "G": "N1",
+           "GUA": "N1",
+           "T": "N3",
+           "THY": "N3",
+           "C": "N3",
+           "CYT": "N3",
+           "U": "N3",
+           "URA": "N3"}
+    ########################################################
+    if isinstance(u, str):
+        u = mda.Universe(u)
+    a = u.select_atoms(sel)
+
+    for item in a:
+        if filter_rna is True and len(a.select_atoms("nucleic")) != 0:
+            if item.name != map[item.resname]:
+                a = a - item    # remove atoms which are not in map
+
+    ids = a.atoms.ids-1
+    ids = [str(item) for item in ids]
+    selid = "index " + " ".join(ids)
+    return selid
+
+
 def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"):
     """
     Dump structures for a list of frames with the file name "save_as".
@@ -388,15 +436,15 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
 ################################################################################
 ### Include contact bias
 
-def parsePDB(fin, sel="protein", filter_rna=True):
+def parsePDB(fin, sel, filter_rna=True):
     """
     Reads PDB file and returns the columns for residue id, residue name,
     atom id and atom name as lists.
 
     Args:
         fin (str): PDB file
-        sel (str): selection str
-        filter_rna (bool):
+        sel (str): selection string
+        filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues
 
     Returns:
         RESID (list)
