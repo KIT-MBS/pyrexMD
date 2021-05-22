@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 22.05.2021
+# @Last modified time: 23.05.2021
 
 
 """
@@ -613,8 +613,7 @@ def DCA_modify_topology(top_fin, DCA_used_fin, n_DCA=None, k=10, skiprows="auto"
             WORDS = read.readline().split()
             for item in WORDS:
                 if "top" in item:
-                    n_DCA = item[3:]
-
+                    n_DCA = int(item[3:])
     # DCA_used_fin has 4 cols with RESi, RESj, ATOMi, ATOMj -> usecols=(2,3)
     ATOM_I, ATOM_J = _misc.read_file(fin=DCA_used_fin, usecols=(2, 3),
                                      n_rows=n_DCA, skiprows=skiprows, dtype=int)
