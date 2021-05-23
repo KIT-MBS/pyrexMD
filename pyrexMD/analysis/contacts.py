@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 24.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -43,8 +43,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import MDAnalysis as mda
-from MDAnalysis.analysis import contacts as _contacts, distances as _distances, rms as _rms, align as _align
-from tqdm.notebook import tqdm
+from MDAnalysis.analysis import contacts as _contacts, distances as _distances
 import operator
 
 
@@ -104,6 +103,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
 
     if cfg.method in ['1', 'Contact_Matrix', 'contact_matrix']:
         RES = a.resids
+        IDS = a.ids
         NAMES = a.names
 
         CM = _distances.contact_matrix(a.positions, cutoff=d_cutoff)
@@ -111,7 +111,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
             for j in range(i + 1, len(CM)):  # no double count/reduce computing time
                 if RES[j] - RES[i] > 3 and CM[i][j] == True and (RES[i], RES[j]) not in NC:
                     NC.append((RES[i], RES[j]))
-                    NC_d.append([(RES[i], RES[j]), (i, j), (NAMES[i], NAMES[j])])
+                    NC_d.append([(RES[i], RES[j]), (IDS[i], IDS[j]), (NAMES[i], NAMES[j])])
 
     elif cfg.method in ['2', 'Shadow_Map', 'shadow_map']:
         # TODO method 2: SHADOWMAP
