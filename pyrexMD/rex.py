@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 22.05.2021
+# @Last modified time: 24.05.2021
 
 
 """
@@ -227,15 +227,15 @@ def test_REX_PDBS(REX_PDBS, ref_pdb, sel="protein", verbose=True, **kwargs):
     ############################################################################
     # treat first pdb as "template pdb" with target array lengths
     template_pdb = ref_pdb
-    template_RESID, template_RESNAME, template_ATOM, template_NAME = _top.parsePDB(template_pdb, sel=sel)
+    template_RESID, template_RESNAME, template_ID, template_NAME = _top.parsePDB(template_pdb, sel=sel)
 
-    for pdb_file in REX_PDBS:
-        RESID, RESNAME, ATOM, NAME = _top.parsePDB(template_pdb, sel=sel)
+    for pdb_file in tqdm(REX_PDBS):
+        RESID, RESNAME, ID, NAME = _top.parsePDB(template_pdb, sel=sel)
 
-        if template_RESID != RESID or template_ATOM != ATOM or template_NAME != NAME:
+        if template_RESID != RESID or template_ID != ID or template_NAME != NAME:
             raise _misc.Error(f"Parsed arrays of {template_pdb} do not match with {pdb_file}.")
     if verbose:
-        _misc.cprint("All tested PDBs have equal RES, ATOM, NAME arrays.", cfg.cprint_color)
+        _misc.cprint("All tested PDBs have equal RES, ID, NAME arrays.", cfg.cprint_color)
     return
 
 

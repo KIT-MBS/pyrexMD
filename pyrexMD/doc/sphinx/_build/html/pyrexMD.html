@@ -1323,6 +1323,21 @@ can subsequently be processed to generate a run input file.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.misc.CONFIG.deepcopy_without">
+<span class="sig-name descname"><span class="pre">deepcopy_without</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#CONFIG.deepcopy_without"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.CONFIG.deepcopy_without" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return deep copy of cfg object but without passed keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keys</strong> (<em>str</em><em>, </em><em>list</em><em>, </em><em>tuple</em>) – <div class="line-block">
+<div class="line">str: single key</div>
+<div class="line">list, tuple: multiple keys</div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyrexMD.misc.CONFIG.items">
 <span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#CONFIG.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.CONFIG.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return dict items (key-value pairs).</p>
@@ -1332,6 +1347,12 @@ can subsequently be processed to generate a run input file.</p>
 <dt class="sig sig-object py" id="pyrexMD.misc.CONFIG.keys">
 <span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#CONFIG.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.CONFIG.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return dict keys.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.misc.CONFIG.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#CONFIG.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.CONFIG.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove key from dict and return its value</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1448,8 +1469,22 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.misc.UNZIP">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">UNZIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#UNZIP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.UNZIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias function of zip(*iterable)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>iterable</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>zip(*iterable)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.add_cbar">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">add_cbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertical'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#add_cbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.add_cbar" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">add_cbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar_ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertical'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#add_cbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.add_cbar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw colorbar relative to existing ax.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1461,6 +1496,7 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <div class="line">matplotlib.axes._axes.Axes: use passed cbar_ax (can be created using misc.add_cbar_ax()).</div>
 </div>
 </p></li>
+<li><p><strong>cmap</strong> (<em>None</em><em>, </em><em>LinearSegmentedColormap</em>) – output of create_cmap()</p></li>
 <li><p><strong>bounds</strong> (<em>str</em><em>, </em><em>list</em>) – <div class="line-block">
 <div class="line">str: “auto”: apply bounds based on kws ‘orientation’ and ‘location’.</div>
 <div class="line">list: [x0, y0, height, width] using axes coordinates.</div>
@@ -1475,6 +1511,8 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
+<li><p><strong>vmin</strong> (<em>None</em><em>, </em><em>float</em>) – colorbar min value</p></li>
+<li><p><strong>vmax</strong> (<em>None</em><em>, </em><em>float</em>) – colorbar max value</p></li>
 <li><p><strong>cbar_label/label</strong> (<em>str</em>) – </p></li>
 <li><p><strong>cbar_fontweight/fontweight</strong> (<em>str</em>) – “normal”, “bold”</p></li>
 <li><p><strong>cbar_location/location</strong> (<em>str</em>) – “right”, “bottom”, “left”, “top”</p></li>
@@ -1870,6 +1908,29 @@ ymin, ymax values.</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.misc.create_cmap">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">create_cmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#create_cmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.create_cmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a LinearSegmentedColormap</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<em>sequence</em>) – sequence of color strings and floats. The floats describe the color thresholds and
+should be increasing and in the interval (0,1).</p></li>
+<li><p><strong>vmin</strong> (<em>float</em>) – min value of cmap</p></li>
+<li><p><strong>vmax</strong> (<em>float</em>) – max value of cmap</p></li>
+<li><p><strong>ax</strong> (<em>None</em><em>, </em><em>ax</em>) – figure ax for adding colorbar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>cmap (LinearSegmentedColormap)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>seq = [“lightblue”, 2/6, “lightgreen”, 3/6, “yellow”, 4/6, “orange”, 5/6, “red”]
+cmap = make_cmap(seq, vmin=0, vmax=12)</p>
 </dd></dl>
 
 <dl class="py function">
@@ -3433,15 +3494,7 @@ where B2 contains every n-th element of A.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.unzip">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">unzip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#unzip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.unzip" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias function of zip(*iterable)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iterable</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>zip(*iterable)</p>
-</dd>
-</dl>
+<dd><p>Unzips iterable into two objects.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -4164,7 +4217,7 @@ min(universe.residues.resids) = 1</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.parsePDB">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads PDB file and returns the columns for residue id, residue name,
 atom id and atom name as lists.</p>
 <dl class="field-list simple">
@@ -4172,6 +4225,7 @@ atom id and atom name as lists.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply norm_universe() before parsing.</p></li>
 <li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
 </ul>
 </dd>
@@ -4193,13 +4247,14 @@ atom id and atom name as lists.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.sel2selid">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">sel2selid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#sel2selid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.sel2selid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">sel2selid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#sel2selid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.sel2selid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts selection string to selection id string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – structure universe or path to structure pdb</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply norm_universe()</p></li>
 <li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
 </ul>
 </dd>

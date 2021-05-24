@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 22.05.2021
+# @Last modified time: 24.05.2021
 
 
 """
@@ -768,7 +768,7 @@ def plot_LA(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
                          xticklabels=xticklabels, yticklabels=yticklabels,
                          square=False, annot=False, linewidths=1.0,
                          ax=ax, cbar_ax=cbar_ax, cbar_kws=cbar_kws, cbar=cfg.show_cbar)
-    if cfg.cmap in ["nucleic", "rna", "dna", "RNA", "DNA"]:
+    elif cfg.cmap in ["nucleic", "rna", "dna", "RNA", "DNA"]:
         hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_RNA, vmin=cfg.vmin, vmax=cfg.vmax,
                          xticklabels=xticklabels, yticklabels=yticklabels,
                          square=False, annot=False, linewidths=1.0,

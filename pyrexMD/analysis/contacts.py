@@ -137,7 +137,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     return(NC, NC_d)
 
 
-def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein and name CA", d_cutoff=6.0, plot=False, **kwargs):
+def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", d_cutoff=6.0, plot=False, **kwargs):
     """
     get native contact distances.
 
@@ -283,22 +283,22 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     if cfg.ms is None and res_max - res_min >= 100:
         cfg.ms = 4
     elif cfg.ms is None and res_max - res_min <= 50:
-        cfg.ms = 16
-    elif cfg.ms is None:
         cfg.ms = 8
+    elif cfg.ms is None:
+        cfg.ms = 6
 
     print("Plotting native contacts...")
     for ndx, item in enumerate(NC):
-        plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms)
+        plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms*cfg.ms)
 
     # find matching contacts ij
     if DCA_fin is not None:
         DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
         for item in DCA:     # if item is in both lists plot it green otherwise red
             if item in NC:
-                plt.plot(item[0], item[1], color="green", marker="s", ms=cfg.ms)
+                plt.plot(item[0], item[1], color="green", marker="s", ms=0.6*cfg.ms)
             else:
-                plt.plot(item[0], item[1], color="red", marker="s", ms=cfg.ms)
+                plt.plot(item[0], item[1], color="red", marker="s", ms=0.6*cfg.ms)
 
     # plt.legend(loc="upper left", numpoints=1)
     if res_max - res_min < 30:
@@ -322,17 +322,21 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     return fig, ax
 
 
-def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
+def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     """
     Create contact map with color-coded distances.
 
     Args:
+        ref (universe, str): reference universe or pdb. Used to detect if target
+          is protein or nucleic to select pre-defined color map.
         NC (list): output of get_NC_distances()
         NC_dist (list): output of get_NC_distances()
-        cmap (None, dict): dictionary with "color":"threshold" pairs, e.g. "red":12.0
         pdbid (str): pdbid which is used for plot title
 
     Keyword Args:
+        cmap (None, dict):
+          | dictionary with "color":"threshold" pairs, e.g. "red":12.0
+          | None: use pre-defined cmaps for Protein and RNA targets
         vmin (None, float)
         vmax (None, float)
         ms (None, int): marker size (should be divisible by 2)
@@ -360,12 +364,18 @@ def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
         del seq[-1]
         return seq
     ############################################################################
+    cmap_Protein = {"dodgerblue": 2.0,
+                    "lightgreen": 3.0,
+                    "yellow": 4.0,
+                    "orange": 5.0,
+                    "red": 6.0}
     cmap_RNA = {"dodgerblue": 4.0,
                 "lightgreen": 6.0,
                 "yellow": 8.0,
                 "orange": 10.0,
                 "red": 12.0}
-    default = {"vmin": None,
+    default = {"cmap": None,
+               "vmin": None,
                "vmax": None,
                "cbar_label": r"Native Contact Distance ($\AA$)",
                "cbar_fontweight": "bold",
@@ -373,8 +383,12 @@ def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
                "save_plot": False,
                "title": "default"}
     cfg = _misc.CONFIG(default, **kwargs)
-    if cmap is None:
-        cmap = cmap_RNA
+    if isinstance(ref, str):
+        ref = mda.Universe(ref)
+    if cfg.cmap is None and len(ref.select_atoms("nucleic")) == 0:
+        cfg.cmap = cmap_Protein
+    elif cfg.cmap is None and len(ref.select_atoms("nucleic")) != 0:
+        cfg.cmap = cmap_RNA
     # init values
     if "figsize" not in kwargs:
         kwargs["figsize"] = (7, 7)
@@ -384,8 +398,8 @@ def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
     ax.set_aspect('equal')
 
     if cfg.vmax is None:
-        cfg.vmax = max(cmap.values())
-    _CMAP = _misc.create_cmap(__HELP__cmap2seq(cmap), vmin=cfg.vmin, vmax=cfg.vmax, ax=None)
+        cfg.vmax = max(cfg.cmap.values())
+    _CMAP = _misc.create_cmap(__HELP__cmap2seq(cfg.cmap), vmin=cfg.vmin, vmax=cfg.vmax, ax=None)
     _CFG = cfg.deepcopy_without("cmap")
     _ = _misc.add_cbar(ax, cmap=_CMAP, **_CFG)
 
@@ -396,19 +410,19 @@ def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
     if cfg.ms is None and res_max - res_min >= 100:
         cfg.ms = 4
     elif cfg.ms is None and res_max - res_min <= 50:
-        cfg.ms = 16
-    elif cfg.ms is None:
         cfg.ms = 8
+    elif cfg.ms is None:
+        cfg.ms = 6
 
     #PLOT color-coded native contacts
     for ndx, item in enumerate(NC):
-        for k, v in cmap.items():
+        for k, v in cfg.cmap.items():
             if NC_dist[ndx] <= v:
-                plt.scatter(item[0], item[1], color=k, marker="s", s=cfg.ms)
+                plt.plot(item[0], item[1], color=k, marker="s", ms=0.6*cfg.ms)
                 break
         # if NC distance is outside of cmap: color silver
-        if NC_dist[ndx] > max(cmap.values()):
-            plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms)
+        if NC_dist[ndx] > max(cfg.cmap.values()):
+            plt.plot(item[0], item[1], color="silver", marker="s", ms=0.6*cfg.ms)
 
     # plt.legend(loc="upper left", numpoints=1)
     if res_max - res_min < 30:

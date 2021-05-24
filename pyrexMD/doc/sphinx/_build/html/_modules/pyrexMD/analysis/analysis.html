@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 22.05.2021</span>
+<span class="c1"># @Last modified time: 24.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions various functions for trajectory analysis.</span>
@@ -598,8 +598,7 @@
     <span class="k">return</span> <span class="n">cfg</span>
 
 
-<div class="viewcode-block" id="get_Distance_Matrices"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_Distance_Matrices">[docs]</a><span class="k">def</span> <span class="nf">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-                          <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="get_Distance_Matrices"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_Distance_Matrices">[docs]</a><span class="k">def</span> <span class="nf">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                           <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate distance matrices for mobile and return them.</span>
@@ -608,12 +607,12 @@
 <span class="sd">        mobile (universe, list):</span>
 <span class="sd">          | (MDA universe): structure with trajectory</span>
 <span class="sd">          | (list): list with paths to structure files (.pdb)</span>
+<span class="sd">        sel (str): selection string</span>
 <span class="sd">        sss (list):</span>
 <span class="sd">          | [start, stop, step]</span>
 <span class="sd">          | start (None, int): start frame</span>
 <span class="sd">          | stop (None, int): stop frame</span>
 <span class="sd">          | step (None, int): step size</span>
-<span class="sd">        sel (str): selection string</span>
 <span class="sd">        flatten (bool): return flattened distance matrices</span>
 <span class="sd">        verbose (bool): show progress bar</span>
 
@@ -1068,7 +1067,7 @@
     <span class="k">return</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">bins_step</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="plot_hist"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_hist"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.plot_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    plot histogram</span>
 
@@ -1250,7 +1249,7 @@
 
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">save_as</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>

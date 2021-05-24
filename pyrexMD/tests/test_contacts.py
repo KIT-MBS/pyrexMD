@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 22.05.2021
+# @Last modified time: 24.05.2021
 
 import pyrexMD.analysis.contacts as con
 import MDAnalysis as mda
@@ -17,10 +17,10 @@ xtc = pre + "traj.xtc"
 
 def test_get_Native_Contacts():
     ref = mda.Universe(pdb)
-    NC, NC_d = con.get_Native_Contacts(ref)
+    NC, NC_d = con.get_Native_Contacts(ref, sel="protein", d_cutoff=6.0, ignh=True)
 
-    assert (NC == np.load(pre + "NC.npy")).all()
-    assert (NC_d == np.load(pre + "NC_d.npy")).all()
+    assert (np.array(NC) == np.load(pre + "NC.npy")).all()
+    assert (np.array(NC_d) == np.load(pre + "NC_d.npy")).all()
     return
 
 
