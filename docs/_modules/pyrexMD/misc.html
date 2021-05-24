@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 21.05.2021</span>
+<span class="c1"># @Last modified time: 24.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -364,6 +364,31 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="CONFIG.deepcopy_without"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.deepcopy_without">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy_without</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return deep copy of cfg object but without passed keys.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            keys (str, list, tuple):</span>
+<span class="sd">              | str: single key</span>
+<span class="sd">              | list, tuple: multiple keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># case 1: keys is a single key ~str</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="c1"># case 2: keys is a list of keys</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">obj</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
 <div class="viewcode-block" id="CONFIG.keys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return dict keys.</span>
@@ -427,6 +452,12 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">key_ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span>
         <span class="k">return</span></div>
+
+<div class="viewcode-block" id="CONFIG.pop"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        remove key from dict and return its value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CONFIG.print_config"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.CONFIG.print_config">[docs]</a>    <span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -884,7 +915,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="unzip"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.unzip">[docs]</a><span class="k">def</span> <span class="nf">unzip</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<div class="viewcode-block" id="UNZIP"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.UNZIP">[docs]</a><span class="k">def</span> <span class="nf">UNZIP</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    alias function of zip(\*iterable)</span>
 
@@ -895,6 +926,15 @@
 <span class="sd">        zip(\*iterable)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">iterable</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="unzip"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.unzip">[docs]</a><span class="k">def</span> <span class="nf">unzip</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unzips iterable into two objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">UNZIP</span><span class="p">(</span><span class="n">iterable</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">UNZIP</span><span class="p">(</span><span class="n">iterable</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_python_version"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_python_version">[docs]</a><span class="k">def</span> <span class="nf">get_python_version</span><span class="p">():</span>
@@ -3049,6 +3089,49 @@
 <span class="c1">### colorbar functions</span>
 
 
+<div class="viewcode-block" id="create_cmap"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.create_cmap">[docs]</a><span class="k">def</span> <span class="nf">create_cmap</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a LinearSegmentedColormap</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq (sequence): sequence of color strings and floats. The floats describe the color thresholds and</span>
+<span class="sd">           should be increasing and in the interval (0,1).</span>
+<span class="sd">        vmin (float): min value of cmap</span>
+<span class="sd">        vmax (float): max value of cmap</span>
+<span class="sd">        ax (None, ax): figure ax for adding colorbar</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        cmap (LinearSegmentedColormap)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        seq = [&quot;lightblue&quot;, 2/6, &quot;lightgreen&quot;, 3/6, &quot;yellow&quot;, 4/6, &quot;orange&quot;, 5/6, &quot;red&quot;]</span>
+<span class="sd">        cmap = make_cmap(seq, vmin=0, vmax=12)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">seq</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ColorConverter</span><span class="p">()</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">cdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;red&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;green&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">r1</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">r2</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">])</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;green&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">])</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">])</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="s1">&#39;CustomMap&#39;</span><span class="p">,</span> <span class="n">cdict</span><span class="p">)</span>
+
+    <span class="c1"># add colorbar if ax is passed</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">_norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+
 <div class="viewcode-block" id="add_cbar_ax"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.add_cbar_ax">[docs]</a><span class="k">def</span> <span class="nf">add_cbar_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add colorbar ax relative to existing ax.</span>
@@ -3092,7 +3175,7 @@
     <span class="k">return</span> <span class="n">cbar_ax</span></div>
 
 
-<div class="viewcode-block" id="add_cbar"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.add_cbar">[docs]</a><span class="k">def</span> <span class="nf">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cbar_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="add_cbar"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.add_cbar">[docs]</a><span class="k">def</span> <span class="nf">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cbar_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Draw colorbar relative to existing ax.</span>
 
@@ -3102,6 +3185,7 @@
 <span class="sd">          | colorbar ax</span>
 <span class="sd">          | None: add new cbar_ax relative to existing ax</span>
 <span class="sd">          | matplotlib.axes._axes.Axes: use passed cbar_ax (can be created using misc.add_cbar_ax()).</span>
+<span class="sd">        cmap (None, LinearSegmentedColormap): output of create_cmap()</span>
 <span class="sd">        bounds (str, list):</span>
 <span class="sd">          | str: &quot;auto&quot;: apply bounds based on kws &#39;orientation&#39; and &#39;location&#39;.</span>
 <span class="sd">          | list: [x0, y0, height, width] using axes coordinates.</span>
@@ -3110,6 +3194,8 @@
 <span class="sd">        orientation (str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
 
 <span class="sd">    Keyword Args:</span>
+<span class="sd">        vmin (None, float): colorbar min value</span>
+<span class="sd">        vmax (None, float): colorbar max value</span>
 <span class="sd">        cbar_label/label (str)</span>
 <span class="sd">        cbar_fontweight/fontweight (str): &quot;normal&quot;, &quot;bold&quot;</span>
 <span class="sd">        cbar_location/location (str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
@@ -3119,7 +3205,9 @@
 <span class="sd">        cbar (matplotlib.colorbar.Colorbar)</span>
 <span class="sd">            color bar</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cbar_label&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_label&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                <span class="s2">&quot;cbar_fontweight&quot;</span><span class="p">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span>
                <span class="s2">&quot;cbar_location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
                <span class="s2">&quot;cbar_orientation&quot;</span><span class="p">:</span> <span class="n">orientation</span>
@@ -3142,6 +3230,13 @@
         <span class="c1"># mappable must be matplotlib.cm.ScalarMappable ~ sns.heatmap()</span>
         <span class="c1"># see help(fig.colorbar) for more info</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">QuadMesh</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">_norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">),</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1">#print(&quot;misc.add_cbar() works currently only with sns.heatmap() plots.&quot;)</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>

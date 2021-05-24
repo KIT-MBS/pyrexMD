@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 22.05.2021</span>
+<span class="c1"># @Last modified time: 24.05.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -390,15 +390,15 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># treat first pdb as &quot;template pdb&quot; with target array lengths</span>
     <span class="n">template_pdb</span> <span class="o">=</span> <span class="n">ref_pdb</span>
-    <span class="n">template_RESID</span><span class="p">,</span> <span class="n">template_RESNAME</span><span class="p">,</span> <span class="n">template_ATOM</span><span class="p">,</span> <span class="n">template_NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="n">template_RESID</span><span class="p">,</span> <span class="n">template_RESNAME</span><span class="p">,</span> <span class="n">template_ID</span><span class="p">,</span> <span class="n">template_NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">pdb_file</span> <span class="ow">in</span> <span class="n">REX_PDBS</span><span class="p">:</span>
-        <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pdb_file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">):</span>
+        <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">template_RESID</span> <span class="o">!=</span> <span class="n">RESID</span> <span class="ow">or</span> <span class="n">template_ATOM</span> <span class="o">!=</span> <span class="n">ATOM</span> <span class="ow">or</span> <span class="n">template_NAME</span> <span class="o">!=</span> <span class="n">NAME</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">template_RESID</span> <span class="o">!=</span> <span class="n">RESID</span> <span class="ow">or</span> <span class="n">template_ID</span> <span class="o">!=</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">template_NAME</span> <span class="o">!=</span> <span class="n">NAME</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsed arrays of </span><span class="si">{</span><span class="n">template_pdb</span><span class="si">}</span><span class="s2"> do not match with </span><span class="si">{</span><span class="n">pdb_file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;All tested PDBs have equal RES, ATOM, NAME arrays.&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;All tested PDBs have equal RES, ID, NAME arrays.&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 

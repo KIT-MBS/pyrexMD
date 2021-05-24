@@ -339,7 +339,7 @@ with non-matching atoms.</div>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_Distance_Matrices">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_Distance_Matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_Distance_Matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_Distance_Matrices" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_Distance_Matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_Distance_Matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_Distance_Matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate distance matrices for mobile and return them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -349,6 +349,7 @@ with non-matching atoms.</div>
 <div class="line">(list): list with paths to structure files (.pdb)</div>
 </div>
 </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
 <div class="line">[start, stop, step]</div>
 <div class="line">start (None, int): start frame</div>
@@ -356,7 +357,6 @@ with non-matching atoms.</div>
 <div class="line">step (None, int): step size</div>
 </div>
 </p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>flatten</strong> (<em>bool</em>) – return flattened distance matrices</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – show progress bar</p></li>
 </ul>
@@ -786,7 +786,7 @@ requires 1 extra bin.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.plot_hist">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">plot_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#plot_hist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.plot_hist" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">plot_hist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#plot_hist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.plot_hist" title="Permalink to this definition">¶</a></dt>
 <dd><p>plot histogram</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -975,6 +975,44 @@ requires 1 extra bin.</p></li>
 <div class="section" id="id2">
 <h3>Module contents:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_NC_distances">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>get native contact distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start frame</p></li>
+<li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
+<li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – save native contacts logfile as…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>NC (list)</dt><dd><p>native contacts with unique RES pairs</p>
+</dd>
+<dt>NC_dist (list)</dt><dd><p>native contact distances ~ distances of items in NC</p>
+</dd>
+<dt>DM (array)</dt><dd><p>array of distance matrices</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_Native_Contacts">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_Native_Contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_Native_Contacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_Native_Contacts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get list of unique RES pairs and list of detailed RES pairs with native contacts.</p>
@@ -1010,7 +1048,7 @@ whereas NC_d contains each ATOM pair.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>NC (list)</dt><dd><p>list with unique RES pairs</p>
+<dt>NC (list)</dt><dd><p>native contacts with unique RES pairs</p>
 </dd>
 <dt>NC_d (list)</dt><dd><p>detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)</p>
 </dd>
@@ -1217,12 +1255,59 @@ If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
 <li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>ms</strong> (<em>None</em><em>, </em><em>int</em>) – marker size (should be divisible by 2)</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Args and Keyword Args of misc.figure() are also valid.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
+</dd>
+<dt>ax (class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.plot_Contact_Map_Distances">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">plot_Contact_Map_Distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NC_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#plot_Contact_Map_Distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.plot_Contact_Map_Distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create contact map with color-coded distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>str</em>) – reference universe or pdb. Used to detect if target
+is protein or nucleic to select pre-defined color map.</p></li>
+<li><p><strong>NC</strong> (<em>list</em>) – output of get_NC_distances()</p></li>
+<li><p><strong>NC_dist</strong> (<em>list</em>) – output of get_NC_distances()</p></li>
+<li><p><strong>pdbid</strong> (<em>str</em>) – pdbid which is used for plot title</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cmap</strong> (<em>None</em><em>, </em><em>dict</em>) – <div class="line-block">
+<div class="line">dictionary with “color”:”threshold” pairs, e.g. “red”:12.0</div>
+<div class="line">None: use pre-defined cmaps for Protein and RNA targets</div>
+</div>
+</p></li>
+<li><p><strong>vmin</strong> (<em>None</em><em>, </em><em>float</em>) – </p></li>
+<li><p><strong>vmax</strong> (<em>None</em><em>, </em><em>float</em>) – </p></li>
+<li><p><strong>ms</strong> (<em>None</em><em>, </em><em>int</em>) – marker size (should be divisible by 2)</p></li>
+<li><p><strong>title</strong> (<em>None</em><em>, </em><em>str</em>) – None, “default” or any title string</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Args and Keyword Args of misc.figure() and misc.add_cbar() are also valid.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
