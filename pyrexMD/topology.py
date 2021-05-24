@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 23.05.2021
+# @Last modified time: 24.05.2021
 
 
 """
@@ -347,13 +347,14 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, ve
     return sel1, sel2
 
 
-def sel2selid(u, sel, filter_rna=True):
+def sel2selid(u, sel, norm=True, filter_rna=True):
     """
     Converts selection string to selection id string.
 
     Args:
         u (universe, str): structure universe or path to structure pdb
         sel (str): selection string
+        norm (bool): apply norm_universe()
         filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues
 
     Returns:
@@ -382,6 +383,8 @@ def sel2selid(u, sel, filter_rna=True):
     ########################################################
     if isinstance(u, str):
         u = mda.Universe(u)
+    if norm:
+        norm_universe(u)
     a = u.select_atoms(sel)
 
     for item in a:
@@ -436,7 +439,7 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
 ################################################################################
 ### Include contact bias
 
-def parsePDB(fin, sel, filter_rna=True):
+def parsePDB(fin, sel, norm=False, filter_rna=True):
     """
     Reads PDB file and returns the columns for residue id, residue name,
     atom id and atom name as lists.
@@ -444,6 +447,7 @@ def parsePDB(fin, sel, filter_rna=True):
     Args:
         fin (str): PDB file
         sel (str): selection string
+        norm (bool): apply norm_universe() before parsing.
         filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues
 
     Returns:
@@ -471,6 +475,8 @@ def parsePDB(fin, sel, filter_rna=True):
     RESID, RESNAME, ID, NAME = [], [], [], []
 
     u = mda.Universe(fin)
+    if norm:
+        norm_universe(u)
     a = u.select_atoms(sel)
 
     for item in a:

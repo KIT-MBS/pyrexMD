@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 24.05.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -201,6 +201,31 @@ class CONFIG(object):
         """
         return copy.deepcopy(self)
 
+    def deepcopy_without(self, keys):
+        """
+        Return deep copy of cfg object but without passed keys.
+
+        Args:
+            keys (str, list, tuple):
+              | str: single key
+              | list, tuple: multiple keys
+        """
+        obj = copy.deepcopy(self)
+        # case 1: keys is a single key ~str
+        if isinstance(keys, str):
+            try:
+                obj.pop(keys)
+            except KeyError:
+                pass
+        # case 2: keys is a list of keys
+        if isinstance(keys, (list, tuple)):
+            for key in keys:
+                try:
+                    obj.pop(key)
+                except KeyError:
+                    pass
+        return obj
+
     def keys(self):
         """
         Return dict keys.
@@ -264,6 +289,12 @@ class CONFIG(object):
             else:
                 self.__dict__[key][key_ndx] = kwargs[alias]
         return
+
+    def pop(self, key):
+        """
+        remove key from dict and return its value
+        """
+        return self.__dict__.pop(key)
 
     def print_config(self):
         """
@@ -721,7 +752,7 @@ def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
     return
 
 
-def unzip(iterable):
+def UNZIP(iterable):
     """
     alias function of zip(\*iterable)
 
@@ -732,6 +763,15 @@ def unzip(iterable):
         zip(\*iterable)
     """
     return zip(*iterable)
+
+
+def unzip(iterable):
+    """
+    Unzips iterable into two objects.
+    """
+    A = list(UNZIP(iterable))[0]
+    B = list(UNZIP(iterable))[1]
+    return (A, B)
 
 
 def get_python_version():
@@ -2886,6 +2926,49 @@ def set_logscale_ticks(ax, axis="x", vmax=None, minorticks=True, **kwargs):
 ### colorbar functions
 
 
+def create_cmap(seq, vmin=None, vmax=None, ax=None):
+    """
+    Return a LinearSegmentedColormap
+
+    Args:
+        seq (sequence): sequence of color strings and floats. The floats describe the color thresholds and
+           should be increasing and in the interval (0,1).
+        vmin (float): min value of cmap
+        vmax (float): max value of cmap
+        ax (None, ax): figure ax for adding colorbar
+
+    Returns:
+        cmap (LinearSegmentedColormap)
+
+    Example:
+        seq = ["lightblue", 2/6, "lightgreen", 3/6, "yellow", 4/6, "orange", 5/6, "red"]
+        cmap = make_cmap(seq, vmin=0, vmax=12)
+    """
+    for ndx, item in enumerate(seq):
+        if isinstance(item, str):
+            seq[ndx] = matplotlib.colors.ColorConverter().to_rgb(item)
+    seq = [(None,) * 3, 0.0] + list(seq) + [1.0, (None,) * 3]
+    cdict = {'red': [], 'green': [], 'blue': []}
+    for i, item in enumerate(seq):
+        if isinstance(item, float):
+            r1, g1, b1 = seq[i - 1]
+            r2, g2, b2 = seq[i + 1]
+            cdict['red'].append([item, r1, r2])
+            cdict['green'].append([item, g1, g2])
+            cdict['blue'].append([item, b1, b2])
+    cmap = matplotlib.colors.LinearSegmentedColormap('CustomMap', cdict)
+
+    # add colorbar if ax is passed
+    if ax is not None:
+        if vmin is None:
+            vmin = 0
+        if vmax is None:
+            vmax = 1
+        _norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
+        plt.colorbar(matplotlib.cm.ScalarMappable(norm=_norm, cmap=cmap), ax=ax)
+    return cmap
+
+
 def add_cbar_ax(ax, bounds="auto", location="right", orientation="vertical"):
     """
     Add colorbar ax relative to existing ax.
@@ -2929,7 +3012,7 @@ def add_cbar_ax(ax, bounds="auto", location="right", orientation="vertical"):
     return cbar_ax
 
 
-def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="vertical", **kwargs):
+def add_cbar(ax, cbar_ax=None, cmap=None, bounds="auto", location="right", orientation="vertical", **kwargs):
     """
     Draw colorbar relative to existing ax.
 
@@ -2939,6 +3022,7 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
           | colorbar ax
           | None: add new cbar_ax relative to existing ax
           | matplotlib.axes._axes.Axes: use passed cbar_ax (can be created using misc.add_cbar_ax()).
+        cmap (None, LinearSegmentedColormap): output of create_cmap()
         bounds (str, list):
           | str: "auto": apply bounds based on kws 'orientation' and 'location'.
           | list: [x0, y0, height, width] using axes coordinates.
@@ -2947,6 +3031,8 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
         orientation (str): "vertical", "horizontal"
 
     Keyword Args:
+        vmin (None, float): colorbar min value
+        vmax (None, float): colorbar max value
         cbar_label/label (str)
         cbar_fontweight/fontweight (str): "normal", "bold"
         cbar_location/location (str): "right", "bottom", "left", "top"
@@ -2956,7 +3042,9 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
         cbar (matplotlib.colorbar.Colorbar)
             color bar
     """
-    default = {"cbar_label": "",
+    default = {"vmin": None,
+               "vmax": None,
+               "cbar_label": "",
                "cbar_fontweight": "normal",
                "cbar_location": location,
                "cbar_orientation": orientation
@@ -2979,6 +3067,13 @@ def add_cbar(ax, cbar_ax=None, bounds="auto", location="right", orientation="ver
         # mappable must be matplotlib.cm.ScalarMappable ~ sns.heatmap()
         # see help(fig.colorbar) for more info
         cbar = plt.colorbar(mappable=QuadMesh, cax=cbar_ax, orientation=cfg.cbar_orientation)
+    if isinstance(cmap, matplotlib.colors.LinearSegmentedColormap):
+        if cfg.vmin is None:
+            cfg.vmin = 0
+        if cfg.vmax is None:
+            cfg.vmax = 1
+        _norm = matplotlib.colors.Normalize(vmin=cfg.vmin, vmax=cfg.vmax)
+        cbar = plt.colorbar(matplotlib.cm.ScalarMappable(norm=_norm, cmap=cmap), cax=cbar_ax, orientation=cfg.cbar_orientation)
     else:
         #print("misc.add_cbar() works currently only with sns.heatmap() plots.")
         cbar = plt.colorbar(cax=cbar_ax, orientation=cfg.cbar_orientation)

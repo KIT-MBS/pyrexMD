@@ -51,8 +51,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     """
     Get list of unique RES pairs and list of detailed RES pairs with native contacts.
 
-    Note:
-        len(NC) < len(NC_d) because NC contains only unique RES pairs
+    .. Note ::  len(NC) < len(NC_d) because NC contains only unique RES pairs
         whereas NC_d contains each ATOM pair.
 
     Args:
@@ -73,7 +72,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
 
     Returns:
         NC (list)
-            list with unique RES pairs
+            native contacts with unique RES pairs
         NC_d (list)
             detailed list of NCs containing (RES pairs), (ATOM numbers), (ATOM names)
     """
@@ -94,7 +93,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     if cfg.norm:
         _top.norm_universe(u)
     if cfg.ignh:
-        a = _top.true_select_atoms(u, sel, ignh=cfg.ignh, norm=cfg.norm)
+        a = _top.true_select_atoms(u, sel=sel, ignh=cfg.ignh, norm=cfg.norm)
     else:
         a = u.select_atoms(sel)
 
@@ -126,16 +125,84 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
         _misc.cprint(f"Saved file as: {cfg.save_as}")
         if len(a.select_atoms("nucleic")) == 0:
             # hardcoded protein selection
-            resid, resname, id, name = _top.parsePDB(u.filename, sel="protein and name CA")
+            resid, resname, id, name = _top.parsePDB(u.filename, sel="protein and name CA", norm=cfg.norm)
         else:
             # hardcoded nucleic selection
-            resid, resname, id, name = _top.parsePDB(u.filename, sel="name N1 or name N3")
+            resid, resname, id, name = _top.parsePDB(u.filename, sel="name N1 or name N3", norm=cfg.norm)
         with open(cfg.save_as, "w") as fout:
             fout.write("#RESi\tRESj\tATOMi\tATOMj\n")
             for IJ in NC:
                 fout.write(f"{IJ[0]}\t{IJ[1]}\t{id[resid.index(IJ[0])]}\t{id[resid.index(IJ[1])]}\n")
 
     return(NC, NC_d)
+
+
+def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein and name CA", d_cutoff=6.0, plot=False, **kwargs):
+    """
+    get native contact distances.
+
+    Args:
+        mobile (universe, str)
+        ref (universe, str)
+        sel (str): selection string
+        d_cutoff (float): cutoff distance
+        plot (bool)
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        norm (bool): apply topology.norm_universe()
+        ignh (bool): ignore hydrogen (mass < 1.2)
+        save_as (None, str): save native contacts logfile as...
+
+    Returns:
+        NC (list)
+            native contacts with unique RES pairs
+        NC_dist (list)
+            native contact distances ~ distances of items in NC
+        DM (array)
+            array of distance matrices
+    """
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2],
+               "norm": True,
+               "ignh": True,
+               "save_as": None}
+    cfg = _misc.CONFIG(default, **kwargs)
+    if "save_as" in kwargs:
+        del kwargs["save_as"]
+    ##########################################################
+    if isinstance(ref, str):
+        ref = mda.Universe(ref)
+    if isinstance(mobile, str):
+        mobile = mda.Universe(mobile)
+    if cfg.norm:
+        _top.norm_universe(ref)
+        _top.norm_universe(mobile)
+
+    # convert sel to selids
+    selid1 = _top.sel2selid(ref, sel=sel, norm=cfg.norm)
+    selid2 = _top.sel2selid(mobile, sel=sel, norm=cfg.norm)
+
+    # get native contacts and distance matrices
+    NC, NC_d = get_Native_Contacts(ref, sel=selid1, d_cutoff=d_cutoff,
+                                   ignh=cfg.ignh, save_as=cfg.save_as)
+    DM = _ana.get_Distance_Matrices(mobile, sel=selid2, sss=[cfg.start, cfg.stop, cfg.step])
+
+    # get native contact distances
+    NC_dist = []
+    for dm in DM:
+        for item in NC:
+            NC_dist.append(dm[item[0]-1][item[1]-1])
+
+    if plot:
+        _ana.plot_hist(NC_dist, **kwargs)
+        plt.xlabel(r"Distance ($\AA$)", fontweight="bold")
+        plt.ylabel(r"Frequency", fontweight="bold")
+        plt.tight_layout()
+    return (NC, NC_dist, DM)
 
 
 def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
@@ -166,6 +233,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
         ignh (bool): ignore hydrogen (mass < 1.2)
         norm (bool): apply topology.norm_universe()
         save_plot (bool)
+        ms (None, int): marker size (should be divisible by 2)
 
     .. hint:: Args and Keyword Args of misc.figure() are also valid.
 
@@ -181,11 +249,12 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
                "RES_range": [None, None],
                "ignh": True,
                "norm": True,
-               "save_plot": False}
+               "save_plot": False,
+               "ms": None}
     cfg = _misc.CONFIG(default, **kwargs)
     # init values
     if "figsize" not in kwargs:
-        kwargs = {"figsize": (7, 7)}
+        kwargs["figsize"] = (7, 7)
 
     # load universe
     if pdbid == 'pdbid':
@@ -211,29 +280,25 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     ax.set_aspect('equal')
 
     # conditions for markersize
+    if cfg.ms is None and res_max - res_min >= 100:
+        cfg.ms = 4
+    elif cfg.ms is None and res_max - res_min <= 50:
+        cfg.ms = 16
+    elif cfg.ms is None:
+        cfg.ms = 8
+
     print("Plotting native contacts...")
-    for item in NC:
-        if res_max - res_min < 100:
-            plt.scatter(item[0], item[1], color="silver", marker="s", s=16)
-        else:
-            plt.scatter(item[0], item[1], color="silver", marker="s", s=4)
+    for ndx, item in enumerate(NC):
+        plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms)
 
     # find matching contacts ij
     if DCA_fin is not None:
         DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
-
-        if res_max - res_min < 100:
-            for item in DCA:     # if item is in both lists plot it green otherwise red
-                if item in NC:
-                    plt.plot(item[0], item[1], color="green", marker="s", ms=4)
-                else:
-                    plt.plot(item[0], item[1], color="red", marker="s", ms=4)
-        else:
-            for item in DCA:     # if item is in both lists plot it green otherwise red
-                if item in NC:
-                    plt.plot(item[0], item[1], color="green", marker="s", ms=2)
-                else:
-                    plt.plot(item[0], item[1], color="red", marker="s", ms=2)
+        for item in DCA:     # if item is in both lists plot it green otherwise red
+            if item in NC:
+                plt.plot(item[0], item[1], color="green", marker="s", ms=cfg.ms)
+            else:
+                plt.plot(item[0], item[1], color="red", marker="s", ms=cfg.ms)
 
     # plt.legend(loc="upper left", numpoints=1)
     if res_max - res_min < 30:
@@ -250,6 +315,119 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     plt.xlabel(r"Residue i", fontweight="bold")
     plt.ylabel(r"Residue j", fontweight="bold")
     plt.title(f"Contact Map of {pdbid}", fontweight="bold")
+    plt.tight_layout()
+    if cfg.save_plot:
+        _misc.savefig(filename=f"{pdbid}_Fig_Contact_Map.png", filedir="./plots")
+    plt.show()
+    return fig, ax
+
+
+def plot_Contact_Map_Distances(NC, NC_dist, cmap=None, pdbid="pdbid", **kwargs):
+    """
+    Create contact map with color-coded distances.
+
+    Args:
+        NC (list): output of get_NC_distances()
+        NC_dist (list): output of get_NC_distances()
+        cmap (None, dict): dictionary with "color":"threshold" pairs, e.g. "red":12.0
+        pdbid (str): pdbid which is used for plot title
+
+    Keyword Args:
+        vmin (None, float)
+        vmax (None, float)
+        ms (None, int): marker size (should be divisible by 2)
+        title (None, str): None, "default" or any title string
+        save_plot (bool)
+
+    .. hint:: Args and Keyword Args of misc.figure() and misc.add_cbar() are also valid.
+
+    Returns:
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
+    """
+    def __HELP__cmap2seq(cmap):
+        """
+        converts cmaps with "color":"threshold" items to cmap sequence as
+        required by misc.create_cmap()
+        """
+        vmax = max(cmap.values())
+        seq = []
+        for v, k in cmap.items():
+            seq.append(v)
+            seq.append(k/vmax)
+        del seq[-1]
+        return seq
+    ############################################################################
+    cmap_RNA = {"dodgerblue": 4.0,
+                "lightgreen": 6.0,
+                "yellow": 8.0,
+                "orange": 10.0,
+                "red": 12.0}
+    default = {"vmin": None,
+               "vmax": None,
+               "cbar_label": r"Native Contact Distance ($\AA$)",
+               "cbar_fontweight": "bold",
+               "ms": None,
+               "save_plot": False,
+               "title": "default"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    if cmap is None:
+        cmap = cmap_RNA
+    # init values
+    if "figsize" not in kwargs:
+        kwargs["figsize"] = (7, 7)
+    ############################################################################
+    # PLOT
+    fig, ax = _misc.figure(**kwargs)
+    ax.set_aspect('equal')
+
+    if cfg.vmax is None:
+        cfg.vmax = max(cmap.values())
+    _CMAP = _misc.create_cmap(__HELP__cmap2seq(cmap), vmin=cfg.vmin, vmax=cfg.vmax, ax=None)
+    _CFG = cfg.deepcopy_without("cmap")
+    _ = _misc.add_cbar(ax, cmap=_CMAP, **_CFG)
+
+    # conditions for markersize
+    I, J = _misc.unzip(NC)
+    res_min = min(min(I), min(J))
+    res_max = max(max(I), max(J))
+    if cfg.ms is None and res_max - res_min >= 100:
+        cfg.ms = 4
+    elif cfg.ms is None and res_max - res_min <= 50:
+        cfg.ms = 16
+    elif cfg.ms is None:
+        cfg.ms = 8
+
+    #PLOT color-coded native contacts
+    for ndx, item in enumerate(NC):
+        for k, v in cmap.items():
+            if NC_dist[ndx] <= v:
+                plt.scatter(item[0], item[1], color=k, marker="s", s=cfg.ms)
+                break
+        # if NC distance is outside of cmap: color silver
+        if NC_dist[ndx] > max(cmap.values()):
+            plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms)
+
+    # plt.legend(loc="upper left", numpoints=1)
+    if res_max - res_min < 30:
+        xmin, xmax = _misc.round_down(res_min, 2), _misc.round_up(res_max + 1, 2)
+        ymin, ymax = _misc.round_down(res_min, 2), _misc.round_up(res_max + 1, 2)
+        loc = matplotlib.ticker.MultipleLocator(base=5)  # this locator puts ticks at regular intervals
+        ax.xaxis.set_major_locator(loc)
+        ax.yaxis.set_major_locator(loc)
+    else:
+        xmin, xmax = _misc.round_down(res_min, 5), _misc.round_up(res_max + 1, 5)
+        ymin, ymax = _misc.round_down(res_min, 5), _misc.round_up(res_max + 1, 5)
+    plt.xlim(xmin, xmax)
+    plt.ylim(ymin, ymax)
+    plt.xlabel(r"Residue i", fontweight="bold")
+    plt.ylabel(r"Residue j", fontweight="bold")
+    if cfg.title == "default":
+        plt.title(f"Contact Map of {pdbid}", fontweight="bold")
+    else:
+        plt.title(cfg.title, fontweight="bold")
     plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=f"{pdbid}_Fig_Contact_Map.png", filedir="./plots")
@@ -472,7 +650,7 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         save_plot (bool)
         save_as (str): "Qnative.png"
 
-    .. Note:: sel (arg) is ignored if sel1 or sel2 (kwargs) are passed.
+    .. Note :: sel (arg) is ignored if sel1 or sel2 (kwargs) are passed.
 
     Returns:
         FRAMES (list)
@@ -527,7 +705,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
     """
     Get QValue for formed bias contacts.
 
-    .. Note:: selection of get_Qbias() is hardcoded to sel='protein and name CA'.
+    .. Note :: selection of get_Qbias() is hardcoded to sel='protein and name CA'.
 
       Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
       sel='protein and name CA' to sel='protein' increases the atom count
@@ -597,7 +775,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
     QBIAS = []  # QBias value (fraction of formed bias contacts)
     CM = []     # Contact Matrices
 
-    DM = _ana.get_Distance_Matrices(mobile=mobile, sss=[cfg.start, cfg.stop, cfg.step], sel=sel)
+    DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step])
     for dm in DM:
         cm = (dm <= d_cutoff)   # converts distance matrix to bool matrix -> use as contact matrix
         count = 0

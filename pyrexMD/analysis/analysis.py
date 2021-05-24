@@ -435,8 +435,7 @@ def _HELP_sss_None2int(obj, cfg):
     return cfg
 
 
-def get_Distance_Matrices(mobile, sss=[None, None, None],
-                          sel="protein and name CA", flatten=False, verbose=True,
+def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, None], flatten=False, verbose=True,
                           **kwargs):
     """
     Calculate distance matrices for mobile and return them.
@@ -445,12 +444,12 @@ def get_Distance_Matrices(mobile, sss=[None, None, None],
         mobile (universe, list):
           | (MDA universe): structure with trajectory
           | (list): list with paths to structure files (.pdb)
+        sel (str): selection string
         sss (list):
           | [start, stop, step]
           | start (None, int): start frame
           | stop (None, int): stop frame
           | step (None, int): step size
-        sel (str): selection string
         flatten (bool): return flattened distance matrices
         verbose (bool): show progress bar
 
@@ -905,7 +904,7 @@ def _HELP_setup_bins(data, vmin=None, vmax=None, vbase=1, bins=None, n_bins=200,
     return(bins, bins_step, cfg)
 
 
-def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
+def plot_hist(data, sss=[None, None, None], save_as=None, **kwargs):
     """
     plot histogram
 
@@ -1087,7 +1086,7 @@ def plot_hist(data, sss=[None, None, None], save_as="", **kwargs):
 
     if cfg.title is not None:
         plt.title(cfg.title, fontweight='bold')
-    if save_as != "":
+    if save_as is not None:
         _misc.savefig(save_as)
 
     plt.tight_layout()
