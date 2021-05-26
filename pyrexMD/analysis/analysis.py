@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 25.05.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -990,12 +990,12 @@ def plot_hist(data, sss=[None, None, None], save_as=None, **kwargs):
     ### detect if data is single or multiple arrays
     # single array
     if len(np.shape(data)) == 1:
-        if isinstance(data, (type([]), np.ndarray)):
+        if isinstance(data, (list, tuple, np.ndarray)):
             data_length = 1
 
     # multiple arrays
     else:
-        if isinstance(data[0], (type([]), np.ndarray)):
+        if isinstance(data[0], (list, tuple, np.ndarray)):
             data_length = len(data)
         elif isinstance(data[0], type(str)):
             data_length = len(data)

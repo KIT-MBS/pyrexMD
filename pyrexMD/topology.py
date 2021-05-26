@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 25.05.2021
 
 
 """
@@ -12,6 +12,7 @@ This module contains functions to modify universe topologies and include contact
 import pyrexMD.misc as _misc
 import MDAnalysis as mda
 import numpy as np
+from tqdm.notebook import tqdm
 
 
 ################################################################################
@@ -422,11 +423,10 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
         ext = _misc.get_extension(realpath)
 
     else:
-        print("specify a file format within the 'save_as' string!")
-        return
+        raise _misc.Error("specify a file format within the 'save_as' string!")
 
     # save structures
-    for ts in u.trajectory[frames]:
+    for ts in tqdm(u.trajectory[frames]):
         frame = u.trajectory.frame
         structure = u.select_atoms(sel)
         temp_save_as = f"{dirpath}/{base}_{frame}{ext}"

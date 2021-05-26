@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 25.05.2021
 
 """
 This module contains functions for decoy creation using `PyRosetta`.
@@ -473,27 +473,27 @@ def get_decoy_scores(decoy_list=None, decoy_dir=None, pattern="*.pdb",
       - If < n_rank > is int: return ranked decoys, ids and scores for best < n_rank > decoys.
 
     Args:
-        decoy_list(None, list): list with decoy paths
-        decoy_dir(None, str): decoy directory
-        pattern(str): pattern of decoy filenames
-        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]
-        n_rank(None, int):
+        decoy_list (None, list): list with decoy paths
+        decoy_dir (None, str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple, list): limit decoy index range to[ndx_min, ndx_max]
+        n_rank (None, int):
           | None: return unranked decoys, ids and scores.
           | int: return ranked decoys, ids and scores for best < n_rank > decoys.
-        reverse(bool):
+        reverse (bool):
           | True: ascending ranking order(low to high)
           | False: decending ranking order(high to low)
-        verbose(bool)
+        verbose (bool)
 
     Keyword Args:
-        cprint_color(None, str): colored print color
+        cprint_color (None, str): colored print color
 
     Returns:
-        DECOY_LIST(list)
+        DECOY_LIST (list)
             list with decoy paths
-        DECOY_ID(list)
+        DECOY_ID (list)
             list with decoy ids
-        SCORE(list)
+        SCORE (list)
             list with corresponding scores(ref 2015)
     """
     default = {"cprint_color": "blue"}

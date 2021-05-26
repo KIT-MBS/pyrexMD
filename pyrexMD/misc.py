@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 25.05.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -151,6 +151,44 @@ class HiddenPrints:
         if not self.verbose:
             sys.stdout.close()
             sys.stdout = self._original_stdout
+        return
+
+
+class HiddenPrints_ALL:
+    """
+    Class to hide all stdout and stderr prints.
+
+    Args:
+        verbose (bool):
+          | True: show prints
+          | False: hide prints (default)
+
+    Example:
+        | with HiddenPrints_ALL():
+        |   print("This print is hidden")
+        | with HiddenPrints(verbose=True):
+        |   print("This print is shown")
+        | This print is shown
+    """
+
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+
+    def __enter__(self):
+        if not self.verbose:
+            self._original_stdout = sys.stdout
+            self._original_stderr = sys.stderr
+            sys.stdout = open(os.devnull, "w")
+            sys.stderr = open(os.devnull, "w")
+        return
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if not self.verbose:
+            sys.stdout.close()
+            sys.stderr.close()
+            sys.stdout = self._original_stdout
+            sys.stderr = self._original_stderr
+
         return
 
 
@@ -886,7 +924,7 @@ def round_to_base(number, base=1):
         return down
 
 
-def round_object(object, prec=3):
+def round_object(object, prec=3, dtype=None):
     """
     Args:
         object (list, array):
@@ -894,6 +932,7 @@ def round_object(object, prec=3):
           | list of lists/arrays
           | array of lists/arrays
         prec (int): rounding precission
+        dtype (None, dtype): return object values as specific data type
 
     Returns:
         new_object (list, array)
@@ -922,7 +961,7 @@ def round_object(object, prec=3):
 
     # array of lists/arrays: convert outer list to array
     if isinstance(object, np.ndarray):
-        new_object = np.array(new_object)
+        new_object = np.array(new_object, dtype=dtype)
 
     return new_object
 
@@ -1310,18 +1349,19 @@ def get_PDBid(ref):
         return
 
 
-def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
+def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_stop=30):
     """
     Prints each item of "data" elementwise next to each other as a table.
 
     Args:
         data (list of lists): table content, where each list corresponds to one column
-        prec(None,int):
+        prec (None, int):
           | None: rounding off
           | int:  rounding on
         spacing (int):
           | spacing between columns (via "".expandtabs(spacing))
           | 8: default \\t width
+        dtype (None, dtype): dtype of table values after rounding
         verbose (bool): print table
         verbose_stop (None, int): stop printing after N lines
 
@@ -1343,7 +1383,10 @@ def print_table(data=[], prec=3, spacing=8, verbose=True, verbose_stop=30):
     """
     # apply precission to input
     if prec is not None:
-        data = round_object(data, prec)
+        data = round_object(data, prec=prec)
+
+    if dtype is not None:
+        data = np.array(data, dtype=dtype)
 
     table_str = ""
 

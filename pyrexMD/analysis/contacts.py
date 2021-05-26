@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 25.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -199,8 +199,8 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", d_cutof
 
     if plot:
         _ana.plot_hist(NC_dist, **kwargs)
-        plt.xlabel(r"Distance ($\AA$)", fontweight="bold")
-        plt.ylabel(r"Frequency", fontweight="bold")
+        plt.xlabel(r"Residue Pair Distance ($\AA$)", fontweight="bold")
+        plt.ylabel(r"Count", fontweight="bold")
         plt.tight_layout()
     return (NC, NC_dist, DM)
 
@@ -280,7 +280,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     ax.set_aspect('equal')
 
     # conditions for markersize
-    if cfg.ms is None and res_max - res_min >= 100:
+    if cfg.ms is None and res_max - res_min >= 70:
         cfg.ms = 4
     elif cfg.ms is None and res_max - res_min <= 50:
         cfg.ms = 8
@@ -377,7 +377,7 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     default = {"cmap": None,
                "vmin": None,
                "vmax": None,
-               "cbar_label": r"Native Contact Distance ($\AA$)",
+               "cbar_label": r"Residue Pair Distance ($\AA$)",
                "cbar_fontweight": "bold",
                "ms": None,
                "save_plot": False,
@@ -407,7 +407,7 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     I, J = _misc.unzip(NC)
     res_min = min(min(I), min(J))
     res_max = max(max(I), max(J))
-    if cfg.ms is None and res_max - res_min >= 100:
+    if cfg.ms is None and res_max - res_min >= 70:
         cfg.ms = 4
     elif cfg.ms is None and res_max - res_min <= 50:
         cfg.ms = 8
@@ -811,11 +811,9 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
     if plot:
         if verbose:
             _misc.cprint(f"average qbias value: {np.mean(QBIAS)}", "blue")
-        fig, ax = _misc.figure()
-        plt.plot(FRAMES, QBIAS, color=cfg.color, alpha=1)
-        #plt.plot(FRAMES, QBIAS, color=cfg.color, alpha=0.3)
-        plt.xlabel("frame", fontweight="bold")
-        plt.ylabel("Qbias", fontweight="bold")
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=QBIAS, color=cfg.color, **kwargs)
+        #plt.xlabel("frame", fontweight="bold")
+        #plt.ylabel("Qbias", fontweight="bold")
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
