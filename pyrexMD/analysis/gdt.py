@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 27.05.2021
 
 
 """
@@ -20,8 +20,8 @@ Example:
     import pyrexMD.analysis.analysis as ana
     import pyrexMD.analysis.gdt as gdt
 
-    ref = mda.Universe("<pdb_file>")
-    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+    ref = mda.Universe("path/to/pdb")
+    mobile = mda.Universe("path/to/tpr", "path/to/xtc")
 
     # first norm and align universes
     top.norm_and_align_universe(mobile, ref)

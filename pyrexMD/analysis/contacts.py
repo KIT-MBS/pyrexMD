@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 26.05.2021
+# @Last modified time: 27.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -16,8 +16,8 @@ Example:
     import MDAnalysis as mda
     import pyrexMD.analysis.contacts as con
 
-    ref = mda.Universe("<pdb_file>")
-    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+    ref = mda.Universe("path/to/pdb")
+    mobile = mda.Universe("path/to/tpr", "path/to/xtc")
 
     # get and plot native contacts
     con.get_Native_Contacts(ref, sel="protein")
@@ -45,6 +45,7 @@ import seaborn as sns
 import MDAnalysis as mda
 from MDAnalysis.analysis import contacts as _contacts, distances as _distances
 import operator
+from tqdm.notebook import tqdm
 
 
 def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
@@ -690,8 +691,8 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     return fig, ax
 
 
-def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
-                d_cutoff=6.0, plot=True, verbose=True, **kwargs):
+def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
+                d_cutoff=8.0, plot=True, verbose=True, **kwargs):
     """
     Get QValue for native contacts.
 
@@ -724,7 +725,7 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         step (None, int): step size
         color (str)
         save_plot (bool)
-        save_as (str): "Qnative.png"
+        save_as (str): "QNative.png"
 
     .. Note :: sel (arg) is ignored if sel1 or sel2 (kwargs) are passed.
 
@@ -742,7 +743,7 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
                "step": sss[2],
                "color": "r",
                "save_plot": False,
-               "save_as": "Qnative.png"}
+               "save_as": "QNative.png"}
     cfg = _misc.CONFIG(default, **kwargs)
     if cfg.sel1 is None and cfg.sel2 is None:
         cfg.sel1 = sel
@@ -768,31 +769,31 @@ def get_Qnative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         fig, ax = _misc.figure()
         plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=1)
         #plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=0.3)
-        plt.xlabel("frame", fontweight="bold")
-        plt.ylabel("Qnative", fontweight="bold")
+        plt.xlabel("Frame", fontweight="bold")
+        plt.ylabel("QNative", fontweight="bold")
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
     return FRAMES, QNATIVE
 
 
-def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
+def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
               plot=True, warn=True, verbose=True, **kwargs):
     """
     Get QValue for formed bias contacts.
 
-    .. Note :: selection of get_Qbias() is hardcoded to sel='protein and name CA'.
+    .. Note :: selection of get_QBias() is hardcoded to sel='protein and name CA'.
 
       Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
       sel='protein and name CA' to sel='protein' increases the atom count
       significantly. Most of them will count as non-native and thus make
-      the Qbias value very low.
+      the QBias value very low.
 
     .. Note :: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of
       both methods yields better results when the kwarg include_selfcontacts
-      (bool) is set to True. However this improves the calculated Qbias value
+      (bool) is set to True. However this improves the calculated QBias value
       artificially (e.g. even when all used bias contacts are never formed,
-      Qbias will not be zero due to the selfcontact counts)
+      QBias will not be zero due to the selfcontact counts)
 
     Args:
         mobile (universe): mobile structure with trajectory
@@ -819,7 +820,7 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
         step (None, int): step size
         color (str)
         save_plot (bool)
-        save_as (str): "Qbias.png"
+        save_as (str): "QBias.png"
 
     Returns:
         FRAMES (array)
@@ -836,14 +837,14 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
                "step": sss[2],
                "color": "r",
                "save_plot": False,
-               "save_as": "Qbias.png"}
+               "save_as": "QBias.png"}
     cfg = _misc.CONFIG(default, **kwargs)
     sel = "protein and name CA"  # selection must be hardcoded (see print msg below)
     ################################################################################
     if warn:
-        _misc.cprint("Note 1: selection of get_Qbias() is hardcoded to sel='protein and name CA'.", "red")
-        _misc.cprint("Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from sel='protein and name CA' to sel='protein' increases the atom count significantly. Most of them will count as non-native and thus make the Qbias value very low.", "red")
-        _misc.cprint("Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated Qbias value artificially (e.g. even when all used bias contacts are never formed, Qbias will not be zero due to the selfcontact counts)", "red")
+        _misc.cprint("Note 1: selection of get_QBias() is hardcoded to sel='protein and name CA'.", "red")
+        _misc.cprint("Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from sel='protein and name CA' to sel='protein' increases the atom count significantly. Most of them will count as non-native and thus make the QBias value very low.", "red")
+        _misc.cprint("Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated QBias value artificially (e.g. even when all used bias contacts are never formed, QBias will not be zero due to the selfcontact counts)", "red")
 
     if norm:
         _top.norm_universe(mobile)
@@ -872,14 +873,151 @@ def get_Qbias(mobile, bc, sss=[None, None, None], d_cutoff=6.0, norm=True,
 
     if plot:
         if verbose:
-            _misc.cprint(f"average qbias value: {np.mean(QBIAS)}", "blue")
+            _misc.cprint(f"average QBias value: {np.mean(QBIAS)}", "blue")
         fig, ax = _ana.PLOT(xdata=FRAMES, ydata=QBIAS, color=cfg.color, **kwargs)
-        #plt.xlabel("frame", fontweight="bold")
-        #plt.ylabel("Qbias", fontweight="bold")
+        plt.xlabel("Frame", fontweight="bold")
+        plt.ylabel("QBias", fontweight="bold")
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
     return np.array(FRAMES), np.array(QBIAS), np.array(CM)
+
+
+def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=True,
+                   plot=True, verbose=True, **kwargs):
+    """
+    Get QValue of true positive (TP) and false positive (FP) bias contacts.
+
+    .. Note :: selection of this function is hardcoded to sel='protein and name CA'.
+
+      Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
+      sel='protein and name CA' to sel='protein' increases the atom count
+      significantly. Most of them will count as non-native and thus make
+      the QBias value very low.
+
+    .. Note :: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of
+      both methods yields better results when the kwarg include_selfcontacts
+      (bool) is set to True. However this improves the calculated QBias value
+      artificially (e.g. even when all used bias contacts are never formed,
+      QBias will not be zero due to the selfcontact counts)
+
+    Args:
+        mobile (universe): mobile structure with trajectory
+        BC (list): list with bias contacts (saved as tuples (RESi, RESj))
+        NC (list): list with native contacts (saved as tuples (RESi, RESj))
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
+        d_cutoff (float): cutoff distance for native contacts
+        norm (bool): norm universe before calculation.
+        plot (bool)
+        verbose (bool)
+
+    Keyword Args:
+        dtype (dtype): data type of returned contact matrix CM
+        include_selfcontacts (bool):
+          | sets norm of QBIAS. Default is False.
+          | True: includes selfcontacts on main diagonal of CM (max count > len(bc))
+          | False: ignores selfcontacts on main diagonal of CM (max count == len(bc))
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        color_TP (str): color of true positive QBias. Defaults to "g".
+        color_FP (str): color of false positive QBias. Defaults to "r".
+        alpha (float): 0.3
+        marker (str): "."
+
+    Returns:
+        FRAMES (array)
+            array with frame numbers
+        TP (array)
+            array with Qvalue of true positive bias contacts
+        FP (array)
+            array with Qvalue of false positive bias contacts
+        CM (array)
+            array with distance matrices
+    """
+    default = {"dtype": bool,
+               "include_selfcontacts": False,
+               "start": sss[0],
+               "stop": sss[1],
+               "step": sss[2],
+               "figsize": (8, 6),
+               "color_TP": "g",
+               "color_FP": "r",
+               "alpha": 0.3,
+               "marker": "."}
+    cfg = _misc.CONFIG(default, **kwargs)
+    sel = "protein and name CA"  # selection must be hardcoded (see print msg below)
+    ################################################################################
+    if not isinstance(BC, (list, np.ndarray)):
+        raise _misc.Error("BC and NC must be list of tuples (RESi, RESj)")
+    if not isinstance(NC, (list, np.ndarray)):
+        raise _misc.Error("BC and NC must be list of tuples (RESi, RESj)")
+    for item in BC:
+        if not isinstance(item, tuple):
+            raise _misc.Error("BC must be list of tuples (RESi, RESj)")
+    for item in NC:
+        if not isinstance(item, tuple):
+            raise _misc.Error("NC must be list of tuples (RESi, RESj)")
+    if norm:
+        _top.norm_universe(mobile)
+
+    CM = []  # Contact Matrices
+    TP = []  # Qvalue of true positive bias contacts (fraction of formed contacts)
+    FP = []  # Qvalue of false positive bias contacts (fraction of formed contacts)
+    len_BC_TP = sum([True for item in BC if item in NC])
+    len_BC_FP = sum([True for item in BC if item not in NC])
+    TPR = round(100*(1-len_BC_FP/len_BC_TP), 2)
+    if verbose:
+        _misc.cprint(f"The used bias contacts have a TPR of {TPR}% with {len_BC_TP} native contacts and {len_BC_FP} non-native contacts.", "blue")
+
+    # calculate distance matrices
+    if verbose:
+        _misc.cprint("calculating distance matrices...")
+    DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step], verbose=verbose)
+    for dm in DM:
+        cm = (dm <= d_cutoff)   # converts distance matrix to bool matrix -> use as contact matrix
+        CM.append(cm)
+
+    # calculate TP and FP
+    if verbose:
+        _misc.cprint("calculating q values...")
+    for cm in tqdm(CM):
+        count_TP = 0
+        count_FP = 0
+        for item in BC:
+            if item in NC and cm[item[0]-1, item[1]-1] == True:
+                count_TP += 1
+            elif item not in NC and cm[item[0]-1, item[1]-1] == True:
+                count_FP += 1
+
+        if cfg.include_selfcontacts == False:
+            # norm based on used bias contacts
+            TP.append(count_TP/len_BC_TP)
+            FP.append(count_FP/len_BC_FP)
+        else:
+            # norm based on used bias contacts and selfcontacts
+            TP.append((count_TP+len(cm))/(len_BC_TP+len(cm)))
+            FP.append(count_FP/len_BC_FP)
+
+    FRAMES = range(len(TP))
+
+    if plot:
+        if verbose:
+            _misc.cprint(f"average true positive QBias value: {np.mean(TP)}", "blue")
+            _misc.cprint(f"average false positive QBias value: {np.mean(FP)}", "blue")
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=TP, color=cfg.color_TP, **cfg)
+        plt.xlabel("Frame", fontweight="bold")
+        plt.ylabel("True Positive QBias", fontweight="bold")
+        plt.tight_layout()
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=FP, color=cfg.color_FP, **cfg)
+        plt.xlabel("Frame", fontweight="bold")
+        plt.ylabel("False Positive QBias", fontweight="bold")
+        plt.tight_layout()
+    return np.array(FRAMES), np.array(TP), np.array(FP), np.array(CM)
 
 
 def get_formed_contactpairs(u, cm, sel="protein and name CA", norm=True, **kwargs):

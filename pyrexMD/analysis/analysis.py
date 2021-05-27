@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 25.05.2021
+# @Last modified time: 27.05.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -17,8 +17,8 @@ Example:
     import pyrexMD.topology as top
     import pyrexMD.analysis.analysis as ana
 
-    ref = mda.Universe("<pdb_file>")
-    mobile = mda.Universe("<tpr_file>", "<xtc_file>")
+    ref = mda.Universe("path/to/pdb")
+    mobile = mda.Universe("path/to/tpr", "path/to/xtc")
 
     # get RMSD
     top.norm_and_align_universe(mobile, ref)
