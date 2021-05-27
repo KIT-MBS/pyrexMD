@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 25.05.2021
+# @Last modified time: 27.05.2021
 
 
 """
@@ -602,14 +602,12 @@ def DCA_modify_topology(top_fin, DCA_used_fin, n_DCA=None, k=10, skiprows="auto"
 
     Keyword Args:
         pdbid (str): "auto" (default): detect PDBID based on ref_PDB path
-        default_dir (str): "./" (default)
         save_as (str):
-          | "PDBID_topol_mod.top"
+          | "PDBID_topol_mod.top" (default)
           | detect and replace PDBID in save_as based on ref_PDB path
           | if kwarg <pdbid> is "auto" (default).
     """
     default = {"pdbid": "auto",
-               "default_dir": "./",
                "save_as": "PDBID_topol_mod.top"}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
@@ -626,19 +624,12 @@ def DCA_modify_topology(top_fin, DCA_used_fin, n_DCA=None, k=10, skiprows="auto"
     if n_DCA is None:
         n_DCA = len(ATOM_I)
 
-    # lstrip ./ or / from save_as
-    if "/" in cfg.save_as:
-        cfg.save_as = cfg.save_as.lstrip("/")
-        cfg.save_as = cfg.save_as.lstrip("./")
-    if cfg.pdbid == "auto":
+    if "PDBID" in cfg.save_as and cfg.pdbid == "auto":
         cfg.pdbid = _misc.get_PDBid(DCA_used_fin)
-    if "PDBID" in cfg.save_as:
         cfg.save_as = f"{cfg.pdbid}_topol_mod.top"
 
     # read and write files
-    new_dir = _misc.mkdir(cfg.default_dir)
-    output = f"{new_dir}/{cfg.save_as}"
-    with open(top_fin, "r") as fin, open(output, "w") as fout:
+    with open(top_fin, "r") as fin, open(cfg.save_as, "w") as fout:
 
         for line in fin:
             # default case: copy paste topology file
@@ -660,7 +651,7 @@ def DCA_modify_topology(top_fin, DCA_used_fin, n_DCA=None, k=10, skiprows="auto"
                             fout.write("{:5d} {:5d} {:5d} {:13d} {:13.2f}\n".format(ATOM_I[i], ATOM_J[i], 9, 0, float(k)))
                 fout.write("; native bonds\n")
 
-    print("Saved modified topology as:", output)
+    print("Saved modified topology as:", _misc.realpath(cfg.save_as))
     return
 
 

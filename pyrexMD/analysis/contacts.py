@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 25.05.2021
+# @Last modified time: 26.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -205,6 +205,68 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", d_cutof
     return (NC, NC_dist, DM)
 
 
+def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", plot=False, **kwargs):
+    """
+    get bias contact distances.
+
+    Args:
+        u (universe, str)
+        bc (list): list of bias contacts represented by (RESi, RESj) tuple
+        sel (str): selection string
+        plot (bool)
+
+    Keyword Args:
+        start (None, int): start frame
+        stop (None, int): stop frame
+        step (None, int): step size
+        norm (bool): apply topology.norm_universe()
+        ignh (bool): ignore hydrogen (mass < 1.2)
+        save_as (None, str): save native contacts logfile as...
+
+    Returns:
+        BC (list)
+            bias contacts with unique RES pairs
+        BC_dist (list)
+            bias contact distances ~ distances of items in BC
+        DM (array)
+            array of distance matrices
+    """
+    BC = bc
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2],
+               "norm": True,
+               "ignh": True,
+               "save_as": None}
+    cfg = _misc.CONFIG(default, **kwargs)
+    if "save_as" in kwargs:
+        del kwargs["save_as"]
+    ##########################################################
+    if isinstance(u, str):
+        u = mda.Universe(u)
+    if cfg.norm:
+        _top.norm_universe(u)
+
+    # convert sel to selid
+    selid = _top.sel2selid(u, sel=sel, norm=cfg.norm)
+
+    # get native contacts and distance matrices
+    DM = _ana.get_Distance_Matrices(u, sel=selid, sss=[cfg.start, cfg.stop, cfg.step])
+
+    # get native contact distances
+    BC_dist = []
+    for dm in DM:
+        for item in BC:
+            BC_dist.append(dm[item[0]-1][item[1]-1])
+
+    if plot:
+        _ana.plot_hist(BC_dist, **kwargs)
+        plt.xlabel(r"Residue Pair Distance ($\AA$)", fontweight="bold")
+        plt.ylabel(r"Count", fontweight="bold")
+        plt.tight_layout()
+    return (BC, BC_dist, DM)
+
+
 def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
                      sel='protein', pdbid='pdbid', **kwargs):
     """
@@ -324,7 +386,7 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
 
 def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     """
-    Create contact map with color-coded distances.
+    Create contact map with color-coded distances for selected contact pairs.
 
     Args:
         ref (universe, str): reference universe or pdb. Used to detect if target
