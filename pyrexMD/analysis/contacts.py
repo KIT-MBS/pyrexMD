@@ -821,6 +821,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        figsize (tuple)
         color (str): "r"
         alpha (float): 0.3
         marker (str): "."
@@ -840,6 +841,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
                "start": sss[0],
                "stop": sss[1],
                "step": sss[2],
+               "figsize": (7, 5),
                "color": "r",
                "alpha": 0.3,
                "marker": ".",
@@ -952,7 +954,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
                "start": sss[0],
                "stop": sss[1],
                "step": sss[2],
-               "figsize": (8, 6),
+               "figsize": (7, 5),
                "color_TP": "g",
                "color_FP": "r",
                "alpha": 0.3,
@@ -1017,11 +1019,12 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
         if verbose:
             _misc.cprint(f"average true positive QBias value: {np.mean(TP)}", "blue")
             _misc.cprint(f"average false positive QBias value: {np.mean(FP)}", "blue")
-        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=TP, color=cfg.color_TP, **cfg)
+        _cfg = cfg.deepcopy_without("color_TP", "color_FP")
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=TP, color=cfg.color_TP, **_cfg)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("True Positive QBias", fontweight="bold")
         plt.tight_layout()
-        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=FP, color=cfg.color_FP, **cfg)
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=FP, color=cfg.color_FP, **_cfg)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("False Positive QBias", fontweight="bold")
         plt.tight_layout()
