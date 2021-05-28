@@ -780,7 +780,7 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     return FRAMES, QNATIVE
 
 
-def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
+def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=True,
               plot=True, warn=True, verbose=True, **kwargs):
     """
     Get QValue for formed bias contacts.
@@ -807,6 +807,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
           | stop (None, int): stop frame
           | step (None, int): step size
         d_cutoff (float): cutoff distance for native contacts
+        prec (None, int): rounding precission
         norm (bool): norm universe before calculation.
         plot (bool)
         warn (bool): print important warnings about usage of this function.
@@ -877,7 +878,8 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
             # norm based on used bias contacts and selfcontacts
             QBIAS.append((count+len(cm))/(len(bc)+len(cm)))
             CM.append(cm)
-
+    if prec is not None:
+        QBIAS = [round(i, prec) for i in QBIAS]
     FRAMES = list(range(len(QBIAS)))
 
     if plot:
@@ -890,11 +892,12 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
         plt.tight_layout()
     if cfg.save_plot:
         _misc.savefig(filename=cfg.save_as, create_dir=True)
+
     return np.array(FRAMES), np.array(QBIAS), np.array(CM)
 
 
-def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=True,
-                   plot=True, verbose=True, **kwargs):
+def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
+                   norm=True, plot=True, verbose=True, **kwargs):
     """
     Get QValue of true positive (TP) and false positive (FP) bias contacts.
 
@@ -921,6 +924,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
           | stop (None, int): stop frame
           | step (None, int): step size
         d_cutoff (float): cutoff distance for native contacts
+        prec (None, int): rounding precission
         norm (bool): norm universe before calculation.
         plot (bool)
         verbose (bool)
@@ -1013,6 +1017,9 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
             TP.append((count_TP+len(cm))/(len_BC_TP+len(cm)))
             FP.append(count_FP/len_BC_FP)
 
+    if prec is not None:
+        TP = [round(i, prec) for i in TP]
+        FP = [round(i, prec) for i in FP]
     FRAMES = range(len(TP))
 
     if plot:
