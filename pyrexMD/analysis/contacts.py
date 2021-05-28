@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 28.05.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -723,7 +723,9 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
-        color (str)
+        color (str): "r"
+        alpha (float): 0.3
+        marker (str): "."
         save_plot (bool)
         save_as (str): "QNative.png"
 
@@ -742,6 +744,8 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
                "stop": sss[1],
                "step": sss[2],
                "color": "r",
+               "alpha": 0.3,
+               "marker": ".",
                "save_plot": False,
                "save_as": "QNative.png"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -767,8 +771,7 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         _misc.cprint(f"average qnative value: {round(np.mean(QNATIVE), 3)}", "blue")
 
         fig, ax = _misc.figure()
-        plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=1)
-        #plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=0.3)
+        plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("QNative", fontweight="bold")
         plt.tight_layout()
@@ -818,7 +821,9 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
-        color (str)
+        color (str): "r"
+        alpha (float): 0.3
+        marker (str): "."
         save_plot (bool)
         save_as (str): "QBias.png"
 
@@ -836,6 +841,8 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
                "stop": sss[1],
                "step": sss[2],
                "color": "r",
+               "alpha": 0.3,
+               "marker": ".",
                "save_plot": False,
                "save_as": "QBias.png"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -874,7 +881,8 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, norm=True,
     if plot:
         if verbose:
             _misc.cprint(f"average QBias value: {np.mean(QBIAS)}", "blue")
-        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=QBIAS, color=cfg.color, **kwargs)
+        _cfg = cfg.deepcopy_without(["color", "alpha", "marker"])
+        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=QBIAS, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker, **_cfg)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("QBias", fontweight="bold")
         plt.tight_layout()
@@ -976,7 +984,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
 
     # calculate distance matrices
     if verbose:
-        _misc.cprint("calculating distance matrices...")
+        _misc.cprint("Calculating Distance Matrices...")
     DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step], verbose=verbose)
     for dm in DM:
         cm = (dm <= d_cutoff)   # converts distance matrix to bool matrix -> use as contact matrix
@@ -984,7 +992,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
 
     # calculate TP and FP
     if verbose:
-        _misc.cprint("calculating q values...")
+        _misc.cprint("Calculating QValues...")
     for cm in tqdm(CM):
         count_TP = 0
         count_FP = 0
