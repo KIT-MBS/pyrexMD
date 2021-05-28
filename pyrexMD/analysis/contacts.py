@@ -1019,7 +1019,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, norm=Tr
         if verbose:
             _misc.cprint(f"average true positive QBias value: {np.mean(TP)}", "blue")
             _misc.cprint(f"average false positive QBias value: {np.mean(FP)}", "blue")
-        _cfg = cfg.deepcopy_without("color_TP", "color_FP")
+        _cfg = cfg.deepcopy_without(["color_TP", "color_FP"])
         fig, ax = _ana.PLOT(xdata=FRAMES, ydata=TP, color=cfg.color_TP, **_cfg)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("True Positive QBias", fontweight="bold")
