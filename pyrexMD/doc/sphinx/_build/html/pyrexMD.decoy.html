@@ -577,11 +577,13 @@
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list with cluster numbers n to test
-SSE (list): list with SSE for each n in n_clusters</p>
+<dd class="field-odd"><p><dl class="simple">
+<dt>n_clusters (list)</dt><dd><p>list with cluster numbers n to test</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>n_clusters (list)</p>
+<dt>SSE (list)</dt><dd><p>list with SSE for each n in n_clusters</p>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -643,10 +645,11 @@ SSE (list): list with SSE for each n in n_clusters</p>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Sum of Squared Errors</p>
+<dd class="field-odd"><p><dl class="simple">
+<dt>SSE (float)</dt><dd><p>Sum of Squared Errors</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>SSE (float)</p>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -692,6 +695,58 @@ SSE (list): list with SSE for each n in n_clusters</p>
 <dt>counts (array)</dt><dd><p>counts per cluster</p>
 </dd>
 <dt>labels (array)</dt><dd><p>data point cluster labels</p>
+</dd>
+<dt>sse (float)</dt><dd><p>sum of squared errors</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.heat_KMeans_bestofN">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">heat_KMeans_bestofN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#heat_KMeans_bestofN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.heat_KMeans_bestofN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeat heat_KMeans N times and return topx results based on minimized sum of squared errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5_file</strong> (<em>str</em>) – path to h5 file containing data</p></li>
+<li><p><strong>n_clusters</strong> (<em>int</em>) – number of clusters</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – number of repeats</p></li>
+<li><p><strong>topx</strong> (<em>int</em>) – number of best ranked clusters to return</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Args and Keyword Args of heat_Kmeans are valid Keyword Args.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl>
+<dt>TOPX_CLUSTER (list)</dt><dd><div class="line-block">
+<div class="line">list of clusters ranked from best to topx best. Each cluster contains:</div>
+<div class="line-block">
+<div class="line">centers (array)</div>
+<div class="line-block">
+<div class="line">cluster centers of best result</div>
+</div>
+<div class="line">counts (array)</div>
+<div class="line-block">
+<div class="line">counts per cluster of best result</div>
+</div>
+<div class="line">labels (array)</div>
+<div class="line-block">
+<div class="line">data point cluster labels</div>
+</div>
+<div class="line">sse (float)</div>
+<div class="line-block">
+<div class="line">sum of squared errors</div>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </p>
