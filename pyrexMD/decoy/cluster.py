@@ -339,7 +339,8 @@ def get_SSE(h5_file, centers, labels, sss=[None, None, None], **kwargs):
         norm (bool): normalize the SSE by diving through lenght of h5_file content (~n_frames)
 
     Returns:
-        SSE (float): Sum of Squared Errors
+        SSE (float)
+            Sum of Squared Errors
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -384,8 +385,10 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
     .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
 
     Returns:
-        n_clusters (list): list with cluster numbers n to test
-        SSE (list): list with SSE for each n in n_clusters
+        n_clusters (list)
+            list with cluster numbers n to test
+        SSE (list)
+            list with SSE for each n in n_clusters
     """
     default = {"start": sss[0],
                "stop": sss[1],
