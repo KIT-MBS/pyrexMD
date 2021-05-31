@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: gdt.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 24.05.2021</span>
+<span class="c1"># @Last modified time: 28.05.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -183,8 +183,8 @@
 <span class="sd">    import pyrexMD.analysis.analysis as ana</span>
 <span class="sd">    import pyrexMD.analysis.gdt as gdt</span>
 
-<span class="sd">    ref = mda.Universe(&quot;&lt;pdb_file&gt;&quot;)</span>
-<span class="sd">    mobile = mda.Universe(&quot;&lt;tpr_file&gt;&quot;, &quot;&lt;xtc_file&gt;&quot;)</span>
+<span class="sd">    ref = mda.Universe(&quot;path/to/pdb&quot;)</span>
+<span class="sd">    mobile = mda.Universe(&quot;path/to/tpr&quot;, &quot;path/to/xtc&quot;)</span>
 
 <span class="sd">    # first norm and align universes</span>
 <span class="sd">    top.norm_and_align_universe(mobile, ref)</span>
@@ -517,7 +517,7 @@
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_GDT_TS"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_TS">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
+<div class="viewcode-block" id="get_GDT_TS"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_TS">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. Note:: GlobalDistanceTest_TotalScore. Possible values: 0 &lt;= GDT_TS &lt;= 100</span>
 
@@ -527,6 +527,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
+<span class="sd">        prec (None, int): rounding precission</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_TS (array)</span>
@@ -536,11 +537,11 @@
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">GDT_percent</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">=</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">15</span><span class="p">])</span><span class="o">/</span><span class="mi">4</span>
         <span class="n">GDT_TS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
-    <span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">GDT_TS</span></div>
+    <span class="n">GDT_TS</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">GDT_TS</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_GDT_HA"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_HA">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">):</span>
+<div class="viewcode-block" id="get_GDT_HA"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.get_GDT_HA">[docs]</a><span class="k">def</span> <span class="nf">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. Note :: GlobalDistanceTest_HighAccuracy. Possible values: 0 &lt;= GDT_HA &lt;= 100</span>
 
@@ -550,6 +551,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        GDT_percent (list, array): output of gdt.GDT()</span>
+<span class="sd">        prec (None, int): rounding precission</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GDT_HA (array)</span>
@@ -559,8 +561,8 @@
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">GDT_percent</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">=</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mi">4</span>
         <span class="n">GDT_HA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
-    <span class="n">GDT_HA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GDT_HA</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">GDT_HA</span></div>
+    <span class="n">GDT_HA</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">GDT_HA</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GDT_HA</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="rank_scores"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.gdt.rank_scores">[docs]</a><span class="k">def</span> <span class="nf">rank_scores</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">GDT_HA</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

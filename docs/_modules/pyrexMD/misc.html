@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 24.05.2021</span>
+<span class="c1"># @Last modified time: 31.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -314,6 +314,44 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="HiddenPrints_ALL"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.HiddenPrints_ALL">[docs]</a><span class="k">class</span> <span class="nc">HiddenPrints_ALL</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hide all stdout and stderr prints.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (bool):</span>
+<span class="sd">          | True: show prints</span>
+<span class="sd">          | False: hide prints (default)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | with HiddenPrints_ALL():</span>
+<span class="sd">        |   print(&quot;This print is hidden&quot;)</span>
+<span class="sd">        | with HiddenPrints(verbose=True):</span>
+<span class="sd">        |   print(&quot;This print is shown&quot;)</span>
+<span class="sd">        | This print is shown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_stderr</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stderr</span>
+
         <span class="k">return</span></div>
 
 
@@ -1049,7 +1087,7 @@
         <span class="k">return</span> <span class="n">down</span></div>
 
 
-<div class="viewcode-block" id="round_object"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_object">[docs]</a><span class="k">def</span> <span class="nf">round_object</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="round_object"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.round_object">[docs]</a><span class="k">def</span> <span class="nf">round_object</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        object (list, array):</span>
@@ -1057,6 +1095,7 @@
 <span class="sd">          | list of lists/arrays</span>
 <span class="sd">          | array of lists/arrays</span>
 <span class="sd">        prec (int): rounding precission</span>
+<span class="sd">        dtype (None, dtype): return object values as specific data type</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        new_object (list, array)</span>
@@ -1085,7 +1124,7 @@
 
     <span class="c1"># array of lists/arrays: convert outer list to array</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="n">new_object</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_object</span><span class="p">)</span>
+        <span class="n">new_object</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_object</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">new_object</span></div>
 
@@ -1473,18 +1512,19 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints each item of &quot;data&quot; elementwise next to each other as a table.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (list of lists): table content, where each list corresponds to one column</span>
-<span class="sd">        prec(None,int):</span>
+<span class="sd">        prec (None, int):</span>
 <span class="sd">          | None: rounding off</span>
 <span class="sd">          | int:  rounding on</span>
 <span class="sd">        spacing (int):</span>
 <span class="sd">          | spacing between columns (via &quot;&quot;.expandtabs(spacing))</span>
 <span class="sd">          | 8: default \\t width</span>
+<span class="sd">        dtype (None, dtype): dtype of table values after rounding</span>
 <span class="sd">        verbose (bool): print table</span>
 <span class="sd">        verbose_stop (None, int): stop printing after N lines</span>
 
@@ -1506,7 +1546,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># apply precission to input</span>
     <span class="k">if</span> <span class="n">prec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">round_object</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">round_object</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="n">table_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
