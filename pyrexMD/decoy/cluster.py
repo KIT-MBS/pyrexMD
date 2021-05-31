@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 31.05.2021
 
 """
 This module contains functions for clustering of decoys.
@@ -13,8 +13,10 @@ import numpy as np
 import heat as ht
 import h5py
 import pyrexMD.misc as _misc
+import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+from tqdm.notebook import tqdm
 
 
 def save_h5(data, save_as, save_dir="./", HDF_group="/distance_matrices", verbose=True):
@@ -125,8 +127,8 @@ def reshape_data(data, dim_out=2, sss=[None, None, None], verbose=True, **kwargs
     return data
 
 
-def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_type='medoid',
-                sss=[None, None, None], verbose=True, **kwargs):
+def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_type='centroid',
+                sss=[None, None, None], norm=True, verbose=True, **kwargs):
     """
     apply heat's KMeans clustering algorithm
 
@@ -143,6 +145,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
           | start (None, int): start index
           | stop (None, int): stop index
           | step (None, int): step size
+        norm (bool):
 
     Keyword Args:
         start (None, int): start index
@@ -171,7 +174,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
     else:
         raise _misc.Error("wrong datatype: <h5_file> must be str (path to h5 file containing data).")
     if np.shape(data) != 2:
-        data = reshape_data(data, dim_out=2, sss=[cfg.start, cfg.stop, cfg.step], verbose=True)
+        data = reshape_data(data, dim_out=2, sss=[cfg.start, cfg.stop, cfg.step], verbose=verbose)
     if verbose:
         print("clustering data...")
         timer = _misc.TIMER()
@@ -186,13 +189,15 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         raise ValueError("""center_type must be either 'centroid' or 'medoid'.""")
 
     kmeans.fit(data)
-    labels = kmeans.labels_.numpy()
+    labels = kmeans.labels_.numpy().flatten()
     counts = np.bincount(labels.flatten())
     centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
+    sse = get_SSE(h5_file, centers=centers, labels=labels, verbose=False, **cfg)
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
-    return centers, counts, labels
+        _misc.cprint(f"Sum of Squared Errors: {sse}")
+    return centers, counts, labels, sse
 
 
 def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=True):
@@ -313,3 +318,99 @@ def log_cluster_decoys(best_decoys, best_scores, save_as, verbose=True):
     NAMES = [_misc.get_filename(item) for item in best_decoys]
     realpath = _misc.save_table(save_as=save_as, data=[NAMES, best_scores], header="decoy name      score", verbose=verbose)
     return realpath
+
+
+def get_SSE(h5_file, centers, labels, sss=[None, None, None], **kwargs):
+    """
+    Get Sum of Squared Errors.
+
+    Args:
+        h5file (str): path to h5_file containing distance matrices
+        centers (array): output of heat_KMeans()
+        labels (array): output of heat_KMeans()
+        sss (list):
+          | [start, stop, step] indices of <h5_file> data
+          | start (None, int): start index
+          | stop (None, int): stop index
+          | step (None, int): step size
+
+    Keyword Args:
+        prec (None, int): rounding precission
+        norm (bool): normalize the SSE by diving through lenght of h5_file content (~n_frames)
+
+    Returns:
+        SSE (float): Sum of Squared Errors
+    """
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2],
+               "prec": 3,
+               "norm": True}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    DM = reshape_data(read_h5(h5_file), dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
+    SE = []  # Squared Errors
+
+    for ndx, l in enumerate(labels):
+        d = np.linalg.norm(centers[l]-DM[ndx])
+        SE.append(d*d)
+
+    if cfg.norm:
+        cfg.norm = 1.0/len(DM)
+    SSE = round(cfg.norm*sum(SE), cfg.prec)   # SSE: Sum of Squared Errors
+    return SSE
+
+
+def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, None],
+                       plot=True, verbose=True, **kwargs):
+    """
+    Apply elbow method for a list with cluster numbers n.
+
+    Args:
+        h5file (str): path to h5_file containing distance matrices
+        n_clusters (range, list, array): list with cluster numbers n to test using elbow method
+        sss (list):
+          | [start, stop, step] indices of <h5_file> data
+          | start (None, int): start index
+          | stop (None, int): stop index
+          | step (None, int): step size
+        plot (bool)
+        verbose (bool)
+
+    Keyword Args:
+        prec (None, int): rounding precission
+        norm (bool): normalize the SSE by diving through lenght of h5_file content (~n_frames)
+
+    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
+
+    Returns:
+        n_clusters (list): list with cluster numbers n to test
+        SSE (list): list with SSE for each n in n_clusters
+    """
+    default = {"start": sss[0],
+               "stop": sss[1],
+               "step": sss[2],
+               "prec": 3,
+               "norm": True}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    if not isinstance(n_clusters, (list, range, np.ndarray)):
+        raise TypeError("n_clusters must be range, list, np.ndarray")
+    n_clusters = list(n_clusters)
+    first_print = True
+    SSE = []  # sum of squared errors for each tested case
+
+    for i in tqdm(n_clusters):
+        centers, counts, labels, sse = heat_KMeans(h5_file, n_clusters=i, sss=[cfg.start, cfg.step, cfg.stop],
+                                                   prec=cfg.prec, norm=cfg.norm, verbose=False)
+        SSE.append(sse)
+
+        if verbose:
+            if first_print:
+                _misc.cprint(f"\nN Clusters\tSSE ", "blue")
+                first_print = False
+            _misc.cprint(f"{i}\t{sse}")
+
+    if plot:
+        _ana.PLOT(xdata=n_clusters, ydata=SSE, xlabel="Number of Clusters", ylabel="Sum of Squared Errors", **kwargs)
+    return n_clusters, SSE

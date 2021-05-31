@@ -1,9 +1,3 @@
-@Author: Arthur Voronin <arthur>
-@Date:   17.04.2021
-@Filename: requirements.txt
-@Last modified by:   arthur
-@Last modified time: 11.05.2021
-
 #nglview==2.0 required
 
 biopython==1.78

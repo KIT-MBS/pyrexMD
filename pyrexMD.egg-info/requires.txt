@@ -1,8 +1,8 @@
-biopython>=1.78
+biopython==1.78
 duecredit>=0.9.1
 future>=0.18.2
 GromacsWrapper==0.8.0
-h5py==2.10.0
+h5py>=2.10.0
 heat==1.0.0
 ipywidgets>=7.4.2
 jupyter>=1.0.0

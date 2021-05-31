@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 24.05.2021</span>
+<span class="c1"># @Last modified time: 27.05.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -175,6 +175,7 @@
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <span class="c1">################################################################################</span>
@@ -585,11 +586,10 @@
         <span class="n">ext</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">realpath</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;specify a file format within the &#39;save_as&#39; string!&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;specify a file format within the &#39;save_as&#39; string!&quot;</span><span class="p">)</span>
 
     <span class="c1"># save structures</span>
-    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">frames</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">frames</span><span class="p">]):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">frame</span>
         <span class="n">structure</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
         <span class="n">temp_save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dirpath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">frame</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -765,14 +765,12 @@
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        pdbid (str): &quot;auto&quot; (default): detect PDBID based on ref_PDB path</span>
-<span class="sd">        default_dir (str): &quot;./&quot; (default)</span>
 <span class="sd">        save_as (str):</span>
-<span class="sd">          | &quot;PDBID_topol_mod.top&quot;</span>
+<span class="sd">          | &quot;PDBID_topol_mod.top&quot; (default)</span>
 <span class="sd">          | detect and replace PDBID in save_as based on ref_PDB path</span>
 <span class="sd">          | if kwarg &lt;pdbid&gt; is &quot;auto&quot; (default).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;default_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID_topol_mod.top&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1">############################################################################</span>
@@ -789,19 +787,12 @@
     <span class="k">if</span> <span class="n">n_DCA</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">n_DCA</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">)</span>
 
-    <span class="c1"># lstrip ./ or / from save_as</span>
-    <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">DCA_used_fin</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">:</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_topol_mod.top&quot;</span>
 
     <span class="c1"># read and write files</span>
-    <span class="n">new_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">default_dir</span><span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
 
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
             <span class="c1"># default case: copy paste topology file</span>
@@ -823,7 +814,7 @@
                             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:5d}</span><span class="s2"> </span><span class="si">{:13d}</span><span class="s2"> </span><span class="si">{:13.2f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ATOM_J</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
                 <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;; native bonds</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved modified topology as:&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved modified topology as:&quot;</span><span class="p">,</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">))</span>
     <span class="k">return</span></div>
 
 

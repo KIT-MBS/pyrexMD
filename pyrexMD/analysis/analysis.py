@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 31.05.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -734,6 +734,11 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
                "marker": None}
     cfg = _misc.CONFIG(default, **kwargs)
     #####################################
+    if isinstance(xdata, range):
+        xdata = list(xdata)
+    if isinstance(ydata, range):
+        ydata = list(ydata)
+
     fig, ax = _misc.figure(**kwargs)
     cp = sns.color_palette(None)
 

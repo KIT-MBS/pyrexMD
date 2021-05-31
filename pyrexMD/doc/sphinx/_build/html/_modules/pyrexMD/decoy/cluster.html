@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: cluster.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 31.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for clustering of decoys.</span>
@@ -176,8 +176,10 @@
 <span class="kn">import</span> <span class="nn">heat</span> <span class="k">as</span> <span class="nn">ht</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">from</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="kn">import</span> <span class="n">get_Distance_Matrices</span><span class="p">,</span> <span class="n">_HELP_sss_None2int</span>  <span class="c1"># required for internal conversion</span>
 <span class="kn">from</span> <span class="nn">pyrexMD.decoy.abinitio</span> <span class="kn">import</span> <span class="n">get_decoy_list</span><span class="p">,</span> <span class="n">get_decoy_scores</span><span class="p">,</span> <span class="n">get_decoy_RMSD</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <div class="viewcode-block" id="save_h5"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.save_h5">[docs]</a><span class="k">def</span> <span class="nf">save_h5</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -288,8 +290,8 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="heat_KMeans"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.heat_KMeans">[docs]</a><span class="k">def</span> <span class="nf">heat_KMeans</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">center_type</span><span class="o">=</span><span class="s1">&#39;medoid&#39;</span><span class="p">,</span>
-                <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="heat_KMeans"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.heat_KMeans">[docs]</a><span class="k">def</span> <span class="nf">heat_KMeans</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">HDF_group</span><span class="o">=</span><span class="s2">&quot;/distance_matrices&quot;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">center_type</span><span class="o">=</span><span class="s1">&#39;centroid&#39;</span><span class="p">,</span>
+                <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    apply heat&#39;s KMeans clustering algorithm</span>
 
@@ -306,6 +308,7 @@
 <span class="sd">          | start (None, int): start index</span>
 <span class="sd">          | stop (None, int): stop index</span>
 <span class="sd">          | step (None, int): step size</span>
+<span class="sd">        norm (bool):</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        start (None, int): start index</span>
@@ -334,7 +337,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;wrong datatype: &lt;h5_file&gt; must be str (path to h5 file containing data).&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;clustering data...&quot;</span><span class="p">)</span>
         <span class="n">timer</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">TIMER</span><span class="p">()</span>
@@ -349,13 +352,15 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;center_type must be either &#39;centroid&#39; or &#39;medoid&#39;.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
     <span class="n">centers</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_clusters</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">))))</span>
+    <span class="n">sse</span> <span class="o">=</span> <span class="n">get_SSE</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;clustering time:&quot;</span><span class="p">)</span>  <span class="c1"># stop timer</span>
-    <span class="k">return</span> <span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">labels</span></div>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum of Squared Errors: </span><span class="si">{</span><span class="n">sse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sse</span></div>
 
 
 <div class="viewcode-block" id="rank_cluster_decoys"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.rank_cluster_decoys">[docs]</a><span class="k">def</span> <span class="nf">rank_cluster_decoys</span><span class="p">(</span><span class="n">decoy_list</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_path</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -476,6 +481,102 @@
     <span class="n">NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">best_decoys</span><span class="p">]</span>
     <span class="n">realpath</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">save_table</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">NAMES</span><span class="p">,</span> <span class="n">best_scores</span><span class="p">],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;decoy name      score&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">realpath</span></div>
+
+
+<div class="viewcode-block" id="get_SSE"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_SSE">[docs]</a><span class="k">def</span> <span class="nf">get_SSE</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get Sum of Squared Errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        h5file (str): path to h5_file containing distance matrices</span>
+<span class="sd">        centers (array): output of heat_KMeans()</span>
+<span class="sd">        labels (array): output of heat_KMeans()</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step] indices of &lt;h5_file&gt; data</span>
+<span class="sd">          | start (None, int): start index</span>
+<span class="sd">          | stop (None, int): stop index</span>
+<span class="sd">          | step (None, int): step size</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        norm (bool): normalize the SSE by diving through lenght of h5_file content (~n_frames)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SSE (float): Sum of Squared Errors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+               <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">DM</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">read_h5</span><span class="p">(</span><span class="n">h5_file</span><span class="p">),</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">SE</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Squared Errors</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">centers</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">-</span><span class="n">DM</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
+        <span class="n">SE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">DM</span><span class="p">)</span>
+    <span class="n">SSE</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">SE</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span>   <span class="c1"># SSE: Sum of Squared Errors</span>
+    <span class="k">return</span> <span class="n">SSE</span></div>
+
+
+<div class="viewcode-block" id="apply_elbow_method"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.apply_elbow_method">[docs]</a><span class="k">def</span> <span class="nf">apply_elbow_method</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                       <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply elbow method for a list with cluster numbers n.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        h5file (str): path to h5_file containing distance matrices</span>
+<span class="sd">        n_clusters (range, list, array): list with cluster numbers n to test using elbow method</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step] indices of &lt;h5_file&gt; data</span>
+<span class="sd">          | start (None, int): start index</span>
+<span class="sd">          | stop (None, int): stop index</span>
+<span class="sd">          | step (None, int): step size</span>
+<span class="sd">        plot (bool)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        norm (bool): normalize the SSE by diving through lenght of h5_file content (~n_frames)</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        n_clusters (list): list with cluster numbers n to test</span>
+<span class="sd">        SSE (list): list with SSE for each n in n_clusters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+               <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+               <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+               <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;n_clusters must be range, list, np.ndarray&quot;</span><span class="p">)</span>
+    <span class="n">n_clusters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">)</span>
+    <span class="n">first_print</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">SSE</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># sum of squared errors for each tested case</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">):</span>
+        <span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">heat_KMeans</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">],</span>
+                                                   <span class="n">prec</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">SSE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sse</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first_print</span><span class="p">:</span>
+                <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">N Clusters</span><span class="se">\t</span><span class="s2">SSE &quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+                <span class="n">first_print</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">sse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="n">_ana</span><span class="o">.</span><span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Number of Clusters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Sum of Squared Errors&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_clusters</span><span class="p">,</span> <span class="n">SSE</span></div>
 </pre></div>
 
            </div>

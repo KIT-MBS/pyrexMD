@@ -212,8 +212,8 @@
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 
-<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
-<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/pdb&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/tpr&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/xtc&quot;</span><span class="p">)</span>
 
 <span class="c1"># get RMSD</span>
 <span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
@@ -955,8 +955,8 @@ requires 1 extra bin.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
 
-<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
-<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/pdb&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/tpr&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/xtc&quot;</span><span class="p">)</span>
 
 <span class="c1"># get and plot native contacts</span>
 <span class="n">con</span><span class="o">.</span><span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">)</span>
@@ -974,6 +974,43 @@ requires 1 extra bin.</p></li>
 </div>
 <div class="section" id="id2">
 <h3>Module contents:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_BC_distances">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_BC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_BC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_BC_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>get bias contact distances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>bc</strong> (<em>list</em>) – list of bias contacts represented by (RESi, RESj) tuple</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start frame</p></li>
+<li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
+<li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – save native contacts logfile as…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>BC (list)</dt><dd><p>bias contacts with unique RES pairs</p>
+</dd>
+<dt>BC_dist (list)</dt><dd><p>bias contact distances ~ distances of items in BC</p>
+</dd>
+<dt>DM (array)</dt><dd><p>array of distance matrices</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_NC_distances">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
@@ -1059,24 +1096,24 @@ whereas NC_d contains each ATOM pair.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_Qbias">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_Qbias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_Qbias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_Qbias" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_QBias">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_QBias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_QBias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_QBias" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get QValue for formed bias contacts.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>selection of get_Qbias() is hardcoded to sel=’protein and name CA’.</p>
+<p>selection of get_QBias() is hardcoded to sel=’protein and name CA’.</p>
 <p>Reason: bias contacts are unique RES PAIRS and grow ‘slowly’, but going from
 sel=’protein and name CA’ to sel=’protein’ increases the atom count
 significantly. Most of them will count as non-native and thus make
-the Qbias value very low.</p>
+the QBias value very low.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>MDAnalysis’ qvalue algorithm includes selfcontacts. Comparison of
 both methods yields better results when the kwarg include_selfcontacts
-(bool) is set to True. However this improves the calculated Qbias value
+(bool) is set to True. However this improves the calculated QBias value
 artificially (e.g. even when all used bias contacts are never formed,
-Qbias will not be zero due to the selfcontact counts)</p>
+QBias will not be zero due to the selfcontact counts)</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1091,6 +1128,7 @@ Qbias will not be zero due to the selfcontact counts)</p>
 </div>
 </p></li>
 <li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance for native contacts</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
 <li><p><strong>norm</strong> (<em>bool</em>) – norm universe before calculation.</p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>warn</strong> (<em>bool</em>) – print important warnings about usage of this function.</p></li>
@@ -1109,9 +1147,12 @@ Qbias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start frame</p></li>
 <li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
 <li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
-<li><p><strong>color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
+<li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 0.3</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – “Qbias.png”</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – “QBias.png”</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
@@ -1129,8 +1170,82 @@ Qbias will not be zero due to the selfcontact counts)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_Qnative">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_Qnative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_Qnative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_Qnative" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_QBias_TPFP">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_QBias_TPFP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_QBias_TPFP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_QBias_TPFP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get QValue of true positive (TP) and false positive (FP) bias contacts.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>selection of this function is hardcoded to sel=’protein and name CA’.</p>
+<p>Reason: bias contacts are unique RES PAIRS and grow ‘slowly’, but going from
+sel=’protein and name CA’ to sel=’protein’ increases the atom count
+significantly. Most of them will count as non-native and thus make
+the QBias value very low.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>MDAnalysis’ qvalue algorithm includes selfcontacts. Comparison of
+both methods yields better results when the kwarg include_selfcontacts
+(bool) is set to True. However this improves the calculated QBias value
+artificially (e.g. even when all used bias contacts are never formed,
+QBias will not be zero due to the selfcontact counts)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – mobile structure with trajectory</p></li>
+<li><p><strong>BC</strong> (<em>list</em>) – list with bias contacts (saved as tuples (RESi, RESj))</p></li>
+<li><p><strong>NC</strong> (<em>list</em>) – list with native contacts (saved as tuples (RESi, RESj))</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step]</div>
+<div class="line">start (None, int): start frame</div>
+<div class="line">stop (None, int): stop frame</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
+<li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance for native contacts</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – norm universe before calculation.</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>dtype</strong> (<em>dtype</em>) – data type of returned contact matrix CM</p></li>
+<li><p><strong>include_selfcontacts</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">sets norm of QBIAS. Default is False.</div>
+<div class="line">True: includes selfcontacts on main diagonal of CM (max count &gt; len(bc))</div>
+<div class="line">False: ignores selfcontacts on main diagonal of CM (max count == len(bc))</div>
+</div>
+</p></li>
+<li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start frame</p></li>
+<li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
+<li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
+<li><p><strong>color_TP</strong> (<em>str</em>) – color of true positive QBias. Defaults to “g”.</p></li>
+<li><p><strong>color_FP</strong> (<em>str</em>) – color of false positive QBias. Defaults to “r”.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 0.3</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>FRAMES (array)</dt><dd><p>array with frame numbers</p>
+</dd>
+<dt>TP (array)</dt><dd><p>array with Qvalue of true positive bias contacts</p>
+</dd>
+<dt>FP (array)</dt><dd><p>array with Qvalue of false positive bias contacts</p>
+</dd>
+<dt>CM (array)</dt><dd><p>array with distance matrices</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_QNative">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_QNative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_QNative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_QNative" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get QValue for native contacts.</p>
 <ul class="simple">
 <li><p>norms and aligns mobile to ref so that atomgroups have same resids</p></li>
@@ -1168,9 +1283,11 @@ Qbias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>start</strong> (<em>None</em><em>, </em><em>int</em>) – start frame</p></li>
 <li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
 <li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
-<li><p><strong>color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 0.3</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>save_as</strong> (<em>str</em>) – “Qnative.png”</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – “QNative.png”</p></li>
 </ul>
 </dd>
 </dl>
@@ -1279,7 +1396,7 @@ If DCA file is passed, correct/wrong contacts are visualized in green/red.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.plot_Contact_Map_Distances">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">plot_Contact_Map_Distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NC_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#plot_Contact_Map_Distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.plot_Contact_Map_Distances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create contact map with color-coded distances.</p>
+<dd><p>Create contact map with color-coded distances for selected contact pairs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1412,7 +1529,7 @@ is protein or nucleic to select pre-defined color map.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.dihedrals</span> <span class="k">as</span> <span class="nn">dih</span>
 
-<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/tpr&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/xtc&quot;</span><span class="p">)</span>
 
 <span class="c1"># get dihedral angles of current frame</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">dih</span><span class="o">.</span><span class="n">get_phi_values</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and resid 1-3&quot;</span><span class="p">)</span>
@@ -1730,8 +1847,8 @@ dihedrals for more information.</p></li>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.gdt</span> <span class="k">as</span> <span class="nn">gdt</span>
 
-<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
-<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/pdb&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;path/to/tpr&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/xtc&quot;</span><span class="p">)</span>
 
 <span class="c1"># first norm and align universes</span>
 <span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
@@ -1985,7 +2102,7 @@ to selection id strings.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.get_GDT_HA">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_GDT_HA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_GDT_HA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_GDT_HA" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_GDT_HA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_GDT_HA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_GDT_HA" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>GlobalDistanceTest_HighAccuracy. Possible values: 0 &lt;= GDT_HA &lt;= 100</p>
@@ -1997,7 +2114,10 @@ to selection id strings.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list</em><em>, </em><em>array</em>) – output of gdt.GDT()</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list</em><em>, </em><em>array</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
@@ -2011,7 +2131,7 @@ to selection id strings.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.get_GDT_TS">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_GDT_TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_GDT_TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_GDT_TS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">get_GDT_TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_percent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#get_GDT_TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.get_GDT_TS" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>GlobalDistanceTest_TotalScore. Possible values: 0 &lt;= GDT_TS &lt;= 100</p>
@@ -2023,7 +2143,10 @@ to selection id strings.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>GDT_percent</strong> (<em>list</em><em>, </em><em>array</em>) – output of gdt.GDT()</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>GDT_percent</strong> (<em>list</em><em>, </em><em>array</em>) – output of gdt.GDT()</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">

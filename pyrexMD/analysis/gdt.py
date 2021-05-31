@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 28.05.2021
 
 
 """
@@ -354,7 +354,7 @@ def plot_GDT(GDT_percent, GDT_cutoff, **kwargs):
     return(fig, ax)
 
 
-def get_GDT_TS(GDT_percent):
+def get_GDT_TS(GDT_percent, prec=3):
     """
     .. Note:: GlobalDistanceTest_TotalScore. Possible values: 0 <= GDT_TS <= 100
 
@@ -364,6 +364,7 @@ def get_GDT_TS(GDT_percent):
 
     Args:
         GDT_percent (list, array): output of gdt.GDT()
+        prec (None, int): rounding precission
 
     Returns:
         GDT_TS (array)
@@ -373,11 +374,11 @@ def get_GDT_TS(GDT_percent):
     for item in GDT_percent:
         score = (item[1] + item[3] + item[7] + item[15])/4
         GDT_TS.append(score)
-    GDT_TS = np.array(GDT_TS)
-    return GDT_TS
+    GDT_TS = [round(i, prec) for i in GDT_TS]
+    return np.array(GDT_TS)
 
 
-def get_GDT_HA(GDT_percent):
+def get_GDT_HA(GDT_percent, prec=3):
     """
     .. Note :: GlobalDistanceTest_HighAccuracy. Possible values: 0 <= GDT_HA <= 100
 
@@ -387,6 +388,7 @@ def get_GDT_HA(GDT_percent):
 
     Args:
         GDT_percent (list, array): output of gdt.GDT()
+        prec (None, int): rounding precission
 
     Returns:
         GDT_HA (array)
@@ -396,8 +398,8 @@ def get_GDT_HA(GDT_percent):
     for item in GDT_percent:
         score = (item[0] + item[1] + item[3] + item[7])/4
         GDT_HA.append(score)
-    GDT_HA = np.array(GDT_HA)
-    return GDT_HA
+    GDT_HA = [round(i, prec) for i in GDT_HA]
+    return np.array(GDT_HA)
 
 
 def rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_TS", prec=3, verbose=True, **kwargs):

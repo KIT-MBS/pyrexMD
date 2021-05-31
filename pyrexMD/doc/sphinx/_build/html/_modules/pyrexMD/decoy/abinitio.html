@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: abinitio.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.05.2021</span>
+<span class="c1"># @Last modified time: 25.05.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for decoy creation using `PyRosetta`.</span>
@@ -636,27 +636,27 @@
 <span class="sd">      - If &lt; n_rank &gt; is int: return ranked decoys, ids and scores for best &lt; n_rank &gt; decoys.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        decoy_list(None, list): list with decoy paths</span>
-<span class="sd">        decoy_dir(None, str): decoy directory</span>
-<span class="sd">        pattern(str): pattern of decoy filenames</span>
-<span class="sd">        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
-<span class="sd">        n_rank(None, int):</span>
+<span class="sd">        decoy_list (None, list): list with decoy paths</span>
+<span class="sd">        decoy_dir (None, str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
+<span class="sd">        n_rank (None, int):</span>
 <span class="sd">          | None: return unranked decoys, ids and scores.</span>
 <span class="sd">          | int: return ranked decoys, ids and scores for best &lt; n_rank &gt; decoys.</span>
-<span class="sd">        reverse(bool):</span>
+<span class="sd">        reverse (bool):</span>
 <span class="sd">          | True: ascending ranking order(low to high)</span>
 <span class="sd">          | False: decending ranking order(high to low)</span>
-<span class="sd">        verbose(bool)</span>
+<span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        cprint_color(None, str): colored print color</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DECOY_LIST(list)</span>
+<span class="sd">        DECOY_LIST (list)</span>
 <span class="sd">            list with decoy paths</span>
-<span class="sd">        DECOY_ID(list)</span>
+<span class="sd">        DECOY_ID (list)</span>
 <span class="sd">            list with decoy ids</span>
-<span class="sd">        SCORE(list)</span>
+<span class="sd">        SCORE (list)</span>
 <span class="sd">            list with corresponding scores(ref 2015)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>

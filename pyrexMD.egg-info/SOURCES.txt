@@ -1,7 +1,6 @@
 LICENSE
 MANIFEST.in
 README.md
-requirements.txt
 setup.py
 pyrexMD/__init__.py
 pyrexMD/core.py

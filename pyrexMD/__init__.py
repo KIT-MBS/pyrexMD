@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 21.05.2021
+# @Last modified time: 31.05.2021
 
 
 import pyrexMD.misc as misc
@@ -17,6 +17,7 @@ warnings.filterwarnings("ignore", message="Failed to guess the mass for the foll
 warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 warnings.filterwarnings("ignore", message="1 A\^3 CRYST1 record,")
 warnings.filterwarnings("ignore", message="Found no information for attr:")
+warnings.filterwarnings("ignore", message="!!! WARNING !!! Manipulating the local contents of a DNDarray needs")
 # MDAnalysis throws many unnecessary warnings when warnings module is used
 
 

@@ -2,7 +2,7 @@
 # @Date:   11.05.2021
 # @Filename: setup.py
 # @Last modified by:   arthur
-# @Last modified time: 11.05.2021
+# @Last modified time: 31.05.2021
 
 from setuptools import setup, find_packages
 
@@ -14,11 +14,11 @@ setup(name='pyrexMD',
       email='arthur.voronin@kit.edu',
       packages=find_packages(),
       install_requires=[
-          'biopython>=1.78',
+          'biopython==1.78',
           'duecredit>=0.9.1',
           'future>=0.18.2',
           'GromacsWrapper==0.8.0',
-          'h5py==2.10.0',
+          'h5py>=2.10.0',
           'heat==1.0.0',
           'ipywidgets>=7.4.2',
           'jupyter>=1.0.0',
