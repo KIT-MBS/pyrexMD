@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 31.05.2021
+# @Last modified time: 01.06.2021
 
 """
 This module contains functions for clustering of decoys.
@@ -15,7 +15,7 @@ import h5py
 import pyrexMD.misc as _misc
 import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
-from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+#from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 from tqdm.notebook import tqdm
 
 
@@ -250,8 +250,8 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=Tr
     Rank cluster decoys based on rosetta scores.
 
     Args:
-        decoy_list (list): output of get_decoy_list()
-        scores (list): output of get_decoy_scores()
+        decoy_list (list): output of abinitio.get_decoy_list()
+        scores (list): output of abinitio.get_decoy_scores()
         labels (array, list): output of heat_KMeans()
         reverse (bool):
           | True:  ascending ranking order (low to high)
@@ -308,7 +308,6 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True, *
     Args:
         decoy_list (list):
           | output of abinitio.get_decoy_list()
-          | or cluster.get_decoy_list()
           | or cluster.rank_cluster_decoys(return_path=True)
         target_dir (str): target directory
         create_dir (bool)

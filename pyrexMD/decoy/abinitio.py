@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 25.05.2021
+# @Last modified time: 01.06.2021
 
 """
 This module contains functions for decoy creation using `PyRosetta`.
@@ -11,6 +11,7 @@ This module contains functions for decoy creation using `PyRosetta`.
 
 from tqdm.notebook import tqdm
 import pyrexMD.misc as _misc
+import pyrexMD.topology as _top
 import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices
 import numpy as np
@@ -22,6 +23,58 @@ import MDAnalysis as mda
 import pyrosetta
 from pyrosetta.rosetta import protocols
 pyrosetta.init("-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
+
+
+def frame2score(mobile, frames, sel="protein", warn=True, save_as=None):
+    """
+    Get rosetta scores (ref2015) for frames of mobile.trajectory
+
+    Args:
+        mobile
+        frames (list): frame indices of mobile.trajectory
+        sel (str): selection string
+
+    Returns:
+        FRAMES (list)
+            list with frames of mobile.trajectory
+        SCORES (list)
+            list with rosetta scores (ref2015)
+    """
+    if warn:
+        _misc.cprint("""Warning: selection should be 'protein' in order to work with full atom rosetta scores. But you can still reduce the selection string to ignore parts of the protein, e.g 'protein and not resids 1-8' etc.""", "red")
+    if isinstance(mobile, str):
+        mobile = mda.Universe(mobile)
+    _top.norm_universe(mobile)
+
+    scorefxn_high = pyrosetta.create_score_function('ref2015')
+    to_fullatom = pyrosetta.SwitchResidueTypeSetMover('fa_standard')
+
+    FRAMES = []
+    SCORES = []
+
+    for frame in tqdm(frames):
+        mobile.trajectory[frame]
+        structure = mobile.select_atoms(sel)
+        structure.write("temp.pdb")
+
+        pose = pyrosetta.pose_from_pdb("temp.pdb")
+        to_fullatom.apply(pose)
+
+        # high score
+        relax = protocols.relax.FastRelax()
+        relax.set_scorefxn(scorefxn_high)
+        relax.apply(pose)
+        SCORES.append(scorefxn_high(pose))
+
+        # frame
+        FRAMES.append(frame)
+
+    _misc.rm("temp.pdb", verbose=False)
+
+    if save_as is not None:
+        with open(save_as, "w") as fout:
+            fout.write(_misc.print_table([FRAMES, SCORES], verbose=False))
+    return FRAMES, SCORES
 
 
 def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, verbose_stop=None):
