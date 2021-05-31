@@ -160,6 +160,8 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
             counts per cluster
         labels (array)
             data point cluster labels
+        sse (float)
+            sum of squared errors
     """
     default = {"dtype": ht.float64,
                "start": sss[0],
@@ -198,6 +200,49 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         _misc.timeit(timer, msg="clustering time:")  # stop timer
         _misc.cprint(f"Sum of Squared Errors: {sse}")
     return centers, counts, labels, sse
+
+
+def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwargs):
+    """
+    Repeat heat_KMeans N times and return topx results based on minimized sum of squared errors.
+
+
+    Args:
+        h5_file (str): path to h5 file containing data
+        n_clusters (int): number of clusters
+        N (int): number of repeats
+        topx (int): number of best ranked clusters to return
+        verbose (bool)
+
+    .. Hint:: Args and Keyword Args of heat_Kmeans are valid Keyword Args.
+
+    Returns:
+        TOPX_CLUSTER (list)
+            | list of clusters ranked from best to topx best. Each cluster contains:
+            |     centers (array)
+            |         cluster centers of best result
+            |     counts (array)
+            |         counts per cluster of best result
+            |     labels (array)
+            |        data point cluster labels
+            |     sse (float)
+            |        sum of squared errors
+    """
+    CLUSTER = []
+    SSE = 99999999999999999999999999999999
+
+    for i in tqdm(range(N)):
+        TEMP = heat_KMeans(h5_file, n_clusters=n_clusters, verbose=False)
+        if TEMP[-1] < SSE:
+            CLUSTER.append(TEMP)
+            SSE = TEMP[-1]
+
+    TOPX_CLUSTER = CLUSTER[-topx:][::-1]
+    if verbose:
+        _misc.cprint(f"Returned clusters:", "blue")
+        for ndx, item in enumerate(TOPX_CLUSTER):
+            _misc.cprint(f"index: {ndx}\tSSE: {item[3]}", "blue")
+    return TOPX_CLUSTER
 
 
 def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=True):
