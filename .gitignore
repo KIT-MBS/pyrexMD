@@ -1,0 +1,3 @@
+pyrexMD
+__pycache__/
+*.npz
