@@ -574,18 +574,18 @@ def map_cluster_scores(cluster_data, score_file, **kwargs):
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     centers, counts, labels, sse = cluster_data
-    scores = misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
+    scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
 
     CLUSTER_E = [[] for i in range(len(centers))]  # contains list of all energies, one for each cluster
     CLUSTER_E4 = []   # contains tuples (Emean, Estd, Emin, Emax), one for each cluster
 
     for ndx, i in enumerate(labels):
-        CLUSTER_E[i].append(round(scores[ndx], prec))
+        CLUSTER_E[i].append(round(scores[ndx], cfg.prec))
     for ndx in range(len(centers)):
-        Emean = round(np.mean(CLUSTER_E[ndx]), prec)
-        Estd = round(np.std(CLUSTER_E[ndx]), prec)
-        Emin = round(min(CLUSTER_E[ndx]), prec)
-        Emax = round(max(CLUSTER_E[ndx]), prec)
+        Emean = round(np.mean(CLUSTER_E[ndx]), cfg.prec)
+        Estd = round(np.std(CLUSTER_E[ndx]), cfg.prec)
+        Emin = round(min(CLUSTER_E[ndx]), cfg.prec)
+        Emax = round(max(CLUSTER_E[ndx]), cfg.prec)
 
         CLUSTER_E4.append((Emean, Estd, Emin, Emax))
 
