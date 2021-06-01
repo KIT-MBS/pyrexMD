@@ -227,6 +227,31 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.frame2score">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">frame2score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#frame2score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.frame2score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get rosetta scores (ref2015) for frames of mobile.trajectory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> – </p></li>
+<li><p><strong>frames</strong> (<em>list</em>) – frame indices of mobile.trajectory</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – logfile containing table of [FRAMES, SCORES]</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>FRAMES (list)</dt><dd><p>list with frames of mobile.trajectory</p>
+</dd>
+<dt>SCORES (list)</dt><dd><p>list with rosetta scores (ref2015)</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.abinitio.get_decoy_RMSD">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'backbone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_RMSD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get decoy RMSD of &lt; decoy_list &gt; or &lt; decoy_dir &gt; .</p>
@@ -597,7 +622,6 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>decoy_list</strong> (<em>list</em>) – <div class="line-block">
 <div class="line">output of abinitio.get_decoy_list()</div>
-<div class="line">or cluster.get_decoy_list()</div>
 <div class="line">or cluster.rank_cluster_decoys(return_path=True)</div>
 </div>
 </p></li>
@@ -778,14 +802,48 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.map_cluster_scores">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">map_cluster_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#map_cluster_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.map_cluster_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>map cluster scores/energies between <cite>score_file</cite> and <cite>cluster_data</cite>.</p>
+<dl class="simple">
+<dt>..Note:: <cite>cluster_data</cite> and <cite>score_file</cite> must have beeen generated using the same order of trajectory frames.</dt><dd><p>Otherwise the index mapping from enumerate(labels) within this function will be wrong.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>)</strong> (<em>cluster_data</em>) – output of heat_KMeans(), i.e. (centers, counts, labels, sse) = heat_KMeans()</p></li>
+<li><p><strong>score_file</strong> (<em>str</em>) – path to file containing cluster scores/energies. Logfile of abinitio.frame2score().</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>usecols</strong> (<em>int</em>) – column of <cite>score_file</cite> containing scores/energies. Defaults to 1.</p></li>
+<li><p><strong>skiprows</strong> (<em>None</em><em>, </em><em>int</em>) – skip rows of <cite>score_file</cite>. Defaults to 0.</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>float</em>) – rounding precissions. Defaults to 3.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>CLUSTER_E (list)</dt><dd><p>contains lists of cluster scores/energies, one for each cluster <cite>label</cite> in <cite>cluster_data</cite></p>
+</dd>
+<dt>CLUSTER_E4 (list)</dt><dd><p>contains tuples (Emean, Estd, Emin, Emax), one for each cluster <cite>label</cite> in <cite>cluster_data</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.rank_cluster_decoys">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">rank_cluster_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#rank_cluster_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.rank_cluster_decoys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rank cluster decoys based on rosetta scores.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>decoy_list</strong> (<em>list</em>) – output of get_decoy_list()</p></li>
-<li><p><strong>scores</strong> (<em>list</em>) – output of get_decoy_scores()</p></li>
+<li><p><strong>decoy_list</strong> (<em>list</em>) – output of abinitio.get_decoy_list()</p></li>
+<li><p><strong>scores</strong> (<em>list</em>) – output of abinitio.get_decoy_scores()</p></li>
 <li><p><strong>labels</strong> (<em>array</em><em>, </em><em>list</em>) – output of heat_KMeans()</p></li>
 <li><p><strong>reverse</strong> (<em>bool</em>) – <div class="line-block">
 <div class="line">True:  ascending ranking order (low to high)</div>
@@ -911,6 +969,59 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>h5_file (str)</dt><dd><p>realpath of h5 file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.scatterplot_clustermapping">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">scatterplot_clustermapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#scatterplot_clustermapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.scatterplot_clustermapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates scatterplot for (xdata, ydata) with cluster mapping according to labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xdata</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
+<li><p><strong>ydata</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
+<li><p><strong>labels</strong> (<em>list</em><em>, </em><em>array</em>) – list with cluster labels used to map (xdata, ydata) ~ Output of heat_KMeans().</p></li>
+<li><p><strong>plot_only</strong> (<em>None</em><em>, </em><em>list</em>) – list of cluster labels to plot. Ignores (xdata, ydata) of other labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>figsize</strong> (<em>tuple</em>) – (7,7)</p></li>
+<li><p><strong>cmap</strong> (<em>seaborn.color_palette</em>) – colormap. Defaults to seaborn.color_palette()</p></li>
+<li><p><strong>marker</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">None: use markers (list) ~ see below</div>
+<div class="line">str: ignore markers (list) and use this marker for all scatter points</div>
+</div>
+</p></li>
+<li><p><strong>markers</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">list with markers to use for cluster mapping.</div>
+<div class="line">Rotates between markers each 10 clusters.</div>
+<div class="line">Defaults to [“o”, “s”, “^”, “v”, “P”, “X”]</div>
+</div>
+</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
+<li><p><strong>ms</strong> (<em>int</em>) – 6</p></li>
+<li><p><strong>show_legend</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>legend_loc</strong> (<em>str</em>) – legend location. Defaults to “best”.</p></li>
+<li><p><strong>legend_ncols</strong> (<em>int</em>) – legend number of columns. Defaults to 2.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Args and Keyword Args of misc.figure() are also valid.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
+</dd>
+<dt>ax (class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
 </dd>
 </dl>
 </p>

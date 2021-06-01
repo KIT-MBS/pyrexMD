@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: abinitio.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 25.05.2021</span>
+<span class="c1"># @Last modified time: 01.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for decoy creation using `PyRosetta`.</span>
@@ -174,6 +174,7 @@
 
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">_top</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">from</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="kn">import</span> <span class="n">get_Distance_Matrices</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -185,6 +186,58 @@
 <span class="kn">import</span> <span class="nn">pyrosetta</span>
 <span class="kn">from</span> <span class="nn">pyrosetta.rosetta</span> <span class="kn">import</span> <span class="n">protocols</span>
 <span class="n">pyrosetta</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s2">&quot;-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory&quot;</span><span class="p">)</span>  <span class="c1"># mute messages</span>
+
+
+<div class="viewcode-block" id="frame2score"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.frame2score">[docs]</a><span class="k">def</span> <span class="nf">frame2score</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">save_as</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get rosetta scores (ref2015) for frames of mobile.trajectory</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mobile</span>
+<span class="sd">        frames (list): frame indices of mobile.trajectory</span>
+<span class="sd">        save_as (str): logfile containing table of [FRAMES, SCORES]</span>
+<span class="sd">        sel (str): selection string</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        FRAMES (list)</span>
+<span class="sd">            list with frames of mobile.trajectory</span>
+<span class="sd">        SCORES (list)</span>
+<span class="sd">            list with rosetta scores (ref2015)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Warning: selection should be &#39;protein&#39; in order to work with full atom rosetta scores. But you can still reduce the selection string to ignore parts of the protein, e.g &#39;protein and not resids 1-8&#39; etc.&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
+    <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
+
+    <span class="n">scorefxn_high</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">create_score_function</span><span class="p">(</span><span class="s1">&#39;ref2015&#39;</span><span class="p">)</span>
+    <span class="n">to_fullatom</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">SwitchResidueTypeSetMover</span><span class="p">(</span><span class="s1">&#39;fa_standard&#39;</span><span class="p">)</span>
+
+    <span class="n">FRAMES</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">SCORES</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+        <span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">frame</span><span class="p">]</span>
+        <span class="n">structure</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+        <span class="n">structure</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;temp.pdb&quot;</span><span class="p">)</span>
+
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">pyrosetta</span><span class="o">.</span><span class="n">pose_from_pdb</span><span class="p">(</span><span class="s2">&quot;temp.pdb&quot;</span><span class="p">)</span>
+        <span class="n">to_fullatom</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+        <span class="c1"># high score</span>
+        <span class="n">relax</span> <span class="o">=</span> <span class="n">protocols</span><span class="o">.</span><span class="n">relax</span><span class="o">.</span><span class="n">FastRelax</span><span class="p">()</span>
+        <span class="n">relax</span><span class="o">.</span><span class="n">set_scorefxn</span><span class="p">(</span><span class="n">scorefxn_high</span><span class="p">)</span>
+        <span class="n">relax</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+        <span class="n">SCORES</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scorefxn_high</span><span class="p">(</span><span class="n">pose</span><span class="p">))</span>
+
+        <span class="c1"># frame</span>
+        <span class="n">FRAMES</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s2">&quot;temp.pdb&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">print_table</span><span class="p">([</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">SCORES</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">FRAMES</span><span class="p">,</span> <span class="n">SCORES</span></div>
 
 
 <div class="viewcode-block" id="get_torsion_angles"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_torsion_angles">[docs]</a><span class="k">def</span> <span class="nf">get_torsion_angles</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">mol_type</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

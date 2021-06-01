@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: cluster.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 31.05.2021</span>
+<span class="c1"># @Last modified time: 01.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for clustering of decoys.</span>
@@ -173,12 +173,14 @@
 
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">heat</span> <span class="k">as</span> <span class="nn">ht</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">_ana</span>
 <span class="kn">from</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="kn">import</span> <span class="n">get_Distance_Matrices</span><span class="p">,</span> <span class="n">_HELP_sss_None2int</span>  <span class="c1"># required for internal conversion</span>
-<span class="kn">from</span> <span class="nn">pyrexMD.decoy.abinitio</span> <span class="kn">import</span> <span class="n">get_decoy_list</span><span class="p">,</span> <span class="n">get_decoy_scores</span><span class="p">,</span> <span class="n">get_decoy_RMSD</span>
+<span class="c1">#from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD</span>
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
@@ -413,8 +415,8 @@
 <span class="sd">    Rank cluster decoys based on rosetta scores.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        decoy_list (list): output of get_decoy_list()</span>
-<span class="sd">        scores (list): output of get_decoy_scores()</span>
+<span class="sd">        decoy_list (list): output of abinitio.get_decoy_list()</span>
+<span class="sd">        scores (list): output of abinitio.get_decoy_scores()</span>
 <span class="sd">        labels (array, list): output of heat_KMeans()</span>
 <span class="sd">        reverse (bool):</span>
 <span class="sd">          | True:  ascending ranking order (low to high)</span>
@@ -471,7 +473,6 @@
 <span class="sd">    Args:</span>
 <span class="sd">        decoy_list (list):</span>
 <span class="sd">          | output of abinitio.get_decoy_list()</span>
-<span class="sd">          | or cluster.get_decoy_list()</span>
 <span class="sd">          | or cluster.rank_cluster_decoys(return_path=True)</span>
 <span class="sd">        target_dir (str): target directory</span>
 <span class="sd">        create_dir (bool)</span>
@@ -625,6 +626,133 @@
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
         <span class="n">_ana</span><span class="o">.</span><span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Number of Clusters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Sum of Squared Errors&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">n_clusters</span><span class="p">,</span> <span class="n">SSE</span></div>
+
+
+<div class="viewcode-block" id="scatterplot_clustermapping"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.scatterplot_clustermapping">[docs]</a><span class="k">def</span> <span class="nf">scatterplot_clustermapping</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">plot_only</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates scatterplot for (xdata, ydata) with cluster mapping according to labels.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xdata (list, array)</span>
+<span class="sd">        ydata (list, array)</span>
+<span class="sd">        labels (list, array): list with cluster labels used to map (xdata, ydata) ~ Output of heat_KMeans().</span>
+<span class="sd">        plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        figsize (tuple): (7,7)</span>
+<span class="sd">        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette()</span>
+<span class="sd">        marker (None, str):</span>
+<span class="sd">          | None: use markers (list) ~ see below</span>
+<span class="sd">          | str: ignore markers (list) and use this marker for all scatter points</span>
+<span class="sd">        markers (list):</span>
+<span class="sd">          | list with markers to use for cluster mapping.</span>
+<span class="sd">          | Rotates between markers each 10 clusters.</span>
+<span class="sd">          | Defaults to [&quot;o&quot;, &quot;s&quot;, &quot;^&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
+<span class="sd">        alpha (float): 1</span>
+<span class="sd">        ms (int): 6</span>
+<span class="sd">        show_legend (bool)</span>
+<span class="sd">        legend_loc (str): legend location. Defaults to &quot;best&quot;.</span>
+<span class="sd">        legend_ncols (int): legend number of columns. Defaults to 2.</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are also valid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ydata</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;xdata, ydata and labels must have same first dimension, but have shapes </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plot_only</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plot_only</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+               <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(),</span>
+               <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+               <span class="s2">&quot;show_legend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;legend_loc&quot;</span><span class="p">:</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;legend_ncols&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+               <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="kc">None</span>
+               <span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">##################################################################</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plot_only</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">)]</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">//</span><span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">)]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ydata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># set xlabel, ylabel</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+    <span class="c1"># create sorted legend</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">show_legend</span><span class="p">:</span>
+        <span class="n">_handles</span><span class="p">,</span> <span class="n">_labels</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+        <span class="n">LABELS</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">plot_only</span><span class="p">]</span>
+        <span class="n">HANDLES</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">LABELS</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_labels</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="n">label</span><span class="p">:</span>
+                    <span class="n">HANDLES</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_handles</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                    <span class="k">break</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">HANDLES</span><span class="p">,</span> <span class="n">LABELS</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">legend_loc</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">legend_ncols</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="map_cluster_scores"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.map_cluster_scores">[docs]</a><span class="k">def</span> <span class="nf">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">score_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    map cluster scores/energies between `score_file` and `cluster_data`.</span>
+
+<span class="sd">    ..Note:: `cluster_data` and `score_file` must have beeen generated using the same order of trajectory frames.</span>
+<span class="sd">              Otherwise the index mapping from enumerate(labels) within this function will be wrong.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cluster_data (): output of heat_KMeans(), i.e. (centers, counts, labels, sse) = heat_KMeans()</span>
+<span class="sd">        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        usecols (int): column of `score_file` containing scores/energies. Defaults to 1.</span>
+<span class="sd">        skiprows (None, int): skip rows of `score_file`. Defaults to 0.</span>
+<span class="sd">        prec (None, float): rounding precissions. Defaults to 3.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CLUSTER_E (list)</span>
+<span class="sd">            contains lists of cluster scores/energies, one for each cluster `label` in `cluster_data`</span>
+<span class="sd">        CLUSTER_E4 (list)</span>
+<span class="sd">            contains tuples (Emean, Estd, Emin, Emax), one for each cluster `label` in `cluster_data`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;usecols&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;skiprows&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sse</span> <span class="o">=</span> <span class="n">cluster_data</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">score_file</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">usecols</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">skiprows</span><span class="p">)</span>
+
+    <span class="n">CLUSTER_E</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">))]</span>  <span class="c1"># contains list of all energies, one for each cluster</span>
+    <span class="n">CLUSTER_E4</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># contains tuples (Emean, Estd, Emin, Emax), one for each cluster</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">CLUSTER_E</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">ndx</span><span class="p">],</span> <span class="n">prec</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)):</span>
+        <span class="n">Emean</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">CLUSTER_E</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="n">prec</span><span class="p">)</span>
+        <span class="n">Estd</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">CLUSTER_E</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="n">prec</span><span class="p">)</span>
+        <span class="n">Emin</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">CLUSTER_E</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="n">prec</span><span class="p">)</span>
+        <span class="n">Emax</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">CLUSTER_E</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="n">prec</span><span class="p">)</span>
+
+        <span class="n">CLUSTER_E4</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Emean</span><span class="p">,</span> <span class="n">Estd</span><span class="p">,</span> <span class="n">Emin</span><span class="p">,</span> <span class="n">Emax</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">CLUSTER_E</span><span class="p">,</span> <span class="n">CLUSTER_E4</span></div>
 </pre></div>
 
            </div>

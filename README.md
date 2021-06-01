@@ -27,7 +27,7 @@ https://manual.gromacs.org/documentation/current/index.html
     jupyter nbextension enable --py nglview
 
 
-(Optional): download and install `PyRosetta` if you want to use pyrexMD.decoy:
+(Optional): download and install `PyRosetta` if you want to use pyrexMD.decoy.abinitio:
 
 http://www.pyrosetta.org/home
 
