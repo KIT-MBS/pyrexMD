@@ -1203,7 +1203,7 @@ def read_file(fin, sep=None, usecols=(0, 1), n_rows=None, skiprows='auto', dtype
           | None: whitespace
         usecols (int, sequence): data columns
         n_rows (None, int): lenght of returned data (AFTER skipping rows)
-        skiprows ('auto', int):
+        skiprows (None, 'auto', int):
           | ignore header rows of fin
           | 'auto' or -1: auto detect
         dtype (dtype cls, list, tuple):
@@ -1229,6 +1229,8 @@ def read_file(fin, sep=None, usecols=(0, 1), n_rows=None, skiprows='auto', dtype
     """
     if skiprows == "auto" or skiprows == -1:
         skiprows = autodetect_header(fin)
+    if skiprows == None:
+        skiprows = 0
 
     if type(usecols) == int:
         col = np.loadtxt(fin, delimiter=sep, skiprows=skiprows, usecols=usecols, dtype=dtype)

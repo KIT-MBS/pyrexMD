@@ -10,6 +10,8 @@ This module contains functions for clustering of decoys.
 
 
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import heat as ht
 import h5py
 import pyrexMD.misc as _misc
@@ -461,3 +463,130 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
     if plot:
         _ana.PLOT(xdata=n_clusters, ydata=SSE, xlabel="Number of Clusters", ylabel="Sum of Squared Errors", **kwargs)
     return n_clusters, SSE
+
+
+def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
+    """
+    Creates scatterplot for (xdata, ydata) with cluster mapping according to labels.
+
+    Args:
+        xdata (list, array)
+        ydata (list, array)
+        labels (list, array): list with cluster labels used to map (xdata, ydata) ~ Output of heat_KMeans().
+        plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
+
+    Keyword Args:
+        figsize (tuple): (7,7)
+        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette()
+        marker (None, str):
+          | None: use markers (list) ~ see below
+          | str: ignore markers (list) and use this marker for all scatter points
+        markers (list):
+          | list with markers to use for cluster mapping.
+          | Rotates between markers each 10 clusters.
+          | Defaults to ["o", "s", "^", "v", "P", "X"]
+        alpha (float): 1
+        ms (int): 6
+        show_legend (bool)
+        legend_loc (str): legend location. Defaults to "best".
+        legend_ncols (int): legend number of columns. Defaults to 2.
+
+    .. Hint:: Args and Keyword Args of misc.figure() are also valid.
+
+    Returns:
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
+    """
+    if len(xdata) != len(ydata):
+        raise ValueError(f"xdata, ydata and labels must have same first dimension, but have shapes {np.shape(xdata)}, {np.shape(ydata)} and {np.shape(labels)}")
+    if plot_only is None:
+        plot_only = list(range(min(labels), max(labels)+1))
+    default = {"figsize": (7, 7),
+               "cmap": sns.color_palette(),
+               "markers": ["o", "s", "^", "v", "P", "X"],
+               "marker": None,
+               "alpha": 1,
+               "ms": 6,
+               "show_legend": True,
+               "legend_loc": "best",
+               "legend_ncols": 2,
+               "xlabel": None,
+               "ylabel": None
+               }
+    cfg = _misc.CONFIG(default, **kwargs)
+    ##################################################################
+    fig, ax = _misc.figure(**cfg)
+    for i in range(len(xdata)):
+        if labels[i] not in plot_only:
+            continue
+        color = cfg.cmap[labels[i] % len(cfg.cmap)]
+        marker = cfg.markers[labels[i]//len(cfg.cmap)]
+        plt.plot(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, ms=cfg.ms, lw=0, label=f"Cluster {labels[i]}")
+
+    # set xlabel, ylabel
+    if cfg.xlabel is not None:
+        plt.xlabel(cfg.xlabel, fontweight="bold")
+    if cfg.ylabel is not None:
+        plt.ylabel(cfg.ylabel, fontweight="bold")
+
+    # create sorted legend
+    if cfg.show_legend:
+        _handles, _labels = ax.get_legend_handles_labels()
+        LABELS = [f"Cluster {i}" for i in plot_only]
+        HANDLES = []
+        for i, label in enumerate(LABELS):
+            for j, item in enumerate(_labels):
+                if item == label:
+                    HANDLES.append(_handles[j])
+                    break
+        ax.legend(HANDLES, LABELS, loc=cfg.legend_loc, ncol=cfg.legend_ncols)
+    plt.tight_layout()
+    return fig, ax
+
+
+def map_cluster_scores(cluster_data, score_file, **kwargs):
+    """
+    map cluster scores/energies between `score_file` and `cluster_data`.
+
+    ..Note:: `cluster_data` and `score_file` must have beeen generated using the same order of trajectory frames.
+              Otherwise the index mapping from enumerate(labels) within this function will be wrong.
+
+    Args:
+        cluster_data (): output of heat_KMeans(), i.e. (centers, counts, labels, sse) = heat_KMeans()
+        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().
+
+    Keyword Args:
+        usecols (int): column of `score_file` containing scores/energies. Defaults to 1.
+        skiprows (None, int): skip rows of `score_file`. Defaults to 0.
+        prec (None, float): rounding precissions. Defaults to 3.
+
+    Returns:
+        CLUSTER_E (list)
+            contains lists of cluster scores/energies, one for each cluster `label` in `cluster_data`
+        CLUSTER_E4 (list)
+            contains tuples (Emean, Estd, Emin, Emax), one for each cluster `label` in `cluster_data`
+    """
+    default = {"usecols": 1,
+               "skiprows": 0,
+               "prec": 3}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    centers, counts, labels, sse = cluster_data
+    scores = misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
+
+    CLUSTER_E = [[] for i in range(len(centers))]  # contains list of all energies, one for each cluster
+    CLUSTER_E4 = []   # contains tuples (Emean, Estd, Emin, Emax), one for each cluster
+
+    for ndx, i in enumerate(labels):
+        CLUSTER_E[i].append(round(scores[ndx], prec))
+    for ndx in range(len(centers)):
+        Emean = round(np.mean(CLUSTER_E[ndx]), prec)
+        Estd = round(np.std(CLUSTER_E[ndx]), prec)
+        Emin = round(min(CLUSTER_E[ndx]), prec)
+        Emax = round(max(CLUSTER_E[ndx]), prec)
+
+        CLUSTER_E4.append((Emean, Estd, Emin, Emax))
+
+    return CLUSTER_E, CLUSTER_E4

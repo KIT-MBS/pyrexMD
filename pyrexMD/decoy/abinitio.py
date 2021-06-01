@@ -25,13 +25,14 @@ from pyrosetta.rosetta import protocols
 pyrosetta.init("-mute basic.io.database core.import_pose core.scoring core.chemical.GlobalResidueTypeSet core.pack.task core.pack.pack_rotamers core.pack.dunbrack.RotamerLibrary protocols.relax.FastRelax core.pack.interaction_graph.interaction_graph_factory")  # mute messages
 
 
-def frame2score(mobile, frames, sel="protein", warn=True, save_as=None):
+def frame2score(mobile, frames, save_as, sel="protein", warn=True):
     """
     Get rosetta scores (ref2015) for frames of mobile.trajectory
 
     Args:
         mobile
         frames (list): frame indices of mobile.trajectory
+        save_as (str): logfile containing table of [FRAMES, SCORES]
         sel (str): selection string
 
     Returns:
@@ -71,9 +72,8 @@ def frame2score(mobile, frames, sel="protein", warn=True, save_as=None):
 
     _misc.rm("temp.pdb", verbose=False)
 
-    if save_as is not None:
-        with open(save_as, "w") as fout:
-            fout.write(_misc.print_table([FRAMES, SCORES], verbose=False))
+    with open(save_as, "w") as fout:
+        fout.write(_misc.print_table([FRAMES, SCORES], verbose=False))
     return FRAMES, SCORES
 
 
