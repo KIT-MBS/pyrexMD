@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 31.05.2021</span>
+<span class="c1"># @Last modified time: 01.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -1366,7 +1366,7 @@
 <span class="sd">          | None: whitespace</span>
 <span class="sd">        usecols (int, sequence): data columns</span>
 <span class="sd">        n_rows (None, int): lenght of returned data (AFTER skipping rows)</span>
-<span class="sd">        skiprows (&#39;auto&#39;, int):</span>
+<span class="sd">        skiprows (None, &#39;auto&#39;, int):</span>
 <span class="sd">          | ignore header rows of fin</span>
 <span class="sd">          | &#39;auto&#39; or -1: auto detect</span>
 <span class="sd">        dtype (dtype cls, list, tuple):</span>
@@ -1392,6 +1392,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">skiprows</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span> <span class="ow">or</span> <span class="n">skiprows</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">skiprows</span> <span class="o">=</span> <span class="n">autodetect_header</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skiprows</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">skiprows</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">usecols</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">usecols</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
