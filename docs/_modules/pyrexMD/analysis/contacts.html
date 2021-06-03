@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: contacts.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 28.05.2021</span>
+<span class="c1"># @Last modified time: 03.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions related to native contact and bias contact analyses.</span>
@@ -943,12 +943,12 @@
     <span class="k">return</span> <span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span></div>
 
 
-<div class="viewcode-block" id="get_QBias"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_QBias">[docs]</a><span class="k">def</span> <span class="nf">get_QBias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_QBias"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_QBias">[docs]</a><span class="k">def</span> <span class="nf">get_QBias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
+              <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get QValue for formed bias contacts.</span>
 
-<span class="sd">    .. Note :: selection of get_QBias() is hardcoded to sel=&#39;protein and name CA&#39;.</span>
+<span class="sd">    .. Note :: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.</span>
 
 <span class="sd">      Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from</span>
 <span class="sd">      sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count</span>
@@ -982,6 +982,9 @@
 <span class="sd">          | sets norm of QBIAS. Default is False.</span>
 <span class="sd">          | True: includes selfcontacts on main diagonal of CM (max count &gt; len(bc))</span>
 <span class="sd">          | False: ignores selfcontacts on main diagonal of CM (max count == len(bc))</span>
+<span class="sd">        softcut (bool): Increase QBias if np.isclose(d, d_cutoff, atol=softcut_tol) is True. Defaults to True.</span>
+<span class="sd">        softcut_tol (float): Softcut tolerance. Defatuls to 0.2 (Angstrom).</span>
+<span class="sd">        softcut_inc: Increase QBias by this value if softcut applies. Defaults to 0.25.</span>
 <span class="sd">        start (None, int): start frame</span>
 <span class="sd">        stop (None, int): stop frame</span>
 <span class="sd">        step (None, int): step size</span>
@@ -991,6 +994,7 @@
 <span class="sd">        marker (str): &quot;.&quot;</span>
 <span class="sd">        save_plot (bool)</span>
 <span class="sd">        save_as (str): &quot;QBias.png&quot;</span>
+<span class="sd">        disable (bool): hide/show progress bar</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FRAMES (array)</span>
@@ -1000,8 +1004,19 @@
 <span class="sd">        CM (array)</span>
 <span class="sd">            array with distance matrices</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__HELP_softcut</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">d0</span><span class="p">,</span> <span class="n">tol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns value between 0 and 1, based on difference between d-d0 and d0+tol</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">d0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tol</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="n">d0</span><span class="p">)</span><span class="o">/</span><span class="n">tol</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                <span class="s2">&quot;include_selfcontacts&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;softcut&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;softcut_tol&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+               <span class="s2">&quot;softcut_inc&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
                <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
@@ -1010,12 +1025,12 @@
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
                <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
                <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QBias.png&quot;</span><span class="p">}</span>
+               <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QBias.png&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">sel</span> <span class="o">=</span> <span class="s2">&quot;protein and name CA&quot;</span>  <span class="c1"># selection must be hardcoded (see print msg below)</span>
     <span class="c1">################################################################################</span>
     <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 1: selection of get_QBias() is hardcoded to sel=&#39;protein and name CA&#39;.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 1: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count significantly. Most of them will count as non-native and thus make the QBias value very low.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 2: MDAnalysis&#39; qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated QBias value artificially (e.g. even when all used bias contacts are never formed, QBias will not be zero due to the selfcontact counts)&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
@@ -1023,24 +1038,31 @@
         <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
 
     <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># QBias value (fraction of formed bias contacts)</span>
-    <span class="n">CM</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># Contact Matrices</span>
+    <span class="c1">#CM = []     # Contact Matrices</span>
 
-    <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="o">=</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="n">DM</span><span class="p">:</span>
-        <span class="n">cm</span> <span class="o">=</span> <span class="p">(</span><span class="n">dm</span> <span class="o">&lt;=</span> <span class="n">d_cutoff</span><span class="p">)</span>   <span class="c1"># converts distance matrix to bool matrix -&gt; use as contact matrix</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;calculating distance matrices...&quot;</span><span class="p">)</span>
+    <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="o">=</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="ow">not</span> <span class="n">cfg</span><span class="o">.</span><span class="n">disable</span><span class="p">)</span>
+    <span class="n">CM</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dm</span> <span class="o">&lt;=</span> <span class="n">d_cutoff</span><span class="p">)</span> <span class="k">for</span> <span class="n">dm</span> <span class="ow">in</span> <span class="n">DM</span><span class="p">]</span>  <span class="c1"># converts distance matrix to bool matrix -&gt; use as contact matrix</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;calculating QBias...&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CM</span><span class="p">)),</span> <span class="n">disable</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">disable</span><span class="p">):</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bc</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">cm</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">CM</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-
+            <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">softcut</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">DM</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="n">d_cutoff</span> <span class="o">&lt;=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">softcut_tol</span><span class="p">):</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="n">__HELP_softcut</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">softcut_tol</span><span class="p">)</span>
+                    <span class="n">CM</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">include_selfcontacts</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="c1"># norm based on used bias contacts</span>
             <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">))</span>
-            <span class="n">CM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># norm based on used bias contacts and selfcontacts</span>
             <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)))</span>
-            <span class="n">CM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">prec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">QBIAS</span><span class="p">]</span>
     <span class="n">FRAMES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">)))</span>
@@ -1105,6 +1127,7 @@
 <span class="sd">        color_FP (str): color of false positive QBias. Defaults to &quot;r&quot;.</span>
 <span class="sd">        alpha (float): 0.3</span>
 <span class="sd">        marker (str): &quot;.&quot;</span>
+<span class="sd">        disable (bool): hide/show progress bar</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FRAMES (array)</span>
@@ -1125,7 +1148,8 @@
                <span class="s2">&quot;color_TP&quot;</span><span class="p">:</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span>
                <span class="s2">&quot;color_FP&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
-               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">}</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">sel</span> <span class="o">=</span> <span class="s2">&quot;protein and name CA&quot;</span>  <span class="c1"># selection must be hardcoded (see print msg below)</span>
     <span class="c1">################################################################################</span>
@@ -1162,7 +1186,7 @@
     <span class="c1"># calculate TP and FP</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Calculating QValues...&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">cm</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">CM</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">cm</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">CM</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">disable</span><span class="p">):</span>
         <span class="n">count_TP</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">count_FP</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">BC</span><span class="p">:</span>
