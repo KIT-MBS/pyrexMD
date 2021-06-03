@@ -780,12 +780,12 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     return FRAMES, QNATIVE
 
 
-def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, sel="protein and name CA",
+def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
               prec=3, norm=True, plot=True, warn=True, verbose=True, **kwargs):
     """
     Get QValue for formed bias contacts.
 
-    .. Note :: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.
+    .. Note :: selection of get_QBias() is hardcoded to sel='protein and name CA'.
 
       Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
       sel='protein and name CA' to sel='protein' increases the atom count
@@ -865,14 +865,16 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, sel="protein and
                "save_as": "QBias.png",
                "disable": False}
     cfg = _misc.CONFIG(default, **kwargs)
+    sel = "protein and name CA"
     ################################################################################
     if warn:
-        _misc.cprint("Note 1: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.", "red")
+        _misc.cprint("Note 1: selection of get_QBias() is hardcoded to sel='protein and name CA'.", "red")
         _misc.cprint("Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from sel='protein and name CA' to sel='protein' increases the atom count significantly. Most of them will count as non-native and thus make the QBias value very low.", "red")
         _misc.cprint("Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated QBias value artificially (e.g. even when all used bias contacts are never formed, QBias will not be zero due to the selfcontact counts)", "red")
 
     if norm:
         _top.norm_universe(mobile)
+        a = mobile.select_atoms(sel)
 
     QBIAS = []  # QBias value (fraction of formed bias contacts)
     #CM = []     # Contact Matrices
