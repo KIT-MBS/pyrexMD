@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 28.05.2021
+# @Last modified time: 03.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -780,12 +780,12 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     return FRAMES, QNATIVE
 
 
-def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=True,
-              plot=True, warn=True, verbose=True, **kwargs):
+def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, sel="protein and name CA",
+              prec=3, norm=True, plot=True, warn=True, verbose=True, **kwargs):
     """
     Get QValue for formed bias contacts.
 
-    .. Note :: selection of get_QBias() is hardcoded to sel='protein and name CA'.
+    .. Note :: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.
 
       Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from
       sel='protein and name CA' to sel='protein' increases the atom count
@@ -819,6 +819,9 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=Tru
           | sets norm of QBIAS. Default is False.
           | True: includes selfcontacts on main diagonal of CM (max count > len(bc))
           | False: ignores selfcontacts on main diagonal of CM (max count == len(bc))
+        softcut (bool): Increase QBias if np.isclose(d, d_cutoff, atol=softcut_tol) is True. Defaults to True.
+        softcut_tol (float): Softcut tolerance. Defatuls to 0.2 (Angstrom).
+        softcut_inc: Increase QBias by this value if softcut applies. Defaults to 0.25.
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
@@ -828,6 +831,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=Tru
         marker (str): "."
         save_plot (bool)
         save_as (str): "QBias.png"
+        disable (bool): hide/show progress bar
 
     Returns:
         FRAMES (array)
@@ -837,8 +841,19 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=Tru
         CM (array)
             array with distance matrices
     """
+    def __HELP_softcut(d, d0, tol):
+        """
+        Returns value between 0 and 1, based on difference between d-d0 and d0+tol
+        """
+        if np.isclose(d, d0, atol=tol):
+            return round(1.0-abs(d-d0)/tol, 3)
+        return 0
+
     default = {"dtype": bool,
                "include_selfcontacts": False,
+               "softcut": True,
+               "softcut_tol": 0.2,
+               "softcut_inc": 0.25,
                "start": sss[0],
                "stop": sss[1],
                "step": sss[2],
@@ -847,12 +862,12 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=Tru
                "alpha": 0.3,
                "marker": ".",
                "save_plot": False,
-               "save_as": "QBias.png"}
+               "save_as": "QBias.png",
+               "disable": False}
     cfg = _misc.CONFIG(default, **kwargs)
-    sel = "protein and name CA"  # selection must be hardcoded (see print msg below)
     ################################################################################
     if warn:
-        _misc.cprint("Note 1: selection of get_QBias() is hardcoded to sel='protein and name CA'.", "red")
+        _misc.cprint("Note 1: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.", "red")
         _misc.cprint("Reason: bias contacts are unique RES PAIRS and grow 'slowly', but going from sel='protein and name CA' to sel='protein' increases the atom count significantly. Most of them will count as non-native and thus make the QBias value very low.", "red")
         _misc.cprint("Note 2: MDAnalysis' qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated QBias value artificially (e.g. even when all used bias contacts are never formed, QBias will not be zero due to the selfcontact counts)", "red")
 
@@ -860,24 +875,31 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0, prec=3, norm=Tru
         _top.norm_universe(mobile)
 
     QBIAS = []  # QBias value (fraction of formed bias contacts)
-    CM = []     # Contact Matrices
+    #CM = []     # Contact Matrices
 
-    DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step])
-    for dm in DM:
-        cm = (dm <= d_cutoff)   # converts distance matrix to bool matrix -> use as contact matrix
+    if verbose:
+        _misc.cprint("calculating distance matrices...")
+    DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step], verbose=not cfg.disable)
+    CM = [(dm <= d_cutoff) for dm in DM]  # converts distance matrix to bool matrix -> use as contact matrix
+
+    if verbose:
+        _misc.cprint("calculating QBias...")
+    for i in tqdm(range(len(CM)), disable=cfg.disable):
         count = 0
         for item in bc:
-            if cm[item[0]-1, item[1]-1] == True:
+            if CM[i][item[0]-1, item[1]-1] == True:
                 count += 1
-
+            elif cfg.softcut is True:
+                d = DM[i][item[0]-1, item[1]-1]
+                if (d-d_cutoff <= cfg.softcut_tol):
+                    count += __HELP_softcut(d, d_cutoff, cfg.softcut_tol)
+                    CM[i][item[0]-1, item[1]-1] = True
         if cfg.include_selfcontacts == False:
             # norm based on used bias contacts
             QBIAS.append(count/len(bc))
-            CM.append(cm)
         else:
             # norm based on used bias contacts and selfcontacts
             QBIAS.append((count+len(cm))/(len(bc)+len(cm)))
-            CM.append(cm)
     if prec is not None:
         QBIAS = [round(i, prec) for i in QBIAS]
     FRAMES = list(range(len(QBIAS)))
@@ -942,6 +964,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
         color_FP (str): color of false positive QBias. Defaults to "r".
         alpha (float): 0.3
         marker (str): "."
+        disable (bool): hide/show progress bar
 
     Returns:
         FRAMES (array)
@@ -962,7 +985,8 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
                "color_TP": "g",
                "color_FP": "r",
                "alpha": 0.3,
-               "marker": "."}
+               "marker": ".",
+               "disable": False}
     cfg = _misc.CONFIG(default, **kwargs)
     sel = "protein and name CA"  # selection must be hardcoded (see print msg below)
     ################################################################################
@@ -999,7 +1023,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
     # calculate TP and FP
     if verbose:
         _misc.cprint("Calculating QValues...")
-    for cm in tqdm(CM):
+    for cm in tqdm(CM, disable=cfg.disable):
         count_TP = 0
         count_FP = 0
         for item in BC:

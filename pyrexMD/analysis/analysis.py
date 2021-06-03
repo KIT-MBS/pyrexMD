@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 31.05.2021
+# @Last modified time: 03.06.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -435,8 +435,8 @@ def _HELP_sss_None2int(obj, cfg):
     return cfg
 
 
-def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, None], flatten=False, verbose=True,
-                          **kwargs):
+def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, None],
+                          flatten=False, verbose=True, **kwargs):
     """
     Calculate distance matrices for mobile and return them.
 
@@ -478,7 +478,7 @@ def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, No
         DM = np.empty((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),
                        a.n_atoms*a.n_atoms), dtype=cfg.dtype)  # tuple args: length, size (of flattened array)
 
-        for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step])):
+        for i, ts in enumerate(tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step], disable=not verbose)):
             DM[i] = mda.analysis.distances.distance_array(a.positions, a.positions).flatten()
         if not flatten:
             DM = DM.reshape((len(mobile.trajectory[cfg.start:cfg.stop:cfg.step]),

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 02.06.2021
+# @Last modified time: 03.06.2021
 
 """
 This module contains functions for:
@@ -290,10 +290,16 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         labels (array)
             data point cluster labels
         wss_data (tuple)
-          | (WSS, SSE, SSE_mean) ~ output of get_WSS()
-          | WSS (float) ~ Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-          | SSE (list) ~ Sum of Squared Errors (of individual clusters)
-          | SSE_mean (list) ~ Mean values of SSE
+          | (WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()
+          | WSS (float)
+          |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          | SSE (list)
+          |     Sum of Squared Errors (of individual clusters)
+          | (SE_mean, SE_std) (tuple)
+          |     SE_mean (list)
+          |         mean values of Squared Errors for each cluster
+          |     SE_std (list)
+          |         std values of Squared Errors for each cluster
     """
     default = {"dtype": ht.float64,
                "start": sss[0],
@@ -328,11 +334,11 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
     counts = np.bincount(labels.flatten())
     centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
     wss_data = get_WSS(h5_file, centers=centers, counts=counts, labels=labels, verbose=False, **cfg)
-    #wss, sse, sse_mean = wss_data
+    #wss, sse, (se_mean, se_std) = wss_data
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
-        _misc.cprint(f"Sum of Squared Errors: {sse}")
+        _misc.cprint(f"WSS: {wss}")
     return centers, counts, labels, wss_data
 
 
@@ -360,7 +366,16 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
             |   labels (array)
             |     data point cluster labels
             |   wss_data (tuple)
-            |     sum of squared errors
+            |     (WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()
+            |     WSS (float)
+            |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+            |     SSE (list)
+            |         Sum of Squared Errors (of individual clusters)
+            |     (SE_mean, SE_std) (tuple)
+            |         SE_mean (list)
+            |             mean values of Squared Errors for each cluster
+            |         SE_std (list)
+            |             std values of Squared Errors for each cluster
     """
     CLUSTER = []
     WSS = 99999999999999999999999999999999
@@ -407,8 +422,11 @@ def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
             Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
         SSE (list)
             Sum of Squared Errors (of individual clusters)
-        SSE_mean (list)
-            Mean values of SSE
+        (SE_mean, SE_std) (tuple)
+          | SE_mean (list)
+          |    mean values of Squared Errors for each cluster
+          | SE_std (list)
+          |    std values of Squared Errors for each cluster
     """
     default = {"start": sss[0],
                "stop": sss[1],
@@ -429,13 +447,15 @@ def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
     else:
         norm = 1
 
+    # statistics
+    SE_mean = [round(norm*np.mean(item), cfg.prec) for item in SE]
+    SE_std = [round(norm*np.std(item), cfg.prec) for item in SE]
+
     # SSE: Sum of Squared Errors (of individual clusters)
     SSE = [round(norm*sum(item), cfg.prec) for item in SE]
-    SSE_mean = [round(norm*np.mean(item), cfg.prec) for item in SE]
-
     # WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)
     WSS = round(sum(SSE), cfg.prec)
-    return WSS, SSE, SSE_mean
+    return WSS, SSE, (SSE_mean, SSE_std)
 
 
 def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, None],
@@ -486,7 +506,7 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
     for i in tqdm(n_clusters):
         centers, counts, labels, wss_data = heat_KMeans(h5_file, n_clusters=i, sss=[cfg.start, cfg.step, cfg.stop],
                                                         prec=cfg.prec, rescale=cfg.rescale, verbose=False)
-        # wss, sse, sse_mean = wss_data
+        # wss, sse,  = wss_data
         WSS.append(wss_data[0])
 
         if verbose:
@@ -525,6 +545,10 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         show_legend (bool)
         legend_loc (str): legend location. Defaults to "best".
         legend_ncols (int): legend number of columns. Defaults to 2.
+        xlabel (None, str)
+        ylabel (None, str)
+        xlim (None, tuple): (xmin, xmax). Defaults to (None, None).
+        ylim (None, tuple): (ymin, ymax). Defaults to (None, None).
 
     .. Hint:: Args and Keyword Args of misc.figure() are also valid.
 
@@ -548,7 +572,9 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
                "legend_loc": "best",
                "legend_ncols": 2,
                "xlabel": None,
-               "ylabel": None
+               "ylabel": None,
+               "xlim": (None, None),
+               "ylim": (None, None)
                }
     cfg = _misc.CONFIG(default, **kwargs)
     ##################################################################
@@ -568,6 +594,12 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         plt.xlabel(cfg.xlabel, fontweight="bold")
     if cfg.ylabel is not None:
         plt.ylabel(cfg.ylabel, fontweight="bold")
+
+    # set xlim, ylim
+    if isinstance(cfg.xlim, (tuple, list)):
+        plt.xlim((cfg.xlim[0], cfg.xlim[1]))
+    if isinstance(cfg.ylim, (tuple, list)):
+        plt.ylim((cfg.ylim[0], cfg.ylim[1]))
 
     # create sorted legend
     if cfg.show_legend:

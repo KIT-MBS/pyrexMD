@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 03.06.2021
 
 import pyrexMD.analysis.contacts as con
 import MDAnalysis as mda
@@ -37,10 +37,10 @@ def test_get_QNative():
 def test_get_QBias():
     mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
     bc = np.load(pre + "NC.npy")
-    FRAMES, QBIAS, CM = con.get_QBias(mobile, bc, d_cutoff=6.0, plot=False)
+    FRAMES, QBIAS, CM = con.get_QBias(mobile, bc, d_cutoff=6.0, plot=False, softcut=False)
 
     assert (FRAMES == np.load(pre + "FRAMES.npy")).all()
-    assert assert_allclose(QBIAS, np.load(pre + "QBIAS.npy")) == None
+    assert assert_allclose(QBIAS, np.load(pre + "QBIAS.npy"), atol=0.001) == None
     assert (CM == np.load(pre + "CM.npy")).all()
     return
 
