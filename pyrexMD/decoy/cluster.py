@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 03.06.2021
+# @Last modified time: 07.06.2021
 
 """
 This module contains functions for:
@@ -20,6 +20,9 @@ import pyrexMD.misc as _misc
 import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 #from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+import pandas as pd
+from sklearn.manifold import TSNE
+from sklearn.cluster import KMeans
 from tqdm.notebook import tqdm
 
 
@@ -283,23 +286,23 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
           | Defaults to True.
 
     Returns:
-        centers (array)
-            cluster centers
-        counts (array)
-            counts per cluster
-        labels (array)
-            data point cluster labels
-        wss_data (tuple)
-          | (WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()
-          | WSS (float)
-          |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-          | SSE (list)
-          |     Sum of Squared Errors (of individual clusters)
-          | (SE_mean, SE_std) (tuple)
-          |     SE_mean (list)
-          |         mean values of Squared Errors for each cluster
-          |     SE_std (list)
-          |         std values of Squared Errors for each cluster
+        cluster_data (CLUSTER_DATA)
+          | .centers (array)
+          |     cluster centers
+          | .counts (array)
+          |     counts per cluster
+          | .labels (array)
+          |     data point cluster labels
+          | .wss_data (tuple) ~ output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()
+          |      WSS (float)
+          |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          |      SSE (list)
+          |         Sum of Squared Errors (of individual clusters)
+          |      (SE_mean, SE_std) (tuple)
+          |         SE_mean (list)
+          |             mean values of Squared Errors for each cluster
+          |         SE_std (list)
+          |             std values of Squared Errors for each cluster
     """
     default = {"dtype": ht.float64,
                "start": sss[0],
@@ -330,16 +333,17 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         raise ValueError("""center_type must be either 'centroid' or 'medoid'.""")
 
     kmeans.fit(data)
-    labels = kmeans.labels_.numpy().flatten()
-    counts = np.bincount(labels.flatten())
     centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
-    wss_data = get_WSS(h5_file, centers=centers, counts=counts, labels=labels, verbose=False, **cfg)
-    #wss, sse, (se_mean, se_std) = wss_data
+    counts = np.bincount(labels.flatten())
+    labels = kmeans.labels_.numpy().flatten()
+
+    wss_data = get_DM_WSS(h5_file, centers=centers, counts=counts, labels=labels, verbose=False, **cfg)
+    cluster_data = CLUSTER_DATA(centers=centers, counts=clounts, labels=labels, wss_data=wss_data)
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
         _misc.cprint(f"WSS: {wss}")
-    return centers, counts, labels, wss_data
+    return cluster_data
 
 
 def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwargs):
@@ -381,30 +385,54 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
     WSS = 99999999999999999999999999999999
 
     for i in tqdm(range(N)):
-        cluster = heat_KMeans(h5_file, n_clusters=n_clusters, verbose=False)
-        centers, counts, labels, wss_data = cluster
-        # (wss, sse, sse_mean) = wss_data
-        if wss_data[0] < WSS:
-            CLUSTER.append(cluster)
-            WSS = wss_data[0]
+        cluster_data = heat_KMeans(h5_file, n_clusters=n_clusters, verbose=False)
+        if cluster_data.wss_data.wss < WSS:
+            CLUSTER.append(cluster_data)
+            WSS = cluster_data.wss_data.wss
 
     TOPX_CLUSTER = CLUSTER[-topx:][::-1]
     if verbose:
         _misc.cprint(f"Returned clusters:", "blue")
         for ndx, item in enumerate(TOPX_CLUSTER):
-            _misc.cprint(f"index: {ndx}\tSSE: {item[3]}", "blue")
+            _misc.cprint(f"index: {ndx}\tWSS: {item.wss_data.wss}", "blue")
     return TOPX_CLUSTER
 
 
-def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
+def get_DM_centroids(DM, labels):
     """
-    get WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)
+    get Distance Matrix centroids.
 
     Args:
-        h5file (str): path to h5_file containing distance matrices
-        centers (array): output of heat_KMeans()
-        counts (array): output of heat_KMeans()
-        labels (array): output of heat_KMeans()
+        DM (str, array): path to h5_file containing distance matrices or array with distance matrices
+        labels (array): cluster labels for each frame of DM
+
+    Returns:
+        CENTROIDS (array)
+            centroids of DM, one for each label
+    """
+    if isinstance(DM, str):
+        DM = read_h5(DM)
+    CENTROIDS = []
+
+    DM_map = [[] for i in range(min(labels), max(labels)+1)]
+    for ndx, item in enumerate(labels):
+        DM_map[item].append(DM[ndx])
+
+    for dms in DM_map:
+        CENTROIDS.append(sum(dms)/len(dms))
+
+    return np.array(CENTROIDS)
+
+
+def get_DM_WSS(DM, cluster_data, centers=None, sss=[None, None, None], **kwargs):
+    """
+    get distance matrix WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)
+
+    Args:
+        DM (str, array): path to h5_file containing distance matrices or array with distance matrices
+        cluster_data (CLUSTER_DATA): output of heat_KMeans()
+        centers (array): CLUSTER_DATA.centers array with size of h5_file.
+          | None: use cluster_data.centers
         sss (list):
           | [start, stop, step] indices of <h5_file> data
           | start (None, int): start index
@@ -418,16 +446,23 @@ def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
           | Defaults to True.
 
     Returns:
-        WSS (float)
-            Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-        SSE (list)
-            Sum of Squared Errors (of individual clusters)
-        (SE_mean, SE_std) (tuple)
-          | SE_mean (list)
-          |    mean values of Squared Errors for each cluster
-          | SE_std (list)
-          |    std values of Squared Errors for each cluster
+        WSS_DATA (WSS_DATA)
+          | .wss (float)
+          |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          | .sse (list)
+          |     Sum of Squared Errors (of individual clusters)
+          | .se_mean (list)
+          |     mean values of Squared Errors for each cluster
+          | .se_std (list)
+          |     std values of Squared Errors for each cluster
     """
+    class WSS_DATA(object):
+        def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
+            self.wss = wss
+            self.sse = sse
+            self.se_mean = se_mean
+            self.se_std = se_std
+            return
     default = {"start": sss[0],
                "stop": sss[1],
                "step": sss[2],
@@ -435,10 +470,15 @@ def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
                "rescale": True}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
-    DM = reshape_data(read_h5(h5_file), dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
-    SE = [[] for i in range(len(centers))]   # Squared Errors (of individual clusters)
+    if isinstance(DM, str):
+        DM = reshape_data(read_h5(DM), dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
+    else:
+        DM = reshape_data(DM, dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
+    SE = [[] for i in range(len(cluster_data.centers))]   # Squared Errors (of individual clusters)
 
-    for ndx, l in enumerate(labels):
+    if centers is None:
+        centers = cluster_data.centers
+    for ndx, l in enumerate(cluster_data.labels):
         d = np.linalg.norm(centers[l]-DM[ndx])
         SE[l].append(d*d)
 
@@ -455,7 +495,9 @@ def get_WSS(h5_file, centers, counts, labels, sss=[None, None, None], **kwargs):
     SSE = [round(norm*sum(item), cfg.prec) for item in SE]
     # WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)
     WSS = round(sum(SSE), cfg.prec)
-    return WSS, SSE, (SSE_mean, SSE_std)
+
+    WSS_DATA = WSS_DATA(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
+    return WSS_DATA
 
 
 def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, None],
@@ -464,7 +506,7 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
     Apply elbow method for a list with cluster numbers n.
 
     Args:
-        h5file (str): path to h5_file containing distance matrices
+        h5_file (str): path to h5_file containing distance matrices
         n_clusters (range, list, array): list with cluster numbers n to test using elbow method
         sss (list):
           | [start, stop, step] indices of <h5_file> data
@@ -504,16 +546,16 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
     first_print = True
 
     for i in tqdm(n_clusters):
-        centers, counts, labels, wss_data = heat_KMeans(h5_file, n_clusters=i, sss=[cfg.start, cfg.step, cfg.stop],
-                                                        prec=cfg.prec, rescale=cfg.rescale, verbose=False)
+        cluster_data = heat_KMeans(h5_file, n_clusters=i, sss=[cfg.start, cfg.step, cfg.stop],
+                                   prec=cfg.prec, rescale=cfg.rescale, verbose=False)
         # wss, sse,  = wss_data
-        WSS.append(wss_data[0])
+        WSS.append(cluster_data.wss_data.wss)
 
         if verbose:
             if first_print:
                 _misc.cprint(f"\nN Clusters\tWSS ", "blue")
                 first_print = False
-            _misc.cprint(f"{i}\t{wss_data[0]}")
+            _misc.cprint(f"{i}\t{cluster_data.wss_data.wss}")
 
     if plot:
         _ana.PLOT(xdata=N_CLUSTERS, ydata=WSS, xlabel="Number of Clusters", ylabel="Sum of Squared Errors", **kwargs)
@@ -618,13 +660,13 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
 
 def map_cluster_scores(cluster_data, score_file, **kwargs):
     """
-    map cluster scores/energies between `score_file` and `cluster_data`.
+    map cluster scores/energies between `cluster_data` and `score_file`.
 
     ..Note:: `cluster_data` and `score_file` must have beeen generated using the same order of trajectory frames.
               Otherwise the index mapping from enumerate(labels) within this function will be wrong.
 
     Args:
-        cluster_data (): output of heat_KMeans(), i.e. (centers, counts, labels, sse) = heat_KMeans()
+        cluster_data (): output of heat_KMeans(), i.e. (centers, counts, labels, wss_data) = heat_KMeans()
         score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().
 
     Keyword Args:
@@ -643,20 +685,187 @@ def map_cluster_scores(cluster_data, score_file, **kwargs):
                "prec": 3}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
-    centers, counts, labels, sse = cluster_data
     scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
+    scores_data = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores)
 
-    CLUSTER_E = [[] for i in range(len(centers))]  # contains list of all energies, one for each cluster
-    CLUSTER_E4 = []   # contains tuples (Emean, Estd, Emin, Emax), one for each cluster
+    return scores_data
 
-    for ndx, i in enumerate(labels):
-        CLUSTER_E[i].append(round(scores[ndx], cfg.prec))
-    for ndx in range(len(centers)):
-        Emean = round(np.mean(CLUSTER_E[ndx]), cfg.prec)
-        Estd = round(np.std(CLUSTER_E[ndx]), cfg.prec)
-        Emin = round(min(CLUSTER_E[ndx]), cfg.prec)
-        Emax = round(max(CLUSTER_E[ndx]), cfg.prec)
 
-        CLUSTER_E4.append((Emean, Estd, Emin, Emax))
+def apply_TSNE(data, n_components=2, perplexity=50):
+    """
+    apply t-distributed stochastic neighbor embedding on data.
 
-    return CLUSTER_E, CLUSTER_E4
+    Args:
+        data (array)
+        n_components (int): TSNE number of components
+        perplexity (int): TSNE perplexity
+
+    Returns:
+        tsne_data (array)
+            tsne transformed data
+    """
+    nsamples, nx, ny = np.array(data).shape
+    data_reshaped = np.array(data).reshape((nsamples, nx*ny))
+    tsne_data = TSNE(n_components=n_components, perplexity=perplexity).fit_transform(data_reshaped)
+    return tsne_data
+
+
+def apply_KMEANS(tsne_data, n_clusters=30):
+    """
+    apply KMeans on tsne_data
+
+    Args:
+        tnse_data (array): output of apply_TSNE()
+        n_clusters (int): number of clusters
+
+    Returns:
+        cluster_data (CLUSTER_DATA)
+          | .centers (array)
+          | .counts (array)
+          | .labels (array)
+          | .inertia (float)
+    """
+    kmeans = KMeans(n_clusters=n_clusters).fit(tsne_data)
+
+    centers = kmeans.cluster_centers_
+    counts = np.bincount(kmeans.labels_)
+    labels = kmeans.labels_
+    inertia = kmeans.inertia_
+
+    cluster_data = CLUSTER_DATA(centers=centers, counts=counts, labels=labels, inertia=inertia)
+    return cluster_data
+
+
+def plot_cluster_data(cluster_data, tsne_data, **kwargs):
+    """
+    plot cluster data
+
+    .. Note:: Uses modified default values if cluster_data has n_clusters=10 or n_clusters=30.
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        tsne_data (array): output of apply_TSNE()
+
+    Keyword Args:
+        cmap (sns.color_palette(n_colors))
+        markers_list (list): Defaults to ["o", "^", "s", "v", "P", "X"]
+        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
+        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.
+        ms (int): marker size. Defaults to 40.
+        figsize (tuple): Defaults to (9,9)
+
+    Returns:
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class)
+            matplotlib.axes._subplots.Axes
+    """
+    size = len(cluster_data.centers)
+    default = {"cmap": sns.color_palette(n_colors=60),
+               "markers_list": ["o", "^", "s", "v", "P", "X"],
+               "markers_repeats": [10, 10, 10, 10, 10, 10],
+               "ms": 40,
+               "figsize": (9, 9)}
+    default = _misc.CONFIG(default)
+    default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
+    modified = {"cmap": default.cmap[:size],
+                "markers": default_markers[:size]}
+    cfg = _misc.CONFIG(default, **modified)   # use default settings, overwrite with modified settings
+    cfg = _misc.CONFIG(cfg, **kwargs)     # overwrite with kwargs settings
+    ###################################################################
+    pandas = pd.DataFrame({'X': tsne_data[:, 0],
+                           'Y': tsne_data[:, 1],
+                           'label': cluster_data.labels})
+
+    # PLOT
+    fig, ax = _misc.figure(figsize=cfg.figsize)
+    sns.scatterplot(x="X", y="Y",
+                    hue="label", palette=cfg.cmap,
+                    style="label", markers=cfg.markers,
+                    s=cfg.ms,
+                    legend='full',
+                    data=pandas)
+
+    # plot legend
+    h, l = ax.get_legend_handles_labels()
+    ax.legend_.remove()
+    ax.legend(h, l, ncol=2, bbox_to_anchor=(1.0, 1.0), loc='upper left', fontsize='xx-small')
+    plt.tight_layout()
+
+    return fig, ax
+
+
+def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
+    """
+    plot cluster center in existing figure.
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        color (str)
+        marker (str)
+        ms (int): marker size
+    """
+    X = cluster_data.centers[:, 0]
+    Y = cluster_data.centers[:, 1]
+    plt.scatter(X, Y, color=color, marker=marker, s=ms)
+    return
+
+################################################################################
+################################################################################
+### CLASSES / OBJECTS
+
+
+class CLUSTER_DATA(object):
+    def __init__(self, centers=None, counts=None, labels=None, inertia=None, wss_data=None):
+        self.centers = centers
+        self.counts = counts
+        self.labels = labels
+        self.inertia = inertia
+        self.wss_data = wss_data
+        return
+
+
+class CLUSTER_DATA_SCORES(object):
+    def __init__(self, cluster_data, scores, prec=3):
+        """
+        maps cluster_data to cluster scores
+
+        Args:
+            cluster_data(CLUSTER_DATA)
+            scores(list, array): scores of frames in cluster_data
+            prec(int): rounding precission
+
+        Returns:
+            obj.scores (list)
+                summary of all scores of individual clusters
+            obj.scores_mean_total (float)
+                mean value of all scores
+            obj.scores_mean (float)
+                mean values of individual cluster scores
+            obj.scores_std (float)
+                std values of individual cluster scores
+            obj.scores_min (float)
+                min values of individual cluster scores
+            obj.scores_max (float)
+                max values of individual cluster scores
+
+        """
+        self.scores = [[] for i in range(len(cluster_data.centers))]
+        self.scores_mean_total = round(np.mean(scores), prec)
+        self.scores_mean = []
+        self.scores_std = []
+        self.scores_min = []
+        self.scores_max = []
+        self.scores_DELTA = []
+
+        for ndx, i in enumerate(cluster_data.labels):
+            self.scores[i].append(round(scores[ndx], prec))
+        for ndx in range(len(cluster_data.centers)):
+            self.scores_mean.append(round(np.mean(self.scores[ndx]), prec))
+            self.scores_std.append(round(np.std(self.scores[ndx]), prec))
+            self.scores_min.append(round(min(self.scores[ndx]), prec))
+            self.scores_max.append(round(max(self.scores[ndx]), prec))
+
+            # DELTA = abs(mean_total-mean)
+            self.scores_DELTA.append(round(abs(self.scores_mean_total-self.scores_mean[ndx]), prec))
+        return
