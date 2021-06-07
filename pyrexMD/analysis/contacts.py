@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 07.06.2021
+# @Last modified time: 08.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -883,8 +883,6 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
         _misc.cprint("calculating distance matrices...")
     DM = _ana.get_Distance_Matrices(mobile=mobile, sel=sel, sss=[cfg.start, cfg.stop, cfg.step], verbose=not cfg.disable)
     CM = [(dm <= d_cutoff) for dm in DM]  # converts distance matrix to bool matrix -> use as contact matrix
-
-    print(np.shape(CM[0]))
 
     if verbose:
         _misc.cprint("calculating QBias...")
