@@ -581,7 +581,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         markers (list):
           | list with markers to use for cluster mapping.
           | Rotates between markers each 10 clusters.
-          | Defaults to ["o", "^", "v", "s", "P", "X"]
+          | Defaults to ["o", "^", "s", "v", "P", "X"]
         alpha (float): 1
         ms (int): 6
         show_legend (bool)
@@ -606,7 +606,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         plot_only = list(range(min(labels), max(labels)+1))
     default = {"figsize": (7, 7),
                "cmap": sns.color_palette(),
-               "markers": ["o", "^", "v", "s", "P", "X"],
+               "markers": ["o", "^", "s", "v", "P", "X"],
                "marker": None,
                "alpha": 1,
                "ms": 6,
@@ -658,7 +658,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
     return fig, ax
 
 
-def map_cluster_scores(cluster_data, score_file, **kwargs):
+def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **kwargs):
     """
     map cluster scores/energies between `cluster_data` and `score_file`.
 
@@ -666,8 +666,13 @@ def map_cluster_scores(cluster_data, score_file, **kwargs):
               Otherwise the index mapping from enumerate(labels) within this function will be wrong.
 
     Args:
-        cluster_data (): output of heat_KMeans(), i.e. (centers, counts, labels, wss_data) = heat_KMeans()
+        cluster_data (): output of apply_KMeans() or heat_KMeans()
         score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().
+        filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
+        filter_tol (float):
+          | defines filter_min and filter_max values
+          | filter_min = np.mean(scores) - filter_tol * np.std(scores)
+          | filter_max = np.mean(scores) + filter_tol * np.std(scores)
 
     Keyword Args:
         usecols (int): column of `score_file` containing scores/energies. Defaults to 1.
@@ -675,10 +680,21 @@ def map_cluster_scores(cluster_data, score_file, **kwargs):
         prec (None, float): rounding precissions. Defaults to 3.
 
     Returns:
-        CLUSTER_E (list)
-            contains lists of cluster scores/energies, one for each cluster `label` in `cluster_data`
-        CLUSTER_E4 (list)
-            contains tuples (Emean, Estd, Emin, Emax), one for each cluster `label` in `cluster_data`
+        scores_data (CLUSTER_DATA_SCORES)
+          | .scores (list)
+          |   summary of all scores of individual clusters
+          | .mean_all (float)
+          |   mean value of all scores before applying filter
+          | .mean_all_filtered (float)
+          |   mean value of all scores after applying filter
+          | .mean (list)
+          |   mean values of individual cluster scores
+          | .std (list)
+          |   std values of individual cluster scores
+          | .min (list)
+          |   min values of individual cluster scores
+          | .max (list)
+          |    max values of individual cluster scores
     """
     default = {"usecols": 1,
                "skiprows": 0,
@@ -686,7 +702,7 @@ def map_cluster_scores(cluster_data, score_file, **kwargs):
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
-    scores_data = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores)
+    scores_data = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores, filter=filter, filter_tol=filter_tol)
 
     return scores_data
 
@@ -810,6 +826,43 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
     plt.scatter(X, Y, color=color, marker=marker, s=ms)
     return
 
+
+def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, verbose=True):
+    """
+    get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers
+
+    Args:
+        cluster_data_n10
+        cluster_data_n30
+        score_file
+
+    Returns:
+        n10_label (int)
+            n10 target label based on lowest std of clusters
+        n30_label (array)
+            n30 target labels (ranked by distance from low to high)
+        n30_dist (array)
+            n30 target distances, with distance n30_dist[i] = n10_centers[n10_label] - n30_centers[i]
+    """
+    cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_file=score_file)
+    cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
+
+    # find optimum center of n10
+    n10_label = np.where(min(cluster_scores_n10.std) == cluster_scores_n10.std)[0][0]
+    n10_center = cluster_data_n10.centers[n10_label]
+
+    # get center distances d[i] = n10_center - n30_center[i]
+    size = len(cluster_data_n30.centers)
+    D = np.zeros((size))
+    for i in range(size):
+        D[i] = np.linalg.norm(n10_center-cluster_data_n30.centers[i])
+
+    # rank center distances (low to high)
+    if verbose:
+        _misc.cprint("Distance Label", "blue")
+    n30_dist, n30_label = _misc.get_ranked_array(D, reverse=True, verbose=verbose, verbose_stop=5, spacing=9)
+    return (n10_label, n30_label, n30_dist)
+
 ################################################################################
 ################################################################################
 ### CLASSES / OBJECTS
@@ -826,46 +879,65 @@ class CLUSTER_DATA(object):
 
 
 class CLUSTER_DATA_SCORES(object):
-    def __init__(self, cluster_data, scores, prec=3):
+    def __init__(self, cluster_data, scores, prec=3, filter=True, filter_tol=2.0):
         """
         maps cluster_data to cluster scores
 
         Args:
-            cluster_data(CLUSTER_DATA)
-            scores(list, array): scores of frames in cluster_data
-            prec(int): rounding precission
+            cluster_data (CLUSTER_DATA)
+            scores (list, array): scores of frames in cluster_data
+            prec (int): rounding precission
+            filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
+            filter_tol (float):
+              | defines filter_min and filter_max values
+              | filter_min = np.mean(scores) - filter_tol * np.std(scores)
+              | filter_max = np.mean(scores) + filter_tol * np.std(scores)
 
         Returns:
             obj.scores (list)
                 summary of all scores of individual clusters
-            obj.scores_mean_total (float)
-                mean value of all scores
-            obj.scores_mean (float)
+            obj.mean_all (float)
+                mean value of all scores before applying filter
+            obj.mean_all_filtered (float)
+                mean value of all scores after applying filter
+            obj.mean (list)
                 mean values of individual cluster scores
-            obj.scores_std (float)
+            obj.std (list)
                 std values of individual cluster scores
-            obj.scores_min (float)
+            obj.min (list)
                 min values of individual cluster scores
-            obj.scores_max (float)
+            obj.max (list)
                 max values of individual cluster scores
-
         """
         self.scores = [[] for i in range(len(cluster_data.centers))]
-        self.scores_mean_total = round(np.mean(scores), prec)
-        self.scores_mean = []
-        self.scores_std = []
-        self.scores_min = []
-        self.scores_max = []
-        self.scores_DELTA = []
+        if filter:
+            self._filter_min = round(np.mean(scores)-filter_tol*np.std(scores), prec)
+            self._filter_max = round(np.mean(scores)+filter_tol*np.std(scores), prec)
+        self.mean_all = round(np.mean(scores), prec)
+        self.mean_all_filtered = round(np.mean(scores), prec)
+        self.mean = []
+        self.std = []
+        self.min = []
+        self.max = []
+        self.DELTA = []
 
+        # process scores
         for ndx, i in enumerate(cluster_data.labels):
-            self.scores[i].append(round(scores[ndx], prec))
-        for ndx in range(len(cluster_data.centers)):
-            self.scores_mean.append(round(np.mean(self.scores[ndx]), prec))
-            self.scores_std.append(round(np.std(self.scores[ndx]), prec))
-            self.scores_min.append(round(min(self.scores[ndx]), prec))
-            self.scores_max.append(round(max(self.scores[ndx]), prec))
+            s = scores[ndx]
+            if not filter:
+                self.scores[i].append(round(s, prec))
+            if filter and self._filter_min <= s <= self._filter_max:
+                self.scores[i].append(round(s, prec))
+        if filter:
+            self.mean_all_filtered = np.mean(_misc.flatten_array(self.scores))
 
-            # DELTA = abs(mean_total-mean)
-            self.scores_DELTA.append(round(abs(self.scores_mean_total-self.scores_mean[ndx]), prec))
+        # get mean, std, etc.
+        for ndx in range(len(cluster_data.centers)):
+            self.mean.append(round(np.mean(self.scores[ndx]), prec))
+            self.std.append(round(np.std(self.scores[ndx]), prec))
+            self.min.append(round(min(self.scores[ndx]), prec))
+            self.max.append(round(max(self.scores[ndx]), prec))
+
+            # DELTA[i] = abs(mean_all-mean[i])
+            self.DELTA.append(round(abs(self.mean_all_filtered-self.mean[ndx]), prec))
         return
