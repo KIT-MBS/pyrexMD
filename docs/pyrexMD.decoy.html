@@ -575,6 +575,68 @@
 </ul>
 </dd>
 </dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.CLUSTER_DATA">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">CLUSTER_DATA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wss_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#CLUSTER_DATA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.CLUSTER_DATA_SCORES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">CLUSTER_DATA_SCORES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#CLUSTER_DATA_SCORES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.CLUSTER_DATA_SCORES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.apply_KMEANS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">apply_KMEANS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsne_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#apply_KMEANS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.apply_KMEANS" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply KMeans on tsne_data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tnse_data</strong> (<em>array</em>) – output of apply_TSNE()</p></li>
+<li><p><strong>n_clusters</strong> (<em>int</em>) – number of clusters</p></li>
+<li><p><strong>random_state</strong> (<em>None</em><em>, </em><em>int</em>) – Determines the random number generator (for centroid initialization)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl>
+<dt>cluster_data (CLUSTER_DATA)</dt><dd><div class="line-block">
+<div class="line">.centers (array)</div>
+<div class="line">.counts (array)</div>
+<div class="line">.labels (array)</div>
+<div class="line">.inertia (float)</div>
+</div>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.apply_TSNE">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">apply_TSNE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perplexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#apply_TSNE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.apply_TSNE" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply t-distributed stochastic neighbor embedding on data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array</em>) – </p></li>
+<li><p><strong>n_components</strong> (<em>int</em>) – TSNE number of components</p></li>
+<li><p><strong>perplexity</strong> (<em>int</em>) – TSNE perplexity</p></li>
+<li><p><strong>random_state</strong> (<em>None</em><em>, </em><em>int</em>) – Determines the random number generator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>tsne_data (array)</dt><dd><p>tsne transformed data</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.apply_elbow_method">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">apply_elbow_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">range(10,</span> <span class="pre">31,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#apply_elbow_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.apply_elbow_method" title="Permalink to this definition">¶</a></dt>
@@ -582,7 +644,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>h5file</strong> (<em>str</em>) – path to h5_file containing distance matrices</p></li>
+<li><p><strong>h5_file</strong> (<em>str</em>) – path to h5_file containing distance matrices</p></li>
 <li><p><strong>n_clusters</strong> (<em>range</em><em>, </em><em>list</em><em>, </em><em>array</em>) – list with cluster numbers n to test using elbow method</p></li>
 <li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
 <div class="line">[start, stop, step] indices of &lt;h5_file&gt; data</div>
@@ -654,16 +716,16 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_WSS">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_WSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_WSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_WSS" title="Permalink to this definition">¶</a></dt>
-<dd><p>get WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)</p>
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_DM_WSS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_DM_WSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_DM_WSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_DM_WSS" title="Permalink to this definition">¶</a></dt>
+<dd><p>get distance matrix WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>h5file</strong> (<em>str</em>) – path to h5_file containing distance matrices</p></li>
-<li><p><strong>centers</strong> (<em>array</em>) – output of heat_KMeans()</p></li>
-<li><p><strong>counts</strong> (<em>array</em>) – output of heat_KMeans()</p></li>
-<li><p><strong>labels</strong> (<em>array</em>) – output of heat_KMeans()</p></li>
+<li><p><strong>DM</strong> (<em>str</em><em>, </em><em>array</em>) – path to h5_file containing distance matrices or array with distance matrices</p></li>
+<li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of heat_KMeans()</p></li>
+<li><p><strong>centers</strong> (<em>array</em>) – CLUSTER_DATA.centers array with size of h5_file.
+| None: use cluster_data.centers</p></li>
 <li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
 <div class="line">[start, stop, step] indices of &lt;h5_file&gt; data</div>
 <div class="line">start (None, int): start index</div>
@@ -685,20 +747,76 @@
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl>
-<dt>WSS (float)</dt><dd><p>Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</p>
-</dd>
-<dt>SSE (list)</dt><dd><p>Sum of Squared Errors (of individual clusters)</p>
-</dd>
-<dt>(SE_mean, SE_std) (tuple)</dt><dd><div class="line-block">
-<div class="line">SE_mean (list)</div>
+<dt>WSS_DATA (WSS_DATA)</dt><dd><div class="line-block">
+<div class="line">.wss (float)</div>
+<div class="line-block">
+<div class="line">Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</div>
+</div>
+<div class="line">.sse (list)</div>
+<div class="line-block">
+<div class="line">Sum of Squared Errors (of individual clusters)</div>
+</div>
+<div class="line">.se_mean (list)</div>
 <div class="line-block">
 <div class="line">mean values of Squared Errors for each cluster</div>
 </div>
-<div class="line">SE_std (list)</div>
+<div class="line">.se_std (list)</div>
 <div class="line-block">
 <div class="line">std values of Squared Errors for each cluster</div>
 </div>
 </div>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_DM_centroids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_DM_centroids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_DM_centroids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_DM_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>get Distance Matrix centroids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DM</strong> (<em>str</em><em>, </em><em>array</em>) – path to h5_file containing distance matrices or array with distance matrices</p></li>
+<li><p><strong>labels</strong> (<em>array</em>) – cluster labels for each frame of DM</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>CENTROIDS (array)</dt><dd><p>centroids of DM, one for each label</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_cluster_targets">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_cluster_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data_n10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_n30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_cluster_targets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_cluster_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>n30 clusters with very low mean and low std can be good target clusters too,
+even if their cluster centers are not close to n10 target center.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster_data_n10</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)</p></li>
+<li><p><strong>cluster_data_n30</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)</p></li>
+<li><p><strong>score_file</strong> (<em>str</em>) – ~ output of abinitio.frame2score()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>n10_label (int)</dt><dd><p>n10 target label based on lowest mean of n10 clusters</p>
+</dd>
+<dt>n30_label (array)</dt><dd><p>n30 target labels (ranked by distance from low to high)</p>
+</dd>
+<dt>n30_dist (array)</dt><dd><p>n30 target distances, with distance n30_dist[i] = n10_centers[n10_label] - n30_centers[i]</p>
 </dd>
 </dl>
 </p>
@@ -747,14 +865,22 @@
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl>
-<dt>centers (array)</dt><dd><p>cluster centers</p>
-</dd>
-<dt>counts (array)</dt><dd><p>counts per cluster</p>
-</dd>
-<dt>labels (array)</dt><dd><p>data point cluster labels</p>
-</dd>
-<dt>wss_data (tuple)</dt><dd><div class="line-block">
-<div class="line">(WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()</div>
+<dt>cluster_data (CLUSTER_DATA)</dt><dd><div class="line-block">
+<div class="line">.centers (array)</div>
+<div class="line-block">
+<div class="line">cluster centers</div>
+</div>
+<div class="line">.counts (array)</div>
+<div class="line-block">
+<div class="line">counts per cluster</div>
+</div>
+<div class="line">.labels (array)</div>
+<div class="line-block">
+<div class="line">data point cluster labels</div>
+</div>
+<div class="line">.wss_data (tuple)</div>
+<div class="line-block">
+<div class="line">output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()</div>
 <div class="line">WSS (float)</div>
 <div class="line-block">
 <div class="line">Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</div>
@@ -772,6 +898,7 @@
 <div class="line">SE_std (list)</div>
 <div class="line-block">
 <div class="line">std values of Squared Errors for each cluster</div>
+</div>
 </div>
 </div>
 </div>
@@ -876,8 +1003,8 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.map_cluster_scores">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">map_cluster_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#map_cluster_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.map_cluster_scores" title="Permalink to this definition">¶</a></dt>
-<dd><p>map cluster scores/energies between <cite>score_file</cite> and <cite>cluster_data</cite>.</p>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">map_cluster_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#map_cluster_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.map_cluster_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>map cluster scores/energies between <cite>cluster_data</cite> and <cite>score_file</cite>.</p>
 <dl class="simple">
 <dt>..Note:: <cite>cluster_data</cite> and <cite>score_file</cite> must have beeen generated using the same order of trajectory frames.</dt><dd><p>Otherwise the index mapping from enumerate(labels) within this function will be wrong.</p>
 </dd>
@@ -885,8 +1012,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>)</strong> (<em>cluster_data</em>) – output of heat_KMeans(), i.e. (centers, counts, labels, sse) = heat_KMeans()</p></li>
+<li><p><strong>(</strong><strong>)</strong> (<em>cluster_data</em>) – output of apply_KMeans() or heat_KMeans()</p></li>
 <li><p><strong>score_file</strong> (<em>str</em>) – path to file containing cluster scores/energies. Logfile of abinitio.frame2score().</p></li>
+<li><p><strong>filter</strong> (<em>bool</em>) – apply filter ~ use only scores s which fulfil: filter_min &lt;= s &lt;= filter_max</p></li>
+<li><p><strong>filter_tol</strong> (<em>float</em>) – <div class="line-block">
+<div class="line">defines filter_min and filter_max values</div>
+<div class="line">filter_min = np.mean(scores) - filter_tol * np.std(scores)</div>
+<div class="line">filter_max = np.mean(scores) + filter_tol * np.std(scores)</div>
+</div>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -897,10 +1031,90 @@
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>CLUSTER_E (list)</dt><dd><p>contains lists of cluster scores/energies, one for each cluster <cite>label</cite> in <cite>cluster_data</cite></p>
+<dd class="field-odd"><p><dl>
+<dt>scores_data (CLUSTER_DATA_SCORES)</dt><dd><div class="line-block">
+<div class="line">.scores (list)</div>
+<div class="line-block">
+<div class="line">summary of all scores of individual clusters</div>
+</div>
+<div class="line">.mean_all (float)</div>
+<div class="line-block">
+<div class="line">mean value of all scores before applying filter</div>
+</div>
+<div class="line">.mean_all_filtered (float)</div>
+<div class="line-block">
+<div class="line">mean value of all scores after applying filter</div>
+</div>
+<div class="line">.mean (list)</div>
+<div class="line-block">
+<div class="line">mean values of individual cluster scores</div>
+</div>
+<div class="line">.std (list)</div>
+<div class="line-block">
+<div class="line">std values of individual cluster scores</div>
+</div>
+<div class="line">.min (list)</div>
+<div class="line-block">
+<div class="line">min values of individual cluster scores</div>
+</div>
+<div class="line">.max (list)</div>
+<div class="line-block">
+<div class="line">max values of individual cluster scores</div>
+</div>
+</div>
 </dd>
-<dt>CLUSTER_E4 (list)</dt><dd><p>contains tuples (Emean, Estd, Emin, Emax), one for each cluster <cite>label</cite> in <cite>cluster_data</cite></p>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.plot_cluster_center">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">plot_cluster_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'black'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#plot_cluster_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.plot_cluster_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot cluster center in existing figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of apply_KMEANS() or heat_KMEANS()</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ms</strong> (<em>int</em>) – marker size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.plot_cluster_data">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">plot_cluster_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tsne_data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#plot_cluster_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.plot_cluster_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot cluster data</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Uses modified default values if cluster_data has n_clusters=10 or n_clusters=30.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of apply_KMEANS() or heat_KMEANS()</p></li>
+<li><p><strong>tsne_data</strong> (<em>array</em>) – output of apply_TSNE()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cmap</strong> (<em>sns.color_palette</em><em>(</em><em>n_colors</em><em>)</em>) – </p></li>
+<li><p><strong>markers_list</strong> (<em>list</em>) – Defaults to [“o”, “^”, “s”, “v”, “P”, “X”]</p></li>
+<li><p><strong>markers_repeats</strong> (<em>list</em>) – Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</p></li>
+<li><p><strong>markers</strong> (<em>list</em>) – list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.</p></li>
+<li><p><strong>ms</strong> (<em>int</em>) – marker size. Defaults to 40.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Defaults to (9,9)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
+</dd>
+<dt>ax (class)</dt><dd><p>matplotlib.axes._subplots.Axes</p>
 </dd>
 </dl>
 </p>
@@ -1074,13 +1288,13 @@
 <li><p><strong>markers</strong> (<em>list</em>) – <div class="line-block">
 <div class="line">list with markers to use for cluster mapping.</div>
 <div class="line">Rotates between markers each 10 clusters.</div>
-<div class="line">Defaults to [“o”, “^”, “v”, “s”, “P”, “X”]</div>
+<div class="line">Defaults to [“o”, “^”, “s”, “v”, “P”, “X”]</div>
 </div>
 </p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
 <li><p><strong>ms</strong> (<em>int</em>) – 6</p></li>
 <li><p><strong>show_legend</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>legend_loc</strong> (<em>str</em>) – legend location. Defaults to “best”.</p></li>
+<li><p><strong>legend_loc</strong> (<em>str</em>) – legend location (“best”, “upper left” etc.). Defaults to “outside”.</p></li>
 <li><p><strong>legend_ncols</strong> (<em>int</em>) – legend number of columns. Defaults to 2.</p></li>
 <li><p><strong>xlabel</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
 <li><p><strong>ylabel</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
