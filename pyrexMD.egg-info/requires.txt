@@ -6,6 +6,7 @@ h5py>=2.10.0
 heat==1.0.0
 ipywidgets>=7.4.2
 jupyter>=1.0.0
+scikit-learn>=0.24.2
 nglview==2.0
 MDAnalysis>=1.1.1
 numpy>=1.18.2

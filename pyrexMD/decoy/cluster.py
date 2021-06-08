@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 08.06.2021
+# @Last modified time: 09.06.2021
 
 """
 This module contains functions for:
@@ -293,7 +293,8 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
           |     counts per cluster
           | .labels (array)
           |     data point cluster labels
-          | .wss_data (tuple) ~ output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()
+          | .wss_data (tuple)
+          |      output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()
           |      WSS (float)
           |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
           |      SSE (list)
@@ -840,16 +841,19 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
 
 def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, verbose=True):
     """
-    get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers
+    get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers.
+
+    .. Note:: n30 clusters with very low mean and low std can be good target clusters too,
+       even if their cluster centers are not close to n10 target center.
 
     Args:
-        cluster_data_n10
-        cluster_data_n30
-        score_file
+        cluster_data_n10 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
+        cluster_data_n30 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
+        score_file (str): ~ output of abinitio.frame2score()
 
     Returns:
         n10_label (int)
-            n10 target label based on lowest std of clusters
+            n10 target label based on lowest mean of n10 clusters
         n30_label (array)
             n30 target labels (ranked by distance from low to high)
         n30_dist (array)
@@ -858,8 +862,8 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, verbose=
     cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_file=score_file)
     cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
 
-    # find optimum center of n10
-    n10_label = np.where(min(cluster_scores_n10.std) == cluster_scores_n10.std)[0][0]
+    # find optimum center of n10 (lowest mean)
+    n10_label = np.where(min(cluster_scores_n10.mean) == cluster_scores_n10.mean)[0][0]
     n10_center = cluster_data_n10.centers[n10_label]
 
     # get center distances d[i] = n10_center - n30_center[i]

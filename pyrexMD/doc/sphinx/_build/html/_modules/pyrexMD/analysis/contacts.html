@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: contacts.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 03.06.2021</span>
+<span class="c1"># @Last modified time: 08.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions related to native contact and bias contact analyses.</span>
@@ -943,12 +943,12 @@
     <span class="k">return</span> <span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span></div>
 
 
-<div class="viewcode-block" id="get_QBias"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_QBias">[docs]</a><span class="k">def</span> <span class="nf">get_QBias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="get_QBias"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_QBias">[docs]</a><span class="k">def</span> <span class="nf">get_QBias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span>
               <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get QValue for formed bias contacts.</span>
 
-<span class="sd">    .. Note :: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.</span>
+<span class="sd">    .. Note :: selection of get_QBias() is hardcoded to sel=&#39;protein and name CA&#39;.</span>
 
 <span class="sd">      Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from</span>
 <span class="sd">      sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count</span>
@@ -1028,14 +1028,16 @@
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QBias.png&quot;</span><span class="p">,</span>
                <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="s2">&quot;protein and name CA&quot;</span>
     <span class="c1">################################################################################</span>
     <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 1: selection of get_QBias() should be kept to CA level. Reducing the resid range to exclude tails is still viable.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 1: selection of get_QBias() is hardcoded to sel=&#39;protein and name CA&#39;.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Reason: bias contacts are unique RES PAIRS and grow &#39;slowly&#39;, but going from sel=&#39;protein and name CA&#39; to sel=&#39;protein&#39; increases the atom count significantly. Most of them will count as non-native and thus make the QBias value very low.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Note 2: MDAnalysis&#39; qvalue algorithm includes selfcontacts. Comparison of both methods yields better results when include_selfcontacts (bool, see kwargs) is set to True. However this improves the calculated QBias value artificially (e.g. even when all used bias contacts are never formed, QBias will not be zero due to the selfcontact counts)&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
         <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
 
     <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># QBias value (fraction of formed bias contacts)</span>
     <span class="c1">#CM = []     # Contact Matrices</span>
@@ -1062,7 +1064,7 @@
             <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># norm based on used bias contacts and selfcontacts</span>
-            <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)))</span>
+            <span class="n">QBIAS</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">prec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">QBIAS</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">QBIAS</span><span class="p">]</span>
     <span class="n">FRAMES</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">)))</span>
