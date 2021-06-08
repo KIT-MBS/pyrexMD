@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 07.06.2021
+# @Last modified time: 08.06.2021
 
 """
 This module contains functions for:
@@ -585,7 +585,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         alpha (float): 1
         ms (int): 6
         show_legend (bool)
-        legend_loc (str): legend location. Defaults to "best".
+        legend_loc (str): legend location ("best", "upper left" etc.). Defaults to "outside".
         legend_ncols (int): legend number of columns. Defaults to 2.
         xlabel (None, str)
         ylabel (None, str)
@@ -604,14 +604,14 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         raise ValueError(f"xdata, ydata and labels must have same first dimension, but have shapes {np.shape(xdata)}, {np.shape(ydata)} and {np.shape(labels)}")
     if plot_only is None:
         plot_only = list(range(min(labels), max(labels)+1))
-    default = {"figsize": (7, 7),
+    default = {"figsize": (9, 9),
                "cmap": sns.color_palette(),
                "markers": ["o", "^", "s", "v", "P", "X"],
                "marker": None,
                "alpha": 1,
-               "ms": 6,
+               "ms": 20,
                "show_legend": True,
-               "legend_loc": "best",
+               "legend_loc": "outside",
                "legend_ncols": 2,
                "xlabel": None,
                "ylabel": None,
@@ -629,7 +629,10 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
             marker = cfg.markers[labels[i]//len(cfg.cmap)]
         else:
             marker = cfg.marker
-        plt.plot(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, ms=cfg.ms, lw=0, label=f"Cluster {labels[i]}")
+        if marker in ["^" or "v"]:
+            plt.scatter(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, s=int(1.5*cfg.ms), lw=0, label=f"Cluster {labels[i]}")
+        else:
+            plt.scatter(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, s=cfg.ms, lw=0, label=f"Cluster {labels[i]}")
 
     # set xlabel, ylabel
     if cfg.xlabel is not None:
@@ -653,7 +656,14 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
                 if item == label:
                     HANDLES.append(_handles[j])
                     break
-        ax.legend(HANDLES, LABELS, loc=cfg.legend_loc, ncol=cfg.legend_ncols)
+
+        # plot legend outside
+        if cfg.legend_loc == "outside":
+            ax.legend(HANDLES, LABELS, ncol=cfg.legend_ncols, bbox_to_anchor=(1.0, 1.0), loc='upper left', fontsize='xx-small')
+        # plot legend inside
+        else:
+            ax.legend(HANDLES, LABELS, loc=cfg.legend_loc, ncol=cfg.legend_ncols)
+
     plt.tight_layout()
     return fig, ax
 
@@ -703,11 +713,10 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
     ############################################################################
     scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
     scores_data = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores, filter=filter, filter_tol=filter_tol)
-
     return scores_data
 
 
-def apply_TSNE(data, n_components=2, perplexity=50):
+def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
     """
     apply t-distributed stochastic neighbor embedding on data.
 
@@ -715,6 +724,7 @@ def apply_TSNE(data, n_components=2, perplexity=50):
         data (array)
         n_components (int): TSNE number of components
         perplexity (int): TSNE perplexity
+        random_state (None, int): Determines the random number generator
 
     Returns:
         tsne_data (array)
@@ -722,17 +732,18 @@ def apply_TSNE(data, n_components=2, perplexity=50):
     """
     nsamples, nx, ny = np.array(data).shape
     data_reshaped = np.array(data).reshape((nsamples, nx*ny))
-    tsne_data = TSNE(n_components=n_components, perplexity=perplexity).fit_transform(data_reshaped)
+    tsne_data = TSNE(n_components=n_components, perplexity=perplexity, random_state=random_state).fit_transform(data_reshaped)
     return tsne_data
 
 
-def apply_KMEANS(tsne_data, n_clusters=30):
+def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     """
     apply KMeans on tsne_data
 
     Args:
         tnse_data (array): output of apply_TSNE()
         n_clusters (int): number of clusters
+        random_state (None, int): Determines the random number generator (for centroid initialization)
 
     Returns:
         cluster_data (CLUSTER_DATA)
@@ -741,7 +752,7 @@ def apply_KMEANS(tsne_data, n_clusters=30):
           | .labels (array)
           | .inertia (float)
     """
-    kmeans = KMeans(n_clusters=n_clusters).fit(tsne_data)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=None).fit(tsne_data)
 
     centers = kmeans.cluster_centers_
     counts = np.bincount(kmeans.labels_)
