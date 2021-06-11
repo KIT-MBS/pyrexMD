@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 01.06.2021
+# @Last modified time: 11.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -1351,7 +1351,7 @@ def get_PDBid(ref):
         return
 
 
-def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_stop=30):
+def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_stop=30, warn=True):
     """
     Prints each item of "data" elementwise next to each other as a table.
 
@@ -1365,7 +1365,8 @@ def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_st
           | 8: default \\t width
         dtype (None, dtype): dtype of table values after rounding
         verbose (bool): print table
-        verbose_stop (None, int): stop printing after N lines
+        verbose_stop (None, int): stop printing after N lines.
+        warn (bool): print/supress message  "misc.print_table(): printed only N entries (set by verbose_stop parameter)."
 
     Returns:
         table_str (str)
@@ -1452,11 +1453,12 @@ def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_st
             print(item)
         if verbose_stop is not None:
             if (len(table_str.splitlines()) >= verbose_stop):
-                cprint(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue")
+                if warn:
+                    cprint(f"misc.print_table(): printed only {verbose_stop} entries (set by verbose_stop parameter).", "blue")
     return table_str
 
 
-def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, verbose=True, **kwargs):
+def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, verbose=True, verbose_stop=None, **kwargs):
     """
     Executes misc.print_table() and saves the returned table string as a log file.
 
@@ -1469,6 +1471,7 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, ve
           | None: rounding off
           | int:  rounding on
         verbose (bool)
+        verbose_stop (None, int)
 
     Keyword Args:
         save_as (str): alias of filename
@@ -1496,7 +1499,7 @@ def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, ve
             if np.shape(item) != ref_shape:
                 raise IndexError('save_table(): data consists of lists with unequal lengths.')
 
-        table_str = print_table(data, prec, verbose=False)
+        table_str = print_table(data, prec, verbose=False, verbose_stop=verbose_stop, **kwargs)
         fout.write(table_str)
 
     if verbose:

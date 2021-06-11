@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 09.06.2021
+# @Last modified time: 11.06.2021
 
 """
 This module contains functions for:
@@ -293,17 +293,18 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
           |     counts per cluster
           | .labels (array)
           |     data point cluster labels
-          | .wss_data (tuple)
-          |      output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()
-          |      WSS (float)
+          | .wss_data (WSS_DATA)
+          |      output of get_WSS() or get_DM_WSS()
+          |      .wss_data.wss (float)
           |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-          |      SSE (list)
+          |      .wss_data.sse (list)
           |         Sum of Squared Errors (of individual clusters)
-          |      (SE_mean, SE_std) (tuple)
-          |         SE_mean (list)
-          |             mean values of Squared Errors for each cluster
-          |         SE_std (list)
+          |      .wss_data.se_mean (list)
+          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+          |      .wss_data.se_std (list)
           |             std values of Squared Errors for each cluster
+          | .compact_score (array)
+          |      mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
     """
     default = {"dtype": ht.float64,
                "start": sss[0],
@@ -335,22 +336,21 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
 
     kmeans.fit(data)
     centers = kmeans.cluster_centers_.numpy().reshape((n_clusters, int(np.sqrt(size)), int(np.sqrt(size))))
-    counts = np.bincount(labels.flatten())
+    counts = np.bincount(kmeans.labels_.numpy().flatten())
     labels = kmeans.labels_.numpy().flatten()
 
-    wss_data = get_DM_WSS(h5_file, centers=centers, counts=counts, labels=labels, verbose=False, **cfg)
-    cluster_data = CLUSTER_DATA(centers=centers, counts=clounts, labels=labels, wss_data=wss_data)
+    wss_data = get_DM_WSS(h5_file, centers=centers, labels=labels, verbose=False, **cfg)
+    cluster_data = CLUSTER_DATA(centers=centers, counts=counts, labels=labels, wss_data=wss_data, compact_score=wss_data.se_mean)
 
     if verbose:
         _misc.timeit(timer, msg="clustering time:")  # stop timer
-        _misc.cprint(f"WSS: {wss}")
+        _misc.cprint(f"WSS: {wss_data.wss}")
     return cluster_data
 
 
 def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwargs):
     """
     Repeat heat_KMeans N times and return topx results based on minimized sum of squared errors.
-
 
     Args:
         h5_file (str): path to h5 file containing data
@@ -363,24 +363,25 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
 
     Returns:
         TOPX_CLUSTER (list)
-            | list of clusters ranked from best to topx best. Each cluster contains:
-            |   centers (array)
-            |     cluster centers of best result
-            |   counts (array)
-            |     counts per cluster of best result
-            |   labels (array)
-            |     data point cluster labels
-            |   wss_data (tuple)
-            |     (WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()
-            |     WSS (float)
-            |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-            |     SSE (list)
-            |         Sum of Squared Errors (of individual clusters)
-            |     (SE_mean, SE_std) (tuple)
-            |         SE_mean (list)
-            |             mean values of Squared Errors for each cluster
-            |         SE_std (list)
-            |             std values of Squared Errors for each cluster
+          | list of clusters ranked from best to topx best. Each cluster contains:
+          |     centers (array)
+          |         cluster centers of best result
+          |     counts (array)
+          |         counts per cluster of best result
+          |     labels (array)
+          |         data point cluster labels
+          |     wss_data (WSS_DATA)
+          |         output of get_WSS() or get_DM_WSS()
+          |         .wss (float)
+          |             Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          |         .sse (list)
+          |             Sum of Squared Errors (of individual clusters)
+          |         .se_mean (list)
+          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+          |         .se_std (list)
+          |             std values of Squared Errors for each cluster
+          |     compact_score (array)
+          |         mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
     """
     CLUSTER = []
     WSS = 99999999999999999999999999999999
@@ -425,17 +426,16 @@ def get_DM_centroids(DM, labels):
     return np.array(CENTROIDS)
 
 
-def get_DM_WSS(DM, cluster_data, centers=None, sss=[None, None, None], **kwargs):
+def get_DM_WSS(DM, centers, labels, sss=[None, None, None], **kwargs):
     """
     get distance matrix WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)
 
     Args:
         DM (str, array): path to h5_file containing distance matrices or array with distance matrices
-        cluster_data (CLUSTER_DATA): output of heat_KMeans()
-        centers (array): CLUSTER_DATA.centers array with size of h5_file.
-          | None: use cluster_data.centers
+        centers (array): cluster centers array with dim(DM) == dim(centers).
+        labels (array): cluster labels array with length(DM)
         sss (list):
-          | [start, stop, step] indices of <h5_file> data
+          | [start, stop, step] indices of DM data
           | start (None, int): start index
           | stop (None, int): stop index
           | step (None, int): step size
@@ -444,7 +444,7 @@ def get_DM_WSS(DM, cluster_data, centers=None, sss=[None, None, None], **kwargs)
         prec (None, int): rounding precission
         rescale (bool):
           | rescale wss_data by diving through length of DM ~ n_frames.
-          | Defaults to True.
+          | Defaults to False.
 
     Returns:
         WSS_DATA (WSS_DATA)
@@ -453,7 +453,7 @@ def get_DM_WSS(DM, cluster_data, centers=None, sss=[None, None, None], **kwargs)
           | .sse (list)
           |     Sum of Squared Errors (of individual clusters)
           | .se_mean (list)
-          |     mean values of Squared Errors for each cluster
+          |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
           | .se_std (list)
           |     std values of Squared Errors for each cluster
     """
@@ -468,23 +468,83 @@ def get_DM_WSS(DM, cluster_data, centers=None, sss=[None, None, None], **kwargs)
                "stop": sss[1],
                "step": sss[2],
                "prec": 3,
-               "rescale": True}
+               "rescale": False}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     if isinstance(DM, str):
         DM = reshape_data(read_h5(DM), dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
     else:
         DM = reshape_data(DM, dim_out=3, sss=[cfg.start, cfg.stop, cfg.step], verbose=False)
-    SE = [[] for i in range(len(cluster_data.centers))]   # Squared Errors (of individual clusters)
 
-    if centers is None:
-        centers = cluster_data.centers
-    for ndx, l in enumerate(cluster_data.labels):
+    SE = [[] for i in range(len(centers))]   # Squared Errors (of individual clusters)
+
+    for ndx, l in enumerate(labels):
         d = np.linalg.norm(centers[l]-DM[ndx])
         SE[l].append(d*d)
 
     if cfg.rescale:
         norm = 1.0/len(DM)
+    else:
+        norm = 1
+
+    # statistics
+    SE_mean = [round(norm*np.mean(item), cfg.prec) for item in SE]
+    SE_std = [round(norm*np.std(item), cfg.prec) for item in SE]
+
+    # SSE: Sum of Squared Errors (of individual clusters)
+    SSE = [round(norm*sum(item), cfg.prec) for item in SE]
+    # WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)
+    WSS = round(sum(SSE), cfg.prec)
+
+    WSS_DATA = WSS_DATA(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
+    return WSS_DATA
+
+
+def get_WSS(data, centers, labels, **kwargs):
+    """
+    get WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)
+
+    Args:
+        data (array): array with data, for example distance matrices or TSNE-transformed data.
+        centers (array): cluster centers array with dim(data) == dim(centers).
+        labels (array): cluster labels array with lenght of data.
+
+    Keyword Args:
+        prec (None, int): rounding precission
+        rescale (bool):
+          | rescale wss_data by diving through length of data ~ n_frames.
+          | Defaults to False.
+
+    Returns:
+        WSS_DATA (WSS_DATA)
+          | .wss (float)
+          |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          | .sse (list)
+          |     Sum of Squared Errors (of individual clusters)
+          | .se_mean (list)
+          |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+          | .se_std (list)
+          |     std values of Squared Errors for each cluster
+    """
+    class WSS_DATA(object):
+        def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
+            self.wss = wss
+            self.sse = sse
+            self.se_mean = se_mean
+            self.se_std = se_std
+            return
+    default = {"prec": 3,
+               "rescale": False}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
+    SE = [[] for i in range(len(centers))]   # Squared Errors (of individual clusters)
+
+    for ndx, l in enumerate(labels):
+        d = np.linalg.norm(centers[l]-data[ndx])
+        SE[l].append(d*d)
+
+    if cfg.rescale:
+        norm = 1.0/len(data)
     else:
         norm = 1
 
@@ -521,7 +581,7 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
         prec (None, int): rounding precission
         rescale (bool):
           | rescale wss_data by diving through length of DM ~ n_frames.
-          | Defaults to True.
+          | Defaults to False.
 
     .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.
 
@@ -717,18 +777,51 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
     return scores_data
 
 
+def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
+    """
+    map cluster accuracy between `cluster_data`, cluster `GDT` and cluster `RMSD`.
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().
+        GDT (list, array): GDT data for each frame of cluster_data
+        RMSD (list, array): RMSD data for each frame of cluster_data
+        prec (None, int): rounding precission
+
+    Returns:
+      | accuracy_data (CLUSTER_DATA_ACCURACY)
+      |   .GDT (array)
+      |       summary of all GDT values of individual clusters
+      |   .GDT_mean (array)
+      |       GDT mean values of individual clusters
+      |   .GDT_std (array)
+      |       GDT std values of individual clusters
+      |   .GDT_minmax (array)
+      |       [GDT_min, GDT_max] values of individual clusters
+      |   .RMSD (array)
+      |       summary of all RMSD values of individual clusters
+      |   .RMSD_mean (array)
+      |       RMSD mean values of individual clusters
+      |   .RMSD_std (array)
+      |       RMSD std values of individual clusters
+      |   .RMSD_minmax (array)
+      |       [RMSD_min, RMSD_max] values of individual clusters
+    """
+    accuracy_data = CLUSTER_DATA_ACCURACY(cluster_data, GDT=GDT, RMSD=RMSD, prec=prec)
+    return accuracy_data
+
+
 def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
     """
     apply t-distributed stochastic neighbor embedding on data.
 
     Args:
-        data (array)
-        n_components (int): TSNE number of components
-        perplexity (int): TSNE perplexity
-        random_state (None, int): Determines the random number generator
+        data(array)
+        n_components(int): TSNE number of components
+        perplexity(int): TSNE perplexity
+        random_state(None, int): Determines the random number generator
 
     Returns:
-        tsne_data (array)
+        tsne_data(array)
             tsne transformed data
     """
     nsamples, nx, ny = np.array(data).shape
@@ -742,16 +835,16 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     apply KMeans on tsne_data
 
     Args:
-        tnse_data (array): output of apply_TSNE()
-        n_clusters (int): number of clusters
-        random_state (None, int): Determines the random number generator (for centroid initialization)
+        tnse_data(array): output of apply_TSNE()
+        n_clusters(int): number of clusters
+        random_state(None, int): Determines the random number generator(for centroid initialization)
 
     Returns:
-        cluster_data (CLUSTER_DATA)
-          | .centers (array)
-          | .counts (array)
-          | .labels (array)
-          | .inertia (float)
+        cluster_data(CLUSTER_DATA)
+          | .centers(array)
+          | .counts(array)
+          | .labels(array)
+          | .inertia(float)
     """
     kmeans = KMeans(n_clusters=n_clusters, random_state=None).fit(tsne_data)
 
@@ -759,8 +852,9 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     counts = np.bincount(kmeans.labels_)
     labels = kmeans.labels_
     inertia = kmeans.inertia_
+    wss_data = get_WSS(tsne_data, centers=centers, labels=labels)
 
-    cluster_data = CLUSTER_DATA(centers=centers, counts=counts, labels=labels, inertia=inertia)
+    cluster_data = CLUSTER_DATA(centers=centers, counts=counts, labels=labels, inertia=inertia, wss_data=wss_data, compact_score=wss_data.se_mean)
     return cluster_data
 
 
@@ -768,24 +862,24 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     """
     plot cluster data
 
-    .. Note:: Uses modified default values if cluster_data has n_clusters=10 or n_clusters=30.
+    .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
-        tsne_data (array): output of apply_TSNE()
+        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        tsne_data(array): output of apply_TSNE()
 
     Keyword Args:
-        cmap (sns.color_palette(n_colors))
-        markers_list (list): Defaults to ["o", "^", "s", "v", "P", "X"]
-        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
-        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.
-        ms (int): marker size. Defaults to 40.
-        figsize (tuple): Defaults to (9,9)
+        cmap(sns.color_palette(n_colors))
+        markers_list(list): Defaults to["o", "^", "s", "v", "P", "X"]
+        markers_repeats(list): Defaults to[10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
+        markers(list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.
+        ms(int): marker size. Defaults to 40.
+        figsize(tuple): Defaults to(9, 9)
 
     Returns:
-        fig (class)
+        fig(class)
             matplotlib.figure.Figure
-        ax (class)
+        ax(class)
             matplotlib.axes._subplots.Axes
     """
     size = len(cluster_data.centers)
@@ -828,10 +922,10 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
     plot cluster center in existing figure.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
-        color (str)
-        marker (str)
-        ms (int): marker size
+        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        color(str)
+        marker(str)
+        ms(int): marker size
     """
     X = cluster_data.centers[:, 0]
     Y = cluster_data.centers[:, 1]
@@ -839,32 +933,39 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
     return
 
 
-def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, verbose=True):
+def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, verbose=True):
     """
-    get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers.
+    get cluster targets by finding optimum center in n10 and then ranking distances
+    to n30 centers. This does not 'really' select targets but rather gives
+    additional information to select proper cluster targets based on
+      - cluster energy mean values
+      - distance between cluster centers with low energy mean (low distance == similar structures)
+      - compact score
 
-    .. Note:: n30 clusters with very low mean and low std can be good target clusters too,
-       even if their cluster centers are not close to n10 target center.
+    .. Note:: n30 clusters with very low mean and low compact score can be good
+       targets too, even if their cluster centers are not close to n10 target.
 
     Args:
-        cluster_data_n10 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
-        cluster_data_n30 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
-        score_file (str): ~ output of abinitio.frame2score()
+        cluster_data_n10(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
+        cluster_data_n30(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
+        score_file(str): ~ output of abinitio.frame2score()
+        prec (None, int): rounding precission of distance
 
     Returns:
-        n10_label (int)
-            n10 target label based on lowest mean of n10 clusters
-        n30_label (array)
+        n10_targets (array)
+            n10 target labels (ranked by Emean of n10 clusters) ~ use only one or two n10 targets
+        n30_targets (array)
             n30 target labels (ranked by distance from low to high)
         n30_dist (array)
-            n30 target distances, with distance n30_dist[i] = n10_centers[n10_label] - n30_centers[i]
+            n30 target distances, with distance n30_dist[i] = n10_centers[n10_targets[0]] - n30_centers[i]
     """
     cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_file=score_file)
-    cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
+    #cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
 
     # find optimum center of n10 (lowest mean)
-    n10_label = np.where(min(cluster_scores_n10.mean) == cluster_scores_n10.mean)[0][0]
-    n10_center = cluster_data_n10.centers[n10_label]
+    _, n10_targets = _misc.get_ranked_array(cluster_scores_n10.mean, reverse=True, verbose=False)
+    n10_center = cluster_data_n10.centers[n10_targets[0]]
+    n10, n30 = len(cluster_data_n10.counts), len(cluster_data_n30.counts)
 
     # get center distances d[i] = n10_center - n30_center[i]
     size = len(cluster_data_n30.centers)
@@ -873,23 +974,133 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, verbose=
         D[i] = np.linalg.norm(n10_center-cluster_data_n30.centers[i])
 
     # rank center distances (low to high)
+    n30_dist, n30_targets = _misc.get_ranked_array(D, reverse=True, verbose=False)
+    n30_dist = np.around(n30_dist, prec)
     if verbose:
-        _misc.cprint("Distance Label", "blue")
-    n30_dist, n30_label = _misc.get_ranked_array(D, reverse=True, verbose=verbose, verbose_stop=5, spacing=9)
-    return (n10_label, n30_label, n30_dist)
+        _misc.cprint(f"'n{n10} target' based on min(Emean): {n10_targets[0]}", "red")
+        _misc.cprint(f"'n{n10} target' distance to adjacent n{n30} clusters:", "red")
+        _misc.cprint("\nndx  distance", "blue")
+        # print 5 closest cluster centers
+        for ndx in range(5):
+            _misc.cprint(f"{n30_targets[ndx]:>3}   {n30_dist[ndx]:>6}")
+    return (n10_targets, n30_targets, n30_dist)
 
+################################################################################
+################################################################################
+### WF functions
+
+
+def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_as=None):
+    """
+    Workflow to print and log cluster accuracy.
+
+    .. Note:: 'Compact Score' is mean(squared errors) of individual clusters.
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        accuracy_data (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
+        targets (list): target labels, which will be colored red in printed table
+        save_as (None, str): logfile name
+
+    Returns:
+        save_as (None, str)
+            logfile name
+    """
+    # rank clusters by mean GDT value
+    _ranked, _ndx = _misc.get_ranked_array(accuracy_data.GDT_mean, verbose=False)
+
+    # print
+    _misc.cprint(f"cluster n{len(cluster_data.counts)} accuracy (ranked by GDT mean)\n", "red")
+    _misc.cprint("                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD", "blue")
+    _misc.cprint("ndx  size  compact | mean    std    min     max    | mean   std    min    max", "blue")
+    for ndx in _ndx:
+        if targets is not [None] and ndx in targets:
+            cprint_color = "red"
+        else:
+            cprint_color = None
+        _misc.cprint(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {accuracy_data.GDT_mean[ndx]:<6}  {accuracy_data.GDT_std[ndx]:<6} {accuracy_data.GDT_minmax[ndx][0]:<6}  {accuracy_data.GDT_minmax[ndx][1]:<6} | {accuracy_data.RMSD_mean[ndx]:<5}  {accuracy_data.RMSD_std[ndx]:<5}  {accuracy_data.RMSD_minmax[ndx][0]:<5}  {accuracy_data.RMSD_minmax[ndx][1]:<5}", cprint_color)
+
+    # save log
+    if save_as is not None:
+        #save_as = _misc.realpath(save_as)
+        with open(save_as, "w") as fout:
+            fout.write(f"cluster n{len(cluster_data.counts)} accuracy (ranked by GDT mean)\n\n")
+            fout.write("                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD\n")
+            fout.write("ndx  size  compact | mean    std    min     max    | mean   std    min    max\n")
+            for ndx in _ndx:
+                fout.write(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {accuracy_data.GDT_mean[ndx]:<6}  {accuracy_data.GDT_std[ndx]:<6} {accuracy_data.GDT_minmax[ndx][0]:<6}  {accuracy_data.GDT_minmax[ndx][1]:<6} | {accuracy_data.RMSD_mean[ndx]:<5}  {accuracy_data.RMSD_std[ndx]:<5}  {accuracy_data.RMSD_minmax[ndx][0]:<5}  {accuracy_data.RMSD_minmax[ndx][1]:<5}\n")
+        print(f"\n Saved log as: {save_as}")
+    return save_as
+
+
+def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[None], save_as=None):
+    """
+    Workflow to print and log cluster scores.
+
+    .. Note:: 'Compact Score' is mean(squared errors) of individual clusters.
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_Kmeans()
+        cluster_scores (CLUSTER_DATA_SCORES): output of map_cluster_scores()
+        score_file (str): path to score file
+        targets (list): target labels, which will be colored red in printed table
+        save_as (None, str): logfile name
+
+    Returns:
+        save_as (None, str)
+            logfile name
+    """
+    if not isinstance(targets, (list, np.ndarray)):
+        raise TypeError("type(targets) must be either list or array.")
+    # rank by Emean
+    _ranked, _ndx = _misc.get_ranked_array(cluster_scores.mean, reverse=True, verbose=False)
+
+    #misc.cprint(f"\nscores mean_all: {scores_data.mean_all}", "red")
+    #misc.cprint(f"scores mean_all_filtered: {scores_data.mean_all_filtered}", "red")
+
+    _misc.cprint(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)", "red")
+    _misc.cprint("\nndx  size  compact | Emean    Estd    Emin      Emax     DELTA", "blue")
+    for ndx in _ndx:
+        if targets is not [None] and ndx in targets:
+            cprint_color = "red"
+        else:
+            cprint_color = None
+        _misc.cprint(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<5}", cprint_color)
+
+    # save log
+    if save_as is not None:
+        #save_as = _misc.realpath(save_as)
+        with open(save_as, "w") as fout:
+            fout.write(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)\n")
+            fout.write("\nndx  size  compact | Emean    Estd    Emin      Emax     DELTA\n")
+            for ndx in _ndx:
+                fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<5}\n")
+        print(f"\n Saved log as: {save_as}")
+    return save_as
 ################################################################################
 ################################################################################
 ### CLASSES / OBJECTS
 
 
 class CLUSTER_DATA(object):
-    def __init__(self, centers=None, counts=None, labels=None, inertia=None, wss_data=None):
+    def __init__(self, centers=None, counts=None, labels=None, inertia=None, wss_data=None, compact_score=None):
+        """
+        saves cluster data as object
+
+        Args:
+            centers (None, array): cluster centers
+            counts (None, array): counts
+            labels (None, array): labels
+            inertia (None, float): intertia
+            wss_data (None, WSS_DATA)
+            compact_score (None, array): mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+        """
         self.centers = centers
         self.counts = counts
         self.labels = labels
         self.inertia = inertia
         self.wss_data = wss_data
+        self.compact_score = np.array(compact_score)
         return
 
 
@@ -944,7 +1155,7 @@ class CLUSTER_DATA_SCORES(object):
             if filter and self._filter_min <= s <= self._filter_max:
                 self.scores[i].append(round(s, prec))
         if filter:
-            self.mean_all_filtered = np.mean(_misc.flatten_array(self.scores))
+            self.mean_all_filtered = round(np.mean(_misc.flatten_array(self.scores)), prec)
 
         # get mean, std, etc.
         for ndx in range(len(cluster_data.centers)):
@@ -955,4 +1166,72 @@ class CLUSTER_DATA_SCORES(object):
 
             # DELTA[i] = abs(mean_all-mean[i])
             self.DELTA.append(round(abs(self.mean_all_filtered-self.mean[ndx]), prec))
+        return
+
+
+class CLUSTER_DATA_ACCURACY(object):
+    def __init__(self, cluster_data, GDT, RMSD, prec=3):
+        """
+        maps cluster_data to cluster GDT and cluster RMSD.
+
+        Args:
+            cluster_data(CLUSTER_DATA)
+            GDT(list, array): GDT data for each frame of cluster_data
+            RMSD(list, array): RMSD data for each frame of cluster_data
+            prec(int): rounding precission
+
+        Returns:
+            obj.GDT (list)
+                summary of all GDT values of individual clusters
+            obj.GDT_mean (array)
+                GDT mean values of individual clusters
+            obj.GDT_std (array)
+                GDT std values of individual clusters
+            obj.GDT_minmax (array)
+                [GDT_min, GDT_max] values of individual clusters
+            obj.RMSD (list)
+                summary of all RMSD values of individual clusters
+            obj.RMSD_mean (array)
+                RMSD mean values of individual clusters
+            obj.RMSD_std (array)
+                RMSD std values of individual clusters
+            obj.RMSD_minmax (array)
+                [RMSD_min, RMSD_max] values of individual clusters
+        """
+        n_labels = len(set(cluster_data.labels))
+
+        self.GDT = [[] for i in range(n_labels)]
+        self.GDT_mean = []
+        self.GDT_std = []
+        self.GDT_minmax = []
+        self.RMSD = [[] for i in range(n_labels)]
+        self.RMSD_mean = []
+        self.RMSD_std = []
+        self.RMSD_minmax = []
+
+        # process scores
+        for ndx, i in enumerate(cluster_data.labels):
+            self.GDT[i].append(GDT[ndx])
+            self.RMSD[i].append(RMSD[ndx])
+
+        for ndx in range(n_labels):
+            self.GDT_mean.append(np.mean(self.GDT[ndx]))
+            self.GDT_std.append(np.std(self.GDT[ndx]))
+            self.GDT_minmax.append([min(self.GDT[ndx]), max(self.GDT[ndx])])
+            self.RMSD_mean.append(np.mean(self.RMSD[ndx]))
+            self.RMSD_std.append(np.std(self.RMSD[ndx]))
+            self.RMSD_minmax.append([min(self.RMSD[ndx]), max(self.RMSD[ndx])])
+
+        if prec is not None:
+            for ndx, item in enumerate(self.GDT):
+                self.GDT[ndx] = np.around(item, prec)
+            self.GDT_mean = np.around(self.GDT_mean, prec)
+            self.GDT_std = np.around(self.GDT_std, prec)
+            self.GDT_minmax = np.around(self.GDT_minmax, prec)
+            for ndx, item in enumerate(self.RMSD):
+                self.RMSD[ndx] = np.around(item, prec)
+            self.RMSD_mean = np.around(self.RMSD_mean, prec)
+            self.RMSD_std = np.around(self.RMSD_std, prec)
+            self.RMSD_minmax = np.around(self.RMSD_minmax, prec)
+
         return
