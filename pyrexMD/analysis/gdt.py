@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 28.05.2021
+# @Last modified time: 13.06.2021
 
 
 """
@@ -364,7 +364,7 @@ def get_GDT_TS(GDT_percent, prec=3):
 
     Args:
         GDT_percent (list, array): output of gdt.GDT()
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
         GDT_TS (array)
@@ -388,7 +388,7 @@ def get_GDT_HA(GDT_percent, prec=3):
 
     Args:
         GDT_percent (list, array): output of gdt.GDT()
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
         GDT_HA (array)
@@ -616,7 +616,7 @@ def plot_LA(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
 
     Keyword Args:
         prec (None, int):
-          | rounding precission of scores
+          | rounding precision of scores
           | None: rounding off
           | int:  rounding on to <int> decimals
         ndx_offset (int):

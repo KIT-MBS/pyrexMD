@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 11.06.2021
+# @Last modified time: 13.06.2021
 
 """
 This module contains functions for:
@@ -280,7 +280,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
         stop (None, int): stop index
         step (None, int): step size
         dtype (dtype): heat.float64 (default), heat.float32, etc.
-        prec (None, int): rounding precission of wss_data
+        prec (None, int): rounding precision of wss_data
         rescale (bool):
           | rescale wss_data by diving through length of DM ~ n_frames.
           | Defaults to True.
@@ -441,7 +441,7 @@ def get_DM_WSS(DM, centers, labels, sss=[None, None, None], **kwargs):
           | step (None, int): step size
 
     Keyword Args:
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
         rescale (bool):
           | rescale wss_data by diving through length of DM ~ n_frames.
           | Defaults to False.
@@ -510,7 +510,7 @@ def get_WSS(data, centers, labels, **kwargs):
         labels (array): cluster labels array with lenght of data.
 
     Keyword Args:
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
         rescale (bool):
           | rescale wss_data by diving through length of data ~ n_frames.
           | Defaults to False.
@@ -578,7 +578,7 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
         verbose (bool)
 
     Keyword Args:
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
         rescale (bool):
           | rescale wss_data by diving through length of DM ~ n_frames.
           | Defaults to False.
@@ -748,7 +748,7 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
     Keyword Args:
         usecols (int): column of `score_file` containing scores/energies. Defaults to 1.
         skiprows (None, int): skip rows of `score_file`. Defaults to 0.
-        prec (None, float): rounding precissions. Defaults to 3.
+        prec (None, float): rounding precisions. Defaults to 3.
 
     Returns:
         scores_data (CLUSTER_DATA_SCORES)
@@ -785,7 +785,7 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().
         GDT (list, array): GDT data for each frame of cluster_data
         RMSD (list, array): RMSD data for each frame of cluster_data
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
       | accuracy_data (CLUSTER_DATA_ACCURACY)
@@ -949,7 +949,7 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
         cluster_data_n10(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
         cluster_data_n30(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
         score_file(str): ~ output of abinitio.frame2score()
-        prec (None, int): rounding precission of distance
+        prec (None, int): rounding precision of distance
 
     Returns:
         n10_targets (array)
@@ -1112,7 +1112,7 @@ class CLUSTER_DATA_SCORES(object):
         Args:
             cluster_data (CLUSTER_DATA)
             scores (list, array): scores of frames in cluster_data
-            prec (int): rounding precission
+            prec (int): rounding precision
             filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
             filter_tol (float):
               | defines filter_min and filter_max values
@@ -1178,7 +1178,7 @@ class CLUSTER_DATA_ACCURACY(object):
             cluster_data(CLUSTER_DATA)
             GDT(list, array): GDT data for each frame of cluster_data
             RMSD(list, array): RMSD data for each frame of cluster_data
-            prec(int): rounding precission
+            prec(int): rounding precision
 
         Returns:
             obj.GDT (list)

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 01.06.2021
+# @Last modified time: 13.06.2021
 
 """
 This module contains functions for decoy creation using `PyRosetta`.
@@ -88,7 +88,7 @@ def get_torsion_angles(obj, mol_type="auto", prec=2, spacing=12, verbose=True, v
           | "auto": detect "protein" or "rna" by checking if pose.phi(1) exists.
           | "protein": protein molecule with torsion angles(phi, psi)
           | "rna": rna molecule with torsion angles(alpha, beta, gamma, delta)
-        prec(int): rounding precission
+        prec(int): rounding precision
         verbose(bool): print table with torsion angles
 
     Returns:
@@ -652,10 +652,10 @@ def get_decoy_RMSD(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     return DECOY_LIST, DECOY_ID, RMSD
 
 
-def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
-                         ndx_range=(None, None), sel='backbone', verbose=True):
+def get_decoy_precision(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
+                        ndx_range=(None, None), sel='backbone', verbose=True):
     """
-    get decoy precission
+    get decoy precision
 
     Args:
         ref(universe): reference structure
@@ -680,13 +680,13 @@ def get_decoy_precission(ref, decoy_list=None, decoy_dir=None, pattern="*.pdb",
     return DECOY_LIST, DECOY_ID, SCORE, RMSD
 
 
-def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
+def rank_decoy_precision(data, rank_by="SCORE", verbose=True):
     """
-    rank decoy precission
+    rank decoy precision
 
     Args:
         data(list):
-          | output of abinitio.get_decoy_precission()
+          | output of abinitio.get_decoy_precision()
           | data[0]: DECOY_LIST
           | data[1]: DECOY_ID
           | data[2]: SCORE
@@ -719,9 +719,9 @@ def rank_decoy_precission(data, rank_by="SCORE", verbose=True):
     return DECOY_LIST_ranked, DECOY_ID_ranked, SCORE_ranked, RMSD_ranked
 
 
-def precission_scatterplot(SCORE, RMSD, **kwargs):
+def precision_scatterplot(SCORE, RMSD, **kwargs):
     """
-    create a precission scatter plot.
+    create a precision scatter plot.
 
     Args:
         SCORE(list, array)

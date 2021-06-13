@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 11.06.2021
+# @Last modified time: 13.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -843,7 +843,7 @@ def percent(num, div, prec=2):
     Args:
         num (int): numerator
         div (int): divisor
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
         p (float)
@@ -931,7 +931,7 @@ def round_object(object, prec=3, dtype=None):
           | single list/array
           | list of lists/arrays
           | array of lists/arrays
-        prec (int): rounding precission
+        prec (int): rounding precision
         dtype (None, dtype): return object values as specific data type
 
     Returns:
@@ -1070,7 +1070,7 @@ def norm_array(array, start_value=0):
 
 def get_precision(number):
     """
-    Returns leading precission of number.
+    Returns leading precision of number.
 
       - convert float to string
       - find position of decimal point relative to the length of the string
@@ -1079,19 +1079,19 @@ def get_precision(number):
         number (int, float)
 
     Returns:
-        precission (int)
+        precision (int)
 
     Example:
-        | >> get_precission(5.00000)
+        | >> get_precision(5.00000)
         | 1
-        | >> get_precission(5.12300)
+        | >> get_precision(5.12300)
         | 3
     """
     if type(number) is str:
         number = number.rstrip("0")
     s = str(number)
-    precission = s[::-1].find('.')
-    return precission
+    precision = s[::-1].find('.')
+    return precision
 
 
 def get_base(_str):
@@ -1384,7 +1384,7 @@ def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_st
         | with open("table.log", "w") as fout:
         |     fout.write(table)
     """
-    # apply precission to input
+    # apply precision to input
     if prec is not None:
         data = round_object(data, prec=prec)
 
@@ -1719,7 +1719,7 @@ def get_quantile(data, p, prec=2, **kwargs):
     Args:
         data (array-like)
         p (int, float): percent value ~ range 0-1
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
         quantile (int, float)
@@ -1736,7 +1736,7 @@ def get_percentile(data, p, prec=2, **kwargs):
     Args:
         data (array-like)
         p (int, float): percent value ~ range 0-100
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
 
     Returns:
         percentile (int, float)
@@ -2738,9 +2738,9 @@ def convert_ticklabels(axes, multiplier, apply_on='y', prec=0):
         multiplier (int/float): multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue
         apply_on (str): 'x', 'y', 'xy'
         prec (int):
-          | precission
-          | 0: use integers with no decimal precission
-          | n: float with n decimal precission
+          | precision
+          | 0: use integers with no decimal precision
+          | n: float with n decimal precision
     """
     for ax in axes:
         if "x" in apply_on:

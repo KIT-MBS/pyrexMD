@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 08.06.2021
+# @Last modified time: 13.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -807,7 +807,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
           | stop (None, int): stop frame
           | step (None, int): step size
         d_cutoff (float): cutoff distance for native contacts
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
         norm (bool): norm universe before calculation.
         plot (bool)
         warn (bool): print important warnings about usage of this function.
@@ -948,7 +948,7 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
           | stop (None, int): stop frame
           | step (None, int): step size
         d_cutoff (float): cutoff distance for native contacts
-        prec (None, int): rounding precission
+        prec (None, int): rounding precision
         norm (bool): norm universe before calculation.
         plot (bool)
         verbose (bool)
