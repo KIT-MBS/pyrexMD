@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: cluster.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 09.06.2021</span>
+<span class="c1"># @Last modified time: 15.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for:</span>
@@ -443,7 +443,7 @@
 <span class="sd">        stop (None, int): stop index</span>
 <span class="sd">        step (None, int): step size</span>
 <span class="sd">        dtype (dtype): heat.float64 (default), heat.float32, etc.</span>
-<span class="sd">        prec (None, int): rounding precission of wss_data</span>
+<span class="sd">        prec (None, int): rounding precision of wss_data</span>
 <span class="sd">        rescale (bool):</span>
 <span class="sd">          | rescale wss_data by diving through length of DM ~ n_frames.</span>
 <span class="sd">          | Defaults to True.</span>
@@ -456,17 +456,18 @@
 <span class="sd">          |     counts per cluster</span>
 <span class="sd">          | .labels (array)</span>
 <span class="sd">          |     data point cluster labels</span>
-<span class="sd">          | .wss_data (tuple)</span>
-<span class="sd">          |      output of (WSS, SSE, (SE_mean, SE_std)) = get_DM_WSS()</span>
-<span class="sd">          |      WSS (float)</span>
+<span class="sd">          | .wss_data (WSS_DATA)</span>
+<span class="sd">          |      output of get_WSS() or get_DM_WSS()</span>
+<span class="sd">          |      .wss_data.wss (float)</span>
 <span class="sd">          |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</span>
-<span class="sd">          |      SSE (list)</span>
+<span class="sd">          |      .wss_data.sse (list)</span>
 <span class="sd">          |         Sum of Squared Errors (of individual clusters)</span>
-<span class="sd">          |      (SE_mean, SE_std) (tuple)</span>
-<span class="sd">          |         SE_mean (list)</span>
-<span class="sd">          |             mean values of Squared Errors for each cluster</span>
-<span class="sd">          |         SE_std (list)</span>
+<span class="sd">          |      .wss_data.se_mean (list)</span>
+<span class="sd">          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
+<span class="sd">          |      .wss_data.se_std (list)</span>
 <span class="sd">          |             std values of Squared Errors for each cluster</span>
+<span class="sd">          | .compact_score (array)</span>
+<span class="sd">          |      mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="n">ht</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
                <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -498,22 +499,21 @@
 
     <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">centers</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_clusters</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">))))</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-    <span class="n">wss_data</span> <span class="o">=</span> <span class="n">get_DM_WSS</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
-    <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">CLUSTER_DATA</span><span class="p">(</span><span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="n">clounts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">wss_data</span><span class="o">=</span><span class="n">wss_data</span><span class="p">)</span>
+    <span class="n">wss_data</span> <span class="o">=</span> <span class="n">get_DM_WSS</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">CLUSTER_DATA</span><span class="p">(</span><span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">wss_data</span><span class="o">=</span><span class="n">wss_data</span><span class="p">,</span> <span class="n">compact_score</span><span class="o">=</span><span class="n">wss_data</span><span class="o">.</span><span class="n">se_mean</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;clustering time:&quot;</span><span class="p">)</span>  <span class="c1"># stop timer</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WSS: </span><span class="si">{</span><span class="n">wss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WSS: </span><span class="si">{</span><span class="n">wss_data</span><span class="o">.</span><span class="n">wss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cluster_data</span></div>
 
 
 <div class="viewcode-block" id="heat_KMeans_bestofN"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.heat_KMeans_bestofN">[docs]</a><span class="k">def</span> <span class="nf">heat_KMeans_bestofN</span><span class="p">(</span><span class="n">h5_file</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">topx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Repeat heat_KMeans N times and return topx results based on minimized sum of squared errors.</span>
-
 
 <span class="sd">    Args:</span>
 <span class="sd">        h5_file (str): path to h5 file containing data</span>
@@ -526,24 +526,25 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        TOPX_CLUSTER (list)</span>
-<span class="sd">            | list of clusters ranked from best to topx best. Each cluster contains:</span>
-<span class="sd">            |   centers (array)</span>
-<span class="sd">            |     cluster centers of best result</span>
-<span class="sd">            |   counts (array)</span>
-<span class="sd">            |     counts per cluster of best result</span>
-<span class="sd">            |   labels (array)</span>
-<span class="sd">            |     data point cluster labels</span>
-<span class="sd">            |   wss_data (tuple)</span>
-<span class="sd">            |     (WSS, SSE, (SE_mean, SE_std)) ~ output of get_WSS()</span>
-<span class="sd">            |     WSS (float)</span>
-<span class="sd">            |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</span>
-<span class="sd">            |     SSE (list)</span>
-<span class="sd">            |         Sum of Squared Errors (of individual clusters)</span>
-<span class="sd">            |     (SE_mean, SE_std) (tuple)</span>
-<span class="sd">            |         SE_mean (list)</span>
-<span class="sd">            |             mean values of Squared Errors for each cluster</span>
-<span class="sd">            |         SE_std (list)</span>
-<span class="sd">            |             std values of Squared Errors for each cluster</span>
+<span class="sd">          | list of clusters ranked from best to topx best. Each cluster contains:</span>
+<span class="sd">          |     centers (array)</span>
+<span class="sd">          |         cluster centers of best result</span>
+<span class="sd">          |     counts (array)</span>
+<span class="sd">          |         counts per cluster of best result</span>
+<span class="sd">          |     labels (array)</span>
+<span class="sd">          |         data point cluster labels</span>
+<span class="sd">          |     wss_data (WSS_DATA)</span>
+<span class="sd">          |         output of get_WSS() or get_DM_WSS()</span>
+<span class="sd">          |         .wss (float)</span>
+<span class="sd">          |             Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</span>
+<span class="sd">          |         .sse (list)</span>
+<span class="sd">          |             Sum of Squared Errors (of individual clusters)</span>
+<span class="sd">          |         .se_mean (list)</span>
+<span class="sd">          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
+<span class="sd">          |         .se_std (list)</span>
+<span class="sd">          |             std values of Squared Errors for each cluster</span>
+<span class="sd">          |     compact_score (array)</span>
+<span class="sd">          |         mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CLUSTER</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">WSS</span> <span class="o">=</span> <span class="mi">99999999999999999999999999999999</span>
@@ -588,26 +589,25 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">CENTROIDS</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_DM_WSS"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_DM_WSS">[docs]</a><span class="k">def</span> <span class="nf">get_DM_WSS</span><span class="p">(</span><span class="n">DM</span><span class="p">,</span> <span class="n">cluster_data</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_DM_WSS"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_DM_WSS">[docs]</a><span class="k">def</span> <span class="nf">get_DM_WSS</span><span class="p">(</span><span class="n">DM</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get distance matrix WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        DM (str, array): path to h5_file containing distance matrices or array with distance matrices</span>
-<span class="sd">        cluster_data (CLUSTER_DATA): output of heat_KMeans()</span>
-<span class="sd">        centers (array): CLUSTER_DATA.centers array with size of h5_file.</span>
-<span class="sd">          | None: use cluster_data.centers</span>
+<span class="sd">        centers (array): cluster centers array with dim(DM) == dim(centers).</span>
+<span class="sd">        labels (array): cluster labels array with length(DM)</span>
 <span class="sd">        sss (list):</span>
-<span class="sd">          | [start, stop, step] indices of &lt;h5_file&gt; data</span>
+<span class="sd">          | [start, stop, step] indices of DM data</span>
 <span class="sd">          | start (None, int): start index</span>
 <span class="sd">          | stop (None, int): stop index</span>
 <span class="sd">          | step (None, int): step size</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precision</span>
 <span class="sd">        rescale (bool):</span>
 <span class="sd">          | rescale wss_data by diving through length of DM ~ n_frames.</span>
-<span class="sd">          | Defaults to True.</span>
+<span class="sd">          | Defaults to False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        WSS_DATA (WSS_DATA)</span>
@@ -616,7 +616,7 @@
 <span class="sd">          | .sse (list)</span>
 <span class="sd">          |     Sum of Squared Errors (of individual clusters)</span>
 <span class="sd">          | .se_mean (list)</span>
-<span class="sd">          |     mean values of Squared Errors for each cluster</span>
+<span class="sd">          |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
 <span class="sd">          | .se_std (list)</span>
 <span class="sd">          |     std values of Squared Errors for each cluster</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -631,23 +631,83 @@
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-               <span class="s2">&quot;rescale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+               <span class="s2">&quot;rescale&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1">############################################################################</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">DM</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">DM</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">read_h5</span><span class="p">(</span><span class="n">DM</span><span class="p">),</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">DM</span> <span class="o">=</span> <span class="n">reshape_data</span><span class="p">(</span><span class="n">DM</span><span class="p">,</span> <span class="n">dim_out</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">SE</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">))]</span>   <span class="c1"># Squared Errors (of individual clusters)</span>
 
-    <span class="k">if</span> <span class="n">centers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">centers</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span>
-    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
+    <span class="n">SE</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">))]</span>   <span class="c1"># Squared Errors (of individual clusters)</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">centers</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">-</span><span class="n">DM</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
         <span class="n">SE</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">rescale</span><span class="p">:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">DM</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># statistics</span>
+    <span class="n">SE_mean</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">norm</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">SE</span><span class="p">]</span>
+    <span class="n">SE_std</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">norm</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">SE</span><span class="p">]</span>
+
+    <span class="c1"># SSE: Sum of Squared Errors (of individual clusters)</span>
+    <span class="n">SSE</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">norm</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">SE</span><span class="p">]</span>
+    <span class="c1"># WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)</span>
+    <span class="n">WSS</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">SSE</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span>
+
+    <span class="n">WSS_DATA</span> <span class="o">=</span> <span class="n">WSS_DATA</span><span class="p">(</span><span class="n">wss</span><span class="o">=</span><span class="n">WSS</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="n">SE_mean</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="n">SE_std</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">WSS_DATA</span></div>
+
+
+<div class="viewcode-block" id="get_WSS"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_WSS">[docs]</a><span class="k">def</span> <span class="nf">get_WSS</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get WSS (Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (array): array with data, for example distance matrices or TSNE-transformed data.</span>
+<span class="sd">        centers (array): cluster centers array with dim(data) == dim(centers).</span>
+<span class="sd">        labels (array): cluster labels array with lenght of data.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        prec (None, int): rounding precision</span>
+<span class="sd">        rescale (bool):</span>
+<span class="sd">          | rescale wss_data by diving through length of data ~ n_frames.</span>
+<span class="sd">          | Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        WSS_DATA (WSS_DATA)</span>
+<span class="sd">          | .wss (float)</span>
+<span class="sd">          |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters</span>
+<span class="sd">          | .sse (list)</span>
+<span class="sd">          |     Sum of Squared Errors (of individual clusters)</span>
+<span class="sd">          | .se_mean (list)</span>
+<span class="sd">          |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
+<span class="sd">          | .se_std (list)</span>
+<span class="sd">          |     std values of Squared Errors for each cluster</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">WSS_DATA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wss</span> <span class="o">=</span> <span class="n">wss</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sse</span> <span class="o">=</span> <span class="n">sse</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">se_mean</span> <span class="o">=</span> <span class="n">se_mean</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">se_std</span> <span class="o">=</span> <span class="n">se_std</span>
+            <span class="k">return</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;rescale&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">SE</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">))]</span>   <span class="c1"># Squared Errors (of individual clusters)</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">centers</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">-</span><span class="n">data</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
+        <span class="n">SE</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">rescale</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -681,10 +741,10 @@
 <span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precision</span>
 <span class="sd">        rescale (bool):</span>
 <span class="sd">          | rescale wss_data by diving through length of DM ~ n_frames.</span>
-<span class="sd">          | Defaults to True.</span>
+<span class="sd">          | Defaults to False.</span>
 
 <span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
 
@@ -851,7 +911,7 @@
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        usecols (int): column of `score_file` containing scores/energies. Defaults to 1.</span>
 <span class="sd">        skiprows (None, int): skip rows of `score_file`. Defaults to 0.</span>
-<span class="sd">        prec (None, float): rounding precissions. Defaults to 3.</span>
+<span class="sd">        prec (None, float): rounding precisions. Defaults to 3.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        scores_data (CLUSTER_DATA_SCORES)</span>
@@ -880,18 +940,51 @@
     <span class="k">return</span> <span class="n">scores_data</span></div>
 
 
+<div class="viewcode-block" id="map_cluster_accuracy"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.map_cluster_accuracy">[docs]</a><span class="k">def</span> <span class="nf">map_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">GDT</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    map cluster accuracy between `cluster_data`, cluster `GDT` and cluster `RMSD`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().</span>
+<span class="sd">        GDT (list, array): GDT data for each frame of cluster_data</span>
+<span class="sd">        RMSD (list, array): RMSD data for each frame of cluster_data</span>
+<span class="sd">        prec (None, int): rounding precision</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      | accuracy_data (CLUSTER_DATA_ACCURACY)</span>
+<span class="sd">      |   .GDT (array)</span>
+<span class="sd">      |       summary of all GDT values of individual clusters</span>
+<span class="sd">      |   .GDT_mean (array)</span>
+<span class="sd">      |       GDT mean values of individual clusters</span>
+<span class="sd">      |   .GDT_std (array)</span>
+<span class="sd">      |       GDT std values of individual clusters</span>
+<span class="sd">      |   .GDT_minmax (array)</span>
+<span class="sd">      |       [GDT_min, GDT_max] values of individual clusters</span>
+<span class="sd">      |   .RMSD (array)</span>
+<span class="sd">      |       summary of all RMSD values of individual clusters</span>
+<span class="sd">      |   .RMSD_mean (array)</span>
+<span class="sd">      |       RMSD mean values of individual clusters</span>
+<span class="sd">      |   .RMSD_std (array)</span>
+<span class="sd">      |       RMSD std values of individual clusters</span>
+<span class="sd">      |   .RMSD_minmax (array)</span>
+<span class="sd">      |       [RMSD_min, RMSD_max] values of individual clusters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">accuracy_data</span> <span class="o">=</span> <span class="n">CLUSTER_DATA_ACCURACY</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">GDT</span><span class="o">=</span><span class="n">GDT</span><span class="p">,</span> <span class="n">RMSD</span><span class="o">=</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">accuracy_data</span></div>
+
+
 <div class="viewcode-block" id="apply_TSNE"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.apply_TSNE">[docs]</a><span class="k">def</span> <span class="nf">apply_TSNE</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    apply t-distributed stochastic neighbor embedding on data.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data (array)</span>
-<span class="sd">        n_components (int): TSNE number of components</span>
-<span class="sd">        perplexity (int): TSNE perplexity</span>
-<span class="sd">        random_state (None, int): Determines the random number generator</span>
+<span class="sd">        data(array)</span>
+<span class="sd">        n_components(int): TSNE number of components</span>
+<span class="sd">        perplexity(int): TSNE perplexity</span>
+<span class="sd">        random_state(None, int): Determines the random number generator</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tsne_data (array)</span>
+<span class="sd">        tsne_data(array)</span>
 <span class="sd">            tsne transformed data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nsamples</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
@@ -905,16 +998,16 @@
 <span class="sd">    apply KMeans on tsne_data</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        tnse_data (array): output of apply_TSNE()</span>
-<span class="sd">        n_clusters (int): number of clusters</span>
-<span class="sd">        random_state (None, int): Determines the random number generator (for centroid initialization)</span>
+<span class="sd">        tnse_data(array): output of apply_TSNE()</span>
+<span class="sd">        n_clusters(int): number of clusters</span>
+<span class="sd">        random_state(None, int): Determines the random number generator(for centroid initialization)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        cluster_data (CLUSTER_DATA)</span>
-<span class="sd">          | .centers (array)</span>
-<span class="sd">          | .counts (array)</span>
-<span class="sd">          | .labels (array)</span>
-<span class="sd">          | .inertia (float)</span>
+<span class="sd">        cluster_data(CLUSTER_DATA)</span>
+<span class="sd">          | .centers(array)</span>
+<span class="sd">          | .counts(array)</span>
+<span class="sd">          | .labels(array)</span>
+<span class="sd">          | .inertia(float)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tsne_data</span><span class="p">)</span>
 
@@ -922,8 +1015,9 @@
     <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>
     <span class="n">inertia</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span>
+    <span class="n">wss_data</span> <span class="o">=</span> <span class="n">get_WSS</span><span class="p">(</span><span class="n">tsne_data</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
 
-    <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">CLUSTER_DATA</span><span class="p">(</span><span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">inertia</span><span class="o">=</span><span class="n">inertia</span><span class="p">)</span>
+    <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">CLUSTER_DATA</span><span class="p">(</span><span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="n">counts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">inertia</span><span class="o">=</span><span class="n">inertia</span><span class="p">,</span> <span class="n">wss_data</span><span class="o">=</span><span class="n">wss_data</span><span class="p">,</span> <span class="n">compact_score</span><span class="o">=</span><span class="n">wss_data</span><span class="o">.</span><span class="n">se_mean</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cluster_data</span></div>
 
 
@@ -931,24 +1025,24 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    plot cluster data</span>
 
-<span class="sd">    .. Note:: Uses modified default values if cluster_data has n_clusters=10 or n_clusters=30.</span>
+<span class="sd">    .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
-<span class="sd">        tsne_data (array): output of apply_TSNE()</span>
+<span class="sd">        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
+<span class="sd">        tsne_data(array): output of apply_TSNE()</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        cmap (sns.color_palette(n_colors))</span>
-<span class="sd">        markers_list (list): Defaults to [&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
-<span class="sd">        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</span>
-<span class="sd">        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.</span>
-<span class="sd">        ms (int): marker size. Defaults to 40.</span>
-<span class="sd">        figsize (tuple): Defaults to (9,9)</span>
+<span class="sd">        cmap(sns.color_palette(n_colors))</span>
+<span class="sd">        markers_list(list): Defaults to[&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
+<span class="sd">        markers_repeats(list): Defaults to[10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</span>
+<span class="sd">        markers(list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.</span>
+<span class="sd">        ms(int): marker size. Defaults to 40.</span>
+<span class="sd">        figsize(tuple): Defaults to(9, 9)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig (class)</span>
+<span class="sd">        fig(class)</span>
 <span class="sd">            matplotlib.figure.Figure</span>
-<span class="sd">        ax (class)</span>
+<span class="sd">        ax(class)</span>
 <span class="sd">            matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
@@ -991,10 +1085,10 @@
 <span class="sd">    plot cluster center in existing figure.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
-<span class="sd">        color (str)</span>
-<span class="sd">        marker (str)</span>
-<span class="sd">        ms (int): marker size</span>
+<span class="sd">        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
+<span class="sd">        color(str)</span>
+<span class="sd">        marker(str)</span>
+<span class="sd">        ms(int): marker size</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
@@ -1002,32 +1096,40 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="get_cluster_targets"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_cluster_targets">[docs]</a><span class="k">def</span> <span class="nf">get_cluster_targets</span><span class="p">(</span><span class="n">cluster_data_n10</span><span class="p">,</span> <span class="n">cluster_data_n30</span><span class="p">,</span> <span class="n">score_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_cluster_targets"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.get_cluster_targets">[docs]</a><span class="k">def</span> <span class="nf">get_cluster_targets</span><span class="p">(</span><span class="n">cluster_data_n10</span><span class="p">,</span> <span class="n">cluster_data_n30</span><span class="p">,</span> <span class="n">score_file</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get cluster targets by finding optimum center in n10 and then ranking distance to n30 centers.</span>
+<span class="sd">    get cluster targets by finding optimum center in n10 and then ranking distances</span>
+<span class="sd">    to n30 centers. This does not &#39;really&#39; select targets but rather gives</span>
+<span class="sd">    additional information to select proper cluster targets based on</span>
 
-<span class="sd">    .. Note:: n30 clusters with very low mean and low std can be good target clusters too,</span>
-<span class="sd">       even if their cluster centers are not close to n10 target center.</span>
+<span class="sd">        - cluster energy mean values</span>
+<span class="sd">        - distance between cluster centers with low energy mean (low distance == similar structures)</span>
+<span class="sd">        - compact score</span>
+
+<span class="sd">    .. Note:: n30 clusters with very low mean and low compact score can be good</span>
+<span class="sd">       targets too, even if their cluster centers are not close to n10 target.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data_n10 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)</span>
-<span class="sd">        cluster_data_n30 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)</span>
-<span class="sd">        score_file (str): ~ output of abinitio.frame2score()</span>
+<span class="sd">        cluster_data_n10(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)</span>
+<span class="sd">        cluster_data_n30(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)</span>
+<span class="sd">        score_file(str): ~ output of abinitio.frame2score()</span>
+<span class="sd">        prec (None, int): rounding precision of distance</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        n10_label (int)</span>
-<span class="sd">            n10 target label based on lowest mean of n10 clusters</span>
-<span class="sd">        n30_label (array)</span>
+<span class="sd">        n10_targets (array)</span>
+<span class="sd">            n10 target labels (ranked by Emean of n10 clusters) ~ use only one or two n10 targets</span>
+<span class="sd">        n30_targets (array)</span>
 <span class="sd">            n30 target labels (ranked by distance from low to high)</span>
 <span class="sd">        n30_dist (array)</span>
-<span class="sd">            n30 target distances, with distance n30_dist[i] = n10_centers[n10_label] - n30_centers[i]</span>
+<span class="sd">            n30 target distances, with distance n30_dist[i] = n10_centers[n10_targets[0]] - n30_centers[i]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cluster_scores_n10</span> <span class="o">=</span> <span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster_data_n10</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
-    <span class="n">cluster_scores_n30</span> <span class="o">=</span> <span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster_data_n30</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
+    <span class="c1">#cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)</span>
 
     <span class="c1"># find optimum center of n10 (lowest mean)</span>
-    <span class="n">n10_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">cluster_scores_n10</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span> <span class="o">==</span> <span class="n">cluster_scores_n10</span><span class="o">.</span><span class="n">mean</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">n10_center</span> <span class="o">=</span> <span class="n">cluster_data_n10</span><span class="o">.</span><span class="n">centers</span><span class="p">[</span><span class="n">n10_label</span><span class="p">]</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">n10_targets</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">cluster_scores_n10</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">n10_center</span> <span class="o">=</span> <span class="n">cluster_data_n10</span><span class="o">.</span><span class="n">centers</span><span class="p">[</span><span class="n">n10_targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">n10</span><span class="p">,</span> <span class="n">n30</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_data_n10</span><span class="o">.</span><span class="n">counts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_data_n30</span><span class="o">.</span><span class="n">counts</span><span class="p">)</span>
 
     <span class="c1"># get center distances d[i] = n10_center - n30_center[i]</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_data_n30</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
@@ -1036,23 +1138,133 @@
         <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">n10_center</span><span class="o">-</span><span class="n">cluster_data_n30</span><span class="o">.</span><span class="n">centers</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
     <span class="c1"># rank center distances (low to high)</span>
+    <span class="n">n30_dist</span><span class="p">,</span> <span class="n">n30_targets</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">n30_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">n30_dist</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Distance Label&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-    <span class="n">n30_dist</span><span class="p">,</span> <span class="n">n30_label</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">n10_label</span><span class="p">,</span> <span class="n">n30_label</span><span class="p">,</span> <span class="n">n30_dist</span><span class="p">)</span></div>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;n</span><span class="si">{</span><span class="n">n10</span><span class="si">}</span><span class="s2"> target&#39; based on min(Emean): </span><span class="si">{</span><span class="n">n10_targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;n</span><span class="si">{</span><span class="n">n10</span><span class="si">}</span><span class="s2"> target&#39; distance to adjacent n</span><span class="si">{</span><span class="n">n30</span><span class="si">}</span><span class="s2"> clusters:&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ndx  distance&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="c1"># print 5 closest cluster centers</span>
+        <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n30_targets</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">n30_dist</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">n10_targets</span><span class="p">,</span> <span class="n">n30_targets</span><span class="p">,</span> <span class="n">n30_dist</span><span class="p">)</span></div>
 
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### WF functions</span>
+
+
+<div class="viewcode-block" id="WF_print_cluster_accuracy"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.WF_print_cluster_accuracy">[docs]</a><span class="k">def</span> <span class="nf">WF_print_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">accuracy_data</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workflow to print and log cluster accuracy.</span>
+
+<span class="sd">    .. Note:: &#39;Compact Score&#39; is mean(squared errors) of individual clusters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()</span>
+<span class="sd">        accuracy_data (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()</span>
+<span class="sd">        targets (list): target labels, which will be colored red in printed table</span>
+<span class="sd">        save_as (None, str): logfile name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        save_as (None, str)</span>
+<span class="sd">            logfile name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># rank clusters by mean GDT value</span>
+    <span class="n">_ranked</span><span class="p">,</span> <span class="n">_ndx</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_mean</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># print</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cluster n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> accuracy (ranked by GDT mean)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;ndx  size  compact | mean    std    min     max    | mean   std    min    max&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">_ndx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="ow">and</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+            <span class="n">cprint_color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cprint_color</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cprint_color</span><span class="p">)</span>
+
+    <span class="c1"># save log</span>
+    <span class="k">if</span> <span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">#save_as = _misc.realpath(save_as)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cluster n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> accuracy (ranked by GDT mean)</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ndx  size  compact | mean    std    min     max    | mean   std    min    max</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">_ndx</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">accuracy_data</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Saved log as: </span><span class="si">{</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">save_as</span></div>
+
+
+<div class="viewcode-block" id="WF_print_cluster_scores"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.WF_print_cluster_scores">[docs]</a><span class="k">def</span> <span class="nf">WF_print_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">cluster_scores</span><span class="p">,</span> <span class="n">score_file</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workflow to print and log cluster scores.</span>
+
+<span class="sd">    .. Note:: &#39;Compact Score&#39; is mean(squared errors) of individual clusters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_Kmeans()</span>
+<span class="sd">        cluster_scores (CLUSTER_DATA_SCORES): output of map_cluster_scores()</span>
+<span class="sd">        score_file (str): path to score file</span>
+<span class="sd">        targets (list): target labels, which will be colored red in printed table</span>
+<span class="sd">        save_as (None, str): logfile name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        save_as (None, str)</span>
+<span class="sd">            logfile name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;type(targets) must be either list or array.&quot;</span><span class="p">)</span>
+    <span class="c1"># rank by Emean</span>
+    <span class="n">_ranked</span><span class="p">,</span> <span class="n">_ndx</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_ranked_array</span><span class="p">(</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#misc.cprint(f&quot;\nscores mean_all: {scores_data.mean_all}&quot;, &quot;red&quot;)</span>
+    <span class="c1">#misc.cprint(f&quot;scores mean_all_filtered: {scores_data.mean_all_filtered}&quot;, &quot;red&quot;)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cluster n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> scores (ranked by Emean)&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ndx  size  compact | Emean    Estd    Emin      Emax     DELTA&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">_ndx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="ow">and</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+            <span class="n">cprint_color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cprint_color</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> |</span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">max</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">DELTA</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cprint_color</span><span class="p">)</span>
+
+    <span class="c1"># save log</span>
+    <span class="k">if</span> <span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">#save_as = _misc.realpath(save_as)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cluster n</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> scores (ranked by Emean)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ndx  size  compact | Emean    Estd    Emin      Emax     DELTA</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">_ndx</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> |</span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">max</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">DELTA</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Saved log as: </span><span class="si">{</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">save_as</span></div>
 <span class="c1">################################################################################</span>
 <span class="c1">################################################################################</span>
 <span class="c1">### CLASSES / OBJECTS</span>
 
 
 <div class="viewcode-block" id="CLUSTER_DATA"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.CLUSTER_DATA">[docs]</a><span class="k">class</span> <span class="nc">CLUSTER_DATA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inertia</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wss_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">counts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inertia</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wss_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compact_score</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        saves cluster data as object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            centers (None, array): cluster centers</span>
+<span class="sd">            counts (None, array): counts</span>
+<span class="sd">            labels (None, array): labels</span>
+<span class="sd">            inertia (None, float): intertia</span>
+<span class="sd">            wss_data (None, WSS_DATA)</span>
+<span class="sd">            compact_score (None, array): mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="n">centers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">=</span> <span class="n">counts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span> <span class="o">=</span> <span class="n">inertia</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wss_data</span> <span class="o">=</span> <span class="n">wss_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compact_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">compact_score</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
@@ -1064,7 +1276,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            cluster_data (CLUSTER_DATA)</span>
 <span class="sd">            scores (list, array): scores of frames in cluster_data</span>
-<span class="sd">            prec (int): rounding precission</span>
+<span class="sd">            prec (int): rounding precision</span>
 <span class="sd">            filter (bool): apply filter ~ use only scores s which fulfil: filter_min &lt;= s &lt;= filter_max</span>
 <span class="sd">            filter_tol (float):</span>
 <span class="sd">              | defines filter_min and filter_max values</span>
@@ -1107,7 +1319,7 @@
             <span class="k">if</span> <span class="nb">filter</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_min</span> <span class="o">&lt;=</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_max</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">prec</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">filter</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mean_all_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mean_all_filtered</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">)),</span> <span class="n">prec</span><span class="p">)</span>
 
         <span class="c1"># get mean, std, etc.</span>
         <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">)):</span>
@@ -1118,6 +1330,74 @@
 
             <span class="c1"># DELTA[i] = abs(mean_all-mean[i])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">DELTA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_all_filtered</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="n">prec</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CLUSTER_DATA_ACCURACY"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.CLUSTER_DATA_ACCURACY">[docs]</a><span class="k">class</span> <span class="nc">CLUSTER_DATA_ACCURACY</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_data</span><span class="p">,</span> <span class="n">GDT</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        maps cluster_data to cluster GDT and cluster RMSD.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cluster_data(CLUSTER_DATA)</span>
+<span class="sd">            GDT(list, array): GDT data for each frame of cluster_data</span>
+<span class="sd">            RMSD(list, array): RMSD data for each frame of cluster_data</span>
+<span class="sd">            prec(int): rounding precision</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            obj.GDT (list)</span>
+<span class="sd">                summary of all GDT values of individual clusters</span>
+<span class="sd">            obj.GDT_mean (array)</span>
+<span class="sd">                GDT mean values of individual clusters</span>
+<span class="sd">            obj.GDT_std (array)</span>
+<span class="sd">                GDT std values of individual clusters</span>
+<span class="sd">            obj.GDT_minmax (array)</span>
+<span class="sd">                [GDT_min, GDT_max] values of individual clusters</span>
+<span class="sd">            obj.RMSD (list)</span>
+<span class="sd">                summary of all RMSD values of individual clusters</span>
+<span class="sd">            obj.RMSD_mean (array)</span>
+<span class="sd">                RMSD mean values of individual clusters</span>
+<span class="sd">            obj.RMSD_std (array)</span>
+<span class="sd">                RMSD std values of individual clusters</span>
+<span class="sd">            obj.RMSD_minmax (array)</span>
+<span class="sd">                [RMSD_min, RMSD_max] values of individual clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">GDT</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GDT_mean</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GDT_std</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GDT_minmax</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_mean</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># process scores</span>
+        <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_std</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">])])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">])])</span>
+
+        <span class="k">if</span> <span class="n">prec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">GDT</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT_mean</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT_std</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GDT_minmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">RMSD</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD_mean</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
+
         <span class="k">return</span></div>
 </pre></div>
 

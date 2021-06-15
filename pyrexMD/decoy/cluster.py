@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 13.06.2021
+# @Last modified time: 15.06.2021
 
 """
 This module contains functions for:
@@ -938,9 +938,10 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
     get cluster targets by finding optimum center in n10 and then ranking distances
     to n30 centers. This does not 'really' select targets but rather gives
     additional information to select proper cluster targets based on
-      - cluster energy mean values
-      - distance between cluster centers with low energy mean (low distance == similar structures)
-      - compact score
+
+        - cluster energy mean values
+        - distance between cluster centers with low energy mean (low distance == similar structures)
+        - compact score
 
     .. Note:: n30 clusters with very low mean and low compact score can be good
        targets too, even if their cluster centers are not close to n10 target.
