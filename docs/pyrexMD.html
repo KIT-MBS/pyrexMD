@@ -1875,9 +1875,9 @@ ymin, ymax values.</p>
 <li><p><strong>multiplier</strong> (<em>int/float</em>) – multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue</p></li>
 <li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’, ‘xy’</p></li>
 <li><p><strong>prec</strong> (<em>int</em>) – <div class="line-block">
-<div class="line">precission</div>
-<div class="line">0: use integers with no decimal precission</div>
-<div class="line">n: float with n decimal precission</div>
+<div class="line">precision</div>
+<div class="line">0: use integers with no decimal precision</div>
+<div class="line">n: float with n decimal precision</div>
 </div>
 </p></li>
 </ul>
@@ -2255,7 +2255,7 @@ the observations may be found.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>array-like</em>) – </p></li>
 <li><p><strong>p</strong> (<em>int</em><em>, </em><em>float</em>) – percent value ~ range 0-100</p></li>
-<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precision</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2267,7 +2267,7 @@ the observations may be found.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.get_precision">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">get_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#get_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.get_precision" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns leading precission of number.</p>
+<dd><p>Returns leading precision of number.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>convert float to string</p></li>
@@ -2279,14 +2279,14 @@ the observations may be found.</p>
 <dd class="field-odd"><p><strong>number</strong> (<em>int</em><em>, </em><em>float</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>precission (int)</p>
+<dd class="field-even"><p>precision (int)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
 <div class="line-block">
-<div class="line">&gt;&gt; get_precission(5.00000)</div>
+<div class="line">&gt;&gt; get_precision(5.00000)</div>
 <div class="line">1</div>
-<div class="line">&gt;&gt; get_precission(5.12300)</div>
+<div class="line">&gt;&gt; get_precision(5.12300)</div>
 <div class="line">3</div>
 </div>
 </dd></dl>
@@ -2307,7 +2307,7 @@ observations may be found.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>array-like</em>) – </p></li>
 <li><p><strong>p</strong> (<em>int</em><em>, </em><em>float</em>) – percent value ~ range 0-1</p></li>
-<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precision</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2726,7 +2726,7 @@ e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num</strong> (<em>int</em>) – numerator</p></li>
 <li><p><strong>div</strong> (<em>int</em>) – divisor</p></li>
-<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precission</p></li>
+<li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – rounding precision</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2988,7 +2988,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.print_table">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#print_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.print_table" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#print_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.print_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints each item of “data” elementwise next to each other as a table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3006,7 +3006,8 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </p></li>
 <li><p><strong>dtype</strong> (<em>None</em><em>, </em><em>dtype</em>) – dtype of table values after rounding</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – print table</p></li>
-<li><p><strong>verbose_stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop printing after N lines</p></li>
+<li><p><strong>verbose_stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop printing after N lines.</p></li>
+<li><p><strong>warn</strong> (<em>bool</em>) – print/supress message  “misc.print_table(): printed only N entries (set by verbose_stop parameter).”</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3249,7 +3250,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 <div class="line">array of lists/arrays</div>
 </div>
 </p></li>
-<li><p><strong>prec</strong> (<em>int</em>) – rounding precission</p></li>
+<li><p><strong>prec</strong> (<em>int</em>) – rounding precision</p></li>
 <li><p><strong>dtype</strong> (<em>None</em><em>, </em><em>dtype</em>) – return object values as specific data type</p></li>
 </ul>
 </dd>
@@ -3310,7 +3311,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.save_table">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">save_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#save_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.save_table" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">save_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#save_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.save_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes misc.print_table() and saves the returned table string as a log file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3325,6 +3326,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </div>
 </p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose_stop</strong> (<em>None</em><em>, </em><em>int</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>

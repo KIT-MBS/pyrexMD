@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 01.06.2021</span>
+<span class="c1"># @Last modified time: 13.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -1006,7 +1006,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        num (int): numerator</span>
 <span class="sd">        div (int): divisor</span>
-<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precision</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        p (float)</span>
@@ -1094,7 +1094,7 @@
 <span class="sd">          | single list/array</span>
 <span class="sd">          | list of lists/arrays</span>
 <span class="sd">          | array of lists/arrays</span>
-<span class="sd">        prec (int): rounding precission</span>
+<span class="sd">        prec (int): rounding precision</span>
 <span class="sd">        dtype (None, dtype): return object values as specific data type</span>
 
 <span class="sd">    Returns:</span>
@@ -1233,7 +1233,7 @@
 
 <div class="viewcode-block" id="get_precision"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_precision">[docs]</a><span class="k">def</span> <span class="nf">get_precision</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns leading precission of number.</span>
+<span class="sd">    Returns leading precision of number.</span>
 
 <span class="sd">      - convert float to string</span>
 <span class="sd">      - find position of decimal point relative to the length of the string</span>
@@ -1242,19 +1242,19 @@
 <span class="sd">        number (int, float)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        precission (int)</span>
+<span class="sd">        precision (int)</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        | &gt;&gt; get_precission(5.00000)</span>
+<span class="sd">        | &gt;&gt; get_precision(5.00000)</span>
 <span class="sd">        | 1</span>
-<span class="sd">        | &gt;&gt; get_precission(5.12300)</span>
+<span class="sd">        | &gt;&gt; get_precision(5.12300)</span>
 <span class="sd">        | 3</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">number</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">number</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-    <span class="n">precission</span> <span class="o">=</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">precission</span></div>
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">precision</span></div>
 
 
 <div class="viewcode-block" id="get_base"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_base">[docs]</a><span class="k">def</span> <span class="nf">get_base</span><span class="p">(</span><span class="n">_str</span><span class="p">):</span>
@@ -1514,7 +1514,7 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints each item of &quot;data&quot; elementwise next to each other as a table.</span>
 
@@ -1528,7 +1528,8 @@
 <span class="sd">          | 8: default \\t width</span>
 <span class="sd">        dtype (None, dtype): dtype of table values after rounding</span>
 <span class="sd">        verbose (bool): print table</span>
-<span class="sd">        verbose_stop (None, int): stop printing after N lines</span>
+<span class="sd">        verbose_stop (None, int): stop printing after N lines.</span>
+<span class="sd">        warn (bool): print/supress message  &quot;misc.print_table(): printed only N entries (set by verbose_stop parameter).&quot;</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        table_str (str)</span>
@@ -1546,7 +1547,7 @@
 <span class="sd">        | with open(&quot;table.log&quot;, &quot;w&quot;) as fout:</span>
 <span class="sd">        |     fout.write(table)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># apply precission to input</span>
+    <span class="c1"># apply precision to input</span>
     <span class="k">if</span> <span class="n">prec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">round_object</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">)</span>
 
@@ -1615,11 +1616,12 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose_stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table_str</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="n">verbose_stop</span><span class="p">):</span>
-                <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;misc.print_table(): printed only </span><span class="si">{</span><span class="n">verbose_stop</span><span class="si">}</span><span class="s2"> entries (set by verbose_stop parameter).&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;misc.print_table(): printed only </span><span class="si">{</span><span class="n">verbose_stop</span><span class="si">}</span><span class="s2"> entries (set by verbose_stop parameter).&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">table_str</span></div>
 
 
-<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes misc.print_table() and saves the returned table string as a log file.</span>
 
@@ -1632,6 +1634,7 @@
 <span class="sd">          | None: rounding off</span>
 <span class="sd">          | int:  rounding on</span>
 <span class="sd">        verbose (bool)</span>
+<span class="sd">        verbose_stop (None, int)</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        save_as (str): alias of filename</span>
@@ -1659,7 +1662,7 @@
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ref_shape</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;save_table(): data consists of lists with unequal lengths.&#39;</span><span class="p">)</span>
 
-        <span class="n">table_str</span> <span class="o">=</span> <span class="n">print_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">prec</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">table_str</span> <span class="o">=</span> <span class="n">print_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">prec</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="n">verbose_stop</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">table_str</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -1879,7 +1882,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        data (array-like)</span>
 <span class="sd">        p (int, float): percent value ~ range 0-1</span>
-<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precision</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        quantile (int, float)</span>
@@ -1896,7 +1899,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        data (array-like)</span>
 <span class="sd">        p (int, float): percent value ~ range 0-100</span>
-<span class="sd">        prec (None, int): rounding precission</span>
+<span class="sd">        prec (None, int): rounding precision</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        percentile (int, float)</span>
@@ -2898,9 +2901,9 @@
 <span class="sd">        multiplier (int/float): multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue</span>
 <span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
 <span class="sd">        prec (int):</span>
-<span class="sd">          | precission</span>
-<span class="sd">          | 0: use integers with no decimal precission</span>
-<span class="sd">          | n: float with n decimal precission</span>
+<span class="sd">          | precision</span>
+<span class="sd">          | 0: use integers with no decimal precision</span>
+<span class="sd">          | n: float with n decimal precision</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>

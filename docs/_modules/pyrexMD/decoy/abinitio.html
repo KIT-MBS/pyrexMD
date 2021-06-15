@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: abinitio.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 01.06.2021</span>
+<span class="c1"># @Last modified time: 13.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for decoy creation using `PyRosetta`.</span>
@@ -251,7 +251,7 @@
 <span class="sd">          | &quot;auto&quot;: detect &quot;protein&quot; or &quot;rna&quot; by checking if pose.phi(1) exists.</span>
 <span class="sd">          | &quot;protein&quot;: protein molecule with torsion angles(phi, psi)</span>
 <span class="sd">          | &quot;rna&quot;: rna molecule with torsion angles(alpha, beta, gamma, delta)</span>
-<span class="sd">        prec(int): rounding precission</span>
+<span class="sd">        prec(int): rounding precision</span>
 <span class="sd">        verbose(bool): print table with torsion angles</span>
 
 <span class="sd">    Returns:</span>
@@ -815,10 +815,10 @@
     <span class="k">return</span> <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">RMSD</span></div>
 
 
-<div class="viewcode-block" id="get_decoy_precission"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_precission">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_precission</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">decoy_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span>
-                         <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_decoy_precision"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_precision">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_precision</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">decoy_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoy_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span>
+                        <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get decoy precission</span>
+<span class="sd">    get decoy precision</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ref(universe): reference structure</span>
@@ -843,13 +843,13 @@
     <span class="k">return</span> <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span></div>
 
 
-<div class="viewcode-block" id="rank_decoy_precission"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.rank_decoy_precission">[docs]</a><span class="k">def</span> <span class="nf">rank_decoy_precission</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rank_by</span><span class="o">=</span><span class="s2">&quot;SCORE&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_decoy_precision"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.rank_decoy_precision">[docs]</a><span class="k">def</span> <span class="nf">rank_decoy_precision</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rank_by</span><span class="o">=</span><span class="s2">&quot;SCORE&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    rank decoy precission</span>
+<span class="sd">    rank decoy precision</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data(list):</span>
-<span class="sd">          | output of abinitio.get_decoy_precission()</span>
+<span class="sd">          | output of abinitio.get_decoy_precision()</span>
 <span class="sd">          | data[0]: DECOY_LIST</span>
 <span class="sd">          | data[1]: DECOY_ID</span>
 <span class="sd">          | data[2]: SCORE</span>
@@ -882,9 +882,9 @@
     <span class="k">return</span> <span class="n">DECOY_LIST_ranked</span><span class="p">,</span> <span class="n">DECOY_ID_ranked</span><span class="p">,</span> <span class="n">SCORE_ranked</span><span class="p">,</span> <span class="n">RMSD_ranked</span></div>
 
 
-<div class="viewcode-block" id="precission_scatterplot"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.precission_scatterplot">[docs]</a><span class="k">def</span> <span class="nf">precission_scatterplot</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="precision_scatterplot"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.precision_scatterplot">[docs]</a><span class="k">def</span> <span class="nf">precision_scatterplot</span><span class="p">(</span><span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    create a precission scatter plot.</span>
+<span class="sd">    create a precision scatter plot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        SCORE(list, array)</span>
