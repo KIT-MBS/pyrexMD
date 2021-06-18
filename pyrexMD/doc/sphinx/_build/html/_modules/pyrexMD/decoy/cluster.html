@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: cluster.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.06.2021</span>
+<span class="c1"># @Last modified time: 18.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for:</span>
@@ -620,13 +620,6 @@
 <span class="sd">          | .se_std (list)</span>
 <span class="sd">          |     std values of Squared Errors for each cluster</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">class</span> <span class="nc">WSS_DATA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">wss</span> <span class="o">=</span> <span class="n">wss</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sse</span> <span class="o">=</span> <span class="n">sse</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">se_mean</span> <span class="o">=</span> <span class="n">se_mean</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">se_std</span> <span class="o">=</span> <span class="n">se_std</span>
-            <span class="k">return</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
@@ -659,7 +652,7 @@
     <span class="c1"># WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)</span>
     <span class="n">WSS</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">SSE</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span>
 
-    <span class="n">WSS_DATA</span> <span class="o">=</span> <span class="n">WSS_DATA</span><span class="p">(</span><span class="n">wss</span><span class="o">=</span><span class="n">WSS</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="n">SE_mean</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="n">SE_std</span><span class="p">)</span>
+    <span class="n">WSS_DATA</span> <span class="o">=</span> <span class="n">WSS_DATA_obj</span><span class="p">(</span><span class="n">wss</span><span class="o">=</span><span class="n">WSS</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="n">SE_mean</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="n">SE_std</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">WSS_DATA</span></div>
 
 
@@ -689,13 +682,6 @@
 <span class="sd">          | .se_std (list)</span>
 <span class="sd">          |     std values of Squared Errors for each cluster</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">class</span> <span class="nc">WSS_DATA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">wss</span> <span class="o">=</span> <span class="n">wss</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sse</span> <span class="o">=</span> <span class="n">sse</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">se_mean</span> <span class="o">=</span> <span class="n">se_mean</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">se_std</span> <span class="o">=</span> <span class="n">se_std</span>
-            <span class="k">return</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                <span class="s2">&quot;rescale&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -720,7 +706,7 @@
     <span class="c1"># WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)</span>
     <span class="n">WSS</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">SSE</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prec</span><span class="p">)</span>
 
-    <span class="n">WSS_DATA</span> <span class="o">=</span> <span class="n">WSS_DATA</span><span class="p">(</span><span class="n">wss</span><span class="o">=</span><span class="n">WSS</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="n">SE_mean</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="n">SE_std</span><span class="p">)</span>
+    <span class="n">WSS_DATA</span> <span class="o">=</span> <span class="n">WSS_DATA_obj</span><span class="p">(</span><span class="n">wss</span><span class="o">=</span><span class="n">WSS</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="n">SSE</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="n">SE_mean</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="n">SE_std</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">WSS_DATA</span></div>
 
 
@@ -797,15 +783,11 @@
 <span class="sd">        plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        figsize (tuple): (7,7)</span>
-<span class="sd">        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette()</span>
-<span class="sd">        marker (None, str):</span>
-<span class="sd">          | None: use settings from Keyword Arg `markers` (see below)</span>
-<span class="sd">          | str: ignore settings from Keyword Arg `markers` and use this marker for all scatter points</span>
-<span class="sd">        markers (list):</span>
-<span class="sd">          | list with markers to use for cluster mapping.</span>
-<span class="sd">          | Rotates between markers each 10 clusters.</span>
-<span class="sd">          | Defaults to [&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
+<span class="sd">        figsize (tuple): (6.6, 6.6)</span>
+<span class="sd">        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette(n_colors=60)</span>
+<span class="sd">        markers_list (list): Defaults to [&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
+<span class="sd">        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</span>
+<span class="sd">        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.</span>
 <span class="sd">        alpha (float): 1</span>
 <span class="sd">        ms (int): 6</span>
 <span class="sd">        show_legend (bool)</span>
@@ -828,35 +810,35 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;xdata, ydata and labels must have same first dimension, but have shapes </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">plot_only</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">plot_only</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
-               <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(),</span>
-               <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span>
-               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.6</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">),</span>
+               <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="n">n_colors</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+               <span class="s2">&quot;markers_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span>
+               <span class="s2">&quot;markers_repeats&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
                <span class="s2">&quot;show_legend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                <span class="s2">&quot;legend_loc&quot;</span><span class="p">:</span> <span class="s2">&quot;outside&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;legend_ncols&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+               <span class="s2">&quot;legend_ncols&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                <span class="s2">&quot;xlim&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-               <span class="s2">&quot;ylim&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-               <span class="p">}</span>
-    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+               <span class="s2">&quot;ylim&quot;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">default_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">default</span><span class="o">.</span><span class="n">markers_list</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">default</span><span class="o">.</span><span class="n">markers_repeats</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
+    <span class="n">modified</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">default</span><span class="o">.</span><span class="n">cmap</span><span class="p">[:</span><span class="n">size</span><span class="p">],</span>
+                <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="n">default_markers</span><span class="p">[:</span><span class="n">size</span><span class="p">]}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">modified</span><span class="p">)</span>   <span class="c1"># use default settings, overwrite with modified settings</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>     <span class="c1"># overwrite with kwargs settings</span>
     <span class="c1">##################################################################</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plot_only</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plot_only</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">marker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">marker</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">//</span><span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;^&quot;</span> <span class="ow">or</span> <span class="s2">&quot;v&quot;</span><span class="p">]:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">ndx</span><span class="p">],</span> <span class="n">ydata</span><span class="p">[</span><span class="n">ndx</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">marker</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">marker</span>
-        <span class="k">if</span> <span class="n">marker</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;^&quot;</span> <span class="ow">or</span> <span class="s2">&quot;v&quot;</span><span class="p">]:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ydata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ydata</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">[</span><span class="n">ndx</span><span class="p">],</span> <span class="n">ydata</span><span class="p">[</span><span class="n">ndx</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># set xlabel, ylabel</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -900,7 +882,7 @@
 <span class="sd">              Otherwise the index mapping from enumerate(labels) within this function will be wrong.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data (): output of apply_KMeans() or heat_KMeans()</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()</span>
 <span class="sd">        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().</span>
 <span class="sd">        filter (bool): apply filter ~ use only scores s which fulfil: filter_min &lt;= s &lt;= filter_max</span>
 <span class="sd">        filter_tol (float):</span>
@@ -978,13 +960,13 @@
 <span class="sd">    apply t-distributed stochastic neighbor embedding on data.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data(array)</span>
-<span class="sd">        n_components(int): TSNE number of components</span>
-<span class="sd">        perplexity(int): TSNE perplexity</span>
-<span class="sd">        random_state(None, int): Determines the random number generator</span>
+<span class="sd">        data (array)</span>
+<span class="sd">        n_components (int): TSNE number of components</span>
+<span class="sd">        perplexity (int): TSNE perplexity</span>
+<span class="sd">        random_state (None, int): Determines the random number generator</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tsne_data(array)</span>
+<span class="sd">        tsne_data (array)</span>
 <span class="sd">            tsne transformed data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nsamples</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
@@ -998,16 +980,16 @@
 <span class="sd">    apply KMeans on tsne_data</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        tnse_data(array): output of apply_TSNE()</span>
-<span class="sd">        n_clusters(int): number of clusters</span>
-<span class="sd">        random_state(None, int): Determines the random number generator(for centroid initialization)</span>
+<span class="sd">        tnse_data (array): output of apply_TSNE()</span>
+<span class="sd">        n_clusters (int): number of clusters</span>
+<span class="sd">        random_state (None, int): Determines the random number generator(for centroid initialization)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        cluster_data(CLUSTER_DATA)</span>
-<span class="sd">          | .centers(array)</span>
-<span class="sd">          | .counts(array)</span>
-<span class="sd">          | .labels(array)</span>
-<span class="sd">          | .inertia(float)</span>
+<span class="sd">        cluster_data (CLUSTER_DATA)</span>
+<span class="sd">          | .centers (array)</span>
+<span class="sd">          | .counts (array)</span>
+<span class="sd">          | .labels (array)</span>
+<span class="sd">          | .inertia (float)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tsne_data</span><span class="p">)</span>
 
@@ -1028,21 +1010,21 @@
 <span class="sd">    .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
-<span class="sd">        tsne_data(array): output of apply_TSNE()</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
+<span class="sd">        tsne_data (array): output of apply_TSNE()</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        cmap(sns.color_palette(n_colors))</span>
-<span class="sd">        markers_list(list): Defaults to[&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
-<span class="sd">        markers_repeats(list): Defaults to[10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</span>
-<span class="sd">        markers(list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.</span>
-<span class="sd">        ms(int): marker size. Defaults to 40.</span>
-<span class="sd">        figsize(tuple): Defaults to(9, 9)</span>
+<span class="sd">        cmap (sns.color_palette(n_colors))</span>
+<span class="sd">        markers_list (list): Defaults to [&quot;o&quot;, &quot;^&quot;, &quot;s&quot;, &quot;v&quot;, &quot;P&quot;, &quot;X&quot;]</span>
+<span class="sd">        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</span>
+<span class="sd">        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.</span>
+<span class="sd">        ms (int): marker size. Defaults to 40.</span>
+<span class="sd">        figsize (tuple): Defaults to(9, 9)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig(class)</span>
+<span class="sd">        fig (class)</span>
 <span class="sd">            matplotlib.figure.Figure</span>
-<span class="sd">        ax(class)</span>
+<span class="sd">        ax (class)</span>
 <span class="sd">            matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">)</span>
@@ -1050,8 +1032,8 @@
                <span class="s2">&quot;markers_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span>
                <span class="s2">&quot;markers_repeats&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
                <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-               <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">)}</span>
-    <span class="n">default</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+               <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.6</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">)}</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">default_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">default</span><span class="o">.</span><span class="n">markers_list</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">default</span><span class="o">.</span><span class="n">markers_repeats</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
     <span class="n">modified</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">default</span><span class="o">.</span><span class="n">cmap</span><span class="p">[:</span><span class="n">size</span><span class="p">],</span>
                 <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="n">default_markers</span><span class="p">[:</span><span class="n">size</span><span class="p">]}</span>
@@ -1070,6 +1052,8 @@
                     <span class="n">s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span>
                     <span class="n">legend</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span>
                     <span class="n">data</span><span class="o">=</span><span class="n">pandas</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
 
     <span class="c1"># plot legend</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
@@ -1085,10 +1069,10 @@
 <span class="sd">    plot cluster center in existing figure.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
-<span class="sd">        color(str)</span>
-<span class="sd">        marker(str)</span>
-<span class="sd">        ms(int): marker size</span>
+<span class="sd">        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()</span>
+<span class="sd">        color (str)</span>
+<span class="sd">        marker (str)</span>
+<span class="sd">        ms (int): marker size</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">centers</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
@@ -1110,9 +1094,9 @@
 <span class="sd">       targets too, even if their cluster centers are not close to n10 target.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        cluster_data_n10(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)</span>
-<span class="sd">        cluster_data_n30(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)</span>
-<span class="sd">        score_file(str): ~ output of abinitio.frame2score()</span>
+<span class="sd">        cluster_data_n10 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)</span>
+<span class="sd">        cluster_data_n30 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)</span>
+<span class="sd">        score_file (str): ~ output of abinitio.frame2score()</span>
 <span class="sd">        prec (None, int): rounding precision of distance</span>
 
 <span class="sd">    Returns:</span>
@@ -1398,6 +1382,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD_std</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span>
 
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="WSS_DATA_obj"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.WSS_DATA_obj">[docs]</a><span class="k">class</span> <span class="nc">WSS_DATA_obj</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wss</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se_std</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wss</span> <span class="o">=</span> <span class="n">wss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sse</span> <span class="o">=</span> <span class="n">sse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">se_mean</span> <span class="o">=</span> <span class="n">se_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">se_std</span> <span class="o">=</span> <span class="n">se_std</span>
         <span class="k">return</span></div>
 </pre></div>
 

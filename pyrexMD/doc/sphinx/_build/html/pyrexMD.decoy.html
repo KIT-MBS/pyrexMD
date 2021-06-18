@@ -648,6 +648,12 @@
 </dl>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.WSS_DATA_obj">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">WSS_DATA_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#WSS_DATA_obj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.WSS_DATA_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.apply_KMEANS">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">apply_KMEANS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsne_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#apply_KMEANS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.apply_KMEANS" title="Permalink to this definition">¶</a></dt>
@@ -662,11 +668,11 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl>
-<dt>cluster_data(CLUSTER_DATA)</dt><dd><div class="line-block">
-<div class="line">.centers(array)</div>
-<div class="line">.counts(array)</div>
-<div class="line">.labels(array)</div>
-<div class="line">.inertia(float)</div>
+<dt>cluster_data (CLUSTER_DATA)</dt><dd><div class="line-block">
+<div class="line">.centers (array)</div>
+<div class="line">.counts (array)</div>
+<div class="line">.labels (array)</div>
+<div class="line">.inertia (float)</div>
 </div>
 </dd>
 </dl>
@@ -690,7 +696,7 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>tsne_data(array)</dt><dd><p>tsne transformed data</p>
+<dt>tsne_data (array)</dt><dd><p>tsne transformed data</p>
 </dd>
 </dl>
 </p>
@@ -1189,7 +1195,7 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>)</strong> (<em>cluster_data</em>) – output of apply_KMeans() or heat_KMeans()</p></li>
+<li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of apply_KMeans() or heat_KMeans()</p></li>
 <li><p><strong>score_file</strong> (<em>str</em>) – path to file containing cluster scores/energies. Logfile of abinitio.frame2score().</p></li>
 <li><p><strong>filter</strong> (<em>bool</em>) – apply filter ~ use only scores s which fulfil: filter_min &lt;= s &lt;= filter_max</p></li>
 <li><p><strong>filter_tol</strong> (<em>float</em>) – <div class="line-block">
@@ -1280,18 +1286,18 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>cmap</strong> (<em>sns.color_palette</em><em>(</em><em>n_colors</em><em>)</em>) – </p></li>
-<li><p><strong>markers_list</strong> (<em>list</em>) – Defaults to[“o”, “^”, “s”, “v”, “P”, “X”]</p></li>
-<li><p><strong>markers_repeats</strong> (<em>list</em>) – Defaults to[10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</p></li>
-<li><p><strong>markers</strong> (<em>list</em>) – list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.</p></li>
+<li><p><strong>markers_list</strong> (<em>list</em>) – Defaults to [“o”, “^”, “s”, “v”, “P”, “X”]</p></li>
+<li><p><strong>markers_repeats</strong> (<em>list</em>) – Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</p></li>
+<li><p><strong>markers</strong> (<em>list</em>) – list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.</p></li>
 <li><p><strong>ms</strong> (<em>int</em>) – marker size. Defaults to 40.</p></li>
 <li><p><strong>figsize</strong> (<em>tuple</em>) – Defaults to(9, 9)</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>fig(class)</dt><dd><p>matplotlib.figure.Figure</p>
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
 </dd>
-<dt>ax(class)</dt><dd><p>matplotlib.axes._subplots.Axes</p>
+<dt>ax (class)</dt><dd><p>matplotlib.axes._subplots.Axes</p>
 </dd>
 </dl>
 </p>
@@ -1455,19 +1461,11 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>figsize</strong> (<em>tuple</em>) – (7,7)</p></li>
-<li><p><strong>cmap</strong> (<em>seaborn.color_palette</em>) – colormap. Defaults to seaborn.color_palette()</p></li>
-<li><p><strong>marker</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
-<div class="line">None: use settings from Keyword Arg <cite>markers</cite> (see below)</div>
-<div class="line">str: ignore settings from Keyword Arg <cite>markers</cite> and use this marker for all scatter points</div>
-</div>
-</p></li>
-<li><p><strong>markers</strong> (<em>list</em>) – <div class="line-block">
-<div class="line">list with markers to use for cluster mapping.</div>
-<div class="line">Rotates between markers each 10 clusters.</div>
-<div class="line">Defaults to [“o”, “^”, “s”, “v”, “P”, “X”]</div>
-</div>
-</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – (6.6, 6.6)</p></li>
+<li><p><strong>cmap</strong> (<em>seaborn.color_palette</em>) – colormap. Defaults to seaborn.color_palette(n_colors=60)</p></li>
+<li><p><strong>markers_list</strong> (<em>list</em>) – Defaults to [“o”, “^”, “s”, “v”, “P”, “X”]</p></li>
+<li><p><strong>markers_repeats</strong> (<em>list</em>) – Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.</p></li>
+<li><p><strong>markers</strong> (<em>list</em>) – list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
 <li><p><strong>ms</strong> (<em>int</em>) – 6</p></li>
 <li><p><strong>show_legend</strong> (<em>bool</em>) – </p></li>

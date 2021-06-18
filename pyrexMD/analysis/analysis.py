@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 03.06.2021
+# @Last modified time: 17.06.2021
 
 """
 This module contains functions various functions for trajectory analysis.

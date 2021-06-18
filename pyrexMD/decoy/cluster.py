@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 15.06.2021
+# @Last modified time: 18.06.2021
 
 """
 This module contains functions for:
@@ -457,13 +457,6 @@ def get_DM_WSS(DM, centers, labels, sss=[None, None, None], **kwargs):
           | .se_std (list)
           |     std values of Squared Errors for each cluster
     """
-    class WSS_DATA(object):
-        def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
-            self.wss = wss
-            self.sse = sse
-            self.se_mean = se_mean
-            self.se_std = se_std
-            return
     default = {"start": sss[0],
                "stop": sss[1],
                "step": sss[2],
@@ -496,7 +489,7 @@ def get_DM_WSS(DM, centers, labels, sss=[None, None, None], **kwargs):
     # WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)
     WSS = round(sum(SSE), cfg.prec)
 
-    WSS_DATA = WSS_DATA(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
+    WSS_DATA = WSS_DATA_obj(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
     return WSS_DATA
 
 
@@ -526,13 +519,6 @@ def get_WSS(data, centers, labels, **kwargs):
           | .se_std (list)
           |     std values of Squared Errors for each cluster
     """
-    class WSS_DATA(object):
-        def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
-            self.wss = wss
-            self.sse = sse
-            self.se_mean = se_mean
-            self.se_std = se_std
-            return
     default = {"prec": 3,
                "rescale": False}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -557,7 +543,7 @@ def get_WSS(data, centers, labels, **kwargs):
     # WSS: Within Cluster Sums of Squares == Sum of Squared Errors (of all clusters)
     WSS = round(sum(SSE), cfg.prec)
 
-    WSS_DATA = WSS_DATA(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
+    WSS_DATA = WSS_DATA_obj(wss=WSS, sse=SSE, se_mean=SE_mean, se_std=SE_std)
     return WSS_DATA
 
 
@@ -634,15 +620,11 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
 
     Keyword Args:
-        figsize (tuple): (7,7)
-        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette()
-        marker (None, str):
-          | None: use settings from Keyword Arg `markers` (see below)
-          | str: ignore settings from Keyword Arg `markers` and use this marker for all scatter points
-        markers (list):
-          | list with markers to use for cluster mapping.
-          | Rotates between markers each 10 clusters.
-          | Defaults to ["o", "^", "s", "v", "P", "X"]
+        figsize (tuple): (6.6, 6.6)
+        cmap (seaborn.color_palette): colormap. Defaults to seaborn.color_palette(n_colors=60)
+        markers_list (list): Defaults to ["o", "^", "s", "v", "P", "X"]
+        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
+        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.
         alpha (float): 1
         ms (int): 6
         show_legend (bool)
@@ -665,35 +647,35 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         raise ValueError(f"xdata, ydata and labels must have same first dimension, but have shapes {np.shape(xdata)}, {np.shape(ydata)} and {np.shape(labels)}")
     if plot_only is None:
         plot_only = list(range(min(labels), max(labels)+1))
-    default = {"figsize": (9, 9),
-               "cmap": sns.color_palette(),
-               "markers": ["o", "^", "s", "v", "P", "X"],
-               "marker": None,
+    default = {"figsize": (6.6, 6.6),
+               "cmap": sns.color_palette(n_colors=60),
+               "markers_list": ["o", "^", "s", "v", "P", "X"],
+               "markers_repeats": [10, 10, 10, 10, 10, 10],
                "alpha": 1,
                "ms": 20,
                "show_legend": True,
                "legend_loc": "outside",
-               "legend_ncols": 2,
+               "legend_ncols": 1,
                "xlabel": None,
                "ylabel": None,
                "xlim": (None, None),
-               "ylim": (None, None)
-               }
-    cfg = _misc.CONFIG(default, **kwargs)
+               "ylim": (None, None)}
+    size = len(set(labels))
+    default = _misc.CONFIG(default, **kwargs)
+    default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
+    modified = {"cmap": default.cmap[:size],
+                "markers": default_markers[:size]}
+    cfg = _misc.CONFIG(default, **modified)   # use default settings, overwrite with modified settings
+    cfg = _misc.CONFIG(cfg, **kwargs)     # overwrite with kwargs settings
     ##################################################################
     fig, ax = _misc.figure(**cfg)
-    for i in range(len(xdata)):
-        if labels[i] not in plot_only:
+    for ndx, i in enumerate(labels):
+        if i not in plot_only:
             continue
-        color = cfg.cmap[labels[i] % len(cfg.cmap)]
-        if cfg.marker is None:
-            marker = cfg.markers[labels[i]//len(cfg.cmap)]
+        if cfg.markers[i] in ["^" or "v"]:
+            plt.scatter(xdata[ndx], ydata[ndx], color=cfg.cmap[i], alpha=cfg.alpha, marker=cfg.markers[i], s=int(1.5*cfg.ms), lw=0, label=f"Cluster {i}")
         else:
-            marker = cfg.marker
-        if marker in ["^" or "v"]:
-            plt.scatter(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, s=int(1.5*cfg.ms), lw=0, label=f"Cluster {labels[i]}")
-        else:
-            plt.scatter(xdata[i], ydata[i], color=color, alpha=cfg.alpha, marker=marker, s=cfg.ms, lw=0, label=f"Cluster {labels[i]}")
+            plt.scatter(xdata[ndx], ydata[ndx], color=cfg.cmap[i], alpha=cfg.alpha, marker=cfg.markers[i], s=cfg.ms, lw=0, label=f"Cluster {i}")
 
     # set xlabel, ylabel
     if cfg.xlabel is not None:
@@ -737,7 +719,7 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
               Otherwise the index mapping from enumerate(labels) within this function will be wrong.
 
     Args:
-        cluster_data (): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
         score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().
         filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
         filter_tol (float):
@@ -815,13 +797,13 @@ def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
     apply t-distributed stochastic neighbor embedding on data.
 
     Args:
-        data(array)
-        n_components(int): TSNE number of components
-        perplexity(int): TSNE perplexity
-        random_state(None, int): Determines the random number generator
+        data (array)
+        n_components (int): TSNE number of components
+        perplexity (int): TSNE perplexity
+        random_state (None, int): Determines the random number generator
 
     Returns:
-        tsne_data(array)
+        tsne_data (array)
             tsne transformed data
     """
     nsamples, nx, ny = np.array(data).shape
@@ -835,16 +817,16 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     apply KMeans on tsne_data
 
     Args:
-        tnse_data(array): output of apply_TSNE()
-        n_clusters(int): number of clusters
-        random_state(None, int): Determines the random number generator(for centroid initialization)
+        tnse_data (array): output of apply_TSNE()
+        n_clusters (int): number of clusters
+        random_state (None, int): Determines the random number generator(for centroid initialization)
 
     Returns:
-        cluster_data(CLUSTER_DATA)
-          | .centers(array)
-          | .counts(array)
-          | .labels(array)
-          | .inertia(float)
+        cluster_data (CLUSTER_DATA)
+          | .centers (array)
+          | .counts (array)
+          | .labels (array)
+          | .inertia (float)
     """
     kmeans = KMeans(n_clusters=n_clusters, random_state=None).fit(tsne_data)
 
@@ -865,21 +847,21 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.
 
     Args:
-        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
-        tsne_data(array): output of apply_TSNE()
+        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        tsne_data (array): output of apply_TSNE()
 
     Keyword Args:
-        cmap(sns.color_palette(n_colors))
-        markers_list(list): Defaults to["o", "^", "s", "v", "P", "X"]
-        markers_repeats(list): Defaults to[10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
-        markers(list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be directly passed.
-        ms(int): marker size. Defaults to 40.
-        figsize(tuple): Defaults to(9, 9)
+        cmap (sns.color_palette(n_colors))
+        markers_list (list): Defaults to ["o", "^", "s", "v", "P", "X"]
+        markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
+        markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.
+        ms (int): marker size. Defaults to 40.
+        figsize (tuple): Defaults to(9, 9)
 
     Returns:
-        fig(class)
+        fig (class)
             matplotlib.figure.Figure
-        ax(class)
+        ax (class)
             matplotlib.axes._subplots.Axes
     """
     size = len(cluster_data.centers)
@@ -887,8 +869,8 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                "markers_list": ["o", "^", "s", "v", "P", "X"],
                "markers_repeats": [10, 10, 10, 10, 10, 10],
                "ms": 40,
-               "figsize": (9, 9)}
-    default = _misc.CONFIG(default)
+               "figsize": (6.6, 6.6)}
+    default = _misc.CONFIG(default, **kwargs)
     default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
     modified = {"cmap": default.cmap[:size],
                 "markers": default_markers[:size]}
@@ -907,6 +889,8 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                     s=cfg.ms,
                     legend='full',
                     data=pandas)
+    plt.xlabel("X", fontweight="bold")
+    plt.ylabel("Y", fontweight="bold")
 
     # plot legend
     h, l = ax.get_legend_handles_labels()
@@ -922,10 +906,10 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
     plot cluster center in existing figure.
 
     Args:
-        cluster_data(CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
-        color(str)
-        marker(str)
-        ms(int): marker size
+        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        color (str)
+        marker (str)
+        ms (int): marker size
     """
     X = cluster_data.centers[:, 0]
     Y = cluster_data.centers[:, 1]
@@ -947,9 +931,9 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
        targets too, even if their cluster centers are not close to n10 target.
 
     Args:
-        cluster_data_n10(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
-        cluster_data_n30(CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
-        score_file(str): ~ output of abinitio.frame2score()
+        cluster_data_n10 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=10) or heat_KMEANS(n_clusters=10)
+        cluster_data_n30 (CLUSTER_DATA): ~ output of apply_KMEANS(n_clusters=30) or heat_KMEANS(n_clusters=10)
+        score_file (str): ~ output of abinitio.frame2score()
         prec (None, int): rounding precision of distance
 
     Returns:
@@ -1235,4 +1219,13 @@ class CLUSTER_DATA_ACCURACY(object):
             self.RMSD_std = np.around(self.RMSD_std, prec)
             self.RMSD_minmax = np.around(self.RMSD_minmax, prec)
 
+        return
+
+
+class WSS_DATA_obj(object):
+    def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
+        self.wss = wss
+        self.sse = sse
+        self.se_mean = se_mean
+        self.se_std = se_std
         return
