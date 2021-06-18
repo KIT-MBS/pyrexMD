@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 13.06.2021
+# @Last modified time: 18.06.2021
 
 
 """
@@ -563,7 +563,7 @@ def get_continuous_segments(array):
 
 def GDT_continuous_segments(GDT_resids):
     """
-    Get continous segments for multiple frames (due to GDT_resids)
+    Get continous segments for multiple frames (via to GDT_resids)
 
     Args:
         GDT_resids (array): output of gdt.GDT()
