@@ -123,7 +123,6 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
 
     if cfg.save_as != None:
         cfg.save_as = _misc.realpath(cfg.save_as)
-        _misc.cprint(f"Saved file as: {cfg.save_as}")
         if len(a.select_atoms("nucleic")) == 0:
             # hardcoded protein selection
             resid, resname, id, name = _top.parsePDB(u.filename, sel="protein and name CA", norm=cfg.norm)
@@ -134,18 +133,28 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
             fout.write("#RESi\tRESj\tATOMi\tATOMj\n")
             for IJ in NC:
                 fout.write(f"{IJ[0]}\t{IJ[1]}\t{id[resid.index(IJ[0])]}\t{id[resid.index(IJ[1])]}\n")
-
+        _misc.cprint(f"Saved file as: {cfg.save_as}")
     return(NC, NC_d)
 
 
-def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", d_cutoff=6.0, plot=False, **kwargs):
+def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method="shortest_distance", d_cutoff=6.0, plot=False, **kwargs):
     """
     get native contact distances.
 
     Args:
         mobile (universe, str)
         ref (universe, str)
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         sel (str): selection string
+        method (str):
+          | 'shortest_distance': uses shortest RES distance between selection atoms
+          | 'contact_distance':
+          |     protein target ~ use distances of CA atoms
+          |     RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()
         d_cutoff (float): cutoff distance
         plot (bool)
 
@@ -184,13 +193,22 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", d_cutof
         _top.norm_universe(mobile)
 
     # convert sel to selids
-    selid1 = _top.sel2selid(ref, sel=sel, norm=cfg.norm)
-    selid2 = _top.sel2selid(mobile, sel=sel, norm=cfg.norm)
+    selid1 = _top.sel2selid(mobile, sel=sel, norm=cfg.norm)
+    selid2 = _top.sel2selid(ref, sel=sel, norm=cfg.norm)
 
     # get native contacts and distance matrices
-    NC, NC_d = get_Native_Contacts(ref, sel=selid1, d_cutoff=d_cutoff,
+    NC, NC_d = get_Native_Contacts(ref, sel=selid2, d_cutoff=d_cutoff,
                                    ignh=cfg.ignh, save_as=cfg.save_as)
-    DM = _ana.get_Distance_Matrices(mobile, sel=selid2, sss=[cfg.start, cfg.stop, cfg.step])
+
+    if method == "shortest_distance":
+        DM = []
+        for ts in mobile.trajectory[cfg.start:cfg.stop:cfg.step]:
+            SD, _ = _ana.get_shortest_RES_distances(mobile, sel=selid1)
+            DM.append(SD)
+    elif method == "contact_distance":
+        DM = _ana.get_Distance_Matrices(mobile, sel=selid1, sss=[cfg.start, cfg.stop, cfg.step])
+    else:
+        raise ValueError("method must be eitehr 'shortest_distance' or 'contact_distance'")
 
     # get native contact distances
     NC_dist = []
@@ -213,6 +231,11 @@ def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", plot=False, *
     Args:
         u (universe, str)
         bc (list): list of bias contacts represented by (RESi, RESj) tuple
+        sss (list):
+          | [start, stop, step]
+          | start (None, int): start frame
+          | stop (None, int): stop frame
+          | step (None, int): step size
         sel (str): selection string
         plot (bool)
 
@@ -609,7 +632,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
     # read DCA and calculate TPR
     DCA, _ = _misc.read_DCA_file(DCA_fin, n_DCA, usecols=cfg.DCA_cols, skiprows=cfg.DCA_skiprows, filter_DCA=cfg.filter_DCA, RES_range=cfg.RES_range)
     DCA_TPR = []  # List with TPR of DCA contacts with d < d_cutoff
-    SD = _ana.shortest_RES_distances(u=a, sel=sel)[0]
+    SD = _ana.get_shortest_RES_distances(u=a, sel=sel)[0]
     RES_min = min(a.residues.resids)
     z = 0
     for index, item in enumerate(DCA):

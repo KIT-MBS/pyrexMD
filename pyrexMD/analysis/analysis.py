@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 17.06.2021
+# @Last modified time: 18.06.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -506,15 +506,14 @@ def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, No
 #
 
 
-def shortest_RES_distances(u, sel):
+def get_shortest_RES_distances(u, sel):
     """
-    Calculates shortest RES distances for selection of universe u.
+    Calculates shortest RES distances (current frame) for selection of universe u.
 
     .. Attention:: Displayed RES ids always start with 1
 
     Args:
-        u (str): structure path
-        u (universe, atomgrp): structure
+        u (universe, str): structure universe or pdb path
         sel (str): selection string
 
     Returns:

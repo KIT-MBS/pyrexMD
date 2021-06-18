@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 18.06.2021
 
 
 """
@@ -439,7 +439,7 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
 ################################################################################
 ### Include contact bias
 
-def parsePDB(fin, sel, norm=False, filter_rna=True):
+def parsePDB(fin, sel, norm=False, filter_rna=True, verbose=False):
     """
     Reads PDB file and returns the columns for residue id, residue name,
     atom id and atom name as lists.
@@ -449,6 +449,7 @@ def parsePDB(fin, sel, norm=False, filter_rna=True):
         sel (str): selection string
         norm (bool): apply norm_universe() before parsing.
         filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues
+        verbose (bool)
 
     Returns:
         RESID (list)
@@ -476,7 +477,7 @@ def parsePDB(fin, sel, norm=False, filter_rna=True):
 
     u = mda.Universe(fin)
     if norm:
-        norm_universe(u)
+        norm_universe(u, verbose=verbose)
     a = u.select_atoms(sel)
 
     for item in a:
