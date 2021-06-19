@@ -537,10 +537,18 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
 
 def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid', **kwargs):
     """
-    Plots true positive rate for number of used DCA contacts.
+    Plots true positive rate (TPR) for number of used DCA contacts.
 
     - calculates shortest RES distance of the selection (only heavy atoms if ignh is True)
     - if distance is below threshold: DCA contact is True
+
+    .. Note:: figure shows
+
+        - blue line: TPR
+        - red line: 75% cutoff threshold (TPR of used number of contacts should be above 75% for contact-guided REX, see https://doi.org/10.1371/journal.pone.0242072)
+        - orange lines: suggested/guessed optimum number of contacts and the corresponding TPR
+        - orange region: region of interest between L/2 and L contacts
+
 
     Args:
         ref (str): reference path
@@ -747,8 +755,10 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         stop (None, int): stop frame
         step (None, int): step size
         color (str): "r"
-        alpha (float): 0.3
+        alpha (float): 1
         marker (str): "."
+        ms (int): 4
+        lw (int): 0
         save_plot (bool)
         save_as (str): "QNative.png"
 
@@ -767,8 +777,10 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
                "stop": sss[1],
                "step": sss[2],
                "color": "r",
-               "alpha": 0.3,
+               "alpha": 1,
                "marker": ".",
+               "ms": 4,
+               "lw": 0,
                "save_plot": False,
                "save_as": "QNative.png"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -791,10 +803,11 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
     QNATIVE = results.timeseries[:, 1]
 
     if plot:
-        _misc.cprint(f"average qnative value: {round(np.mean(QNATIVE), 3)}", "blue")
+        _misc.cprint(f"average QNative value: {round(np.mean(QNATIVE), 3)}", "blue")
 
-        fig, ax = _misc.figure()
-        plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker)
+        fig, ax = _misc.figure(**kwargs)
+        plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=0.3, marker=None, ms=cfg.ms)
+        plt.plot(FRAMES, QNATIVE, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker, ms=cfg.ms, lw=cfg.lw)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("QNative", fontweight="bold")
         plt.tight_layout()
@@ -850,8 +863,10 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
         step (None, int): step size
         figsize (tuple)
         color (str): "r"
-        alpha (float): 0.3
+        alpha (float): 1
         marker (str): "."
+        ms (int): 4
+        lw (int): 0
         save_plot (bool)
         save_as (str): "QBias.png"
         disable (bool): hide/show progress bar
@@ -882,8 +897,10 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
                "step": sss[2],
                "figsize": (7, 5),
                "color": "r",
-               "alpha": 0.3,
+               "alpha": 1,
                "marker": ".",
+               "ms": 4,
+               "lw": 0,
                "save_plot": False,
                "save_as": "QBias.png",
                "disable": False}
@@ -932,8 +949,9 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
     if plot:
         if verbose:
             _misc.cprint(f"average QBias value: {np.mean(QBIAS)}", "blue")
-        _cfg = cfg.deepcopy_without(["color", "alpha", "marker"])
-        fig, ax = _ana.PLOT(xdata=FRAMES, ydata=QBIAS, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker, **_cfg)
+        fig, ax = _misc.figure(**kwargs)
+        plt.plot(FRAMES, QBIAS, color=cfg.color, alpha=0.3, marker=None, ms=cfg.ms)
+        plt.plot(FRAMES, QBIAS, color=cfg.color, alpha=cfg.alpha, marker=cfg.marker, ms=cfg.ms, lw=cfg.lw)
         plt.xlabel("Frame", fontweight="bold")
         plt.ylabel("QBias", fontweight="bold")
         plt.tight_layout()

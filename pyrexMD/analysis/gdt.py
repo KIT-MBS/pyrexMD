@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 19.06.2021
 
 
 """
@@ -753,7 +753,7 @@ def plot_LA(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
         if cfg.vmin is None:
             cfg.vmin = 0.0
         if cfg.vmax is None:
-            cfg.vmax = 20.0
+            cfg.vmax = 14.0
     ############################################################################
     ### plot
     fig, ax = _misc.figure(**cfg)

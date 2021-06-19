@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 17.06.2021</span>
+<span class="c1"># @Last modified time: 18.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions various functions for trajectory analysis.</span>
@@ -669,15 +669,14 @@
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="shortest_RES_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.shortest_RES_distances">[docs]</a><span class="k">def</span> <span class="nf">shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">):</span>
+<div class="viewcode-block" id="get_shortest_RES_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analysis.get_shortest_RES_distances">[docs]</a><span class="k">def</span> <span class="nf">get_shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">sel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates shortest RES distances for selection of universe u.</span>
+<span class="sd">    Calculates shortest RES distances (current frame) for selection of universe u.</span>
 
 <span class="sd">    .. Attention:: Displayed RES ids always start with 1</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (str): structure path</span>
-<span class="sd">        u (universe, atomgrp): structure</span>
+<span class="sd">        u (universe, str): structure universe or pdb path</span>
 <span class="sd">        sel (str): selection string</span>
 
 <span class="sd">    Returns:</span>
@@ -1149,7 +1148,9 @@
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
                <span class="s2">&quot;colors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;grey&quot;</span><span class="p">],</span>
                <span class="s2">&quot;ec&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+               <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1"># edge color has to be a string, so None will result into white edge color; fix:</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1254,6 +1255,10 @@
 
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
 

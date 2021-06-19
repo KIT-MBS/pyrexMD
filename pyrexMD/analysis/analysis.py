@@ -985,7 +985,9 @@ def plot_hist(data, sss=[None, None, None], save_as=None, **kwargs):
                "alpha": 0.5,
                "colors": ["red", "grey"],
                "ec": "white",
-               "title": None}
+               "title": None,
+               "xlabel": None,
+               "ylabel": None}
     cfg = _misc.CONFIG(default, **kwargs)
     # edge color has to be a string, so None will result into white edge color; fix:
     if cfg.ec is None:
@@ -1090,6 +1092,10 @@ def plot_hist(data, sss=[None, None, None], save_as=None, **kwargs):
 
     if cfg.title is not None:
         plt.title(cfg.title, fontweight='bold')
+    if cfg.xlabel is not None:
+        plt.xlabel(cfg.xlabel, fontweight='bold')
+    if cfg.ylabel is not None:
+        plt.ylabel(cfg.ylabel, fontweight='bold')
     if save_as is not None:
         _misc.savefig(save_as)
 

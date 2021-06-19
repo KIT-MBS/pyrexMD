@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 19.06.2021
 
 """
 This module contains functions for:
@@ -920,7 +920,7 @@ def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
 def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, verbose=True):
     """
     get cluster targets by finding optimum center in n10 and then ranking distances
-    to n30 centers. This does not 'really' select targets but rather gives
+    to n30 centers. This does not 'really' select targets but rather provides
     additional information to select proper cluster targets based on
 
         - cluster energy mean values
@@ -979,7 +979,7 @@ def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_
     """
     Workflow to print and log cluster accuracy.
 
-    .. Note:: 'Compact Score' is mean(squared errors) of individual clusters.
+    .. Note:: 'compact score' is mean(squared errors) of individual clusters.
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
@@ -1022,7 +1022,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[N
     """
     Workflow to print and log cluster scores.
 
-    .. Note:: 'Compact Score' is mean(squared errors) of individual clusters.
+    .. Note:: 'compact score' is mean(squared errors) of individual clusters.
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_Kmeans()
@@ -1044,13 +1044,17 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[N
     #misc.cprint(f"scores mean_all_filtered: {scores_data.mean_all_filtered}", "red")
 
     _misc.cprint(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)", "red")
-    _misc.cprint("\nndx  size  compact | Emean    Estd    Emin      Emax     DELTA", "blue")
+    _misc.cprint("\nndx  size  compact | Emean    Estd    Emin      Emax      DELTA", "blue")
     for ndx in _ndx:
         if targets is not [None] and ndx in targets:
             cprint_color = "red"
         else:
             cprint_color = None
-        _misc.cprint(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<5}", cprint_color)
+        if cluster_scores.DELTA[ndx] < 0:
+            _misc.cprint(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<6}", cprint_color)
+        else:
+            # move scores by 1 digit if positive (looks nicer)
+            _misc.cprint(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}   {cluster_scores.DELTA[ndx]:<6}", cprint_color)
 
     # save log
     if save_as is not None:
@@ -1059,7 +1063,11 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[N
             fout.write(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)\n")
             fout.write("\nndx  size  compact | Emean    Estd    Emin      Emax     DELTA\n")
             for ndx in _ndx:
-                fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<5}\n")
+                if cluster_scores.DELTA[ndx] < 0:
+                    fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}  {cluster_scores.DELTA[ndx]:<6}\n")
+                else:
+                    # move scores by 1 digit if positive (looks nicer)
+                    fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}   {cluster_scores.DELTA[ndx]:<6}\n")
         print(f"\n Saved log as: {save_as}")
     return save_as
 ################################################################################
@@ -1149,8 +1157,8 @@ class CLUSTER_DATA_SCORES(object):
             self.min.append(round(min(self.scores[ndx]), prec))
             self.max.append(round(max(self.scores[ndx]), prec))
 
-            # DELTA[i] = abs(mean_all-mean[i])
-            self.DELTA.append(round(abs(self.mean_all_filtered-self.mean[ndx]), prec))
+            # DELTA[i] = mean[i] - mean_all
+            self.DELTA.append(round(self.mean[ndx]-self.mean_all_filtered, prec))
         return
 
 
