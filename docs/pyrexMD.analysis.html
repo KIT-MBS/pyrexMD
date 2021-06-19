@@ -510,6 +510,41 @@ corresponding atom in “mobile”.</div>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_shortest_RES_distances">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_shortest_RES_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_shortest_RES_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_shortest_RES_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates shortest RES distances (current frame) for selection of universe u.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Displayed RES ids always start with 1</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – structure universe or pdb path</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl>
+<dt>SD (arrray)</dt><dd><div class="line-block">
+<div class="line">NxN Matrix with shortest RES distances</div>
+<div class="line">i.e.: SD[0][0] is shortest distance RES0-RES0</div>
+<div class="line-block">
+<div class="line">SD[0][1] is shortest distance RES0-RES1</div>
+<div class="line">SD[0][2] is shortest distance RES0-RES2</div>
+</div>
+<div class="line">etc.</div>
+</div>
+</dd>
+<dt>SD_d (array, dtype=object)</dt><dd><p>detailed List with [d_min, (RES_pair), (ATM_pair), (ATM_names)]</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analysis.get_time_conversion">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">get_time_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#get_time_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.get_time_conversion" title="Permalink to this definition">¶</a></dt>
 <dd><p>get/print time conversion of MDA universe &lt;u&gt;</p>
@@ -909,42 +944,6 @@ requires 1 extra bin.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.analysis.analysis.shortest_RES_distances">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analysis.</span></span><span class="sig-name descname"><span class="pre">shortest_RES_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analysis.html#shortest_RES_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analysis.shortest_RES_distances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates shortest RES distances for selection of universe u.</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>Displayed RES ids always start with 1</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure path</p></li>
-<li><p><strong>u</strong> – structure</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl>
-<dt>SD (arrray)</dt><dd><div class="line-block">
-<div class="line">NxN Matrix with shortest RES distances</div>
-<div class="line">i.e.: SD[0][0] is shortest distance RES0-RES0</div>
-<div class="line-block">
-<div class="line">SD[0][1] is shortest distance RES0-RES1</div>
-<div class="line">SD[0][2] is shortest distance RES0-RES2</div>
-</div>
-<div class="line">etc.</div>
-</div>
-</dd>
-<dt>SD_d (array, dtype=object)</dt><dd><p>detailed List with [d_min, (RES_pair), (ATM_pair), (ATM_names)]</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 </div>
 <div class="section" id="module-pyrexMD.analysis.contacts">
@@ -983,6 +982,13 @@ requires 1 extra bin.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
 <li><p><strong>bc</strong> (<em>list</em>) – list of bias contacts represented by (RESi, RESj) tuple</p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step]</div>
+<div class="line">start (None, int): start frame</div>
+<div class="line">stop (None, int): stop frame</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
 </ul>
@@ -1013,14 +1019,30 @@ requires 1 extra bin.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_NC_distances">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shortest_distance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
 <dd><p>get native contact distances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
 <li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>sss</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">[start, stop, step]</div>
+<div class="line">start (None, int): start frame</div>
+<div class="line">stop (None, int): stop frame</div>
+<div class="line">step (None, int): step size</div>
+</div>
+</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">‘shortest_distance’: uses shortest RES distance between selection atoms</div>
+<div class="line">’contact_distance’:</div>
+<div class="line-block">
+<div class="line">protein target ~ use distances of CA atoms</div>
+<div class="line">RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()</div>
+</div>
+</div>
+</p></li>
 <li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance</p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
 </ul>
@@ -1152,8 +1174,10 @@ QBias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
 <li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
 <li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) – 0.3</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
 <li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
+<li><p><strong>ms</strong> (<em>int</em>) – 4</p></li>
+<li><p><strong>lw</strong> (<em>int</em>) – 0</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – “QBias.png”</p></li>
 <li><p><strong>disable</strong> (<em>bool</em>) – hide/show progress bar</p></li>
@@ -1289,8 +1313,10 @@ QBias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>stop</strong> (<em>None</em><em>, </em><em>int</em>) – stop frame</p></li>
 <li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
 <li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) – 0.3</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
 <li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
+<li><p><strong>ms</strong> (<em>int</em>) – 4</p></li>
+<li><p><strong>lw</strong> (<em>int</em>) – 0</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – “QNative.png”</p></li>
 </ul>
@@ -1447,11 +1473,21 @@ is protein or nucleic to select pre-defined color map.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.plot_DCA_TPR">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">plot_DCA_TPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#plot_DCA_TPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.plot_DCA_TPR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots true positive rate for number of used DCA contacts.</p>
+<dd><p>Plots true positive rate (TPR) for number of used DCA contacts.</p>
 <ul class="simple">
 <li><p>calculates shortest RES distance of the selection (only heavy atoms if ignh is True)</p></li>
 <li><p>if distance is below threshold: DCA contact is True</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>figure shows</p>
+<ul class="simple">
+<li><p>blue line: TPR</p></li>
+<li><p>red line: 75% cutoff threshold (TPR of used number of contacts should be above 75% for contact-guided REX, see <a class="reference external" href="https://doi.org/10.1371/journal.pone.0242072">https://doi.org/10.1371/journal.pone.0242072</a>)</p></li>
+<li><p>orange lines: suggested/guessed optimum number of contacts and the corresponding TPR</p></li>
+<li><p>orange region: region of interest between L/2 and L contacts</p></li>
+</ul>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1973,7 +2009,7 @@ percent of residues under distance cutoff &lt;= x Angstrom</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.GDT_continuous_segments">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">GDT_continuous_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDT_resids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#GDT_continuous_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.GDT_continuous_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get continous segments for multiple frames (due to GDT_resids)</p>
+<dd><p>Get continous segments for multiple frames (via to GDT_resids)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>GDT_resids</strong> (<em>array</em>) – output of gdt.GDT()</p>

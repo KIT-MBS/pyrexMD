@@ -286,7 +286,6 @@
 
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;nucleic&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># hardcoded protein selection</span>
             <span class="n">resid</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein and name CA&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
@@ -297,18 +296,28 @@
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#RESi</span><span class="se">\t</span><span class="s2">RESj</span><span class="se">\t</span><span class="s2">ATOMi</span><span class="se">\t</span><span class="s2">ATOMj</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">IJ</span> <span class="ow">in</span> <span class="n">NC</span><span class="p">:</span>
                 <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="nb">id</span><span class="p">[</span><span class="n">resid</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="nb">id</span><span class="p">[</span><span class="n">resid</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">IJ</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_NC_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_NC_distances">[docs]</a><span class="k">def</span> <span class="nf">get_NC_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_NC_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_NC_distances">[docs]</a><span class="k">def</span> <span class="nf">get_NC_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;shortest_distance&quot;</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get native contact distances.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        mobile (universe, str)</span>
 <span class="sd">        ref (universe, str)</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        sel (str): selection string</span>
+<span class="sd">        method (str):</span>
+<span class="sd">          | &#39;shortest_distance&#39;: uses shortest RES distance between selection atoms</span>
+<span class="sd">          | &#39;contact_distance&#39;:</span>
+<span class="sd">          |     protein target ~ use distances of CA atoms</span>
+<span class="sd">          |     RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()</span>
 <span class="sd">        d_cutoff (float): cutoff distance</span>
 <span class="sd">        plot (bool)</span>
 
@@ -347,13 +356,22 @@
         <span class="n">_top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">)</span>
 
     <span class="c1"># convert sel to selids</span>
-    <span class="n">selid1</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">sel2selid</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
-    <span class="n">selid2</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">sel2selid</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+    <span class="n">selid1</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">sel2selid</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
+    <span class="n">selid2</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">sel2selid</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">norm</span><span class="p">)</span>
 
     <span class="c1"># get native contacts and distance matrices</span>
-    <span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span> <span class="o">=</span> <span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid1</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">,</span>
+    <span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span> <span class="o">=</span> <span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid2</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">,</span>
                                    <span class="n">ignh</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
-    <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;shortest_distance&quot;</span><span class="p">:</span>
+        <span class="n">DM</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">]:</span>
+            <span class="n">SD</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_shortest_RES_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid1</span><span class="p">)</span>
+            <span class="n">DM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SD</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;contact_distance&quot;</span><span class="p">:</span>
+        <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid1</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;method must be eitehr &#39;shortest_distance&#39; or &#39;contact_distance&#39;&quot;</span><span class="p">)</span>
 
     <span class="c1"># get native contact distances</span>
     <span class="n">NC_dist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -376,6 +394,11 @@
 <span class="sd">    Args:</span>
 <span class="sd">        u (universe, str)</span>
 <span class="sd">        bc (list): list of bias contacts represented by (RESi, RESj) tuple</span>
+<span class="sd">        sss (list):</span>
+<span class="sd">          | [start, stop, step]</span>
+<span class="sd">          | start (None, int): start frame</span>
+<span class="sd">          | stop (None, int): stop frame</span>
+<span class="sd">          | step (None, int): step size</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        plot (bool)</span>
 
@@ -677,10 +700,18 @@
 
 <div class="viewcode-block" id="plot_DCA_TPR"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.plot_DCA_TPR">[docs]</a><span class="k">def</span> <span class="nf">plot_DCA_TPR</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">pdbid</span><span class="o">=</span><span class="s1">&#39;pdbid&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plots true positive rate for number of used DCA contacts.</span>
+<span class="sd">    Plots true positive rate (TPR) for number of used DCA contacts.</span>
 
 <span class="sd">    - calculates shortest RES distance of the selection (only heavy atoms if ignh is True)</span>
 <span class="sd">    - if distance is below threshold: DCA contact is True</span>
+
+<span class="sd">    .. Note:: figure shows</span>
+
+<span class="sd">        - blue line: TPR</span>
+<span class="sd">        - red line: 75% cutoff threshold (TPR of used number of contacts should be above 75% for contact-guided REX, see https://doi.org/10.1371/journal.pone.0242072)</span>
+<span class="sd">        - orange lines: suggested/guessed optimum number of contacts and the corresponding TPR</span>
+<span class="sd">        - orange region: region of interest between L/2 and L contacts</span>
+
 
 <span class="sd">    Args:</span>
 <span class="sd">        ref (str): reference path</span>
@@ -772,7 +803,7 @@
     <span class="c1"># read DCA and calculate TPR</span>
     <span class="n">DCA</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_DCA_file</span><span class="p">(</span><span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_cols</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">DCA_skiprows</span><span class="p">,</span> <span class="n">filter_DCA</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">filter_DCA</span><span class="p">,</span> <span class="n">RES_range</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">RES_range</span><span class="p">)</span>
     <span class="n">DCA_TPR</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List with TPR of DCA contacts with d &lt; d_cutoff</span>
-    <span class="n">SD</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">SD</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_shortest_RES_distances</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">RES_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
     <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">DCA</span><span class="p">):</span>
@@ -887,8 +918,10 @@
 <span class="sd">        stop (None, int): stop frame</span>
 <span class="sd">        step (None, int): step size</span>
 <span class="sd">        color (str): &quot;r&quot;</span>
-<span class="sd">        alpha (float): 0.3</span>
+<span class="sd">        alpha (float): 1</span>
 <span class="sd">        marker (str): &quot;.&quot;</span>
+<span class="sd">        ms (int): 4</span>
+<span class="sd">        lw (int): 0</span>
 <span class="sd">        save_plot (bool)</span>
 <span class="sd">        save_as (str): &quot;QNative.png&quot;</span>
 
@@ -907,8 +940,10 @@
                <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QNative.png&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -931,10 +966,11 @@
     <span class="n">QNATIVE</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">timeseries</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average qnative value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QNATIVE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average QNative value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QNATIVE</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QNATIVE</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">lw</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frame&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;QNative&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -990,8 +1026,10 @@
 <span class="sd">        step (None, int): step size</span>
 <span class="sd">        figsize (tuple)</span>
 <span class="sd">        color (str): &quot;r&quot;</span>
-<span class="sd">        alpha (float): 0.3</span>
+<span class="sd">        alpha (float): 1</span>
 <span class="sd">        marker (str): &quot;.&quot;</span>
+<span class="sd">        ms (int): 4</span>
+<span class="sd">        lw (int): 0</span>
 <span class="sd">        save_plot (bool)</span>
 <span class="sd">        save_as (str): &quot;QBias.png&quot;</span>
 <span class="sd">        disable (bool): hide/show progress bar</span>
@@ -1022,8 +1060,10 @@
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+               <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QBias.png&quot;</span><span class="p">,</span>
                <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
@@ -1072,8 +1112,9 @@
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average QBias value: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QBIAS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-        <span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">deepcopy_without</span><span class="p">([</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;marker&quot;</span><span class="p">])</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">QBIAS</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="o">**</span><span class="n">_cfg</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">lw</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frame&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;QBias&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>

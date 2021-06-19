@@ -599,7 +599,7 @@
 <dd><p>Workflow to print and log cluster accuracy.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>‘Compact Score’ is mean(squared errors) of individual clusters.</p>
+<p>‘compact score’ is mean(squared errors) of individual clusters.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -626,7 +626,7 @@
 <dd><p>Workflow to print and log cluster scores.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>‘Compact Score’ is mean(squared errors) of individual clusters.</p>
+<p>‘compact score’ is mean(squared errors) of individual clusters.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -912,7 +912,7 @@
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_cluster_targets">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_cluster_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data_n10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_data_n30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_cluster_targets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_cluster_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>get cluster targets by finding optimum center in n10 and then ranking distances
-to n30 centers. This does not ‘really’ select targets but rather gives
+to n30 centers. This does not ‘really’ select targets but rather provides
 additional information to select proper cluster targets based on</p>
 <blockquote>
 <div><ul class="simple">

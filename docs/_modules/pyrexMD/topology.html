@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 27.05.2021</span>
+<span class="c1"># @Last modified time: 18.06.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -602,7 +602,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">### Include contact bias</span>
 
-<div class="viewcode-block" id="parsePDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.parsePDB">[docs]</a><span class="k">def</span> <span class="nf">parsePDB</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filter_rna</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="parsePDB"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.parsePDB">[docs]</a><span class="k">def</span> <span class="nf">parsePDB</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">sel</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filter_rna</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads PDB file and returns the columns for residue id, residue name,</span>
 <span class="sd">    atom id and atom name as lists.</span>
@@ -612,6 +612,7 @@
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        norm (bool): apply norm_universe() before parsing.</span>
 <span class="sd">        filter_rna (bool): filter selection only for N1 and N3 atoms based on nucleic residues</span>
+<span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RESID (list)</span>
@@ -639,7 +640,7 @@
 
     <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
-        <span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
