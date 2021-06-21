@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_misc.py
 # @Last modified by:   arthur
-# @Last modified time: 16.05.2021
+# @Last modified time: 21.06.2021
 
 
 import pyrexMD.misc as misc
@@ -10,6 +10,12 @@ import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
 import pytest
+import os
+
+if os.path.exists("./files"):
+    pre = "."
+else:
+    pre = "./tests/"
 
 
 def test_round_object():
@@ -91,32 +97,32 @@ def test_insert_str():
 
 
 def test_autodetect_header():
-    assert misc.autodetect_header("files/header_file1.txt") == 8
-    assert misc.autodetect_header("files/header_file2.txt") == 10
+    assert misc.autodetect_header(f"{pre}/files/header_file1.txt") == 8
+    assert misc.autodetect_header(f"{pre}/files/header_file2.txt") == 10
     return
 
 
 def test_read_file():
-    val = misc.read_file("files/header_file1.txt")
+    val = misc.read_file(f"{pre}/files/header_file1.txt")
     expected = [np.array([1., 2., 3., 4., 5.]), np.array([1., 2., 3., 4., 5.])]
     assert assert_allclose(val, expected) == None
 
-    val = misc.read_file("files/header_file2.txt")
+    val = misc.read_file(f"{pre}/files/header_file2.txt")
     expected = [np.array([1., 2., 3., 4., 5.]), np.array([10., 20., 30., 40., 50.])]
     assert assert_allclose(val, expected) == None
     return
 
 
 def test_read_DCA_ile():
-    val = misc.read_DCA_file("files/2hda.score", n_DCA=50)
-    expected = np.load("files/READ_DCA_FILE.npy", allow_pickle=True)
+    val = misc.read_DCA_file(f"{pre}/files/2hda.score", n_DCA=50)
+    expected = np.load(f"{pre}/files/READ_DCA_FILE.npy", allow_pickle=True)
     assert assert_allclose(val[0], expected[0]) == None
     assert assert_allclose(val[1], expected[1]) == None
     return
 
 
 def test_get_PDBid():
-    ref = mda.Universe("files/1l2y/1l2y_ref.pdb")
+    ref = mda.Universe(f"{pre}/files/1l2y/1l2y_ref.pdb")
     val = misc.get_PDBid(ref)
     assert val == "1l2y"
     return
@@ -171,3 +177,20 @@ def test_get_ranked_array():
     assert (val[0] == [1, 2, 3, 4]).all()
     assert (val[1] == [0, 2, 1, 3]).all()
     return
+
+
+def test_CONFIG():
+    default = {"start": None,
+               "stop": 100,
+               "step": 1,
+               "color": "red"}
+    change = {"color": "blue",
+              "marker": "."}
+    target = {"start": None,
+              "stop": 100,
+              "step": 1,
+              "color": "blue",
+              "marker": "."}
+    cfg1 = misc.CONFIG(default, **change)
+    cfg2 = misc.CONFIG(target)
+    assert cfg1.items() == cfg2.items()

@@ -2,7 +2,7 @@
 ;	File 'mdout.mdp' was generated
 ;	By user: arthur (1000)
 ;	On host: fractal-r9
-;	At date: Sat Jun 19 00:18:53 2021
+;	At date: Mon Jun 21 03:51:22 2021
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2020.5 (-:
@@ -11,7 +11,7 @@
 ;	Data prefix:  /usr/local/gromacs_2020
 ;	Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_3
 ;	Command line:
-;	  gmx_mpi grompp -f ../ions.mdp -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_3/ions.tpr -c solvent.gro -p topol.top -nov -maxwarn 10
+;	  gmx_mpi grompp -f ../min.mdp -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_3/em.tpr -c ions.gro -p topol.top -v -maxwarn 10
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -25,7 +25,7 @@ integrator               = steep
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.001
-nsteps                   = 50000
+nsteps                   = 1000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -59,13 +59,13 @@ rtpi                     = 0.05
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 0
-nstvout                  = 0
+nstxout                  = 100
+nstvout                  = 100
 nstfout                  = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 1000
+nstlog                   = 100
 nstcalcenergy            = 100
-nstenergy                = 1000
+nstenergy                = 100
 ; Output frequency and precision for .xtc file
 nstxout-compressed       = 0
 compressed-x-precision   = 1000

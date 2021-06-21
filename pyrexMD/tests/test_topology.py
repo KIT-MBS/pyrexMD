@@ -2,7 +2,7 @@
 # @Date:   21.05.2021
 # @Filename: test_topology.py
 # @Last modified by:   arthur
-# @Last modified time: 22.05.2021
+# @Last modified time: 21.06.2021
 
 
 import pyrexMD.topology as top
@@ -10,8 +10,12 @@ import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
 import pytest
+import os
 
-pre = "./files/1l2y/"
+if os.path.exists("./files"):
+    pre = "./files/1l2y/"
+else:
+    pre = "./tests/files/1l2y/"
 pdb = pre + "1l2y_ref.pdb"
 tpr = pre + "traj.tpr"
 xtc = pre + "traj.xtc"

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 21.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -1351,7 +1351,7 @@ def get_PDBid(ref):
         return
 
 
-def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_stop=30, warn=True):
+def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_stop=30, warn=True, **kwargs):
     """
     Prints each item of "data" elementwise next to each other as a table.
 
@@ -1458,13 +1458,13 @@ def print_table(data=[], prec=3, spacing=8, dtype=None, verbose=True, verbose_st
     return table_str
 
 
-def save_table(filename="", data=[], header="", default_dir="./logs", prec=3, verbose=True, verbose_stop=None, **kwargs):
+def save_table(data=[], filename="", header="", default_dir="./logs", prec=3, verbose=True, verbose_stop=None, **kwargs):
     """
     Executes misc.print_table() and saves the returned table string as a log file.
 
     Args:
-        filename (str): filename or realpath
         data (list of lists): table content, where each list corresponds to one column
+        filename (str): filename or realpath
         header (str): header for log file, e.g. column descriptions
         default_dir (str)
         prec (None, int):

@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 21.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -208,7 +208,7 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method=
     elif method == "contact_distance":
         DM = _ana.get_Distance_Matrices(mobile, sel=selid1, sss=[cfg.start, cfg.stop, cfg.step])
     else:
-        raise ValueError("method must be eitehr 'shortest_distance' or 'contact_distance'")
+        raise ValueError("method must be either 'shortest_distance' or 'contact_distance'")
 
     # get native contact distances
     NC_dist = []
@@ -224,7 +224,7 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method=
     return (NC, NC_dist, DM)
 
 
-def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", plot=False, **kwargs):
+def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", method="shortest_distance", plot=False, **kwargs):
     """
     get bias contact distances.
 
@@ -237,6 +237,11 @@ def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", plot=False, *
           | stop (None, int): stop frame
           | step (None, int): step size
         sel (str): selection string
+        method (str):
+          | 'shortest_distance': uses shortest RES distance between selection atoms
+          | 'contact_distance':
+          |     protein target ~ use distances of CA atoms
+          |     RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()
         plot (bool)
 
     Keyword Args:
@@ -275,7 +280,15 @@ def get_BC_distances(u, bc, sss=[None, None, None], sel="protein", plot=False, *
     selid = _top.sel2selid(u, sel=sel, norm=cfg.norm)
 
     # get native contacts and distance matrices
-    DM = _ana.get_Distance_Matrices(u, sel=selid, sss=[cfg.start, cfg.stop, cfg.step])
+    if method == "shortest_distance":
+        DM = []
+        for ts in u.trajectory[cfg.start:cfg.stop:cfg.step]:
+            SD, _ = _ana.get_shortest_RES_distances(u, sel=selid)
+            DM.append(SD)
+    elif method == "contact_distance":
+        DM = _ana.get_Distance_Matrices(u, sel=selid, sss=[cfg.start, cfg.stop, cfg.step])
+    else:
+        raise ValueError("method must be either 'shortest_distance' or 'contact_distance'")
 
     # get native contact distances
     BC_dist = []
@@ -373,7 +386,6 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
     elif cfg.ms is None:
         cfg.ms = 6
 
-    print("Plotting native contacts...")
     for ndx, item in enumerate(NC):
         plt.scatter(item[0], item[1], color="silver", marker="s", s=cfg.ms*cfg.ms)
 
@@ -411,6 +423,10 @@ def plot_Contact_Map(ref, DCA_fin=None, n_DCA=None, d_cutoff=6.0,
 def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     """
     Create contact map with color-coded distances for selected contact pairs.
+    Distances larger than the highest value of the colorbar will be displayed in grey.
+
+    .. Warning :: vmin and vmax do only modify the limits of the color bar. They
+        do not affect the color mapping of the contacts, which is defined in cmap.
 
     Args:
         ref (universe, str): reference universe or pdb. Used to detect if target
@@ -788,7 +804,7 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         cfg.sel1 = sel
         cfg.sel2 = sel
     if cfg.sel1 == None or cfg.sel2 == None:
-        _misc.Error("Set either sel (arg) or both sel1 and sel2 (kwargs).")
+        raise _misc.Error("Set either sel (arg) or both sel1 and sel2 (kwargs).")
     #####################################################################
     _top.norm_and_align_universe(mobile, ref)
 
@@ -877,7 +893,7 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
         QBIAS (array)
             array with fraction of formed bias contacts
         CM (array)
-            array with distance matrices
+            array with contact matrices
     """
     def __HELP_softcut(d, d0, tol):
         """
@@ -1038,10 +1054,10 @@ def get_QBias_TPFP(mobile, BC, NC, sss=[None, None, None], d_cutoff=8.0, prec=3,
     if not isinstance(NC, (list, np.ndarray)):
         raise _misc.Error("BC and NC must be list of tuples (RESi, RESj)")
     for item in BC:
-        if not isinstance(item, tuple):
+        if not isinstance(item, (tuple, list)):
             raise _misc.Error("BC must be list of tuples (RESi, RESj)")
     for item in NC:
-        if not isinstance(item, tuple):
+        if not isinstance(item, (tuple, list)):
             raise _misc.Error("NC must be list of tuples (RESi, RESj)")
     if norm:
         _top.norm_universe(mobile)

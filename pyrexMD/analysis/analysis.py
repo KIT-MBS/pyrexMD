@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 21.06.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -69,10 +69,11 @@ def get_time_conversion(u, **kwargs):
     if isinstance(u, mda.core.universe.Universe):
         dt = u.trajectory.dt
         tu = u.trajectory.units["time"]
+
         if tu == "ps":
-            _misc.cprint(f"Time = Frame * {dt} {tu} = Frame * {0.001*dt} ns", **kwargs)
-        else:
-            _misc.cprint(f"Time=Frame * {dt} {tu}", **kwargs)
+            _misc.cprint(f"Time = Frame * {dt} {tu} = Frame * {0.001*dt} ns")
+        elif tu == "ns":
+            _misc.cprint(f"Time=Frame * {dt} {tu}")
     else:
         raise TypeError("type(u) must be MDAnalysis.core.universe.Universe.")
     return
@@ -356,7 +357,6 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
     if not isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError(f'''{get_RMSF.__module__}.{get_RMSF.__name__}():\
         \nmobile be MDA universe or atomgrp!''')
-        return
 
     else:
         RMSF = _rms.RMSF(mobile.select_atoms(sel))
@@ -766,7 +766,7 @@ def PLOT(xdata, ydata, xlabel='', ylabel='', title='', xlim=None, ylim=None, **k
     return(fig, ax)
 
 
-def plot_RMSD(RMSD_file, sss=[None, None, 10], verbose=None, save_as="", **kwargs):
+def plot_RMSD(RMSD_file, sss=[None, None, None], verbose=None, save_as="", **kwargs):
     """
     plot RMSD curve
 
@@ -807,7 +807,7 @@ def plot_RMSD(RMSD_file, sss=[None, None, 10], verbose=None, save_as="", **kwarg
     default = {"alpha": 0.3,
                "color": "r",
                "lw": 1.5,
-               "ms": 1,
+               "ms": 4,
                "marker": ".",
                "start": sss[0],
                "stop": sss[1],
@@ -1030,6 +1030,7 @@ def plot_hist(data, sss=[None, None, None], save_as=None, **kwargs):
 
     if "ax" in cfg.keys():
         plt.sca(cfg["ax"])
+        fig = plt.gcf()
     else:
         fig, ax = _misc.figure(**cfg)
     # plt.hist version
@@ -1297,9 +1298,7 @@ def _HELP_convert_RMSD_nm2angstrom(RMSD_nm):
         RMSD (list)
             rmsd values in angstrom
     """
-    RMSD_max = np.amax(RMSD_nm)
-    if RMSD_max < 5.0:
-        RMSD = [x*10 for x in RMSD_nm]
+    RMSD = [x*10 for x in RMSD_nm]
     return RMSD
 
 

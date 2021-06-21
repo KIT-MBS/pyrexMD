@@ -1,0 +1,61 @@
+STDERR:
+
+                     :-) GROMACS - gmx editconf, 2020.5 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx editconf, version 2020.5
+Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
+Data prefix:  /usr/local/gromacs_2020
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/protein
+Command line:
+  gmx_mpi editconf -f protein.gro -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/protein/box.gro -d 2.0 -c -bt cubic
+
+
+Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/protein/box.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/protein/#box.gro.1#
+
+GROMACS reminds you: "There's so many shades of black" (The Raconteurs)
+
+
+STDOUT:
+
+Note that major changes are planned in future for editconf, to improve usability and utility.
+Read 304 atoms
+Volume: 0.001 nm^3, corresponds to roughly 0 electrons
+No velocities found
+    system size :  2.299  2.012  1.378 (nm)
+    diameter    :  2.392               (nm)
+    center      :  0.010  0.002 -0.001 (nm)
+    box vectors :  0.100  0.100  0.100 (nm)
+    box angles  :  90.00  90.00  90.00 (degrees)
+    box volume  :   0.00               (nm^3)
+    shift       :  3.186  3.194  3.197 (nm)
+new center      :  3.196  3.196  3.196 (nm)
+new box vectors :  6.392  6.392  6.392 (nm)
+new box angles  :  90.00  90.00  90.00 (degrees)
+new box volume  : 261.20               (nm^3)
+

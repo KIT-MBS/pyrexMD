@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 20.05.2021
+# @Last modified time: 21.06.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -922,7 +922,7 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
     return tpr_file, xtc_file
 
 
-def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, **kwargs):
+def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel=["bb", "bb"], verbose=True, **kwargs):
     """
     Modified function of gromacs.rms(). Calculate backbone RMSD.
 
@@ -936,8 +936,8 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
           | output directory
           | special case: odir is ignored when o is relative/absolute path
         tu (str): time unit: fs ps ns us ms s
-        sel (str):
-          | selection string (case independant)
+        sel (list):
+          | list with selection strings (case independant)
           | "system" or "all": all atoms
           | "protein": protein atoms
           | "ca" or "calpha": CA atoms
@@ -975,7 +975,10 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel="bb", verbose=True, 
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        gromacs.rms(s=ref, f=xtc, o=o, tu=tu, **kwargs)
+        sel_code = ""
+        for item in sel:
+            sel_code += f"{_get_sel_code(item)} "
+        gromacs.rms(s=ref, f=xtc, o=o, tu=tu, input=sel_code, **kwargs)
 
     # save message
     o_file = _misc.realpath(o)
@@ -1198,7 +1201,7 @@ def create_positions_dat(box_vec=[25, 25, 25],
     elif isinstance(nmol, (list, tuple, range)):
         pass
     else:
-        raise _misc.Error("<nmol> must be int, tuple, list or range object.")
+        raise TypeError("<nmol> must be int, tuple, list or range object.")
     for n in nmol:
         with open(f"{file_dir}/positions_{n}.dat", "w") as handle:
             for i in range(n):

@@ -30,7 +30,7 @@ GROMACS:      gmx mdrun, version 2020.5
 Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 Data prefix:  /usr/local/gromacs_2020
 Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_8
-Process ID:   24338
+Process ID:   13252
 Command line:
   gmx_mpi mdrun -v -deffnm em -nsteps 10
 
@@ -142,7 +142,7 @@ Input Parameters:
    comm-mode                      = Linear
    nstcomm                        = 100
    bd-fric                        = 0
-   ld-seed                        = -68308993
+   ld-seed                        = -536872714
    emtol                          = 1000
    emstep                         = 0.01
    niter                          = 20
@@ -353,7 +353,7 @@ J. Comp. Chem. 13 (1992) pp. 952-962
 
 Note that activating steepest-descent energy minimization via the integrator .mdp option and the command gmx mdrun may be available in a different form in a future version of GROMACS, e.g. gmx minimize and an .mdp option.
 Initiating Steepest Descents
-Started Steepest Descents on rank 0 Fri May 21 17:23:07 2021
+Started Steepest Descents on rank 0 Mon Jun 21 03:51:42 2021
 
 
 Steepest Descents:
@@ -366,127 +366,127 @@ Steepest Descents:
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
     6.81526e+03    3.60766e+02    3.32176e+03    9.29405e-01    1.98798e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.93560e+04    2.22567e+05   -1.27829e+06    1.24944e+04   -1.01139e+06
+    1.93560e+04    2.22368e+05   -1.27813e+06    1.23316e+04   -1.01159e+06
  Pressure (bar)
-    3.40723e+03
+    3.39098e+03
 
            Step           Time
               1        1.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    6.50116e+03    3.72084e+02    3.32315e+03    1.52326e+00    1.98999e+03
+    6.50116e+03    3.72098e+02    3.32315e+03    1.52374e+00    1.98999e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.93525e+04    2.14965e+05   -1.27853e+06    1.24714e+04   -1.01955e+06
+    1.93525e+04    2.14768e+05   -1.27837e+06    1.23093e+04   -1.01975e+06
  Pressure (bar)
-    2.71405e+03
+    2.69803e+03
 
            Step           Time
               2        2.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    5.61840e+03    4.49325e+02    3.33091e+03    7.07643e+00    1.99349e+03
+    5.61840e+03    4.49389e+02    3.33091e+03    7.07735e+00    1.99347e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.93391e+04    2.06025e+05   -1.27925e+06    1.23925e+04   -1.03009e+06
+    1.93391e+04    2.05833e+05   -1.27909e+06    1.22323e+04   -1.03028e+06
  Pressure (bar)
-    1.87782e+03
+    1.86230e+03
 
            Step           Time
               3        3.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    3.69113e+03    7.50207e+02    3.35605e+03    2.14454e+01    1.99156e+03
+    3.69090e+03    7.50387e+02    3.35604e+03    2.14371e+01    1.99152e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.93100e+04    1.98445e+05   -1.28120e+06    1.21541e+04   -1.04148e+06
+    1.93100e+04    1.98268e+05   -1.28103e+06    1.19998e+04   -1.04164e+06
  Pressure (bar)
-    1.06041e+03
+    1.04628e+03
 
            Step           Time
               4        4.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.45697e+03    1.19078e+03    3.38082e+03    4.44561e+01    1.97915e+03
+    1.45633e+03    1.19096e+03    3.38077e+03    4.44009e+01    1.97910e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.92755e+04    1.91743e+05   -1.28585e+06    1.15838e+04   -1.05520e+06
+    1.92754e+04    1.91594e+05   -1.28569e+06    1.14428e+04   -1.05532e+06
  Pressure (bar)
-    7.28699e+01
+    6.13793e+01
 
            Step           Time
               5        5.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.58935e+03    9.46094e+02    3.35418e+03    8.51521e+01    1.97912e+03
+    1.58753e+03    9.44307e+02    3.35402e+03    8.47850e+01    1.97905e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.92322e+04    1.83816e+05   -1.29515e+06    1.05172e+04   -1.07363e+06
+    1.92321e+04    1.83713e+05   -1.29496e+06    1.04030e+04   -1.07366e+06
  Pressure (bar)
-   -1.25402e+03
+   -1.25966e+03
 
            Step           Time
               6        6.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.30398e+03    1.18098e+03    3.37796e+03    6.68964e+01    1.89313e+03
+    1.30634e+03    1.18143e+03    3.37781e+03    6.65235e+01    1.89300e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.92215e+04    1.81975e+05   -1.29808e+06    1.01884e+04   -1.07887e+06
+    1.92214e+04    1.81874e+05   -1.29789e+06    1.00806e+04   -1.07889e+06
  Pressure (bar)
-   -1.59248e+03
+   -1.59857e+03
 
            Step           Time
               7        7.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.27410e+03    8.55780e+02    3.37385e+03    6.87856e+01    1.91524e+03
+    1.27162e+03    8.54592e+02    3.37365e+03    6.84394e+01    1.91516e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.91837e+04    1.80461e+05   -1.30023e+06    9.99264e+03   -1.08311e+06
+    1.91836e+04    1.80365e+05   -1.30005e+06    9.88918e+03   -1.08313e+06
  Pressure (bar)
-   -1.76180e+03
+   -1.76723e+03
 
            Step           Time
               8        8.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.43362e+03    1.02683e+03    3.36867e+03    6.50190e+01    1.87479e+03
+    1.43376e+03    1.02605e+03    3.36846e+03    6.46609e+01    1.87472e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.91875e+04    1.79113e+05   -1.30261e+06    9.73774e+03   -1.08680e+06
+    1.91875e+04    1.79018e+05   -1.30243e+06    9.63925e+03   -1.08682e+06
  Pressure (bar)
-   -1.99607e+03
+   -2.00166e+03
 
            Step           Time
               9        9.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    1.53655e+03    8.48286e+02    3.37646e+03    6.63539e+01    1.88330e+03
+    1.53430e+03    8.47011e+02    3.37624e+03    6.60179e+01    1.88321e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.91504e+04    1.77846e+05   -1.30451e+06    9.57833e+03   -1.09022e+06
+    1.91504e+04    1.77754e+05   -1.30433e+06    9.48296e+03   -1.09023e+06
  Pressure (bar)
-   -2.15415e+03
+   -2.15946e+03
 
            Step           Time
              10       10.00000
 
    Energies (kJ/mol)
            Bond          Angle    Proper Dih.  Improper Dih.          LJ-14
-    2.04887e+03    1.04106e+03    3.36927e+03    6.37976e+01    1.85074e+03
+    2.04767e+03    1.03966e+03    3.36905e+03    6.34429e+01    1.85066e+03
      Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.      Potential
-    1.91541e+04    1.76702e+05   -1.30665e+06    9.35707e+03   -1.09306e+06
+    1.91540e+04    1.76610e+05   -1.30647e+06    9.26615e+03   -1.09307e+06
  Pressure (bar)
-   -2.35245e+03
+   -2.35771e+03
 
 
 Energy minimization reached the maximum number of steps before the forces
 reached the requested precision Fmax < 1000.
 
 Steepest Descents did not converge to Fmax < 1000 in 11 steps.
-Potential Energy  = -1.0930636e+06
-Maximum force     =  4.3821250e+04 on atom 168
-Norm of force     =  3.2418699e+02
-Finished mdrun on rank 0 Fri May 21 17:23:08 2021
+Potential Energy  = -1.0930684e+06
+Maximum force     =  4.3843223e+04 on atom 168
+Norm of force     =  3.2411545e+02
+Finished mdrun on rank 0 Mon Jun 21 03:51:42 2021
 
