@@ -2,8 +2,9 @@ Metadata-Version: 2.1
 Name: pyrexMD
 Version: 1.0
 Summary: workflow orientated setup and analyses of contact-guided Replica Exchange Molecular Dynamics (requires GROMACS for MD)
-Home-page: UNKNOWN
+Home-page: https://github.com/KIT-MBS/pyrexMD
 Author: Arthur Voronin
+Author-email: arthur.voronin@kit.edu
 License: MIT
 Description: UNKNOWN
 Platform: UNKNOWN

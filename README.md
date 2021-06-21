@@ -20,7 +20,9 @@ https://manual.gromacs.org/documentation/current/index.html
     cd pyrexMD
     python -m pip install .
 
-.. Note:: setup.py versioning of required packages is written for python 3.8. Refer to content of requirements_python3.6.txt or requirements_python3.8.txt based on your used python version.
+.. Note:: setup.py is written and tested only for python 3.6 and 3.8. Alternatively
+    refer to content of requirements_python3.6.txt or requirements_python3.8.txt
+    based on your python version.
 
 
 (3) enable trajectory viewer for `jupyter`:
