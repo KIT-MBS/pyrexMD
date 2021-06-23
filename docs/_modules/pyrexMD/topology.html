@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.06.2021</span>
+<span class="c1"># @Last modified time: 22.06.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -223,6 +223,8 @@
 <span class="sd">        shift (None, int): shift value</span>
 <span class="sd">        verbose (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">shift</span> <span class="o">==</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">shift</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">shift</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span>
 
@@ -268,6 +270,16 @@
     <span class="k">return</span></div>
 
 
+<span class="k">def</span> <span class="nf">__HELP_print</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">info</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Norming atom ids...&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Norming </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1"> atom ids...&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span>
+
+
 <div class="viewcode-block" id="norm_ids"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.norm_ids">[docs]</a><span class="k">def</span> <span class="nf">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify existing MDA universe/atomgrp and normalize ids according to</span>
@@ -292,19 +304,9 @@
 <span class="sd">        | &gt;&gt; print(ref.atoms.ids)</span>
 <span class="sd">        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__HELP_print</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">info</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Norming atom ids...&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Norming </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1"> atom ids...&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{norm_ids.__module__}</span><span class="s1">.</span><span class="si">{norm_ids.__name__}</span><span class="s1">():</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Invalid input. u must be MDA universe/atomgrp.&#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
@@ -336,19 +338,9 @@
 <span class="sd">        | &gt;&gt; print(ref.residues.resids)</span>
 <span class="sd">        | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__HELP_print</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">info</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Norming res ids...&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Norming </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1"> res ids...&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{norm_resids.__module__}</span><span class="s1">.</span><span class="si">{name_resids.__name__}</span><span class="s1">():</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Invalid input. u must be MDA universe/atomgrp.&#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span>
@@ -391,7 +383,6 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">():</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Number of atoms doesn&#39;t match! Cannot align atom ids.&#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">norm_ids</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
@@ -407,7 +398,6 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()::</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Residues number doesn&#39;t match! Cannot align resids.&#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">norm_resids</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="s1">&#39;reference&#39;</span><span class="p">)</span>
@@ -694,9 +684,9 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        RES_PAIR (list)</span>
-<span class="sd">            list with RES pairs</span>
+<span class="sd">            list with RES pair tuples (RESi, RESj)</span>
 <span class="sd">        ATOM_PAIR (list)</span>
-<span class="sd">            list with ATOM pairs</span>
+<span class="sd">            list with ATOM pair tuples (ATOMi, ATOMj)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
                <span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>

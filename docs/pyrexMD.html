@@ -896,7 +896,7 @@ added on top of those specified with -np/-nn or -conc</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.get_RMSD">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_RMSD" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['bb',</span> <span class="pre">'bb']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_RMSD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.rms(). Calculate backbone RMSD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -914,8 +914,8 @@ added on top of those specified with -np/-nn or -conc</p></li>
 </div>
 </p></li>
 <li><p><strong>tu</strong> (<em>str</em>) – time unit: fs ps ns us ms s</p></li>
-<li><p><strong>sel</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">selection string (case independant)</div>
+<li><p><strong>sel</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">list with selection strings (case independant)</div>
 <div class="line">”system” or “all”: all atoms</div>
 <div class="line">”protein”: protein atoms</div>
 <div class="line">”ca” or “calpha”: CA atoms</div>
@@ -1383,7 +1383,7 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">colors              [‘g’, ‘r’]</div>
 <div class="line">ms                  1</div>
 <div class="line">color_positive      teal</div>
-<div class="line">color_negative      pink</div>
+<div class="line">color_negative      orange</div>
 <div class="line">markersize          5</div>
 <div class="line"><br /></div>
 </div>
@@ -1599,7 +1599,7 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
 <li><p><strong>target_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
-<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’</p></li>
+<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’, ‘xy’</p></li>
 <li><p><strong>new_lim</strong> (<em>list</em>) – assign new values to both ref_ax and target_ax</p></li>
 </ul>
 </dd>
@@ -1618,7 +1618,7 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
 <li><p><strong>target_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
-<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’</p></li>
+<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’, ‘xy’</p></li>
 <li><p><strong>new_ticklabels</strong> (<em>list</em>) – assign new values to both ref_ax and target_ax</p></li>
 </ul>
 </dd>
@@ -1637,7 +1637,7 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
 <li><p><strong>target_ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
-<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’</p></li>
+<li><p><strong>apply_on</strong> (<em>str</em>) – ‘x’, ‘y’, ‘xy’</p></li>
 <li><p><strong>new_ticks</strong> (<em>list</em>) – assign new values to both ref_ax and target_ax</p></li>
 </ul>
 </dd>
@@ -1680,8 +1680,8 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fig</strong> (<em>class</em>) – matplotlib.figure.Figure</p></li>
 <li><p><strong>ax</strong> (<em>class</em><em>, </em><em>list</em>) – ax or list of axes ~ matplotlib.axes._subplots.Axes</p></li>
+<li><p><strong>grid</strong> (<em>list</em>) – grid of figure (example: grid=[2,2] for 2x2 figure or grid =[3,2] for 3x2 figure)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1812,8 +1812,9 @@ ymin, ymax values.</p>
 <dd><p>Converts image type. Currently ONLY tested for</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>tif -&gt; png</p></li>
 <li><p>pdf -&gt; png</p></li>
+<li><p>png -&gt; tiff</p></li>
+<li><p>tiff -&gt; png</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -1841,7 +1842,14 @@ ymin, ymax values.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.convert_multiple_images">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">convert_multiple_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#convert_multiple_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.convert_multiple_images" title="Permalink to this definition">¶</a></dt>
-<dd><p>convert multiple images</p>
+<dd><p>convert multiple images. Currently ONLY tested for</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>pdf -&gt; png</p></li>
+<li><p>png -&gt; tiff</p></li>
+<li><p>tiff -&gt; png</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1887,14 +1895,13 @@ ymin, ymax values.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.cp">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-rp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.cp" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.cp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy file(s) from &lt;source&gt; to &lt;target&gt;.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<em>str</em><em>, </em><em>list</em><em>, </em><em>array</em>) – source path or list of source paths</p></li>
 <li><p><strong>target</strong> (<em>str</em>) – target path</p></li>
-<li><p><strong>mode</strong> (<em>str</em>) – copy mode flags (see cp –help in linux OS)</p></li>
 <li><p><strong>create_dir</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
 </ul>
@@ -1958,7 +1965,7 @@ should be increasing and in the interval (0,1).</p></li>
 </dl>
 <p class="rubric">Example</p>
 <p>seq = [“lightblue”, 2/6, “lightgreen”, 3/6, “yellow”, 4/6, “orange”, 5/6, “red”]
-cmap = make_cmap(seq, vmin=0, vmax=12)</p>
+cmap = misc.create_cmap(seq, vmin=0, vmax=12)</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2177,7 +2184,7 @@ as well as the corresponding indices.</p>
 <div class="line-block">
 <div class="line">array = list(range(10,20))</div>
 <div class="line">cut_min, cut_max = 12, 16</div>
-<div class="line">cutoff_array, cutoff_array_ndx = get_cutoff_array(array, cut_min, cut_max)</div>
+<div class="line">cutoff_array, cutoff_array_ndx = misc.get_cutoff_array(array, cut_min, cut_max)</div>
 <div class="line">print(cutoff_array)</div>
 <div class="line">&gt;&gt; [12, 13, 14, 15, 16]</div>
 <div class="line">print(cutoff_array_ndx)</div>
@@ -2295,6 +2302,14 @@ the observations may be found.</p>
 <dt class="sig sig-object py" id="pyrexMD.misc.get_python_version">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">get_python_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#get_python_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.get_python_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns python version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>python version in format major.minor.micro (e.g. 3.8.5)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>version (str)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2609,7 +2624,7 @@ inches. If number is passed, apply on figure with that number.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels</strong> (<em>sequence of strings</em>) – </p></li>
-<li><p><strong>handles</strong> (sequence of <cite>.Artist</cite>) – </p></li>
+<li><p><strong>handlescolors</strong> (<em>list</em>) – </p></li>
 <li><p><strong>handlelength</strong> (<em>None/int/float</em>) – </p></li>
 <li><p><strong>handletextpad</strong> (<em>None/int/float</em>) – </p></li>
 <li><p><strong>loc</strong> (<em>str</em>) – <div class="line-block">
@@ -2988,7 +3003,7 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.print_table">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#print_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.print_table" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#print_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.print_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints each item of “data” elementwise next to each other as a table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3310,14 +3325,47 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.misc.save_fig">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">save_fig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filedir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrexMD.misc.save_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>general helpfunction</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>save current figure</p></li>
+<li><p>print message “Saved figure as: …”</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">None: do not save figure</div>
+<div class="line">str: file name or realpath to file</div>
+</div>
+</p></li>
+<li><p><strong>filedir</strong> (<em>str</em>) – file directory</p></li>
+<li><p><strong>create_dir</strong> (<em>bool</em>) – create directory if it does not exist yet</p></li>
+<li><p><strong>dpi</strong> (<em>int</em>) – dpi settings</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>realpath (str)</dt><dd><p>realpath to saved figure</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.save_table">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">save_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#save_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.save_table" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">save_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#save_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.save_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes misc.print_table() and saves the returned table string as a log file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – filename or realpath</p></li>
 <li><p><strong>data</strong> (<em>list of lists</em>) – table content, where each list corresponds to one column</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – filename or realpath</p></li>
 <li><p><strong>header</strong> (<em>str</em>) – header for log file, e.g. column descriptions</p></li>
 <li><p><strong>default_dir</strong> (<em>str</em>) – </p></li>
 <li><p><strong>prec</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
@@ -3377,14 +3425,13 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.set_logscale_ticks">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">set_logscale_ticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minorticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#set_logscale_ticks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.set_logscale_ticks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply logscale ticks on specific axis of ax.
-If vmax is specified, sets vmax as upper limit of axis.</p>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">set_logscale_ticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minorticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#set_logscale_ticks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.set_logscale_ticks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply logscale ticks on ax. If vmax is specified, sets vmax as upper limit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes._subplots.Axes</em>) – </p></li>
-<li><p><strong>axis</strong> (<em>str</em>) – “x”, “y”, “xy”</p></li>
+<li><p><strong>apply_on</strong> (<em>str</em>) – “x”, “y”, “xy”</p></li>
 <li><p><strong>vmin</strong> (<em>None</em><em>, </em><em>int</em><em>, </em><em>float</em>) – highest logscale tick value</p></li>
 <li><p><strong>minorticks</strong> (<em>bool</em>) – display minorticks on/off</p></li>
 </ul>
@@ -3655,7 +3702,7 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.WF_getParameter_maxsol">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_getParameter_maxsol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs/solution.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_getParameter_maxsol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_getParameter_maxsol" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_getParameter_maxsol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs/solvate.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_getParameter_maxsol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_getParameter_maxsol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read &lt;logfile&gt; and suggest a ‘max solution’ parameter for REX simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3681,7 +3728,7 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.apply_ff_best_decoys">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">apply_ff_best_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_decoys_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./PDBID_best_decoys_ref'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#apply_ff_best_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.apply_ff_best_decoys" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">apply_ff_best_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_decoys_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_decoys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./PDBID_best_decoys_ref'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#apply_ff_best_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.apply_ff_best_decoys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply forcefield on best decoys and save as &lt;filename&gt;_ref.pdb.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3691,6 +3738,11 @@ generating REX simulations and modify topologies to include contact bias etc.</p
 <li><p>best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</p></li>
 <li><p>decoy_scores.log (output of cluster.log_cluster.decoys())</p></li>
 </ul>
+</p></li>
+<li><p><strong>n_decoys</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">None: use all decoys from best_decoys_dir</div>
+<div class="line">int: use this number of decoys from best_decoys_dir</div>
+</div>
 </p></li>
 <li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
 <div class="line">output directory</div>
@@ -3746,9 +3798,9 @@ to each rex subdirectory rex_1, rex_2, …</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.rex.create_pull_groups_ndx">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_pull_groups_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_groups.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_pull_groups_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_pull_groups_ndx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create index file for pull groups.</p>
+<dt class="sig sig-object py" id="pyrexMD.rex.create_pull_group_ndx">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_pull_group_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_pull_group_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_pull_group_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index file for pull group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -4033,9 +4085,9 @@ specified in DCA_fin file.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>RES_PAIR (list)</dt><dd><p>list with RES pairs</p>
+<dt>RES_PAIR (list)</dt><dd><p>list with RES pair tuples (RESi, RESj)</p>
 </dd>
-<dt>ATOM_PAIR (list)</dt><dd><p>list with ATOM pairs</p>
+<dt>ATOM_PAIR (list)</dt><dd><p>list with ATOM pair tuples (ATOMi, ATOMj)</p>
 </dd>
 </dl>
 </p>
