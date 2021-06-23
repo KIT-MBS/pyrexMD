@@ -287,11 +287,11 @@
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>DECOY_LIST(list)</dt><dd><p>list with decoy names</p>
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy names</p>
 </dd>
-<dt>DECOY_ID(list)</dt><dd><p>list with decoy ids</p>
+<dt>DECOY_ID (list)</dt><dd><p>list with decoy ids</p>
 </dd>
-<dt>RMSD(list)</dt><dd><p>list with decoy RMSDs</p>
+<dt>RMSD (list)</dt><dd><p>list with decoy RMSDs</p>
 </dd>
 </dl>
 </p>
@@ -304,7 +304,7 @@
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.abinitio.</span></span><span class="sig-name descname"><span class="pre">get_decoy_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/abinitio.html#get_decoy_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.abinitio.get_decoy_list" title="Permalink to this definition">¶</a></dt>
 <dd><div class="line-block">
 <div class="line">Alias function of get_structure_list().</div>
-<div class="line">get decoy list(sorted by a numeric part at any position of the filename,</div>
+<div class="line">get decoy list (sorted by a numeric part at any position of the filename,</div>
 <div class="line">e.g. 1LMB_1.pdb, 1LMB_2.pdb, …)</div>
 </div>
 <dl class="field-list simple">
@@ -312,12 +312,12 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>decoy_dir</strong> (<em>str</em>) – decoy directory</p></li>
 <li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
-<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to[ndx_min, ndx_max]</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>DECOY_LIST(list)</dt><dd><p>list with decoy filenames</p>
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy filenames</p>
 </dd>
 </dl>
 </p>
@@ -342,13 +342,13 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>DECOY_LIST(list)</dt><dd><p>list with decoy paths</p>
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy paths</p>
 </dd>
-<dt>DECOY_ID(list)</dt><dd><p>list with decoy ids</p>
+<dt>DECOY_ID (list)</dt><dd><p>list with decoy ids</p>
 </dd>
-<dt>SCORE(list)</dt><dd><p>list with corresponding scores(ref 2015)</p>
+<dt>SCORE (list)</dt><dd><p>list with corresponding scores(ref 2015)</p>
 </dd>
-<dt>RMSD(list)</dt><dd><p>list with corresponding RMSD values</p>
+<dt>RMSD (list)</dt><dd><p>list with corresponding RMSD values</p>
 </dd>
 </dl>
 </p>
@@ -421,7 +421,7 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>STRUCTURE_LIST(list)</dt><dd><p>list with structure filenames</p>
+<dt>STRUCTURE_LIST (list)</dt><dd><p>list with structure filenames</p>
 </dd>
 </dl>
 </p>
@@ -450,7 +450,7 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl>
-<dt>TORSION_ANGLES(tuple)</dt><dd><div class="line-block">
+<dt>TORSION_ANGLES (tuple)</dt><dd><div class="line-block">
 <div class="line">tuple containing lists with torsion angles of each residue</div>
 <div class="line">if mol_type == “protein”:</div>
 <div class="line">TORSION_ANGLES = (phi, psi)</div>
@@ -479,9 +479,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>fig(class)</dt><dd><p>matplotlib.figure.Figure</p>
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
 </dd>
-<dt>ax(class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
+<dt>ax (class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
 </dd>
 </dl>
 </p>
@@ -510,13 +510,13 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>DECOY_LIST_ranked(array)</dt><dd><p>ranked list with decoy paths</p>
+<dt>DECOY_LIST_ranked (array)</dt><dd><p>ranked list with decoy paths</p>
 </dd>
-<dt>DECOY_ID_ranked(array)</dt><dd><p>ranked list with decoy ids</p>
+<dt>DECOY_ID_ranked (array)</dt><dd><p>ranked list with decoy ids</p>
 </dd>
-<dt>SCORE_ranked(array)</dt><dd><p>ranked list with corresponding scores(ref 2015)</p>
+<dt>SCORE_ranked (array)</dt><dd><p>ranked list with corresponding scores (ref 2015)</p>
 </dd>
-<dt>RMSD_ranked(array)</dt><dd><p>ranked list with corresponding RMSD values</p>
+<dt>RMSD_ranked (array)</dt><dd><p>ranked list with corresponding RMSD values</p>
 </dd>
 </dl>
 </p>
@@ -557,7 +557,7 @@
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>abinitio_cfg(CONFIG class)</dt><dd><p>configs used as input for abinitio.create_decoys()</p>
+<dt>abinitio_cfg (CONFIG class)</dt><dd><p>configs used as input for abinitio.create_decoys()</p>
 </dd>
 </dl>
 </p>
@@ -595,7 +595,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.WF_print_cluster_accuracy">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">WF_print_cluster_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#WF_print_cluster_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.WF_print_cluster_accuracy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">WF_print_cluster_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_accuracy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#WF_print_cluster_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.WF_print_cluster_accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Workflow to print and log cluster accuracy.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -605,14 +605,14 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of apply_KMeans() or heat_KMeans()</p></li>
-<li><p><strong>accuracy_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA_ACCURACY" title="pyrexMD.decoy.cluster.CLUSTER_DATA_ACCURACY"><em>CLUSTER_DATA_ACCURACY</em></a>) – output of map_cluster_accuracy()</p></li>
+<li><p><strong>cluster_accuracy</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA_ACCURACY" title="pyrexMD.decoy.cluster.CLUSTER_DATA_ACCURACY"><em>CLUSTER_DATA_ACCURACY</em></a>) – output of map_cluster_accuracy()</p></li>
 <li><p><strong>targets</strong> (<em>list</em>) – target labels, which will be colored red in printed table</p></li>
-<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – logfile name</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – realpath or name of logfile</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>save_as (None, str)</dt><dd><p>logfile name</p>
+<dt>save_as (None, str)</dt><dd><p>realpath of logfile</p>
 </dd>
 </dl>
 </p>
@@ -622,7 +622,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.WF_print_cluster_scores">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">WF_print_cluster_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#WF_print_cluster_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.WF_print_cluster_scores" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">WF_print_cluster_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#WF_print_cluster_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.WF_print_cluster_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Workflow to print and log cluster scores.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -633,14 +633,13 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cluster_data</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="pyrexMD.decoy.cluster.CLUSTER_DATA"><em>CLUSTER_DATA</em></a>) – output of apply_KMeans() or heat_Kmeans()</p></li>
 <li><p><strong>cluster_scores</strong> (<a class="reference internal" href="#pyrexMD.decoy.cluster.CLUSTER_DATA_SCORES" title="pyrexMD.decoy.cluster.CLUSTER_DATA_SCORES"><em>CLUSTER_DATA_SCORES</em></a>) – output of map_cluster_scores()</p></li>
-<li><p><strong>score_file</strong> (<em>str</em>) – path to score file</p></li>
 <li><p><strong>targets</strong> (<em>list</em>) – target labels, which will be colored red in printed table</p></li>
-<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – logfile name</p></li>
+<li><p><strong>save_as</strong> (<em>None</em><em>, </em><em>str</em>) – realpath or name of logfile</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>save_as (None, str)</dt><dd><p>logfile name</p>
+<dt>save_as (None, str)</dt><dd><p>realpath of logfile</p>
 </dd>
 </dl>
 </p>
@@ -950,6 +949,32 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.decoy.cluster.get_decoy_list">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">get_decoy_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decoy_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*.pdb'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndx_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#get_decoy_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.get_decoy_list" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Alias function of get_structure_list().</div>
+<div class="line">get decoy list(sorted by a numeric part at any position of the filename,</div>
+<div class="line">e.g. 1LMB_1.pdb, 1LMB_2.pdb, …)</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decoy_dir</strong> (<em>str</em>) – decoy directory</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – pattern of decoy filenames</p></li>
+<li><p><strong>ndx_range</strong> (<em>tuple</em><em>, </em><em>list</em>) – limit decoy index range to [ndx_min, ndx_max]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>DECOY_LIST (list)</dt><dd><p>list with decoy filenames</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.heat_KMeans">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">heat_KMeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HDF_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/distance_matrices'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'centroid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#heat_KMeans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.heat_KMeans" title="Permalink to this definition">¶</a></dt>
 <dd><p>apply heat’s KMeans clustering algorithm</p>
@@ -1058,21 +1083,21 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl>
 <dt>TOPX_CLUSTER (list)</dt><dd><div class="line-block">
-<div class="line">list of clusters ranked from best to topx best. Each cluster contains:</div>
+<div class="line">list of clusters ranked from best to topx best. Each cluster contains CLUSTER_DATA with:</div>
 <div class="line-block">
-<div class="line">centers (array)</div>
+<div class="line">.centers (array)</div>
 <div class="line-block">
 <div class="line">cluster centers of best result</div>
 </div>
-<div class="line">counts (array)</div>
+<div class="line">.counts (array)</div>
 <div class="line-block">
 <div class="line">counts per cluster of best result</div>
 </div>
-<div class="line">labels (array)</div>
+<div class="line">.labels (array)</div>
 <div class="line-block">
 <div class="line">data point cluster labels</div>
 </div>
-<div class="line">wss_data (WSS_DATA)</div>
+<div class="line">.wss_data (WSS_DATA)</div>
 <div class="line-block">
 <div class="line">output of get_WSS() or get_DM_WSS()</div>
 <div class="line">.wss (float)</div>
@@ -1092,7 +1117,7 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 <div class="line">std values of Squared Errors for each cluster</div>
 </div>
 </div>
-<div class="line">compact_score (array)</div>
+<div class="line">.compact_score (array)</div>
 <div class="line-block">
 <div class="line">mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score</div>
 </div>
@@ -1143,7 +1168,7 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><div class="line-block">
-<div class="line">accuracy_data (CLUSTER_DATA_ACCURACY)</div>
+<div class="line">cluster_accuracy (CLUSTER_DATA_ACCURACY)</div>
 <div class="line-block">
 <div class="line">.GDT (array)</div>
 <div class="line-block">
@@ -1215,7 +1240,7 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl>
-<dt>scores_data (CLUSTER_DATA_SCORES)</dt><dd><div class="line-block">
+<dt>cluster_scores (CLUSTER_DATA_SCORES)</dt><dd><div class="line-block">
 <div class="line">.scores (list)</div>
 <div class="line-block">
 <div class="line">summary of all scores of individual clusters</div>
@@ -1314,7 +1339,7 @@ targets too, even if their cluster centers are not close to n10 target.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>decoy_list</strong> (<em>list</em>) – output of abinitio.get_decoy_list()</p></li>
 <li><p><strong>scores</strong> (<em>list</em>) – output of abinitio.get_decoy_scores()</p></li>
-<li><p><strong>labels</strong> (<em>array</em><em>, </em><em>list</em>) – output of heat_KMeans()</p></li>
+<li><p><strong>labels</strong> (<em>array</em><em>, </em><em>list</em>) – output of heat_KMeans() or apply_KMeans()</p></li>
 <li><p><strong>reverse</strong> (<em>bool</em>) – <div class="line-block">
 <div class="line">True:  ascending ranking order (low to high)</div>
 <div class="line">False: decending ranking order (high to low)</div>

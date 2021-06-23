@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 24.05.2021</span>
+<span class="c1"># @Last modified time: 22.06.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -221,7 +221,7 @@
 <span class="kn">import</span> <span class="nn">glob</span>
 
 
-<div class="viewcode-block" id="apply_ff_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.apply_ff_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">apply_ff_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./PDBID_best_decoys_ref&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="apply_ff_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.apply_ff_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">apply_ff_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">n_decoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./PDBID_best_decoys_ref&quot;</span><span class="p">,</span>
                          <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply forcefield on best decoys and save as &lt;filename&gt;_ref.pdb.</span>
@@ -231,6 +231,9 @@
 
 <span class="sd">          - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
 <span class="sd">          - decoy_scores.log (output of cluster.log_cluster.decoys())</span>
+<span class="sd">        n_decoys (None, int):</span>
+<span class="sd">          | None: use all decoys from best_decoys_dir</span>
+<span class="sd">          | int: use this number of decoys from best_decoys_dir</span>
 <span class="sd">        odir (str):</span>
 <span class="sd">          | output directory</span>
 <span class="sd">          | Note: if &quot;PDBID&quot; in &lt;odir&gt; and no &lt;pdbid&gt; kwarg is passed -&gt; find and replace &quot;PDBID&quot; in &lt;odir&gt; automatically based on filenames</span>
@@ -276,6 +279,8 @@
     <span class="n">DECOY_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span>
                    <span class="n">_misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                                    <span class="n">usecols</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">n_decoys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">DECOY_PATHS</span> <span class="o">=</span> <span class="n">DECOY_PATHS</span><span class="p">[:</span><span class="n">n_decoys</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">DECOY_PATHS</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
             <span class="n">_gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="n">odir</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">water</span><span class="p">,</span>
@@ -285,8 +290,14 @@
 
     <span class="c1"># copy and fix log</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_log</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">odir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_log</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">old_log</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;.pdb&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">new_log</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pdb&quot;</span><span class="p">,</span> <span class="s2">&quot;_ref.pdb&quot;</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">n_decoys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_decoys</span> <span class="o">==</span> <span class="n">count</span><span class="p">:</span>
+                <span class="k">break</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved files to: </span><span class="si">{</span><span class="n">odir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
@@ -340,10 +351,12 @@
 <span class="sd">            list with REX directory paths</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
-    <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">))</span>
-                                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># remove emptry entries</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">realpath</span><span class="p">:</span>
+        <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_DIRS</span><span class="p">]</span>
 
+    <span class="c1"># filter for directories</span>
     <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_DIRS</span> <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">REX_DIRS</span></div>
 
@@ -361,10 +374,12 @@
 <span class="sd">            list with PDB paths within folders rex_1, rex_2, etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
-    <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">))</span>
-                                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="n">realpath</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># remove emptry entries</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">realpath</span><span class="p">:</span>
+        <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_PDBS</span><span class="p">]</span>
 
+    <span class="c1"># filter for files</span>
     <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_PDBS</span> <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">REX_PDBS</span></div>
 
@@ -442,7 +457,7 @@
     <span class="k">return</span> <span class="n">boxsize</span></div>
 
 
-<div class="viewcode-block" id="WF_getParameter_maxsol"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_maxsol">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_maxsol</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/solution.log&quot;</span><span class="p">,</span> <span class="n">maxsol_reduce</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_getParameter_maxsol"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_maxsol">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_maxsol</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/solvate.log&quot;</span><span class="p">,</span> <span class="n">maxsol_reduce</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read &lt;logfile&gt; and suggest a &#39;max solution&#39; parameter for REX simulations.</span>
 
@@ -457,6 +472,7 @@
 <span class="sd">        maxsol (int)</span>
 <span class="sd">            suggested max solution parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">maxsol</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;Number of solvent molecules&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -467,10 +483,10 @@
                     <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading logfile: </span><span class="si">{</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
                     <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;suggested max solution: </span><span class="si">{</span><span class="n">maxsol</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">maxsol</span>
 
-    <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;No solution parameter found.&quot;</span><span class="p">)</span>
-    <span class="k">return</span></div>
+    <span class="k">if</span> <span class="n">maxsol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;No solution parameter found.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">maxsol</span></div>
 
 
 <div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -545,7 +561,8 @@
 
     <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
     <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
-    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Finished energy minimization of all REX DIRS.&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span></div>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Finished energy minimization of all REX DIRS.&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="create_special_group_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_special_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_special_group_ndx</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;special_group.ndx&quot;</span><span class="p">):</span>
@@ -557,7 +574,7 @@
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        save_as (str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ </span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2"> ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ATOM</span><span class="p">)):</span>
@@ -568,16 +585,16 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="create_pull_groups_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_pull_groups_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_pull_groups_ndx</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;pull_groups.ndx&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="create_pull_group_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_pull_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_pull_group_ndx</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;pull_group.ndx&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create index file for pull groups.</span>
+<span class="sd">    Create index file for pull group.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ref_pdb (str): PDB file (after applying force field)</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        save_as (str)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RESID</span><span class="p">)):</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ pull_res</span><span class="si">{</span><span class="n">RESID</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>

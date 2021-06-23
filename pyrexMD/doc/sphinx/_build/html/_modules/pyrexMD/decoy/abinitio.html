@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: abinitio.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 13.06.2021</span>
+<span class="c1"># @Last modified time: 23.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for decoy creation using `PyRosetta`.</span>
@@ -245,17 +245,17 @@
 <span class="sd">    get torsion angles of object.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        obj(pose, str): pyrosetta pose object or pdb path</span>
-<span class="sd">        mol_type(str):</span>
+<span class="sd">        obj (pose, str): pyrosetta pose object or pdb path</span>
+<span class="sd">        mol_type (str):</span>
 <span class="sd">          | molecule type</span>
 <span class="sd">          | &quot;auto&quot;: detect &quot;protein&quot; or &quot;rna&quot; by checking if pose.phi(1) exists.</span>
 <span class="sd">          | &quot;protein&quot;: protein molecule with torsion angles(phi, psi)</span>
 <span class="sd">          | &quot;rna&quot;: rna molecule with torsion angles(alpha, beta, gamma, delta)</span>
-<span class="sd">        prec(int): rounding precision</span>
-<span class="sd">        verbose(bool): print table with torsion angles</span>
+<span class="sd">        prec (int): rounding precision</span>
+<span class="sd">        verbose (bool): print table with torsion angles</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        TORSION_ANGLES(tuple)</span>
+<span class="sd">        TORSION_ANGLES (tuple)</span>
 <span class="sd">          | tuple containing lists with torsion angles of each residue</span>
 <span class="sd">          | if mol_type == &quot;protein&quot;:</span>
 <span class="sd">          | TORSION_ANGLES = (phi, psi)</span>
@@ -312,14 +312,14 @@
 <span class="sd">    Apply relative torsion angle(use pose_ref angle and apply relative shift).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pose_ref(pose)</span>
-<span class="sd">        pose(pose)</span>
-<span class="sd">        resid(int)</span>
-<span class="sd">        angle(str)</span>
+<span class="sd">        pose_ref (pose)</span>
+<span class="sd">        pose (pose)</span>
+<span class="sd">        resid (int)</span>
+<span class="sd">        angle (str)</span>
 <span class="sd">          | protein: &quot;phi&quot;, &quot;psi&quot;</span>
 <span class="sd">          | rna: &quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot;, &quot;delta&quot;</span>
-<span class="sd">        shift(float): relative shift value</span>
-<span class="sd">        verbose(bool): print applied changes to torsion angle.</span>
+<span class="sd">        shift (float): relative shift value</span>
+<span class="sd">        verbose (bool): print applied changes to torsion angle.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">angle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;phi&quot;</span><span class="p">:</span>
@@ -360,27 +360,27 @@
 <span class="sd">    Setup config file for abinitio functions.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pdbid(str): pdb id / pdb name</span>
-<span class="sd">        fasta_seq(str): fasta sequence</span>
-<span class="sd">        frag3mer(str): 3mer file path(get via robetta server)</span>
-<span class="sd">        frag9mer(str): 9mer file path(get via robetta server)</span>
+<span class="sd">        pdbid (str): pdb id / pdb name</span>
+<span class="sd">        fasta_seq (str): fasta sequence</span>
+<span class="sd">        frag3mer (str): 3mer file path(get via robetta server)</span>
+<span class="sd">        frag9mer (str): 9mer file path(get via robetta server)</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        fasta_seq_len(int): fasta sequence length</span>
-<span class="sd">        frag3inserts(int): number of frag3 inserts</span>
-<span class="sd">        frag9inserts(int): number of frag9 inserts</span>
-<span class="sd">        folding_cycles(int): folding move cycles</span>
-<span class="sd">        folding_repeats(int): folding move repeats</span>
-<span class="sd">        job_name(str)</span>
-<span class="sd">        n_decoys(int): total number of decoys</span>
-<span class="sd">        n_cores(int): -np option for multiprocessing</span>
-<span class="sd">        decoy_ndx_shift(int):</span>
+<span class="sd">        fasta_seq_len (int): fasta sequence length</span>
+<span class="sd">        frag3inserts (int): number of frag3 inserts</span>
+<span class="sd">        frag9inserts (int): number of frag9 inserts</span>
+<span class="sd">        folding_cycles (int): folding move cycles</span>
+<span class="sd">        folding_repeats (int): folding move repeats</span>
+<span class="sd">        job_name (str)</span>
+<span class="sd">        n_decoys (int): total number of decoys</span>
+<span class="sd">        n_cores (int): -np option for multiprocessing</span>
+<span class="sd">        decoy_ndx_shift (int):</span>
 <span class="sd">          | shift decoy index(output filename) by this value</span>
 <span class="sd">          | required for multiprocessing to fix names of decoys</span>
-<span class="sd">        kT(float): kT parameter during Monte-Carlo simulation</span>
+<span class="sd">        kT (float): kT parameter during Monte-Carlo simulation</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        abinitio_cfg(CONFIG class)</span>
+<span class="sd">        abinitio_cfg (CONFIG class)</span>
 <span class="sd">            configs used as input for abinitio.create_decoys()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="n">pdbid</span><span class="p">,</span>
@@ -412,11 +412,11 @@
 <span class="sd">                 is working with 1 core)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        abinitio_cfg(CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
-<span class="sd">        output_dir(str): output directory for decoys</span>
-<span class="sd">        stream2pymol(bool): stream decoys to pymol</span>
-<span class="sd">        fastrelax(bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
-<span class="sd">        save_log(bool): save scores to logfile at &lt; output_dir/scores.txt &gt;</span>
+<span class="sd">        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
+<span class="sd">        output_dir (str): output directory for decoys</span>
+<span class="sd">        stream2pymol (bool): stream decoys to pymol</span>
+<span class="sd">        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
+<span class="sd">        save_log (bool): save scores to logfile at &lt; output_dir/scores.txt &gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">abinitio_cfg</span>
 
@@ -454,19 +454,19 @@
 <span class="sd">    Create decoys within pyrosetta framework.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        abinitio_cfg(CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
-<span class="sd">        output_dir(str): output directory for decoys</span>
-<span class="sd">        stream2pymol(bool): stream decoys to pymol</span>
-<span class="sd">        fastrelax(bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
-<span class="sd">        save_log(bool): save scores to logfile at &lt; output_dir/scores.txt &gt;</span>
+<span class="sd">        abinitio_cfg (CONFIG class): output of abinitio.setup_abinitio_cfg()</span>
+<span class="sd">        output_dir (str): output directory for decoys</span>
+<span class="sd">        stream2pymol (bool): stream decoys to pymol</span>
+<span class="sd">        fastrelax (bool): apply fastrelax protocol on decoys before dumping them as pdb</span>
+<span class="sd">        save_log (bool): save scores to logfile at &lt; output_dir/scores.txt &gt;</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        cprint_color(None, str): colored print color</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SCORES_low(list)</span>
+<span class="sd">        SCORES_low (list)</span>
 <span class="sd">            centroid scores ~ score 3</span>
-<span class="sd">        SCORES_high(list)</span>
+<span class="sd">        SCORES_high (list)</span>
 <span class="sd">            fa scores ~ ref2015</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -608,20 +608,20 @@
 <div class="viewcode-block" id="get_decoy_list"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.abinitio.get_decoy_list">[docs]</a><span class="k">def</span> <span class="nf">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    | Alias function of get_structure_list().</span>
-<span class="sd">    | get decoy list(sorted by a numeric part at any position of the filename,</span>
+<span class="sd">    | get decoy list (sorted by a numeric part at any position of the filename,</span>
 <span class="sd">    | e.g. 1LMB_1.pdb, 1LMB_2.pdb, ...)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        decoy_dir(str): decoy directory</span>
-<span class="sd">        pattern(str): pattern of decoy filenames</span>
-<span class="sd">        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
+<span class="sd">        decoy_dir (str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DECOY_LIST(list)</span>
+<span class="sd">        DECOY_LIST (list)</span>
 <span class="sd">            list with decoy filenames</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">decoy_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;decoy_dir was None Type.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;type(decoy_dir) must be string.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">decoy_dir</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
         <span class="n">decoy_dir</span> <span class="o">=</span> <span class="n">decoy_dir</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
@@ -668,12 +668,12 @@
 <span class="sd">    | e.g. 1LMB_1.pdb, 1LMB_2.pdb, ...)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        structure_dir(str): structure directory</span>
-<span class="sd">        pattern(str): pattern of structure filenames</span>
-<span class="sd">        ndx_range(tuple, list): limit structure index range to[ndx_min, ndx_max]</span>
+<span class="sd">        structure_dir (str): structure directory</span>
+<span class="sd">        pattern (str): pattern of structure filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit structure index range to[ndx_min, ndx_max]</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        STRUCTURE_LIST(list)</span>
+<span class="sd">        STRUCTURE_LIST (list)</span>
 <span class="sd">            list with structure filenames</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span><span class="p">(</span><span class="n">get_decoy_list</span><span class="p">(</span><span class="n">decoy_dir</span><span class="o">=</span><span class="n">structure_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="n">ndx_range</span><span class="p">))</span></div>
@@ -755,28 +755,28 @@
 <span class="sd">      - If &lt; n_rank &gt; is int: return ranked decoys, ids and RMSD for best &lt; n_rank &gt; decoys.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ref(universe): reference structure</span>
-<span class="sd">        decoy_list(None, list): list with decoy paths</span>
-<span class="sd">        decoy_dir(None, str): decoy directory</span>
-<span class="sd">        pattern(str): pattern of decoy filenames</span>
-<span class="sd">        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
-<span class="sd">        n_rank(None, int):</span>
+<span class="sd">        ref (universe): reference structure</span>
+<span class="sd">        decoy_list (None, list): list with decoy paths</span>
+<span class="sd">        decoy_dir (None, str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
+<span class="sd">        n_rank (None, int):</span>
 <span class="sd">          | None: return unranked decoys, ids and scores.</span>
 <span class="sd">          | int: return ranked decoys, ids and scores for best &lt; n_rank &gt; decoys.</span>
-<span class="sd">        reverse(bool):</span>
+<span class="sd">        reverse (bool):</span>
 <span class="sd">          | True: ascending ranking order(low to high)</span>
 <span class="sd">          | False: decending ranking order(high to low)</span>
-<span class="sd">        verbose(bool)</span>
+<span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        cprint_color(None, str): colored print color</span>
+<span class="sd">        cprint_color (None, str): colored print color</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DECOY_LIST(list)</span>
+<span class="sd">        DECOY_LIST (list)</span>
 <span class="sd">            list with decoy names</span>
-<span class="sd">        DECOY_ID(list)</span>
+<span class="sd">        DECOY_ID (list)</span>
 <span class="sd">            list with decoy ids</span>
-<span class="sd">        RMSD(list)</span>
+<span class="sd">        RMSD (list)</span>
 <span class="sd">            list with decoy RMSDs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -821,21 +821,21 @@
 <span class="sd">    get decoy precision</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ref(universe): reference structure</span>
-<span class="sd">        decoy_dir(str): decoy directory</span>
-<span class="sd">        pattern(str): pattern of decoy filenames</span>
-<span class="sd">        ndx_range(tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
-<span class="sd">        sel(str): selection string(for RMSD calculation)</span>
-<span class="sd">        verbose(bool)</span>
+<span class="sd">        ref (universe): reference structure</span>
+<span class="sd">        decoy_dir (str): decoy directory</span>
+<span class="sd">        pattern (str): pattern of decoy filenames</span>
+<span class="sd">        ndx_range (tuple, list): limit decoy index range to[ndx_min, ndx_max]</span>
+<span class="sd">        sel (str): selection string(for RMSD calculation)</span>
+<span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DECOY_LIST(list)</span>
+<span class="sd">        DECOY_LIST (list)</span>
 <span class="sd">            list with decoy paths</span>
-<span class="sd">        DECOY_ID(list)</span>
+<span class="sd">        DECOY_ID (list)</span>
 <span class="sd">            list with decoy ids</span>
-<span class="sd">        SCORE(list)</span>
+<span class="sd">        SCORE (list)</span>
 <span class="sd">            list with corresponding scores(ref 2015)</span>
-<span class="sd">        RMSD(list)</span>
+<span class="sd">        RMSD (list)</span>
 <span class="sd">            list with corresponding RMSD values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span> <span class="o">=</span> <span class="n">get_decoy_scores</span><span class="p">(</span><span class="n">decoy_dir</span><span class="o">=</span><span class="n">decoy_dir</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">ndx_range</span><span class="o">=</span><span class="n">ndx_range</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
@@ -848,23 +848,23 @@
 <span class="sd">    rank decoy precision</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data(list):</span>
+<span class="sd">        data (list):</span>
 <span class="sd">          | output of abinitio.get_decoy_precision()</span>
 <span class="sd">          | data[0]: DECOY_LIST</span>
 <span class="sd">          | data[1]: DECOY_ID</span>
 <span class="sd">          | data[2]: SCORE</span>
 <span class="sd">          | data[3]: RMSD</span>
-<span class="sd">        rank_by(str): &quot;SCORE&quot;, &quot;RMSD&quot;</span>
-<span class="sd">        verbose(bool)</span>
+<span class="sd">        rank_by (str): &quot;SCORE&quot;, &quot;RMSD&quot;</span>
+<span class="sd">        verbose (bool)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DECOY_LIST_ranked(array)</span>
+<span class="sd">        DECOY_LIST_ranked (array)</span>
 <span class="sd">            ranked list with decoy paths</span>
-<span class="sd">        DECOY_ID_ranked(array)</span>
+<span class="sd">        DECOY_ID_ranked (array)</span>
 <span class="sd">            ranked list with decoy ids</span>
-<span class="sd">        SCORE_ranked(array)</span>
-<span class="sd">            ranked list with corresponding scores(ref 2015)</span>
-<span class="sd">        RMSD_ranked(array)</span>
+<span class="sd">        SCORE_ranked (array)</span>
+<span class="sd">            ranked list with corresponding scores (ref 2015)</span>
+<span class="sd">        RMSD_ranked (array)</span>
 <span class="sd">            ranked list with corresponding RMSD values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DECOY_LIST</span><span class="p">,</span> <span class="n">DECOY_ID</span><span class="p">,</span> <span class="n">SCORE</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">data</span>
@@ -887,15 +887,15 @@
 <span class="sd">    create a precision scatter plot.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        SCORE(list, array)</span>
-<span class="sd">        RMSD(list, array)</span>
+<span class="sd">        SCORE (list, array)</span>
+<span class="sd">        RMSD (list, array)</span>
 
 <span class="sd">    .. Hint: : Args and Keyword Args of misc.figure() are valid Keyword Args.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        fig(class)</span>
+<span class="sd">        fig (class)</span>
 <span class="sd">            matplotlib.figure.Figure</span>
-<span class="sd">        ax(class, list)</span>
+<span class="sd">        ax (class, list)</span>
 <span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

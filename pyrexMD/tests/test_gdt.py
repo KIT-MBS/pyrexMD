@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 23.06.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.gdt as gdt
@@ -11,12 +11,20 @@ import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
 from unittest.mock import patch
+import pytest
 import os
 
-if os.path.exists("./files"):
+
+cwd = misc.cwd(verbose=False)
+
+# cwd is <...>/pyrexMD/tests/
+if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
     pre = "./files/1l2y/"
-else:
+
+# cwd is <...>/pyrexMD/
+if misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
     pre = "./tests/files/1l2y/"
+
 pdb = pre + "1l2y_ref.pdb"
 tpr = pre + "traj.tpr"
 xtc = pre + "traj.xtc"
@@ -156,6 +164,12 @@ def test_rank_scores():
     rank_scores = gdt.rank_scores(GDT_TS, GDT_HA)
     assert (rank_scores == np.load(pre + "rank_scores.npy")).all()
     assert (rank_scores == np.load(pre + "GDT_rank_scores.npy")).all()
+
+    # coverage
+    gdt.rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_HA")
+    gdt.rank_scores(GDT_TS, GDT_HA, ranking_order=None)
+    with pytest.raises(ValueError) as e_info:
+        gdt.rank_scores(GDT_TS, GDT_HA, ranking_order="invalid_value")
     return
 
 
@@ -171,6 +185,9 @@ def test_GDT_rank_percent():
     GDT_percent = np.load(pre + "GDT_percent.npy")
     GDT_rank_percent = gdt.GDT_rank_percent(GDT_percent)
     assert assert_allclose(GDT_rank_percent, np.load(pre + "GDT_rank_percent.npy")) == None
+
+    # coverage
+    gdt.GDT_rank_percent(GDT_percent, norm=False)
     return
 
 
@@ -200,6 +217,11 @@ def test_plot_LA(mock_show):
     assert fig != None
     assert ax != None
     assert LA_data != None
+
+    # coverage
+    gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], show_frames=True, show_scores=True, cbar_min=0, cbar_max=2)
+    gdt.plot_LA(mobile, ref, SCORES[0], SCORES[1], SCORES[2], show_frames=True, show_scores=False, show_cbar=False, save_as="./temp.png")
+    misc.rm("./temp.png")
     return
 
 

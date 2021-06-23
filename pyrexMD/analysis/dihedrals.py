@@ -2,7 +2,7 @@
 # @Date:   06.05.2021
 # @Filename: dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 27.05.2021
+# @Last modified time: 22.06.2021
 
 """
 This module contains functions related to dihedral analyses.
@@ -32,6 +32,7 @@ Module contents:
 
 
 import pyrexMD.misc as _misc
+import pyrexMD.topology as _top
 from MDAnalysis.analysis import dihedrals
 import matplotlib.pyplot as plt
 import warnings
@@ -68,6 +69,7 @@ def get_ramachandran(u, sel="protein", sss=[None, None, None], plot=True, **kwar
         num (None, int):
           | figure number
           | None: create new figure
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         rama (MDAnalysis.analysis.dihedrals.Ramachandran)
@@ -79,12 +81,15 @@ def get_ramachandran(u, sel="protein", sss=[None, None, None], plot=True, **kwar
                "color": "black",
                "marker": ".",
                "ref": True,
-               "num": None}
+               "num": None,
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
     if "ref" in kwargs:
         del kwargs["ref"]
     if "num" in kwargs:
         del kwargs["num"]
+    if cfg.norm:
+        _top.norm_universe(u)
     ############################################################################
     rama = dihedrals.Ramachandran(u.select_atoms(sel)).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
 
@@ -125,6 +130,7 @@ def get_janin(u, sel="protein", sss=[None, None, None], plot=True, verbose=True,
         num (None, int):
           | figure number
           | None: create new figure
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         janin (MDAnalysis.analysis.dihedrals.Janin)
@@ -136,12 +142,15 @@ def get_janin(u, sel="protein", sss=[None, None, None], plot=True, verbose=True,
                "color": "black",
                "marker": ".",
                "ref": True,
-               "num": None}
+               "num": None,
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
     if "ref" in kwargs:
         del kwargs["ref"]
     if "num" in kwargs:
         del kwargs["num"]
+    if cfg.norm:
+        _top.norm_universe(u)
     ############################################################################
     janin = dihedrals.Janin(u.select_atoms(sel)).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
 
@@ -173,6 +182,7 @@ def get_phi_values(u, sel="protein", sss=[None, None, None], **kwargs):
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         phi (array)
@@ -180,8 +190,11 @@ def get_phi_values(u, sel="protein", sss=[None, None, None], **kwargs):
     """
     default = {"start": sss[0],
                "stop": sss[1],
-               "step": sss[2]}
+               "step": sss[2],
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
+    if cfg.norm:
+        _top.norm_universe(u)
     ############################################################################
     a = [res.phi_selection() for res in u.select_atoms(sel).residues
          if res.phi_selection() is not None]
@@ -209,6 +222,7 @@ def get_psi_values(u, sel="protein", sss=[None, None, None], **kwargs):
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         psi_values (array)
@@ -216,8 +230,11 @@ def get_psi_values(u, sel="protein", sss=[None, None, None], **kwargs):
     """
     default = {"start": sss[0],
                "stop": sss[1],
-               "step": sss[2]}
+               "step": sss[2],
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
+    if cfg.norm:
+        _top.norm_universe(u)
     ############################################################################
     a = [res.psi_selection() for res in u.select_atoms(sel).residues
          if res.psi_selection() is not None]
@@ -243,6 +260,7 @@ def get_omega_values(u, sel="protein", sss=[None, None, None], **kwargs):
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         omega_values (array)
@@ -250,8 +268,11 @@ def get_omega_values(u, sel="protein", sss=[None, None, None], **kwargs):
     """
     default = {"start": sss[0],
                "stop": sss[1],
-               "step": sss[2]}
+               "step": sss[2],
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
+    if cfg.norm:
+        _top.norm_universe(u)
     ############################################################################
     a = [res.omega_selection() for res in u.select_atoms(sel).residues
          if res.omega_selection() is not None]
@@ -279,6 +300,7 @@ def get_chi1_values(u, sel="protein", sss=[None, None, None], warn=True, **kwarg
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         chi1_values (array)
@@ -286,16 +308,18 @@ def get_chi1_values(u, sel="protein", sss=[None, None, None], warn=True, **kwarg
     """
     default = {"start": sss[0],
                "stop": sss[1],
-               "step": sss[2]}
+               "step": sss[2],
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
+    if cfg.norm:
+        _top.norm_universe(u)
+    if warn:
+        _misc.cprint("All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.", "red")
     ############################################################################
     a = [res.chi1_selection() for res in u.select_atoms(sel).residues
          if res.chi1_selection() is not None]
     dih = dihedrals.Dihedral(a).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
     chi1_values = dih.angles
-
-    if warn:
-        _misc.cprint("All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.", "red")
     return chi1_values
 
 
@@ -318,6 +342,7 @@ def get_chi2_values(u, sel="protein", sss=[None, None, None], warn=True, **kwarg
         start (None, int): start frame
         stop (None, int): stop frame
         step (None, int): step size
+        norm (bool): norm universe before calculation. Defaults to True.
 
     Returns:
         chi2_values (array)
@@ -325,14 +350,19 @@ def get_chi2_values(u, sel="protein", sss=[None, None, None], warn=True, **kwarg
     """
     default = {"start": sss[0],
                "stop": sss[1],
-               "step": sss[2]}
+               "step": sss[2],
+               "norm": True}
     cfg = _misc.CONFIG(default, **kwargs)
-    ############################################################################
-    a = [res.chi2_selection() for res in u.select_atoms(sel).residues
-         if res.chi2_selection() is not None]
-    dih = dihedrals.Dihedral(a).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
-    chi2_values = dih.angles
-
+    if cfg.norm:
+        _top.norm_universe(u)
     if warn:
         _misc.cprint("All ALA, CYS, GLY, PRO, SER, THR, and VAL residues have been removed from the selection.", "red")
+    ############################################################################
+    try:
+        a = [res.chi2_selection() for res in u.select_atoms(sel).residues
+             if res.chi2_selection() is not None]
+    except AttributeError:
+        raise AttributeError("Selection has no chi2 angles.")
+    dih = dihedrals.Dihedral(a).run(start=cfg.start, stop=cfg.stop, step=cfg.step)
+    chi2_values = dih.angles
     return chi2_values

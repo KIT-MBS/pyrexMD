@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 18.06.2021
+# @Last modified time: 22.06.2021
 
 
 """
@@ -60,6 +60,8 @@ def shift_resids(u, shift=None, verbose=True):
         shift (None, int): shift value
         verbose (bool)
     """
+    if isinstance(shift, (np.ndarray, list)) and np.all(shift == shift[0]):
+        shift = shift[0]
     if shift == None or shift == 0:
         return
 
@@ -105,6 +107,16 @@ def align_resids(mobile, ref, norm=True, verbose=True, **kwargs):
     return
 
 
+def __HELP_print(info='', verbose=True):
+    if verbose:
+        if info == '':
+            print('Norming atom ids...')
+        else:
+            print(f'Norming {info} atom ids...')
+    else:
+        return
+
+
 def norm_ids(u, info='', verbose=True):
     """
     Modify existing MDA universe/atomgrp and normalize ids according to
@@ -129,19 +141,9 @@ def norm_ids(u, info='', verbose=True):
         | >> print(ref.atoms.ids)
         | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
-    def __HELP_print(info='', verbose=True):
-        if verbose:
-            if info == '':
-                print('Norming atom ids...')
-            else:
-                print(f'Norming {info} atom ids...')
-        else:
-            return
-
     if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError('''{norm_ids.__module__}.{norm_ids.__name__}():\
         \nInvalid input. u must be MDA universe/atomgrp.''')
-        return
 
     if min(u.atoms.ids) != 1:
         shift = 1 - min(u.atoms.ids)
@@ -173,19 +175,9 @@ def norm_resids(u, info='', verbose=True):
         | >> print(ref.residues.resids)
         | [1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]
     """
-    def __HELP_print(info='', verbose=True):
-        if verbose:
-            if info == '':
-                print('Norming res ids...')
-            else:
-                print(f'Norming {info} res ids...')
-        else:
-            return
-
     if not isinstance(u, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError('''{norm_resids.__module__}.{name_resids.__name__}():\
         \nInvalid input. u must be MDA universe/atomgrp.''')
-        return
 
     if min(u.residues.resids) != 1:
         shift = 1 - min(u.residues.resids)
@@ -228,7 +220,6 @@ def norm_and_align_universe(mobile, ref, verbose=True):
     if len(ref.atoms.ids) != len(mobile.atoms.ids):
         raise ValueError(f'''{norm_and_align_universe.__module__}.{norm_and_align_universe.__name__}():\
         \nNumber of atoms doesn't match! Cannot align atom ids.''')
-        return
 
     if min(ref.atoms.ids) < 1:
         norm_ids(ref, 'reference')
@@ -244,7 +235,6 @@ def norm_and_align_universe(mobile, ref, verbose=True):
     if len(ref.residues.resids) != len(mobile.residues.resids):
         raise ValueError(f'''{norm_and_align_universe.__module__}.{norm_and_align_universe.__name__}()::\
         \nResidues number doesn't match! Cannot align resids.''')
-        return
 
     if min(ref.residues.resids) < 1:
         norm_resids(ref, 'reference')
@@ -531,9 +521,9 @@ def DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows="auto",
 
     Returns:
         RES_PAIR (list)
-            list with RES pairs
+            list with RES pair tuples (RESi, RESj)
         ATOM_PAIR (list)
-            list with ATOM pairs
+            list with ATOM pair tuples (ATOMi, ATOMj)
     """
     default = {"cprint_color": "blue",
                "pdbid": "auto",

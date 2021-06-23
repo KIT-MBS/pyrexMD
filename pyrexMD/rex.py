@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 24.05.2021
+# @Last modified time: 22.06.2021
 
 
 """
@@ -58,7 +58,7 @@ import numpy as np
 import glob
 
 
-def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
+def apply_ff_best_decoys(best_decoys_dir, n_decoys=None, odir="./PDBID_best_decoys_ref",
                          create_dir=True, verbose=False, **kwargs):
     """
     Apply forcefield on best decoys and save as <filename>_ref.pdb.
@@ -68,6 +68,9 @@ def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
 
           - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
           - decoy_scores.log (output of cluster.log_cluster.decoys())
+        n_decoys (None, int):
+          | None: use all decoys from best_decoys_dir
+          | int: use this number of decoys from best_decoys_dir
         odir (str):
           | output directory
           | Note: if "PDBID" in <odir> and no <pdbid> kwarg is passed -> find and replace "PDBID" in <odir> automatically based on filenames
@@ -113,6 +116,8 @@ def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
     DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
                    _misc.read_file(f"{best_decoys_dir}/{cfg.logfile}",
                                    usecols=0, skiprows=1, dtype=str)]
+    if n_decoys is not None:
+        DECOY_PATHS = DECOY_PATHS[:n_decoys]
     for item in tqdm(DECOY_PATHS):
         with _misc.HiddenPrints(verbose=verbose):
             _gmx.get_ref_structure(item, odir=odir, water=cfg.water,
@@ -122,8 +127,14 @@ def apply_ff_best_decoys(best_decoys_dir, odir="./PDBID_best_decoys_ref",
 
     # copy and fix log
     with open(f"{best_decoys_dir}/{cfg.logfile}", "r") as old_log, open(f"{odir}/{cfg.logfile}", "w") as new_log:
+        count = 0
         for line in old_log:
+            if ".pdb" in line:
+                count += 1
             new_log.write(line.replace(".pdb", "_ref.pdb"))
+
+            if n_decoys is not None and n_decoys == count:
+                break
 
     if verbose:
         _misc.cprint(f"Saved files to: {odir}", cfg.cprint_color)
@@ -177,10 +188,12 @@ def get_REX_DIRS(main_dir="./", realpath=True):
             list with REX directory paths
     """
     n_REX = 300   # hardcoded but will be filtered automatically
-    REX_DIRS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))
-                                    for i in range(0, n_REX + 1)
-                                    if len(glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))) != 0])
+    REX_DIRS = _misc.flatten_array([glob.glob(_misc.realpath(main_dir) + f"/rex_{i}") for i in range(0, n_REX+1)
+                                    if len(glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
+    if not realpath:
+        REX_DIRS = [_misc.relpath(item) for item in REX_DIRS]
 
+    # filter for directories
     REX_DIRS = [item for item in REX_DIRS if _misc.isdir(item)]
     return REX_DIRS
 
@@ -198,10 +211,12 @@ def get_REX_PDBS(main_dir="./", realpath=True):
             list with PDB paths within folders rex_1, rex_2, etc.
     """
     n_REX = 300   # hardcoded but will be filtered automatically
-    REX_PDBS = _misc.flatten_array([glob.glob(_misc.joinpath(main_dir, f"rex_{i}/*.pdb", realpath=realpath))
-                                    for i in range(0, n_REX + 1)
-                                    if len(glob.glob(_misc.joinpath(main_dir, f"rex_{i}", realpath=realpath))) != 0])
+    REX_PDBS = _misc.flatten_array([glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb") for i in range(0, n_REX+1)
+                                    if len(glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
+    if not realpath:
+        REX_PDBS = [_misc.relpath(item) for item in REX_PDBS]
 
+    # filter for files
     REX_PDBS = [item for item in REX_PDBS if _misc.isfile(item)]
     return REX_PDBS
 
@@ -279,7 +294,7 @@ def WF_getParameter_boxsize(logfile="./logs/editconf.log", base=0.2, verbose=Tru
     return boxsize
 
 
-def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verbose=True):
+def WF_getParameter_maxsol(logfile="./logs/solvate.log", maxsol_reduce=50, verbose=True):
     """
     Read <logfile> and suggest a 'max solution' parameter for REX simulations.
 
@@ -294,6 +309,7 @@ def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verb
         maxsol (int)
             suggested max solution parameter
     """
+    maxsol = None
     with open(logfile, "r") as fin:
         for line in fin:
             if "Number of solvent molecules" in line:
@@ -304,10 +320,10 @@ def WF_getParameter_maxsol(logfile="./logs/solution.log", maxsol_reduce=50, verb
                     _misc.cprint(f"Reading logfile: {logfile}")
                     _misc.cprint(line, "blue", end="")
                     _misc.cprint(f"suggested max solution: {maxsol}", "green", end="")
-                return maxsol
 
-    _misc.Error("No solution parameter found.")
-    return
+    if maxsol is None:
+        raise _misc.Error("No solution parameter found.")
+    return maxsol
 
 
 def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
@@ -383,6 +399,7 @@ def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
     _misc.cprint("#######################################################################################")
     _misc.cd("..")
     _misc.cprint("Finished energy minimization of all REX DIRS.", "green")
+    return
 
 
 def create_special_group_ndx(ref_pdb, sel="name CA", save_as="special_group.ndx"):
@@ -394,7 +411,7 @@ def create_special_group_ndx(ref_pdb, sel="name CA", save_as="special_group.ndx"
         sel (str): selection string
         save_as (str)
     """
-    RESID, RESNAME, ATOM, NAME = _top.parsePDB(ref_pdb=ref_pdb, sel=sel)
+    RESID, RESNAME, ATOM, NAME = _top.parsePDB(ref_pdb, sel=sel)
     with open(save_as, "w") as fout:
         fout.write(f"[ {sel} ]\n")
         for i in range(len(ATOM)):
@@ -405,16 +422,16 @@ def create_special_group_ndx(ref_pdb, sel="name CA", save_as="special_group.ndx"
     return
 
 
-def create_pull_groups_ndx(ref_pdb, sel="name CA", save_as="pull_groups.ndx"):
+def create_pull_group_ndx(ref_pdb, sel="name CA", save_as="pull_group.ndx"):
     """
-    Create index file for pull groups.
+    Create index file for pull group.
 
     Args:
         ref_pdb (str): PDB file (after applying force field)
         sel (str): selection string
         save_as (str)
     """
-    RESID, RESNAME, ATOM, NAME = _top.parsePDB(ref_pdb=ref_pdb, sel=sel)
+    RESID, RESNAME, ATOM, NAME = _top.parsePDB(ref_pdb, sel=sel)
     with open(save_as, "w") as fout:
         for i in range(len(RESID)):
             fout.write(f"[ pull_res{RESID[i]} ]\n")

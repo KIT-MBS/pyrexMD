@@ -2,7 +2,7 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 23.06.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx
@@ -11,12 +11,16 @@ import os
 import shutil
 
 
-# change directory
 cwd = misc.cwd(verbose=False)
+
+# cwd is <...>/pyrexMD/tests/
 if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
     pre = "../examples/files/protein/"
-if misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
+
+# cwd is <...>/pyrexMD/tests/
+elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
     pre = "./examples/files/protein/"
+
 pdb = f"{pre}/1l2y.pdb"
 tpr = f"{pre}/../traj/traj_protein.tpr"
 xtc = f"{pre}/../traj/traj_protein.xtc"

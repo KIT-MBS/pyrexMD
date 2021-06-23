@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 18.06.2021</span>
+<span class="c1"># @Last modified time: 23.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -181,6 +181,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gridspec</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -470,7 +471,7 @@
 <span class="sd">          |     colors              [&#39;g&#39;, &#39;r&#39;]</span>
 <span class="sd">          |     ms                  1</span>
 <span class="sd">          |     color_positive      teal</span>
-<span class="sd">          |     color_negative      pink</span>
+<span class="sd">          |     color_negative      orange</span>
 <span class="sd">          |     markersize          5</span>
 <span class="sd">          |</span>
 <span class="sd">          | cfg.update_by_alias(alias=&quot;markersize&quot;, key=&quot;ms&quot;, **alias_dict)</span>
@@ -756,14 +757,13 @@
     <span class="k">return</span> <span class="n">realpath</span></div>
 
 
-<div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;-rp&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Copy file(s) from &lt;source&gt; to &lt;target&gt;.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source (str, list, array): source path or list of source paths</span>
 <span class="sd">        target (str): target path</span>
-<span class="sd">        mode (str): copy mode flags (see cp --help in linux OS)</span>
 <span class="sd">        create_dir (bool)</span>
 <span class="sd">        verbose (bool)</span>
 
@@ -773,17 +773,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">dtypeError</span><span class="p">(</span><span class="s2">&quot;Wrong datatype: &lt;target&gt; must be str (path/realpath).&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;*&quot;</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">realpath</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cp </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source file to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">create_dir</span><span class="p">:</span>
             <span class="n">mkdir</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cp </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source files to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -864,8 +866,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts image type. Currently ONLY tested for</span>
 
-<span class="sd">      - tif -&gt; png</span>
-<span class="sd">      - pdf -&gt; png</span>
+<span class="sd">        - pdf -&gt; png</span>
+<span class="sd">        - png -&gt; tiff</span>
+<span class="sd">        - tiff -&gt; png</span>
+
 
 <span class="sd">    Args:</span>
 <span class="sd">        fin (str): file path for file in (including extension)</span>
@@ -897,7 +901,11 @@
 
 <div class="viewcode-block" id="convert_multiple_images"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.convert_multiple_images">[docs]</a><span class="k">def</span> <span class="nf">convert_multiple_images</span><span class="p">(</span><span class="n">folder_in</span><span class="p">,</span> <span class="n">folder_out</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    convert multiple images</span>
+<span class="sd">    convert multiple images. Currently ONLY tested for</span>
+
+<span class="sd">        - pdf -&gt; png</span>
+<span class="sd">        - png -&gt; tiff</span>
+<span class="sd">        - tiff -&gt; png</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        folder_in (str):  file path for folder with input  images</span>
@@ -978,8 +986,17 @@
 <div class="viewcode-block" id="get_python_version"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_python_version">[docs]</a><span class="k">def</span> <span class="nf">get_python_version</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns python version.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        version (str):</span>
+<span class="sd">            python version in format major.minor.micro (e.g. 3.8.5)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+    <span class="n">major</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">minor</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">micro</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">minor</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">micro</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">version</span></div>
 
 
 <div class="viewcode-block" id="input_python_x"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.input_python_x">[docs]</a><span class="k">def</span> <span class="nf">input_python_x</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
@@ -1317,7 +1334,7 @@
     <span class="k">elif</span> <span class="n">loc</span> <span class="o">==</span> <span class="s2">&quot;before&quot;</span><span class="p">:</span>
         <span class="n">_str</span> <span class="o">=</span> <span class="n">str1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">str2</span> <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">str1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;loc argument must be either &#39;before&#39; or &#39;after&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;loc argument must be either &#39;before&#39; or &#39;after&#39;.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_str</span></div>
 
 
@@ -1336,7 +1353,10 @@
     <span class="n">CHAR_SET</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2"> .,0123456789&quot;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">n_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.pdb&quot;</span><span class="p">:</span>
                 <span class="n">l</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
                 <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
@@ -1352,6 +1372,10 @@
                     <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">header_rows</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># check if header was found</span>
+        <span class="k">if</span> <span class="n">n_lines</span> <span class="o">==</span> <span class="n">header_rows</span><span class="p">:</span>
+            <span class="n">header_rows</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">return</span> <span class="n">header_rows</span></div>
 
 
@@ -1476,7 +1500,7 @@
 <span class="sd">        None (None)</span>
 <span class="sd">            else</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
         <span class="n">split</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)]</span>
@@ -1514,7 +1538,7 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="print_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.print_table">[docs]</a><span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints each item of &quot;data&quot; elementwise next to each other as a table.</span>
 
@@ -1621,13 +1645,13 @@
     <span class="k">return</span> <span class="n">table_str</span></div>
 
 
-<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">default_dir</span><span class="o">=</span><span class="s2">&quot;./logs&quot;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes misc.print_table() and saves the returned table string as a log file.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filename (str): filename or realpath</span>
 <span class="sd">        data (list of lists): table content, where each list corresponds to one column</span>
+<span class="sd">        filename (str): filename or realpath</span>
 <span class="sd">        header (str): header for log file, e.g. column descriptions</span>
 <span class="sd">        default_dir (str)</span>
 <span class="sd">        prec (None, int):</span>
@@ -1696,15 +1720,13 @@
     <span class="c1"># find potential starting indices</span>
     <span class="n">test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mainlist</span><span class="p">)</span>
     <span class="n">test_ndx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">test</span> <span class="o">==</span> <span class="n">sublist</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">test_ndx</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">test_ndx</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">sublist</span> <span class="o">==</span> <span class="n">mainlist</span><span class="p">[</span><span class="n">ndx</span><span class="p">:</span><span class="n">ndx</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">sublist</span><span class="p">)]:</span>
             <span class="n">slice_ndx1</span> <span class="o">=</span> <span class="n">ndx</span>
             <span class="n">slice_ndx2</span> <span class="o">=</span> <span class="n">ndx</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">sublist</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">slice_ndx1</span><span class="p">,</span> <span class="n">slice_ndx2</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;There is no sublist between list1 and list2. Slicing is not possible.&quot;</span><span class="p">)</span>
-    <span class="k">return</span></div>
+    <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;There is no sublist between list1 and list2. Slicing is not possible.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_cutoff_array"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.get_cutoff_array">[docs]</a><span class="k">def</span> <span class="nf">get_cutoff_array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">cut_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut_max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1726,7 +1748,7 @@
 <span class="sd">    Example:</span>
 <span class="sd">        | array = list(range(10,20))</span>
 <span class="sd">        | cut_min, cut_max = 12, 16</span>
-<span class="sd">        | cutoff_array, cutoff_array_ndx = get_cutoff_array(array, cut_min, cut_max)</span>
+<span class="sd">        | cutoff_array, cutoff_array_ndx = misc.get_cutoff_array(array, cut_min, cut_max)</span>
 <span class="sd">        | print(cutoff_array)</span>
 <span class="sd">        | &gt;&gt; [12, 13, 14, 15, 16]</span>
 <span class="sd">        | print(cutoff_array_ndx)</span>
@@ -2056,7 +2078,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        labels (sequence of strings)</span>
-<span class="sd">        handles (sequence of `.Artist`)</span>
+<span class="sd">        handlescolors (list)</span>
 <span class="sd">        handlelength (None/int/float)</span>
 <span class="sd">        handletextpad (None/int/float)</span>
 <span class="sd">        loc (str):</span>
@@ -2119,6 +2141,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved figure as:&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">realpath</span></div>
+
+
+<span class="c1">### alias function</span>
+<span class="n">save_fig</span> <span class="o">=</span> <span class="n">savefig</span>
 
 
 <div class="viewcode-block" id="autoapply_limits"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.autoapply_limits">[docs]</a><span class="k">def</span> <span class="nf">autoapply_limits</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
@@ -2617,10 +2643,10 @@
         <span class="n">ncols</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">pickle_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">pickle_files</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">pickle_files</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">type</span><span class="p">([])):</span>
+    <span class="k">elif</span> <span class="n">pickle_files</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;help(pickle_plot)&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid type of &#39;pickle_files&#39;. Read the docstring above.&quot;</span><span class="p">)</span>
 
@@ -2765,7 +2791,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
 <span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
-<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
 <span class="sd">        new_lim (list): assign new values to both ref_ax and target_ax</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
@@ -2784,13 +2810,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">new_lim</span><span class="p">)</span>
     <span class="c1">##################################################</span>
-    <span class="k">if</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 
@@ -2802,7 +2827,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
 <span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
-<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
 <span class="sd">        new_ticks (list): assign new values to both ref_ax and target_ax</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
@@ -2821,13 +2846,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">new_ticks</span><span class="p">)</span>
     <span class="c1">##################################################</span>
-    <span class="k">if</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 
@@ -2839,7 +2863,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
 <span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
-<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
 <span class="sd">        new_ticklabels (list): assign new values to both ref_ax and target_ax</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
@@ -2858,12 +2882,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">new_ticklabels</span><span class="p">)</span>
     <span class="c1">##################################################</span>
-    <span class="k">if</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
-        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">apply_on</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
         <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 
@@ -2873,10 +2897,10 @@
 <span class="sd">    - removes yticklabels of all axes except for left column.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        fig (class)</span>
-<span class="sd">            matplotlib.figure.Figure</span>
 <span class="sd">        ax (class, list)</span>
 <span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">        grid (list)</span>
+<span class="sd">            grid of figure (example: grid=[2,2] for 2x2 figure or grid =[3,2] for 3x2 figure)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ndx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
@@ -2914,9 +2938,9 @@
                 <span class="n">xticklabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
             <span class="c1"># convert</span>
             <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span><span class="p">]</span>
+                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">prec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span><span class="p">]</span>
+                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">xticklabels</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
@@ -2928,9 +2952,9 @@
 
             <span class="c1"># convert</span>
             <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span><span class="p">]</span>
+                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">prec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span><span class="p">]</span>
+                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">yticklabels</span><span class="p">)</span>
     <span class="k">return</span></div>
 
@@ -3066,14 +3090,13 @@
     <span class="k">return</span> <span class="n">majorticks</span><span class="p">,</span> <span class="n">minorticks</span></div>
 
 
-<div class="viewcode-block" id="set_logscale_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.set_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">set_logscale_ticks</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minorticks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="set_logscale_ticks"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.set_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">set_logscale_ticks</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minorticks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Apply logscale ticks on specific axis of ax.</span>
-<span class="sd">    If vmax is specified, sets vmax as upper limit of axis.</span>
+<span class="sd">    Apply logscale ticks on ax. If vmax is specified, sets vmax as upper limit.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ax (matplotlib.axes._subplots.Axes)</span>
-<span class="sd">        axis (str): &quot;x&quot;, &quot;y&quot;, &quot;xy&quot;</span>
+<span class="sd">        apply_on (str): &quot;x&quot;, &quot;y&quot;, &quot;xy&quot;</span>
 <span class="sd">        vmin (None, int, float): highest logscale tick value</span>
 <span class="sd">        minorticks (bool): display minorticks on/off</span>
 
@@ -3090,7 +3113,7 @@
                <span class="s2">&quot;ymax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">axis</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
         <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span>
@@ -3110,7 +3133,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">axis</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
         <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span>
@@ -3153,7 +3176,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">        seq = [&quot;lightblue&quot;, 2/6, &quot;lightgreen&quot;, 3/6, &quot;yellow&quot;, 4/6, &quot;orange&quot;, 5/6, &quot;red&quot;]</span>
-<span class="sd">        cmap = make_cmap(seq, vmin=0, vmax=12)</span>
+<span class="sd">        cmap = misc.create_cmap(seq, vmin=0, vmax=12)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>

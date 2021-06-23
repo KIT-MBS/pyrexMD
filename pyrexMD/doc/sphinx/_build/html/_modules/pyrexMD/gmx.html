@@ -165,7 +165,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 20.05.2021</span>
+<span class="c1"># @Last modified time: 21.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions to interact with `GROMACS` to setup systems and</span>
@@ -1085,7 +1085,7 @@
     <span class="k">return</span> <span class="n">tpr_file</span><span class="p">,</span> <span class="n">xtc_file</span></div>
 
 
-<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="s2">&quot;bb&quot;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modified function of gromacs.rms(). Calculate backbone RMSD.</span>
 
@@ -1099,8 +1099,8 @@
 <span class="sd">          | output directory</span>
 <span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
 <span class="sd">        tu (str): time unit: fs ps ns us ms s</span>
-<span class="sd">        sel (str):</span>
-<span class="sd">          | selection string (case independant)</span>
+<span class="sd">        sel (list):</span>
+<span class="sd">          | list with selection strings (case independant)</span>
 <span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
 <span class="sd">          | &quot;protein&quot;: protein atoms</span>
 <span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
@@ -1138,7 +1138,10 @@
 
     <span class="c1"># GromacsWrapper</span>
     <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
-        <span class="n">gromacs</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="n">tu</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sel</span><span class="p">:</span>
+            <span class="n">sel_code</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_get_sel_code</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="n">gromacs</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="n">tu</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">sel_code</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="c1"># save message</span>
     <span class="n">o_file</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
@@ -1361,7 +1364,7 @@
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nmol</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">range</span><span class="p">)):</span>
         <span class="k">pass</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&lt;nmol&gt; must be int, tuple, list or range object.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&lt;nmol&gt; must be int, tuple, list or range object.&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nmol</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_dir</span><span class="si">}</span><span class="s2">/positions_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>

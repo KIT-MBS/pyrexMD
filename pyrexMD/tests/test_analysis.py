@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 23.06.2021
 
 
 import pyrexMD.analysis.analysis as ana
@@ -18,10 +18,16 @@ import pytest
 import os
 
 
-if os.path.exists("./files"):
+cwd = misc.cwd(verbose=False)
+
+# cwd is <...>/pyrexMD/tests/
+if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
     pre = "./files/1l2y/"
-else:
+
+# cwd is <...>/pyrexMD/
+elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
     pre = "./tests/files/1l2y/"
+
 pdb = pre + "1l2y_ref.pdb"
 tpr = pre + "traj.tpr"
 xtc = pre + "traj.xtc"

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 23.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import seaborn as sns
 import os
+import shutil
 import glob
 import sys
 import subprocess
@@ -307,7 +308,7 @@ class CONFIG(object):
           |     colors              ['g', 'r']
           |     ms                  1
           |     color_positive      teal
-          |     color_negative      pink
+          |     color_negative      orange
           |     markersize          5
           |
           | cfg.update_by_alias(alias="markersize", key="ms", **alias_dict)
@@ -593,14 +594,13 @@ def cd(path, verbose=True):
     return realpath
 
 
-def cp(source, target, mode="-rp", create_dir=True, verbose=True):
+def cp(source, target, create_dir=True, verbose=True):
     """
     Copy file(s) from <source> to <target>.
 
     Args:
         source (str, list, array): source path or list of source paths
         target (str): target path
-        mode (str): copy mode flags (see cp --help in linux OS)
         create_dir (bool)
         verbose (bool)
 
@@ -610,17 +610,19 @@ def cp(source, target, mode="-rp", create_dir=True, verbose=True):
     """
     if not isinstance(target, str):
         raise dtypeError("Wrong datatype: <target> must be str (path/realpath).")
+    if "*" in source:
+        source = glob.glob(source)
     target = realpath(target)
 
     if isinstance(source, str):
-        os.popen(f"cp {mode} {source} {target}")
+        shutil.copy(source, target)
         if verbose:
             cprint(f"Copied source file to: {target}", "blue")
     elif isinstance(source, list):
         if create_dir:
             mkdir(target, verbose=False)
         for item in source:
-            os.popen(f"cp {mode} {item} {target}")
+            shutil.copy(item, target)
         if verbose:
             cprint(f"Copied source files to: {target}", "blue")
     else:
@@ -701,8 +703,10 @@ def convert_image(fin, fout, format="auto", **kwargs):
     """
     Converts image type. Currently ONLY tested for
 
-      - tif -> png
-      - pdf -> png
+        - pdf -> png
+        - png -> tiff
+        - tiff -> png
+
 
     Args:
         fin (str): file path for file in (including extension)
@@ -734,7 +738,11 @@ def convert_image(fin, fout, format="auto", **kwargs):
 
 def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
     """
-    convert multiple images
+    convert multiple images. Currently ONLY tested for
+
+        - pdf -> png
+        - png -> tiff
+        - tiff -> png
 
     Args:
         folder_in (str):  file path for folder with input  images
@@ -815,8 +823,17 @@ def unzip(iterable):
 def get_python_version():
     """
     Returns python version.
+
+    Returns:
+        version (str):
+            python version in format major.minor.micro (e.g. 3.8.5)
+
     """
-    return sys.version_info[0]
+    major = sys.version_info[0]
+    minor = sys.version_info[1]
+    micro = sys.version_info[2]
+    version = f"{major}.{minor}.{micro}"
+    return version
 
 
 def input_python_x(msg):
@@ -1154,7 +1171,7 @@ def insert_str(str1, str2, sep, loc="after"):
     elif loc == "before":
         _str = str1.split(sep)[0] + str2 + sep + f"{sep}".join(str1.split(sep)[1:])
     else:
-        raise _misc.Error("loc argument must be either 'before' or 'after'.")
+        raise Error("loc argument must be either 'before' or 'after'.")
     return _str
 
 
@@ -1173,7 +1190,10 @@ def autodetect_header(fin):
     CHAR_SET = set("\n\t .,0123456789")
 
     with open(fin, "r") as f:
-        for line in f:
+        lines = f.readlines()
+        n_lines = len(lines)
+
+        for line in lines:
             if extension == ".pdb":
                 l = "".join(line.split())
                 if l.isnumeric():
@@ -1189,6 +1209,10 @@ def autodetect_header(fin):
                     break
                 else:
                     header_rows += 1
+
+        # check if header was found
+        if n_lines == header_rows:
+            header_rows = 0
     return header_rows
 
 
@@ -1313,7 +1337,7 @@ def get_PDBid(ref):
         None (None)
             else
     """
-    if type(ref) is str:
+    if isinstance(ref, str):
         ref = ref.replace('.', '/')
         ref = ref.replace('_', '/')
         split = [i.lower() for i in ref.split('/')]
@@ -1533,7 +1557,6 @@ def get_slice_indices(list1, list2):
     # find potential starting indices
     test = np.array(mainlist)
     test_ndx = np.where(test == sublist[0])[0]
-    print(test_ndx)
 
     for ndx in test_ndx:
         if sublist == mainlist[ndx:ndx+len(sublist)]:
@@ -1541,7 +1564,6 @@ def get_slice_indices(list1, list2):
             slice_ndx2 = ndx+len(sublist)
             return (slice_ndx1, slice_ndx2)
     raise Error("There is no sublist between list1 and list2. Slicing is not possible.")
-    return
 
 
 def get_cutoff_array(array, cut_min=None, cut_max=None):
@@ -1563,7 +1585,7 @@ def get_cutoff_array(array, cut_min=None, cut_max=None):
     Example:
         | array = list(range(10,20))
         | cut_min, cut_max = 12, 16
-        | cutoff_array, cutoff_array_ndx = get_cutoff_array(array, cut_min, cut_max)
+        | cutoff_array, cutoff_array_ndx = misc.get_cutoff_array(array, cut_min, cut_max)
         | print(cutoff_array)
         | >> [12, 13, 14, 15, 16]
         | print(cutoff_array_ndx)
@@ -1893,7 +1915,7 @@ def legend(labels=[""], handlecolors=[""], handlelength=1, handletextpad=None, l
 
     Args:
         labels (sequence of strings)
-        handles (sequence of `.Artist`)
+        handlescolors (list)
         handlelength (None/int/float)
         handletextpad (None/int/float)
         loc (str):
@@ -1956,6 +1978,10 @@ def savefig(filename, filedir="", create_dir=True, dpi=300):
     plt.savefig(realpath, dpi=dpi)
     print("Saved figure as:", realpath)
     return realpath
+
+
+### alias function
+save_fig = savefig
 
 
 def autoapply_limits(fig_or_ax, margin=0.05):
@@ -2454,10 +2480,10 @@ def pickle_plot(pickle_files=[], import_settings=True, xscale='auto', yscale='au
         ncols = 2
         cfg.grid = [nrows, ncols]
 
-    if isinstance(pickle_files, type("")):
+    if isinstance(pickle_files, str):
         pickle_files = [pickle_files]
 
-    if pickle_files == [] or not isinstance(pickle_files, type([])):
+    elif pickle_files == [] or not isinstance(pickle_files, list):
         exec("help(pickle_plot)")
         raise TypeError("Invalid type of 'pickle_files'. Read the docstring above.")
 
@@ -2602,7 +2628,7 @@ def align_limits(ref_ax, target_ax, apply_on='y', new_lim=[]):
     Args:
         ref_ax (matplotlib.axes._subplots.Axes)
         target_ax (matplotlib.axes._subplots.Axes)
-        apply_on (str): 'x', 'y'
+        apply_on (str): 'x', 'y', 'xy'
         new_lim (list): assign new values to both ref_ax and target_ax
     """
     ax_data = _pickle_get_ax_data(ref_ax)
@@ -2621,13 +2647,12 @@ def align_limits(ref_ax, target_ax, apply_on='y', new_lim=[]):
         else:
             ax.set_ylim(new_lim)
     ##################################################
-    if apply_on == "y":
-        _apply_on_y(ref_ax)
-        _apply_on_y(target_ax)
-    elif apply_on == "x":
+    if "x" in apply_on:
         _apply_on_x(ref_ax)
         _apply_on_x(target_ax)
-
+    if "y" in apply_on:
+        _apply_on_y(ref_ax)
+        _apply_on_y(target_ax)
     return
 
 
@@ -2639,7 +2664,7 @@ def align_ticks(ref_ax, target_ax, apply_on='y', new_ticks=[]):
     Args:
         ref_ax (matplotlib.axes._subplots.Axes)
         target_ax (matplotlib.axes._subplots.Axes)
-        apply_on (str): 'x', 'y'
+        apply_on (str): 'x', 'y', 'xy'
         new_ticks (list): assign new values to both ref_ax and target_ax
     """
     ax_data = _pickle_get_ax_data(ref_ax)
@@ -2658,13 +2683,12 @@ def align_ticks(ref_ax, target_ax, apply_on='y', new_ticks=[]):
         else:
             ax.set_yticks(new_ticks)
     ##################################################
-    if apply_on == "y":
-        _apply_on_y(ref_ax)
-        _apply_on_y(target_ax)
-    elif apply_on == "x":
+    if "x" in apply_on:
         _apply_on_x(ref_ax)
         _apply_on_x(target_ax)
-
+    if "y" in apply_on:
+        _apply_on_y(ref_ax)
+        _apply_on_y(target_ax)
     return
 
 
@@ -2676,7 +2700,7 @@ def align_ticklabels(ref_ax, target_ax, apply_on='y', new_ticklabels=[]):
     Args:
         ref_ax (matplotlib.axes._subplots.Axes)
         target_ax (matplotlib.axes._subplots.Axes)
-        apply_on (str): 'x', 'y'
+        apply_on (str): 'x', 'y', 'xy'
         new_ticklabels (list): assign new values to both ref_ax and target_ax
     """
     ax_data = _pickle_get_ax_data(ref_ax)
@@ -2695,12 +2719,12 @@ def align_ticklabels(ref_ax, target_ax, apply_on='y', new_ticklabels=[]):
         else:
             ax.set_yticklabels(new_ticklabels)
     ##################################################
-    if apply_on == "y":
-        _apply_on_y(ref_ax)
-        _apply_on_y(target_ax)
-    elif apply_on == "x":
+    if "x" in apply_on:
         _apply_on_x(ref_ax)
         _apply_on_x(target_ax)
+    if "y" in apply_on:
+        _apply_on_y(ref_ax)
+        _apply_on_y(target_ax)
     return
 
 
@@ -2710,10 +2734,10 @@ def apply_shared_axes(ax, grid):
     - removes yticklabels of all axes except for left column.
 
     Args:
-        fig (class)
-            matplotlib.figure.Figure
         ax (class, list)
             ax or list of axes ~ matplotlib.axes._subplots.Axes
+        grid (list)
+            grid of figure (example: grid=[2,2] for 2x2 figure or grid =[3,2] for 3x2 figure)
     """
     ndx = list(range(grid[0]*grid[1]))
 
@@ -2751,9 +2775,9 @@ def convert_ticklabels(axes, multiplier, apply_on='y', prec=0):
                 xticklabels.append(item.get_text())
             # convert
             if prec == 0:
-                xticklabels = [int(float(item)*multiplier) for item in xticklabels]
+                xticklabels = [int(float(item)*multiplier) for item in xticklabels if item != ""]
             elif prec > 0:
-                xticklabels = [round(float(item)*multiplier, prec) for item in xticklabels]
+                xticklabels = [round(float(item)*multiplier, prec) for item in xticklabels if item != ""]
             ax.set_xticklabels(xticklabels)
 
         if "y" in apply_on:
@@ -2765,9 +2789,9 @@ def convert_ticklabels(axes, multiplier, apply_on='y', prec=0):
 
             # convert
             if prec == 0:
-                yticklabels = [int(float(item)*multiplier) for item in yticklabels]
+                yticklabels = [int(float(item)*multiplier) for item in yticklabels if item != ""]
             elif prec > 0:
-                yticklabels = [round(float(item)*multiplier, prec) for item in yticklabels]
+                yticklabels = [round(float(item)*multiplier, prec) for item in yticklabels if item != ""]
             ax.set_yticklabels(yticklabels)
     return
 
@@ -2903,14 +2927,13 @@ def setup_logscale_ticks(vmax):
     return majorticks, minorticks
 
 
-def set_logscale_ticks(ax, axis="x", vmax=None, minorticks=True, **kwargs):
+def set_logscale_ticks(ax, apply_on="x", vmax=None, minorticks=True, **kwargs):
     """
-    Apply logscale ticks on specific axis of ax.
-    If vmax is specified, sets vmax as upper limit of axis.
+    Apply logscale ticks on ax. If vmax is specified, sets vmax as upper limit.
 
     Args:
         ax (matplotlib.axes._subplots.Axes)
-        axis (str): "x", "y", "xy"
+        apply_on (str): "x", "y", "xy"
         vmin (None, int, float): highest logscale tick value
         minorticks (bool): display minorticks on/off
 
@@ -2927,7 +2950,7 @@ def set_logscale_ticks(ax, axis="x", vmax=None, minorticks=True, **kwargs):
                "ymax": None}
     cfg = CONFIG(default, **kwargs)
 
-    if "x" in axis:
+    if "x" in apply_on:
         if cfg.vmax is None:
             _, vmax = ax.get_xlim()
         major, minor = setup_logscale_ticks(vmax)
@@ -2947,7 +2970,7 @@ def set_logscale_ticks(ax, axis="x", vmax=None, minorticks=True, **kwargs):
         else:
             ax.set_xlim(cfg.xmin, vmax)
 
-    if "y" in axis:
+    if "y" in apply_on:
         if cfg.vmax is None:
             _, vmax = ax.get_ylim()
         major, minor = setup_logscale_ticks(vmax)
@@ -2990,7 +3013,7 @@ def create_cmap(seq, vmin=None, vmax=None, ax=None):
 
     Example:
         seq = ["lightblue", 2/6, "lightgreen", 3/6, "yellow", 4/6, "orange", 5/6, "red"]
-        cmap = make_cmap(seq, vmin=0, vmax=12)
+        cmap = misc.create_cmap(seq, vmin=0, vmax=12)
     """
     for ndx, item in enumerate(seq):
         if isinstance(item, str):

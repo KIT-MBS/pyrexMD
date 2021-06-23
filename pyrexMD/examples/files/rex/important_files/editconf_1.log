@@ -31,22 +31,31 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx editconf, version 2020.5
 Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 Data prefix:  /usr/local/gromacs_2020
-Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/tests
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters
 Command line:
-  gmx_mpi editconf -f ../examples/files/protein//../traj/traj_protein.tpr -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/tests/traj_protein.pdb
+  gmx_mpi editconf -f /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/protein.gro -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/box.gro -bt cubic -d 2
 
-Reading file ../examples/files/protein//../traj/traj_protein.tpr, VERSION 2020.5 (single precision)
-Reading file ../examples/files/protein//../traj/traj_protein.tpr, VERSION 2020.5 (single precision)
 
-Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/tests/traj_protein.pdb to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/tests/#traj_protein.pdb.1#
+Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/box.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/#box.gro.1#
 
-GROMACS reminds you: ""Everything organic and natural is good" - ignoring the fact that organic natural substances include arsenic and poo and crocodiles. And everything chemical is bad, ignoring the fact that... everything is chemicals." (Tim Minchin)
+GROMACS reminds you: "Any one who considers arithmetical methods of producing random digits is, of course, in a state of sin." (John von Neumann)
 
 
 STDOUT:
 
 Note that major changes are planned in future for editconf, to improve usability and utility.
-Read 825 atoms
-Volume: 206.643 nm^3, corresponds to roughly 92900 electrons
-Velocities found
+Read 1443 atoms
+Volume: 69.4631 nm^3, corresponds to roughly 31200 electrons
+No velocities found
+    system size :  3.681  4.557  4.142 (nm)
+    diameter    :  5.398               (nm)
+    center      :  0.560 -0.742  1.739 (nm)
+    box vectors :  3.681  4.556  4.142 (nm)
+    box angles  :  90.00  90.00  90.00 (degrees)
+    box volume  :  69.46               (nm^3)
+    shift       :  4.139  5.441  2.960 (nm)
+new center      :  4.699  4.699  4.699 (nm)
+new box vectors :  9.398  9.398  9.398 (nm)
+new box angles  :  90.00  90.00  90.00 (degrees)
+new box volume  : 830.16               (nm^3)
 

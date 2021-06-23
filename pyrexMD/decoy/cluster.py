@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 19.06.2021
+# @Last modified time: 23.06.2021
 
 """
 This module contains functions for:
@@ -24,6 +24,62 @@ import pandas as pd
 from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from tqdm.notebook import tqdm
+import glob
+
+
+def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
+    """
+    | Alias function of get_structure_list().
+    | get decoy list(sorted by a numeric part at any position of the filename,
+    | e.g. 1LMB_1.pdb, 1LMB_2.pdb, ...)
+
+    Args:
+        decoy_dir (str): decoy directory
+        pattern (str): pattern of decoy filenames
+        ndx_range (tuple, list): limit decoy index range to [ndx_min, ndx_max]
+
+    Returns:
+        DECOY_LIST (list)
+            list with decoy filenames
+    """
+    if not isinstance(decoy_dir, str):
+        raise TypeError("type(decoy_dir) must be string.")
+    if decoy_dir[-1] == "/":
+        decoy_dir = decoy_dir[:-1]
+
+    # preset stuff
+    decoy_list = glob.glob(f"{decoy_dir}/{pattern}")
+    decoy_names = [_misc.get_filename(i) for i in decoy_list]
+    decoy_names_substrings = [_misc.get_substrings(i) for i in decoy_names]
+
+    # get decoy index range
+    diff_element = list(set(decoy_names_substrings[0])-set(decoy_names_substrings[1]))
+    if len(diff_element) != 1:
+        raise ValueError('decoy_names_substrings differ in more than 1 element (i.e. differ at more than 1 position)')
+    diff_position = decoy_names_substrings[0].index(diff_element[0])
+    min_ndx = 999999999
+    max_ndx = -999999999
+    for i in decoy_names_substrings:
+        if i[diff_position].isdigit() and int(i[diff_position]) < min_ndx:
+            min_ndx = int(i[diff_position])
+        if i[diff_position].isdigit() and int(i[diff_position]) > max_ndx:
+            max_ndx = int(i[diff_position])
+
+    if ndx_range[0] is not None:
+        min_ndx = ndx_range[0]
+    if ndx_range[1] is not None:
+        max_ndx = ndx_range[1]
+
+    # get decoy filename prefix and suffix
+    template = decoy_names[0]
+    template_diff_element = _misc.get_substrings(template)[diff_position]
+    decoy_filename_prefix = template[:template.index(template_diff_element)]
+    decoy_filename_suffix = template[template.index(template_diff_element)+len(template_diff_element):]
+
+    # create sorted decoy list
+    DECOY_LIST = [f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" for i in range(min_ndx, max_ndx+1)
+                  if f"{decoy_dir}/{decoy_filename_prefix}{i}{decoy_filename_suffix}" in decoy_list]
+    return DECOY_LIST
 
 
 def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=True):
@@ -33,7 +89,7 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=Tr
     Args:
         decoy_list (list): output of abinitio.get_decoy_list()
         scores (list): output of abinitio.get_decoy_scores()
-        labels (array, list): output of heat_KMeans()
+        labels (array, list): output of heat_KMeans() or apply_KMeans()
         reverse (bool):
           | True:  ascending ranking order (low to high)
           | False: decending ranking order (high to low)
@@ -56,10 +112,10 @@ def rank_cluster_decoys(decoy_list, scores, labels, reverse=True, return_path=Tr
     ### link decoys and scores
     CLUSTER_DECOYS = [[] for i in range(n_labels)]
     CLUSTER_SCORES = [[] for i in range(n_labels)]
-    for i in range(len(decoy_list)):
-        k = labels[i].item()
-        CLUSTER_DECOYS[k].append(decoy_list[i])
-        CLUSTER_SCORES[k].append(scores[i])
+    for ndx in range(len(decoy_list)):
+        k = labels[ndx]
+        CLUSTER_DECOYS[k].append(decoy_list[ndx])
+        CLUSTER_SCORES[k].append(scores[ndx])
 
     # rank by score
     for k in range(len(CLUSTER_DECOYS)):
@@ -113,11 +169,10 @@ def copy_cluster_decoys(decoy_list, target_dir, create_dir=True, verbose=True, *
         raise _misc.dtypeError("target_dir", "str")
 
     # copy decoys if no Error occurred
-    target_dir = _misc.cp(source=decoy_list, target=target_dir,
-                          create_dir=create_dir, verbose=False)
+    target_dir = _misc.cp(source=decoy_list, target=target_dir, create_dir=create_dir, verbose=False)
+
     if verbose:
         _misc.cprint(f"Copied decoys to: {target_dir}", cfg.cprint_color)
-
     return target_dir
 
 
@@ -141,7 +196,7 @@ def log_cluster_decoys(best_decoys, best_scores, save_as, verbose=True):
         _misc.dtypeError("best_scores", "list")
 
     NAMES = [_misc.get_filename(item) for item in best_decoys]
-    realpath = _misc.save_table(save_as=save_as, data=[NAMES, best_scores], header="decoy name      score", verbose=verbose)
+    realpath = _misc.save_table(save_as=save_as, data=[NAMES, best_scores], header="#decoy name     score", verbose=verbose)
     return realpath
 
 ################################################################################
@@ -318,7 +373,7 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
             print("loading data...")
         data = ht.load(h5_file, HDF_group, split=0, dtype=cfg.dtype)
     else:
-        raise _misc.Error("wrong datatype: <h5_file> must be str (path to h5 file containing data).")
+        raise TypeError("wrong datatype: <h5_file> must be str (path to h5 file containing data).")
     if np.shape(data) != 2:
         data = reshape_data(data, dim_out=2, sss=[cfg.start, cfg.stop, cfg.step], verbose=verbose)
     if verbose:
@@ -363,14 +418,14 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
 
     Returns:
         TOPX_CLUSTER (list)
-          | list of clusters ranked from best to topx best. Each cluster contains:
-          |     centers (array)
+          | list of clusters ranked from best to topx best. Each cluster contains CLUSTER_DATA with:
+          |     .centers (array)
           |         cluster centers of best result
-          |     counts (array)
+          |     .counts (array)
           |         counts per cluster of best result
-          |     labels (array)
+          |     .labels (array)
           |         data point cluster labels
-          |     wss_data (WSS_DATA)
+          |     .wss_data (WSS_DATA)
           |         output of get_WSS() or get_DM_WSS()
           |         .wss (float)
           |             Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
@@ -380,7 +435,7 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
           |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
           |         .se_std (list)
           |             std values of Squared Errors for each cluster
-          |     compact_score (array)
+          |     .compact_score (array)
           |         mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
     """
     CLUSTER = []
@@ -643,7 +698,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
         ax (class, list)
             ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
-    if len(xdata) != len(ydata):
+    if len(xdata) != len(ydata) or len(xdata) != len(labels):
         raise ValueError(f"xdata, ydata and labels must have same first dimension, but have shapes {np.shape(xdata)}, {np.shape(ydata)} and {np.shape(labels)}")
     if plot_only is None:
         plot_only = list(range(min(labels), max(labels)+1))
@@ -733,7 +788,7 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
         prec (None, float): rounding precisions. Defaults to 3.
 
     Returns:
-        scores_data (CLUSTER_DATA_SCORES)
+        cluster_scores (CLUSTER_DATA_SCORES)
           | .scores (list)
           |   summary of all scores of individual clusters
           | .mean_all (float)
@@ -755,8 +810,8 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
-    scores_data = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores, filter=filter, filter_tol=filter_tol)
-    return scores_data
+    cluster_scores = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores, filter=filter, filter_tol=filter_tol)
+    return cluster_scores
 
 
 def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
@@ -770,7 +825,7 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
         prec (None, int): rounding precision
 
     Returns:
-      | accuracy_data (CLUSTER_DATA_ACCURACY)
+      | cluster_accuracy (CLUSTER_DATA_ACCURACY)
       |   .GDT (array)
       |       summary of all GDT values of individual clusters
       |   .GDT_mean (array)
@@ -788,8 +843,8 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
       |   .RMSD_minmax (array)
       |       [RMSD_min, RMSD_max] values of individual clusters
     """
-    accuracy_data = CLUSTER_DATA_ACCURACY(cluster_data, GDT=GDT, RMSD=RMSD, prec=prec)
-    return accuracy_data
+    cluster_accuracy = CLUSTER_DATA_ACCURACY(cluster_data, GDT=GDT, RMSD=RMSD, prec=prec)
+    return cluster_accuracy
 
 
 def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
@@ -975,7 +1030,7 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
 ### WF functions
 
 
-def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_as=None):
+def WF_print_cluster_accuracy(cluster_data, cluster_accuracy, targets=[None], save_as=None):
     """
     Workflow to print and log cluster accuracy.
 
@@ -983,16 +1038,22 @@ def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
-        accuracy_data (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
+        cluster_accuracy (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
         targets (list): target labels, which will be colored red in printed table
-        save_as (None, str): logfile name
+        save_as (None, str): realpath or name of logfile
 
     Returns:
         save_as (None, str)
-            logfile name
+            realpath of logfile
     """
+    if not isinstance(cluster_data, CLUSTER_DATA):
+        raise TypeError("Wrong datatype of cluster_data.")
+    if not isinstance(cluster_accuracy, CLUSTER_DATA_ACCURACY):
+        raise TypeError("Wrong datatype of cluster_accuracy.")
+    if not isinstance(targets, (list, np.ndarray)):
+        raise TypeError("type(targets) must be either list or array.")
     # rank clusters by mean GDT value
-    _ranked, _ndx = _misc.get_ranked_array(accuracy_data.GDT_mean, verbose=False)
+    _ranked, _ndx = _misc.get_ranked_array(cluster_accuracy.GDT_mean, verbose=False)
 
     # print
     _misc.cprint(f"cluster n{len(cluster_data.counts)} accuracy (ranked by GDT mean)\n", "red")
@@ -1003,7 +1064,7 @@ def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_
             cprint_color = "red"
         else:
             cprint_color = None
-        _misc.cprint(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {accuracy_data.GDT_mean[ndx]:<6}  {accuracy_data.GDT_std[ndx]:<6} {accuracy_data.GDT_minmax[ndx][0]:<6}  {accuracy_data.GDT_minmax[ndx][1]:<6} | {accuracy_data.RMSD_mean[ndx]:<5}  {accuracy_data.RMSD_std[ndx]:<5}  {accuracy_data.RMSD_minmax[ndx][0]:<5}  {accuracy_data.RMSD_minmax[ndx][1]:<5}", cprint_color)
+        _misc.cprint(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {cluster_accuracy.GDT_mean[ndx]:<6}  {cluster_accuracy.GDT_std[ndx]:<6} {cluster_accuracy.GDT_minmax[ndx][0]:<6}  {cluster_accuracy.GDT_minmax[ndx][1]:<6} | {cluster_accuracy.RMSD_mean[ndx]:<5}  {cluster_accuracy.RMSD_std[ndx]:<5}  {cluster_accuracy.RMSD_minmax[ndx][0]:<5}  {cluster_accuracy.RMSD_minmax[ndx][1]:<5}", cprint_color)
 
     # save log
     if save_as is not None:
@@ -1013,12 +1074,12 @@ def WF_print_cluster_accuracy(cluster_data, accuracy_data, targets=[None], save_
             fout.write("                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD\n")
             fout.write("ndx  size  compact | mean    std    min     max    | mean   std    min    max\n")
             for ndx in _ndx:
-                fout.write(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {accuracy_data.GDT_mean[ndx]:<6}  {accuracy_data.GDT_std[ndx]:<6} {accuracy_data.GDT_minmax[ndx][0]:<6}  {accuracy_data.GDT_minmax[ndx][1]:<6} | {accuracy_data.RMSD_mean[ndx]:<5}  {accuracy_data.RMSD_std[ndx]:<5}  {accuracy_data.RMSD_minmax[ndx][0]:<5}  {accuracy_data.RMSD_minmax[ndx][1]:<5}\n")
+                fout.write(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {cluster_accuracy.GDT_mean[ndx]:<6}  {cluster_accuracy.GDT_std[ndx]:<6} {cluster_accuracy.GDT_minmax[ndx][0]:<6}  {cluster_accuracy.GDT_minmax[ndx][1]:<6} | {cluster_accuracy.RMSD_mean[ndx]:<5}  {cluster_accuracy.RMSD_std[ndx]:<5}  {cluster_accuracy.RMSD_minmax[ndx][0]:<5}  {cluster_accuracy.RMSD_minmax[ndx][1]:<5}\n")
         print(f"\n Saved log as: {save_as}")
-    return save_as
+    return _misc.realpath(save_as)
 
 
-def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[None], save_as=None):
+def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_as=None):
     """
     Workflow to print and log cluster scores.
 
@@ -1027,21 +1088,21 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[N
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_Kmeans()
         cluster_scores (CLUSTER_DATA_SCORES): output of map_cluster_scores()
-        score_file (str): path to score file
         targets (list): target labels, which will be colored red in printed table
-        save_as (None, str): logfile name
+        save_as (None, str): realpath or name of logfile
 
     Returns:
         save_as (None, str)
-            logfile name
+            realpath of logfile
     """
+    if not isinstance(cluster_data, CLUSTER_DATA):
+        raise TypeError("Wrong datatype of cluster_data.")
+    if not isinstance(cluster_scores, CLUSTER_DATA_SCORES):
+        raise TypeError("Wrong datatype of cluster_scores.")
     if not isinstance(targets, (list, np.ndarray)):
         raise TypeError("type(targets) must be either list or array.")
     # rank by Emean
     _ranked, _ndx = _misc.get_ranked_array(cluster_scores.mean, reverse=True, verbose=False)
-
-    #misc.cprint(f"\nscores mean_all: {scores_data.mean_all}", "red")
-    #misc.cprint(f"scores mean_all_filtered: {scores_data.mean_all_filtered}", "red")
 
     _misc.cprint(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)", "red")
     _misc.cprint("\nndx  size  compact | Emean    Estd    Emin      Emax      DELTA", "blue")
@@ -1069,7 +1130,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, score_file, targets=[N
                     # move scores by 1 digit if positive (looks nicer)
                     fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}   {cluster_scores.DELTA[ndx]:<6}\n")
         print(f"\n Saved log as: {save_as}")
-    return save_as
+    return _misc.realpath(save_as)
 ################################################################################
 ################################################################################
 ### CLASSES / OBJECTS

@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 19.06.2021
+# @Last modified time: 23.06.2021
 
 
 """
@@ -763,7 +763,7 @@ def plot_LA(mobile, ref, GDT_TS, GDT_HA, GDT_ndx,
         cbar_kws = {'orientation': cfg.cbar_orientation}
     else:
         cbar_ax = None
-        cbar_kws = dict()(7.5, 6)
+        cbar_kws = dict()
 
     if cfg.cmap in ["GDT_TS", "TS", "GDT_HA", "HA"]:
         hm = sns.heatmap(PAIR_DISTANCES, cmap=cmap_GDT, vmin=cfg.vmin, vmax=cfg.vmax,
