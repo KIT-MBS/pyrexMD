@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 25.06.2021
 
 
 import pyrexMD.misc as misc
@@ -11,7 +11,6 @@ import pyrexMD.gmx as gmx
 import pyrexMD.topology as topology
 import pyrexMD.analysis as analysis
 import warnings
-print("GIT VERSION LOADED")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Element information is absent or missing for a few")
 warnings.filterwarnings("ignore", message="Failed to guess the mass for the following atom types")

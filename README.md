@@ -7,6 +7,10 @@ Due to its workflow-orientated design, it is possible to rapidly create whole se
 notebooks and requires `GROMACS` to run MD simulations.
 
 
+## Documentation
+You can access the documentation via https://kit-mbs.github.io/pyrexMD/
+
+
 ## Installation Instructions
 
 (1) download and install `GROMACS`:
@@ -45,7 +49,3 @@ To run the python tests install pytest, go into pyrexMD/tests folder and run
 To run one of the short examples, go into the pyrexMD/examples folder and run
 
     jupyter notebook
-
-
-## Documentation
-You can access the documentation via https://kit-mbs.github.io/pyrexMD/
