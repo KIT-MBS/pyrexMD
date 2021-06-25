@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for tests/test_gmx.py: 99%</title>
+    <title>Coverage for tests/test_gmx.py: 97%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,7 +18,7 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>tests/test_gmx.py</b> :
-            <span class="pc_cov">99%</span>
+            <span class="pc_cov">97%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
@@ -26,6 +26,7 @@
             <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">147 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">1 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
+            <button type="button" class="par run show_par shortkey_p button_toggle_par" title="Toggle lines partially run">4 partial</button>
         </h2>
     </div>
 </div>
@@ -68,11 +69,11 @@
     <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="nam">cwd</span> <span class="op">=</span> <span class="nam">misc</span><span class="op">.</span><span class="nam">cwd</span><span class="op">(</span><span class="nam">verbose</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t15" class="pln"><span class="n"><a href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t"><span class="com"># cwd is &lt;...>/pyrexMD/tests/</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="key">if</span> <span class="nam">misc</span><span class="op">.</span><span class="nam">realpath</span><span class="op">(</span><span class="str">f"{cwd}"</span><span class="op">)</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">==</span> <span class="str">"tests"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="par run show_par"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="key">if</span> <span class="nam">misc</span><span class="op">.</span><span class="nam">realpath</span><span class="op">(</span><span class="str">f"{cwd}"</span><span class="op">)</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">==</span> <span class="str">"tests"</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">17&#x202F;&#x219B;&#x202F;18</span><span class="annotate long">line 17 didn't jump to line 18, because the condition on line 17 was never true</span></span></p>
     <p id="t18" class="mis show_mis"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">pre</span> <span class="op">=</span> <span class="str">"../examples/files/protein/"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t19" class="pln"><span class="n"><a href="#t19">19</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t"><span class="com"># cwd is &lt;...>/pyrexMD/tests/</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="key">elif</span> <span class="nam">misc</span><span class="op">.</span><span class="nam">realpath</span><span class="op">(</span><span class="str">f"{cwd}"</span><span class="op">)</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">==</span> <span class="str">"pyrexMD"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="par run show_par"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="key">elif</span> <span class="nam">misc</span><span class="op">.</span><span class="nam">realpath</span><span class="op">(</span><span class="str">f"{cwd}"</span><span class="op">)</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="num">1</span><span class="op">]</span> <span class="op">==</span> <span class="str">"pyrexMD"</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">21&#x202F;&#x219B;&#x202F;24</span><span class="annotate long">line 21 didn't jump to line 24, because the condition on line 21 was never false</span></span></p>
     <p id="t22" class="run"><span class="n"><a href="#t22">22</a></span><span class="t">    <span class="nam">pre</span> <span class="op">=</span> <span class="str">"./examples/files/protein/"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t23" class="pln"><span class="n"><a href="#t23">23</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t24" class="run"><span class="n"><a href="#t24">24</a></span><span class="t"><span class="nam">pdb</span> <span class="op">=</span> <span class="str">f"{pre}/1l2y.pdb"</span>&nbsp;</span><span class="r"></span></p>
@@ -273,9 +274,9 @@
     <p id="t219" class="pln"><span class="n"><a href="#t219">219</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t220" class="pln"><span class="n"><a href="#t220">220</a></span><span class="t"><span class="com"># clean up at after tests</span>&nbsp;</span><span class="r"></span></p>
     <p id="t221" class="run"><span class="n"><a href="#t221">221</a></span><span class="t"><span class="key">def</span> <span class="nam">test_clean_up_after_tests</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t222" class="run"><span class="n"><a href="#t222">222</a></span><span class="t">    <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">exists</span><span class="op">(</span><span class="str">'./logs'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t222" class="par run show_par"><span class="n"><a href="#t222">222</a></span><span class="t">    <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">exists</span><span class="op">(</span><span class="str">'./logs'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">222&#x202F;&#x219B;&#x202F;224</span><span class="annotate long">line 222 didn't jump to line 224, because the condition on line 222 was never false</span></span></p>
     <p id="t223" class="run"><span class="n"><a href="#t223">223</a></span><span class="t">        <span class="nam">shutil</span><span class="op">.</span><span class="nam">rmtree</span><span class="op">(</span><span class="str">'./logs'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t224" class="run"><span class="n"><a href="#t224">224</a></span><span class="t">    <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">exists</span><span class="op">(</span><span class="str">'./positions_dat'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t224" class="par run show_par"><span class="n"><a href="#t224">224</a></span><span class="t">    <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">exists</span><span class="op">(</span><span class="str">'./positions_dat'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">224&#x202F;&#x219B;&#x202F;226</span><span class="annotate long">line 224 didn't jump to line 226, because the condition on line 224 was never false</span></span></p>
     <p id="t225" class="run"><span class="n"><a href="#t225">225</a></span><span class="t">        <span class="nam">shutil</span><span class="op">.</span><span class="nam">rmtree</span><span class="op">(</span><span class="str">'./positions_dat'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t226" class="run"><span class="n"><a href="#t226">226</a></span><span class="t">    <span class="key">return</span>&nbsp;</span><span class="r"></span></p>
 </div>
@@ -283,7 +284,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-06-25 22:25 +0200
+            created at 2021-06-25 23:16 +0200
         </p>
     </div>
 </div>

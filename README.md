@@ -41,9 +41,9 @@ http://www.pyrosetta.org/home
 
 
 ## Tests
-To run the python tests install pytest, go into pyrexMD/tests folder and run
+To run the python tests with code coverage, run
 
-    python -m pytest
+    python -m pytest --cov=pyrexMD
 
 ## Examples
 To run one of the short examples, go into the pyrexMD/examples folder and run
