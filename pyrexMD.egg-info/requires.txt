@@ -9,6 +9,7 @@ ipywidgets>=7.4.2
 jupyter>=1.0.0
 scikit-learn>=0.24.2
 nglview==2.0
+matplotlib==3.3.4
 MDAnalysis>=1.1.1
 numpy>=1.18.2
 pdf2image>=1.10.0

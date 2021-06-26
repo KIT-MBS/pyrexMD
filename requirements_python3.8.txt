@@ -10,6 +10,7 @@ heat==1.0.0
 ipywidgets==7.6.3
 jupyter==1.0.0
 scikit-learn==0.24.2
+matplotlib==3.3.4
 MDAnalysis==1.1.1
 nglview==2.0
 numpy==1.20.3

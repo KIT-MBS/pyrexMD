@@ -9,6 +9,7 @@ h5py==2.10.0
 heat==1.0.0
 ipywidgets==7.4.2
 jupyter==1.0.0
+matplotlib==3.3.4
 MDAnalysis==1.1.1
 nglview==2.0
 numpy==1.18.2
