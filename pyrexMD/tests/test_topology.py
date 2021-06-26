@@ -2,7 +2,7 @@
 # @Date:   21.05.2021
 # @Filename: test_topology.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 27.06.2021
 
 
 import pyrexMD.misc as misc
@@ -10,28 +10,27 @@ import pyrexMD.topology as top
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
+import pathlib
 import pytest
 import os
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "./files/1l2y/"
-
-# cwd is <...>/pyrexMD/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./tests/files/1l2y/"
-
-pdb = pre + "1l2y_ref.pdb"
-tpr = pre + "traj.tpr"
-xtc = pre + "traj.xtc"
+pre = f"{main_dir}/tests/files/1l2y"
+pdb = f"{pre}/1l2y_ref.pdb"
+tpr = f"{pre}/traj.tpr"
+xtc = f"{pre}/traj.xtc"
 
 
 def test_get_resids_shift():
     ref = mda.Universe(pdb)
-    ref_shifted = mda.Universe(pre + "1l2y_ref_shifted.pdb", tpr_resid_from_one=False)
+    ref_shifted = mda.Universe(f"{pre}/1l2y_ref_shifted.pdb", tpr_resid_from_one=False)
     assert top.get_resids_shift(ref_shifted, ref) == 4
 
     # coverage
@@ -231,13 +230,13 @@ def test_parse_PDB():
     assert np.all(NAME == ref.atoms.names)        # strings have no tolerance
 
     # coverage
-    top.parsePDB(pre + "../4enc_cluster_01.pdb", sel="nucleic")
+    top.parsePDB(f"{pre}/../4enc_cluster_01.pdb", sel="nucleic")
     return
 
 
 def test_DCA_rex2atom_mapping():
-    ref_pdb = pre + "../2hba/2hba_ChainB_ref.pdb"
-    DCA_fin = pre + "../2hba/2hba.score"
+    ref_pdb = f"{pre}/../2hba/2hba_ChainB_ref.pdb"
+    DCA_fin = f"{pre}/../2hba/2hba.score"
     n_DCA = 40
     usecols = (0, 1)
 
@@ -263,12 +262,12 @@ def test_DCA_rex2atom_mapping():
 
 
 def test_DCA_modify_topology():
-    top_fin = pre + "../2hba/2hba_topol.top"
+    top_fin = f"{pre}/../2hba/2hba_topol.top"
     DCA_used_fin = "./2HBA_DCA_used.log"
     n_DCA = 40
 
     top.DCA_modify_topology(top_fin=top_fin, DCA_used_fin=DCA_used_fin, n_DCA=None, pdbid="2hba", save_as="./2hba_topol_mod.top")
-    with open(pre + "../2hba/2hba_topol_mod.top", "r") as expected, open("./2hba_topol_mod.top", "r") as val:
+    with open(f"{pre}/../2hba/2hba_topol_mod.top", "r") as expected, open("./2hba_topol_mod.top", "r") as val:
         lines1 = expected.readlines()
         lines2 = val.readlines()
         assert lines1 == lines2
@@ -278,7 +277,7 @@ def test_DCA_modify_topology():
 
 
 def test_modify_scorefile():
-    DCA_fin = pre + "../2hba/2hba.score"
+    DCA_fin = f"{pre}/../2hba/2hba.score"
     n_DCA = 40
     usecols = (0, 1)
 

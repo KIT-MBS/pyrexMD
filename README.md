@@ -1,3 +1,8 @@
+[![DOCS](https://img.shields.io/badge/docs-1.0-blue?&logo=github)](https://kit-mbs.github.io/pyrexMD/)
+[![GH Actions CI](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml/badge.svg)](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml)
+[![codecov](https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW)](https://codecov.io/gh/KIT-MBS/pyrexMD)
+
+
 pyrexMD
 =======
 
@@ -12,24 +17,27 @@ You can access the documentation via https://kit-mbs.github.io/pyrexMD/
 
 
 ## Installation Instructions
+(1) install MPI:
 
-(1) download and install `GROMACS`:
+    # on ubuntu:
+    sudo apt-get install openmpi-bin libopenmpi-dev
+
+    # on macOS:
+    brew install mpich
+
+(2) download and install MPI-enabled version of `GROMACS` following instructions:
 
 https://manual.gromacs.org/documentation/current/index.html
 
 
-(2) download and install `pyrexMD`:
+(3) download and install `pyrexMD`:
 
     git clone https://github.com/KIT-MBS/pyrexMD.git
     cd pyrexMD
     python -m pip install .
 
-.. Note:: setup.py is written and tested only for python 3.6 and 3.8. Alternatively
-    refer to content of requirements_python3.6.txt or requirements_python3.8.txt
-    based on your python version.
 
-
-(3) enable trajectory viewer for `jupyter`:
+(4) enable trajectory viewer for `jupyter`:
 
     jupyter nbextension enable --py widgetsnbextension
     jupyter nbextension enable --py nglview
@@ -41,9 +49,15 @@ http://www.pyrosetta.org/home
 
 
 ## Tests
-To run the python tests with code coverage, run
+To run the python tests with code coverage, go into pyrexMD folder and run
 
-    python -m pytest --cov=pyrexMD
+    coverage run -m pytest
+    coverage report html
+
+and open htmlcov with any browser to see code coverage, e.g.
+
+    firefox htmlcov/index.html
+
 
 ## Examples
 To run one of the short examples, go into the pyrexMD/examples folder and run

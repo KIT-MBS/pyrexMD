@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 27.06.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.gdt as gdt
@@ -11,38 +11,36 @@ import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
 from unittest.mock import patch
+import pathlib
 import pytest
 import os
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "./files/1l2y/"
-
-# cwd is <...>/pyrexMD/
-if misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./tests/files/1l2y/"
-
-pdb = pre + "1l2y_ref.pdb"
-tpr = pre + "traj.tpr"
-xtc = pre + "traj.xtc"
+pre = f"{main_dir}/tests/files/1l2y"
+pdb = f"{pre}/1l2y_ref.pdb"
+tpr = f"{pre}/traj.tpr"
+xtc = f"{pre}/traj.xtc"
 
 
 def test_get_array_percent():
-    p, ndx = gdt.get_array_percent(np.load(pre + "DIST_ARR.npy"), cutoff=1.0)
-    v1, v2 = np.load(pre + "array_percent_1.npy", allow_pickle=True)
+    p, ndx = gdt.get_array_percent(np.load(f"{pre}/DIST_ARR.npy"), cutoff=1.0)
+    v1, v2 = np.load(f"{pre}/array_percent_1.npy", allow_pickle=True)
     assert assert_allclose(p, v1) == None
     assert assert_allclose(ndx, v2) == None
 
-    p, ndx = gdt.get_array_percent(np.load(pre + "DIST_ARR.npy"), cutoff=2.0)
-    v1, v2 = np.load(pre + "array_percent_2.npy", allow_pickle=True)
+    p, ndx = gdt.get_array_percent(np.load(f"{pre}/DIST_ARR.npy"), cutoff=2.0)
+    v1, v2 = np.load(f"{pre}/array_percent_2.npy", allow_pickle=True)
     assert assert_allclose(p, v1) == None
     assert assert_allclose(ndx, v2) == None
 
-    p, ndx = gdt.get_array_percent(np.load(pre + "DIST_ARR.npy"), cutoff=4.0)
-    v1, v2 = np.load(pre + "array_percent_4.npy", allow_pickle=True)
+    p, ndx = gdt.get_array_percent(np.load(f"{pre}/DIST_ARR.npy"), cutoff=4.0)
+    v1, v2 = np.load(f"{pre}/array_percent_4.npy", allow_pickle=True)
     assert assert_allclose(p, v1) == None
     assert assert_allclose(ndx, v2) == None
     return
@@ -53,10 +51,10 @@ def test_get_Pair_Distances():
     ref = mda.Universe(pdb)
     PAIR_DISTANCES, RMSD, resids_mobile, resids_ref = gdt.get_Pair_Distances(mobile, ref)
 
-    assert assert_allclose(PAIR_DISTANCES, np.load(pre + "PAIR_DISTANCES.npy")) == None
-    assert assert_allclose(RMSD, np.load(pre + "RMSD.npy")) == None
-    assert assert_allclose(resids_mobile, np.load(pre + "resids_mobile.npy")) == None
-    assert assert_allclose(resids_ref, np.load(pre + "resids_ref.npy")) == None
+    assert assert_allclose(PAIR_DISTANCES, np.load(f"{pre}/PAIR_DISTANCES.npy")) == None
+    assert assert_allclose(RMSD, np.load(f"{pre}/RMSD.npy")) == None
+    assert assert_allclose(resids_mobile, np.load(f"{pre}/resids_mobile.npy")) == None
+    assert assert_allclose(resids_ref, np.load(f"{pre}/resids_ref.npy")) == None
     return
 
 
@@ -94,14 +92,14 @@ def test_GDT():
     ref = mda.Universe(pdb)
     GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = gdt.GDT(mobile, ref)
 
-    assert assert_allclose(GDT_percent, np.load(pre + "GDT_percent.npy")) == None
-    assert assert_allclose(GDT_cutoff, np.load(pre + "GDT_cutoff.npy")) == None
-    assert assert_allclose(RMSD, np.load(pre + "GDT_RMSD.npy")) == None
-    assert assert_allclose(FRAME, np.load(pre + "GDT_FRAME.npy")) == None
+    assert assert_allclose(GDT_percent, np.load(f"{pre}/GDT_percent.npy")) == None
+    assert assert_allclose(GDT_cutoff, np.load(f"{pre}/GDT_cutoff.npy")) == None
+    assert assert_allclose(RMSD, np.load(f"{pre}/GDT_RMSD.npy")) == None
+    assert assert_allclose(FRAME, np.load(f"{pre}/GDT_FRAME.npy")) == None
 
     # GDT_resids has complicated structure with changing data types
     flat1 = misc.flatten_array(GDT_resids)
-    flat2 = misc.flatten_array(np.load(pre + "GDT_resids.npy", allow_pickle=True))
+    flat2 = misc.flatten_array(np.load(f"{pre}/GDT_resids.npy", allow_pickle=True))
     for i in range(len(flat1)):
         assert (flat1[i] == flat2[i]).all()
     return
@@ -112,14 +110,14 @@ def test_GDT_rna():
     ref = mda.Universe(pdb)
     GDT_percent, GDT_resids, GDT_cutoff, RMSD, FRAME = gdt.GDT_rna(mobile, ref, sel1="protein and name CA", sel2="protein and name CA", cutoff=[0.5, 10, 0.5])
 
-    assert assert_allclose(GDT_percent, np.load(pre + "GDT_percent.npy")) == None
-    assert assert_allclose(GDT_cutoff, np.load(pre + "GDT_cutoff.npy")) == None
-    assert assert_allclose(RMSD, np.load(pre + "GDT_RMSD.npy")) == None
-    assert assert_allclose(FRAME, np.load(pre + "GDT_FRAME.npy")) == None
+    assert assert_allclose(GDT_percent, np.load(f"{pre}/GDT_percent.npy")) == None
+    assert assert_allclose(GDT_cutoff, np.load(f"{pre}/GDT_cutoff.npy")) == None
+    assert assert_allclose(RMSD, np.load(f"{pre}/GDT_RMSD.npy")) == None
+    assert assert_allclose(FRAME, np.load(f"{pre}/GDT_FRAME.npy")) == None
 
     # GDT_resids has complicated structure with changing data types
     flat1 = misc.flatten_array(GDT_resids)
-    flat2 = misc.flatten_array(np.load(pre + "GDT_resids.npy", allow_pickle=True))
+    flat2 = misc.flatten_array(np.load(f"{pre}/GDT_resids.npy", allow_pickle=True))
     for i in range(len(flat1)):
         assert (flat1[i] == flat2[i]).all()
     return
@@ -145,25 +143,25 @@ def test_plot_GDT(mock_show):
 
 
 def test_get_GDT_TS():
-    GDT_percent = np.load(pre + "GDT_percent.npy")
+    GDT_percent = np.load(f"{pre}/GDT_percent.npy")
     GDT_TS = gdt.get_GDT_TS(GDT_percent)
-    assert assert_allclose(GDT_TS, np.load(pre + "GDT_TS.npy")) == None
+    assert assert_allclose(GDT_TS, np.load(f"{pre}/GDT_TS.npy")) == None
     return
 
 
 def test_get_GDT_HA():
-    GDT_percent = np.load(pre + "GDT_percent.npy")
+    GDT_percent = np.load(f"{pre}/GDT_percent.npy")
     GDT_HA = gdt.get_GDT_HA(GDT_percent)
-    assert assert_allclose(GDT_HA, np.load(pre + "GDT_HA.npy")) == None
+    assert assert_allclose(GDT_HA, np.load(f"{pre}/GDT_HA.npy")) == None
     return
 
 
 def test_rank_scores():
-    GDT_TS = np.load(pre + "GDT_TS.npy")
-    GDT_HA = np.load(pre + "GDT_HA.npy")
+    GDT_TS = np.load(f"{pre}/GDT_TS.npy")
+    GDT_HA = np.load(f"{pre}/GDT_HA.npy")
     rank_scores = gdt.rank_scores(GDT_TS, GDT_HA)
-    assert (rank_scores == np.load(pre + "rank_scores.npy")).all()
-    assert (rank_scores == np.load(pre + "GDT_rank_scores.npy")).all()
+    assert (rank_scores == np.load(f"{pre}/rank_scores.npy")).all()
+    assert (rank_scores == np.load(f"{pre}/GDT_rank_scores.npy")).all()
 
     # coverage
     gdt.rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_HA")
@@ -174,17 +172,17 @@ def test_rank_scores():
 
 
 def test_GDT_rank_scores():
-    GDT_percent = np.load(pre + "GDT_percent.npy")
+    GDT_percent = np.load(f"{pre}/GDT_percent.npy")
     GDT_rank_scores = gdt.GDT_rank_scores(GDT_percent)
-    assert (GDT_rank_scores == np.load(pre + "GDT_rank_scores.npy")).all()
-    assert (GDT_rank_scores == np.load(pre + "rank_scores.npy")).all()
+    assert (GDT_rank_scores == np.load(f"{pre}/GDT_rank_scores.npy")).all()
+    assert (GDT_rank_scores == np.load(f"{pre}/rank_scores.npy")).all()
     return
 
 
 def test_GDT_rank_percent():
-    GDT_percent = np.load(pre + "GDT_percent.npy")
+    GDT_percent = np.load(f"{pre}/GDT_percent.npy")
     GDT_rank_percent = gdt.GDT_rank_percent(GDT_percent)
-    assert assert_allclose(GDT_rank_percent, np.load(pre + "GDT_rank_percent.npy")) == None
+    assert assert_allclose(GDT_rank_percent, np.load(f"{pre}/GDT_rank_percent.npy")) == None
 
     # coverage
     gdt.GDT_rank_percent(GDT_percent, norm=False)
@@ -198,9 +196,9 @@ def test_get_continous_segments():
 
 
 def test_GDT_continous_segments():
-    GDT_resids = np.load(pre + "GDT_resids.npy", allow_pickle=True)
+    GDT_resids = np.load(f"{pre}/GDT_resids.npy", allow_pickle=True)
     GDT_continous_segments = gdt.GDT_continuous_segments(GDT_resids)
-    assert (GDT_continous_segments == np.load(pre + "GDT_continous_segments.npy", allow_pickle=True)).all()
+    assert (GDT_continous_segments == np.load(f"{pre}/GDT_continous_segments.npy", allow_pickle=True)).all()
     return
 
 

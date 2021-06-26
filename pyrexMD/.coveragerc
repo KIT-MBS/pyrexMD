@@ -1,7 +1,15 @@
 [run]
+relative_files = True
+source = pyrexMD
 omit =
-    core.py
-    decoy/abinitio.py
-    */tests/*
-    __init__.py
+    *core.py
+    *decoy/abinitio.py
+    */tests*
+    */__init__.py
+
+[report]
+omit =
+    *core.py
+    *decoy/abinitio.py
+    */tests*
     */__init__.py

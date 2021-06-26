@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_misc.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 29.06.2021
 
 
 import pyrexMD.misc as misc
@@ -11,26 +11,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.testing import assert_allclose
 from unittest.mock import patch
+import pathlib
 import pytest
 import os
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "."
-    pre2 = "./files/figs/"
-    pre3 = "../examples/files/protein/"
-    pre4 = "../examples/files/pickle/"
-
-# cwd is <...>/pyrexMD/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./tests/"
-    pre2 = "./tests/files/figs/"
-    pre3 = "./examples/files/protein/"
-    pre4 = "./examples/files/pickle/"
-
+pre = f"{main_dir}/tests"
+pre2 = f"{main_dir}/tests/files/figs/"
+pre3 = f"{main_dir}/examples/files/protein/"
+pre4 = f"{main_dir}/examples/files/pickle/"
 
 ################################################################################
 ################################################################################
@@ -250,7 +246,7 @@ def test_get_quantile():
 
 
 def test_autodetect_header():
-    assert misc.autodetect_header(pre3 + "1l2y.pdb") == 145
+    assert misc.autodetect_header(f"{pre3}/1l2y.pdb") == 145
     assert misc.autodetect_header(f"{pre}/files/header_file1.txt") == 8
     assert misc.autodetect_header(f"{pre}/files/header_file2.txt") == 10
     return
@@ -348,7 +344,7 @@ def test_bash_cmd():
 
 
 def test_convert_image():
-    image = pre2 + "TSNE_n10_v2.png"
+    image = f"{pre2}/TSNE_n10_v2.png"
     misc.convert_image(fin=image, fout="./temp.png")
     misc.rm("./temp.png")
     return
@@ -447,7 +443,7 @@ def test_autoapply_limits():
     plt.plot([0, 1, 2], [0, 1, 2])
     misc.autoapply_limits(ax)
 
-    obj = misc.pickle_load(pre4 + "RMSD_PLOT.pickle")
+    obj = misc.pickle_load(f"{pre4}/RMSD_PLOT.pickle")
     misc.autoapply_limits(obj)
     plt.close("all")
     return
@@ -463,8 +459,8 @@ def test_hide_plot():
 
 @patch("matplotlib.pyplot.show")
 def test_pickle_load(mock_show):
-    obj = misc.pickle_load(pre4 + "RMSD_HIST.pickle")
-    obj = misc.pickle_load(pre4 + "RMSD_PLOT.pickle")
+    obj = misc.pickle_load(f"{pre4}/RMSD_HIST.pickle")
+    obj = misc.pickle_load(f"{pre4}/RMSD_PLOT.pickle")
     plt.close("all")
     return
 
@@ -486,8 +482,8 @@ def test_pickle_dump(mock_show):
 
 @patch("matplotlib.pyplot.show")
 def test_pickle_plot(mock_show):
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"], import_settings=False, xscale="linear", yscale="linear")   # coverage
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"], save_as="./temp.png")
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"], import_settings=False, xscale="linear", yscale="linear")   # coverage
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"], save_as="./temp.png")
 
     # coverage
     with pytest.raises(TypeError) as e_info:
@@ -500,7 +496,7 @@ def test_pickle_plot(mock_show):
 
 @patch("matplotlib.pyplot.show")
 def test_align_limits(mock_show):
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"])
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"])
     misc.align_limits(ax[0], ax[1], apply_on="xy", new_lim=[])
     misc.align_limits(ax[0], ax[1], apply_on="xy", new_lim=[0, 1])
     plt.close("all")
@@ -509,7 +505,7 @@ def test_align_limits(mock_show):
 
 @patch("matplotlib.pyplot.show")
 def test_align_ticks(mock_show):
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"])
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"])
     misc.align_ticks(ax[0], ax[1], apply_on="xy", new_ticks=[])
     misc.align_ticks(ax[0], ax[1], apply_on="xy", new_ticks=[0, 1])
     plt.close("all")
@@ -518,7 +514,7 @@ def test_align_ticks(mock_show):
 
 @patch("matplotlib.pyplot.show")
 def test_align_ticklabels(mock_show):
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"])
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"])
     misc.align_ticklabels(ax[0], ax[1], apply_on="xy", new_ticklabels=[])
     misc.align_ticklabels(ax[0], ax[1], apply_on="xy", new_ticklabels=[0, 1])
     plt.close("all")
@@ -527,7 +523,7 @@ def test_align_ticklabels(mock_show):
 
 @patch("matplotlib.pyplot.show")
 def test_apply_shared_axes(mock_show):
-    fig, ax = misc.pickle_plot([pre4 + "RMSD_PLOT.pickle", pre4 + "RMSD_HIST.pickle"])
+    fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"])
     # coverage
     misc.apply_shared_axes(ax, grid=[2, 1])
     plt.close("all")

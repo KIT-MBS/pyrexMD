@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 26.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -836,22 +836,6 @@ def get_python_version():
     return version
 
 
-def input_python_x(msg):
-    """
-    Uses raw_input(msg) in python 2.x or input(msg) in python 3.x
-
-    Args:
-        msg (str): promt message
-
-    Returns:
-        msg (str)
-            user input message
-    """
-    if sys.version_info[0] == 2:
-        return raw_input(msg + "\n")
-    else:
-        return input(msg + "\n")
-
 
 def percent(num, div, prec=2):
     """
@@ -1367,7 +1351,7 @@ def get_PDBid(ref):
         print("get_PDBid(ref): Warning\
              \nFound multiple possible PDB ids by splitting the ref path.")
         print(PDBid)
-        PDBid = input_python_x('Enter correct PDB id:')
+        PDBid = input('Enter correct PDB id:\n')
         return PDBid
     else:
         print("get_PDBid(ref): Warning\

@@ -2,7 +2,7 @@
 # @Date:   22.06.2021
 # @Filename: test_rex.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 27.06.2021
 
 
 import pyrexMD.misc as misc
@@ -11,30 +11,28 @@ import pyrexMD.gmx as gmx
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose
+import pathlib
 import pytest
 import os
 import shutil
 import glob
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "../examples/files/rex/"
-    pre2 = "./files/"
-
-# cwd is <...>/pyrexMD/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./examples/files/rex/"
-    pre2 = "./tests/files/"
-
-pdb = pre + "1lmb_Chain4.pdb"
-score_fin = pre + "1LMB.rr"
+pre = f"{main_dir}/examples/files/rex/"
+pre2 = f"{main_dir}/tests/files/"
+pdb = f"{pre}/1lmb_Chain4.pdb"
+score_fin = f"{pre}/1LMB.rr"
 
 
 def test_apply_ff_best_decoys():
-    decoy_dir = pre + "decoys/"
+    decoy_dir = f"{pre}/decoys/"
     n_decoys = 2    # use only 2 for test
     odir = rex.apply_ff_best_decoys(decoy_dir, n_decoys=n_decoys, verbose=True)
     assert odir == misc.realpath("./1LMB_best_decoys_ref")
@@ -45,7 +43,7 @@ def test_apply_ff_best_decoys():
 
 
 def test_assign_best_decoys():
-    best_decoys_dir = pre + "1LMB_best_decoys_ref"
+    best_decoys_dir = f"{pre}/1LMB_best_decoys_ref"
     rex.assign_best_decoys(best_decoys_dir)
     return
 
@@ -69,37 +67,37 @@ def test_test_REX_PDBS():
 
 
 def test_WF_getParameter_boxsize():
-    logfile = pre + "important_files/editconf_1.log"
+    logfile = f"{pre}/important_files/editconf_1.log"
     boxsize = rex.WF_getParameter_boxsize(logfile=logfile)
     assert boxsize == 9.4
 
     # coverage
     with pytest.raises(misc.Error) as e_info:
-        logfile = pre + "important_files/solvate_1.log"
+        logfile = f"{pre}/important_files/solvate_1.log"
         boxsize = rex.WF_getParameter_boxsize(logfile=logfile)
     return
 
 
 def test_WF_getParameter_maxsol():
-    logfile = pre + "important_files/solvate_1.log"
+    logfile = f"{pre}/important_files/solvate_1.log"
     maxsol = rex.WF_getParameter_maxsol(logfile=logfile)
     assert maxsol == 26042
 
     # coverage
     with pytest.raises(misc.Error) as e_info:
-        logfile = pre + "important_files/editconf_1.log"
+        logfile = f"{pre}/important_files/editconf_1.log"
         maxsol = rex.WF_getParameter_maxsol(logfile=logfile)
     return
 
 
 def test_WF_REX_setup():
     # copy mdp files temporarily
-    misc.cp(pre + "*mdp", ".")
+    misc.cp(f"{pre}/*mdp", ".")
 
     rex_dirs = rex.get_REX_DIRS()[:2]    # use only 2 rex dirs for test
-    log1 = pre + "important_files/editconf_1.log"
+    log1 = f"{pre}/important_files/editconf_1.log"
     boxsize = rex.WF_getParameter_boxsize(logfile=log1)
-    log2 = pre + "important_files/solvate_1.log"
+    log2 = f"{pre}/important_files/solvate_1.log"
     maxsol = rex.WF_getParameter_maxsol(logfile=log2)
 
     rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)
@@ -114,7 +112,7 @@ def test_WF_REX_setup_energy_minimization():
 
 def test_create_special_group_ndx():
     rex.create_special_group_ndx(ref_pdb=pdb, sel="name CA", save_as="./special_group.ndx")
-    with open(pre2 + "special_group.ndx", "r") as expected, open("./special_group.ndx", "r") as val:
+    with open(f"{pre2}/special_group.ndx", "r") as expected, open("./special_group.ndx", "r") as val:
         lines1 = expected.readlines()
         lines2 = val.readlines()
         assert lines1 == lines2
@@ -124,7 +122,7 @@ def test_create_special_group_ndx():
 
 def test_create_pull_group_ndx():
     rex.create_pull_group_ndx(ref_pdb=pdb, sel="name CA", save_as="./pull_group.ndx")
-    with open(pre2 + "pull_group.ndx", "r") as expected, open("./pull_group.ndx", "r") as val:
+    with open(f"{pre2}/pull_group.ndx", "r") as expected, open("./pull_group.ndx", "r") as val:
         lines1 = expected.readlines()
         lines2 = val.readlines()
         assert lines1 == lines2
@@ -134,7 +132,7 @@ def test_create_pull_group_ndx():
 
 def test_prep_REX_temps():
     rex.prep_REX_temps(T_0=280, n_REX=50, k=0.005)
-    with open(pre2 + "rex_temps.log", "r") as expected, open("./rex_temps.log", "r") as val:
+    with open(f"{pre2}/rex_temps.log", "r") as expected, open("./rex_temps.log", "r") as val:
         lines1 = expected.readlines()
         lines2 = val.readlines()
         assert lines1 == lines2

@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 27.06.2021
 
 
 import pyrexMD.analysis.analysis as ana
@@ -14,23 +14,22 @@ import numpy as np
 from numpy.testing import assert_allclose
 from Bio.PDB.PDBExceptions import PDBConstructionWarning
 from unittest.mock import patch
+import pathlib
 import pytest
 import os
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "./files/1l2y/"
-
-# cwd is <...>/pyrexMD/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./tests/files/1l2y/"
-
-pdb = pre + "1l2y_ref.pdb"
-tpr = pre + "traj.tpr"
-xtc = pre + "traj.xtc"
+pre = f"{main_dir}/tests/files/1l2y"
+pdb = f"{pre}/1l2y_ref.pdb"
+tpr = f"{pre}/traj.tpr"
+xtc = f"{pre}/traj.xtc"
 
 
 def test_get_timeconversion():
@@ -64,7 +63,7 @@ def test_get_RMSD(mock_show):
     mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
     ref = mda.Universe(pdb)
     val = ana.get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', plot=True)
-    expected = np.load(pre + "get_RMSD.npy")
+    expected = np.load(f"{pre}/get_RMSD.npy")
     assert assert_allclose(val[0], expected[0]) == None
     assert assert_allclose(val[1], expected[1]) == None
     assert assert_allclose(val[2], expected[2]) == None
@@ -76,7 +75,7 @@ def test_get_RMSD(mock_show):
 def test_get_RMSF(mock_show):
     mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
     val = ana.get_RMSF(mobile, "backbone", plot=True)
-    expected = np.load(pre + "get_RMSF.npy")
+    expected = np.load(f"{pre}/get_RMSF.npy")
     assert assert_allclose(val, expected) == None
 
     # coverage 2nd plot case
@@ -119,7 +118,7 @@ def test_HELP_sss_None2int():
 def test_get_Distance_Matrices():
     mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=True)
     val = ana.get_Distance_Matrices(mobile)
-    expected = np.load(pre + "get_Distance_Matrices.npy")
+    expected = np.load(f"{pre}/get_Distance_Matrices.npy")
     assert assert_allclose(val, expected) == None
 
     # coverage
@@ -135,7 +134,7 @@ def test_get_Distance_Matrices():
 def test_get_shortest_RES_distances():
     ref = mda.Universe(pdb)
     val = ana.get_shortest_RES_distances(ref, sel="protein")
-    expected = np.load(pre + "shortest_RES_distances.npy", allow_pickle=True)
+    expected = np.load(f"{pre}/shortest_RES_distances.npy", allow_pickle=True)
     assert assert_allclose(val[0], expected[0]) == None
     assert (val[1] == expected[1]).all()  # this could cause problems as mixed types
 

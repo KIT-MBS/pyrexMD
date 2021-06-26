@@ -2,25 +2,24 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 27.06.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx
 import pytest
+import pathlib
 import os
 import shutil
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "../examples/files/protein/"
-
-# cwd is <...>/pyrexMD/tests/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./examples/files/protein/"
-
+pre = f"{main_dir}/examples/files/protein/"
 pdb = f"{pre}/1l2y.pdb"
 tpr = f"{pre}/../traj/traj_protein.tpr"
 xtc = f"{pre}/../traj/traj_protein.xtc"

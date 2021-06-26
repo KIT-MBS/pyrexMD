@@ -1,57 +1,47 @@
-# @Author: Arthur Voronin <arthur>
-# @Date:   22.06.2021
-# @Filename: test_cluster.py
-# @Last modified by:   arthur
-# @Last modified time: 23.06.2021
-
-
-import pyrexMD.misc as misc
-import pyrexMD.decoy.cluster as clu
-import MDAnalysis as mda
-import numpy as np
-from numpy.testing import assert_allclose
-from unittest.mock import patch
-import pytest
-import os
 import shutil
+import os
+import pytest
+import pathlib
+from unittest.mock import patch
+from numpy.testing import assert_allclose
+import numpy as np
+import MDAnalysis as mda
+import pyrexMD.decoy.cluster as clu
+import pyrexMD.misc as misc
 
 
+# find main directory of pyrexMD
+posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
+pathname = posixpath.send(None).as_posix()        # get first path name
+main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+
+# set up test paths
 cwd = misc.cwd(verbose=False)
-
-# cwd is <...>/pyrexMD/tests/
-if misc.realpath(f"{cwd}").split("/")[-1] == "tests":
-    pre = "../examples/files/cluster/"
-    pre2 = "../examples/files/rex/"
-    pre3 = ".."
-
-
-# cwd is <...>/pyrexMD/
-elif misc.realpath(f"{cwd}").split("/")[-1] == "pyrexMD":
-    pre = "./examples/files/cluster/"
-    pre2 = "./examples/files/rex/"
-    pre3 = "."
+pre = f"{main_dir}"
+pre2 = f"{main_dir}/examples/files/cluster"
+pre3 = f"{main_dir}/examples/files/rex"
 
 
 def test_get_decoy_list():
-    decoy_dir = pre2 + "decoys"
+    decoy_dir = f"{pre3}/decoys"
     decoy_list = clu.get_decoy_list(decoy_dir)
-    expected = [f'{pre3}/examples/files/rex/decoys/1LMB_16.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_23.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_45.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_96.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_104.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_155.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_285.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_303.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_348.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_361.pdb']
+    expected = [f'{pre3}/decoys/1LMB_16.pdb',
+                f'{pre3}/decoys/1LMB_23.pdb',
+                f'{pre3}/decoys/1LMB_45.pdb',
+                f'{pre3}/decoys/1LMB_96.pdb',
+                f'{pre3}/decoys/1LMB_104.pdb',
+                f'{pre3}/decoys/1LMB_155.pdb',
+                f'{pre3}/decoys/1LMB_285.pdb',
+                f'{pre3}/decoys/1LMB_303.pdb',
+                f'{pre3}/decoys/1LMB_348.pdb',
+                f'{pre3}/decoys/1LMB_361.pdb']
     assert np.all(decoy_list == expected)
 
     # coverage
     decoy_list = clu.get_decoy_list(decoy_dir+"/", ndx_range=(0, 50))
-    expected = [f'{pre3}/examples/files/rex/decoys/1LMB_16.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_23.pdb',
-                f'{pre3}/examples/files/rex/decoys/1LMB_45.pdb']
+    expected = [f'{pre3}/decoys/1LMB_16.pdb',
+                f'{pre3}/decoys/1LMB_23.pdb',
+                f'{pre3}/decoys/1LMB_45.pdb']
     assert np.all(decoy_list == expected)
     with pytest.raises(TypeError) as e_info:
         clu.get_decoy_list(None)
@@ -60,24 +50,24 @@ def test_get_decoy_list():
 
 
 def test_rank_cluster_decoys():
-    decoy_dir = pre2 + "decoys"
+    decoy_dir = f"{pre3}/decoys"
     decoy_list = clu.get_decoy_list(decoy_dir)
-    scores = misc.read_file(pre2 + "decoys/decoy_scores.log", usecols=1)
+    scores = misc.read_file(f"{pre3}/decoys/decoy_scores.log", usecols=1)
     labels = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])
 
     BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES = clu.rank_cluster_decoys(decoy_list=decoy_list, scores=scores, labels=labels)
-    expected_BEST_DECOYS = [f'{pre3}/examples/files/rex/decoys/1LMB_23.pdb', f'{pre3}/examples/files/rex/decoys/1LMB_303.pdb']
+    expected_BEST_DECOYS = [f'{pre3}/decoys/1LMB_23.pdb', f'{pre3}/decoys/1LMB_303.pdb']
     expected_BEST_SCORES = [-240.863, -230.116]
-    expected_CLUSTER_DECOYS = [[f'{pre3}/examples/files/rex/decoys/1LMB_23.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_104.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_16.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_96.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_45.pdb'],
-                               [f'{pre3}/examples/files/rex/decoys/1LMB_303.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_348.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_155.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_285.pdb',
-                                f'{pre3}/examples/files/rex/decoys/1LMB_361.pdb']]
+    expected_CLUSTER_DECOYS = [[f'{pre3}/decoys/1LMB_23.pdb',
+                                f'{pre3}/decoys/1LMB_104.pdb',
+                               f'{pre3}/decoys/1LMB_16.pdb',
+                                f'{pre3}/decoys/1LMB_96.pdb',
+                                f'{pre3}/decoys/1LMB_45.pdb'],
+                               [f'{pre3}/decoys/1LMB_303.pdb',
+                               f'{pre3}/decoys/1LMB_348.pdb',
+                                f'{pre3}/decoys/1LMB_155.pdb',
+                                f'{pre3}/decoys/1LMB_285.pdb',
+                                f'{pre3}/decoys/1LMB_361.pdb']]
     expected_CLUSTER_SCORES = [[-240.863, -232.453, -230.46, -227.485, -220.469],
                                [-230.116, -229.57, -229.107, -225.998, -217.567]]
 
@@ -90,11 +80,11 @@ def test_rank_cluster_decoys():
     BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES = clu.rank_cluster_decoys(decoy_list=decoy_list, scores=scores, labels=labels, return_path=False)
     expected_CLUSTER_DECOYS = [['1LMB_23.pdb',
                                 '1LMB_104.pdb',
-                                '1LMB_16.pdb',
+                               '1LMB_16.pdb',
                                 '1LMB_96.pdb',
                                 '1LMB_45.pdb'],
                                ['1LMB_303.pdb',
-                                '1LMB_348.pdb',
+                               '1LMB_348.pdb',
                                 '1LMB_155.pdb',
                                 '1LMB_285.pdb',
                                 '1LMB_361.pdb']]
@@ -103,7 +93,7 @@ def test_rank_cluster_decoys():
 
 
 def test_copy_cluster_decoys():
-    decoy_dir = pre2 + "decoys"
+    decoy_dir = f"{pre3}/decoys"
     decoy_list = clu.get_decoy_list(decoy_dir)
     assert len(decoy_list) == 10
     target_dir = "./copied_decoys"
@@ -131,16 +121,16 @@ def test_copy_cluster_decoys():
 
 
 def test_log_cluster_decoys():
-    decoy_dir = pre2 + "decoys"
+    decoy_dir = f"{pre3}/decoys"
     decoy_list = clu.get_decoy_list(decoy_dir)
-    scores = misc.read_file(pre2 + "decoys/decoy_scores.log", usecols=1)
+    scores = misc.read_file(f"{pre3}/decoys/decoy_scores.log", usecols=1)
     labels = np.array(range(10))
 
     BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES = clu.rank_cluster_decoys(decoy_list=decoy_list, scores=scores, labels=labels)
 
     logfile = clu.log_cluster_decoys(best_decoys=BEST_DECOYS, best_scores=BEST_SCORES, save_as="./temp.log")
 
-    with open(pre2 + "decoys/decoy_scores_ranked.log", "r") as expected, open(logfile, "r") as val:
+    with open(f"{pre3}/decoys/decoy_scores_ranked.log", "r") as expected, open(logfile, "r") as val:
         lines1 = expected.readlines()
         lines2 = val.readlines()
         assert lines1 == lines2
@@ -149,7 +139,7 @@ def test_log_cluster_decoys():
 
 
 def test_save_h5():
-    DM = clu.read_h5(pre + "DM")                   # coverage: append .h5
+    DM = clu.read_h5(f"{pre2}/DM")                   # coverage: append .h5
     h5_file = clu.save_h5(DM, save_as="./temp")   # coverage: append .h5
 
     assert h5_file == misc.realpath("./temp.h5")
@@ -158,7 +148,7 @@ def test_save_h5():
 
 
 def test_read_h5():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
 
     assert DM.shape == (500, 84, 84)
@@ -167,7 +157,7 @@ def test_read_h5():
 
 
 def test_reshape_data():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
 
     assert DM.shape == (500, 84, 84)
@@ -179,7 +169,7 @@ def test_reshape_data():
 
 
 def test_heat_KMeans():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     cluster10 = clu.heat_KMeans(h5_file, n_clusters=10, center_type='centroid')
     assert isinstance(cluster10, clu.CLUSTER_DATA)
     assert hasattr(cluster10, "centers")
@@ -198,7 +188,7 @@ def test_heat_KMeans():
 
 
 def test_heat_KMeans_bestofN():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
 
     TOPX_CLUSTER = clu.heat_KMeans_bestofN(h5_file, n_clusters=10, N=5, topx=1)
     cluster_data = TOPX_CLUSTER[0]
@@ -208,7 +198,7 @@ def test_heat_KMeans_bestofN():
 
 
 def test_get_DM_centroids():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     labels = [0]*500
     labels[0] == 1
@@ -222,7 +212,7 @@ def test_get_DM_centroids():
 
 
 def test_get_DM_WSS():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
 
     DM2 = clu.reshape_data(DM, dim_out=2)     # coverage
@@ -240,7 +230,7 @@ def test_get_DM_WSS():
 
 
 def test_get_WSS():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     TSNE = clu.apply_TSNE(DM, n_components=2)
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=5)
@@ -257,9 +247,9 @@ def test_get_WSS():
     return
 
 
-@patch("matplotlib.pyplot.show")
+@ patch("matplotlib.pyplot.show")
 def test_apply_elbow_method(mock_show):
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     n_clusters = list(range(1, 10, 2))
 
     N_CLUSTERS, WSS = clu.apply_elbow_method(h5_file, n_clusters=n_clusters, stop=10)
@@ -273,7 +263,7 @@ def test_apply_elbow_method(mock_show):
     return
 
 
-@patch("matplotlib.pyplot.show")
+@ patch("matplotlib.pyplot.show")
 def test_scatterplot_clustermapping(mock_show):
     xdata = list(range(10))
     ydata = list(range(10))
@@ -293,11 +283,11 @@ def test_scatterplot_clustermapping(mock_show):
 
 
 def test_map_cluster_scores():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     TSNE = clu.apply_TSNE(DM, n_components=2)
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=10)
-    score_file = pre + "energies.log"
+    score_file = f"{pre2}/energies.log"
 
     scores_data = clu.map_cluster_scores(cluster_data=KMEANS, score_file=score_file)
     assert isinstance(scores_data, clu.CLUSTER_DATA_SCORES)
@@ -315,13 +305,13 @@ def test_map_cluster_scores():
 
 
 def test_map_cluster_accuracy():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     TSNE = clu.apply_TSNE(DM, n_components=2)
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=10)
 
-    GDT = misc.pickle_load(pre + "GDT_TS.pickle")
-    RMSD = misc.pickle_load(pre + "RMSD.pickle")
+    GDT = misc.pickle_load(f"{pre2}/GDT_TS.pickle")
+    RMSD = misc.pickle_load(f"{pre2}/RMSD.pickle")
 
     accuracy_data = clu.map_cluster_accuracy(cluster_data=KMEANS, GDT=GDT, RMSD=RMSD)
     assert isinstance(accuracy_data, clu.CLUSTER_DATA_ACCURACY)
@@ -336,9 +326,9 @@ def test_map_cluster_accuracy():
     return
 
 
-@patch("matplotlib.pyplot.show")
+@ patch("matplotlib.pyplot.show")
 def test_plot_cluster_data(mock_show):
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     TSNE = clu.apply_TSNE(DM, n_components=2)
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=10)
@@ -347,7 +337,7 @@ def test_plot_cluster_data(mock_show):
     return
 
 
-@patch("matplotlib.pyplot.show")
+@ patch("matplotlib.pyplot.show")
 def test_plot_cluster_center(mock_show):
     centers = np.array([[0, 0], [1, 1]])
     cluster_data = clu.CLUSTER_DATA(centers=centers)
@@ -357,30 +347,30 @@ def test_plot_cluster_center(mock_show):
 
 
 def test_get_cluster_targets():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     DM = DM[:50]  # reduce n_frames for test
 
     TSNE = clu.apply_TSNE(DM, n_components=2)
     cluster10 = clu.apply_KMEANS(TSNE, n_clusters=10)
     cluster30 = clu.apply_KMEANS(TSNE, n_clusters=30)
-    score_file = pre + "energies.log"
+    score_file = f"{pre2}/energies.log"
 
     n10_targets, n30_targets, n30_dist = clu.get_cluster_targets(cluster10, cluster30, score_file=score_file)
     return
 
 
 def test_WF_print_cluster_accuracy_AND_test_WF_print_cluster_scores():
-    h5_file = pre + "DM.h5"
+    h5_file = f"{pre2}/DM.h5"
     DM = clu.read_h5(h5_file)
     TSNE = clu.apply_TSNE(DM, n_components=2)
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=10)
 
-    GDT = misc.pickle_load(pre + "GDT_TS.pickle")
-    RMSD = misc.pickle_load(pre + "RMSD.pickle")
+    GDT = misc.pickle_load(f"{pre2}/GDT_TS.pickle")
+    RMSD = misc.pickle_load(f"{pre2}/RMSD.pickle")
     cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=KMEANS, GDT=GDT, RMSD=RMSD)
 
-    score_file = pre + "energies.log"
+    score_file = f"{pre2}/energies.log"
     cluster10_scores = clu.map_cluster_scores(cluster_data=KMEANS, score_file=score_file)
 
     log1 = clu.WF_print_cluster_accuracy(cluster_data=KMEANS, cluster_accuracy=cluster10_accuracy, targets=[0], save_as="./log1.log")

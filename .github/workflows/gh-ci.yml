@@ -1,0 +1,227 @@
+name: GH Actions CI
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  ## job 1 ##
+  build-gromacs:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.8']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install MPI (ubuntu)
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: sudo apt-get install openmpi-bin libopenmpi-dev
+    - name: Install MPI (macOS)
+      if: ${{ startsWith(matrix.os, 'mac') }}
+      run: brew install mpich
+    - name: Cache GROMACS
+      uses: actions/cache@v2
+      id: cache-gromacs
+      with:
+        path: ~/cache/${{ runner.os }}/gromacs
+        key: ${{ runner.os }}-python${{ matrix.python-version }}-gromacs-${{ secrets.CACHE_VERSION_GROMACS }}
+    - name: Install GROMACS
+      if: ${{ steps.cache-gromacs.outputs.cache-hit != 'true' }}   # execute only if no cache exists
+      run: |
+        curl -o gromacs-2020.6.tar.gz https://ftp.gromacs.org/gromacs/gromacs-2020.6.tar.gz
+        tar -xzf gromacs-2020.6.tar.gz
+        cd gromacs-2020.6
+        mkdir build
+        cd build
+        # autodetect compiler dir
+        export COMPILER_DIR=$(echo $(which mpicc) | sed -e "s|mpicc||")
+        # set up Gromacs installation (save in ~/cache/${{ runner.os }}/gromacs)
+        CC=mpicc CXX=mpicxx && cmake ../\
+            -DGMX_BUILD_OWN_FFTW=ON\
+            -DREGRESSIONTEST_DOWNLOAD=ON\
+            -DCMAKE_INSTALL_PREFIX=~/cache/${{ runner.os }}/gromacs\
+            -DCMAKE_C_COMPILER=$COMPILER_DIR/mpicc\
+            -DCMAKE_CXX_COMPILER=$COMPILER_DIR/mpicxx\
+            -DGMX_DEFAULT_SUFFIX=ON\
+            -DGMX_MPI=ON\
+            -DGMX_GPU=OFF\
+            -DGMX_PREFER_STATIC_LIBS=ON
+        make
+        sudo make install
+    - name: Update library (ubuntu)
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: |
+        sudo ldconfig
+        source ~/cache/${{ runner.os }}/gromacs/bin/GMXRC
+    - name: Update library (macOS)
+      if: ${{ startsWith(matrix.os, 'mac') }}
+      run: |
+        sudo update_dyld_shared_cache
+        source ~/cache/${{ runner.os }}/gromacs/bin/GMXRC
+
+
+  ## job 2 ##
+  build-python:
+    needs: build-gromacs
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.8']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install MPI (ubuntu)
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: sudo apt-get install openmpi-bin libopenmpi-dev
+    - name: Install MPI (macOS)
+      if: ${{ startsWith(matrix.os, 'mac') }}
+      run: brew install mpich
+    - name: Cache python modules
+      uses: actions/cache@v2
+      id: cache-python
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', './**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+    - name: Install python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        python setup.py sdist
+        python -m pip install .
+
+
+  ## job 3 ##
+  codecov:
+    runs-on: ${{ matrix.os }}
+    needs: build-python
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.8']
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python
+      uses: actions/setup-python@master
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install MPI (ubuntu)
+      if: ${{ startsWith(matrix.os, 'ubuntu') }}
+      run: sudo apt-get install openmpi-bin libopenmpi-dev
+    - name: Install MPI (macOS)
+      if: ${{ startsWith(matrix.os, 'mac') }}
+      run: brew install mpich
+    - name: Load cached GROMACS
+      uses: actions/cache@v2
+      id: cache-gromacs
+      with:
+        path: ~/cache/${{ runner.os }}/gromacs
+        key: ${{ runner.os }}-python${{ matrix.python-version }}-gromacs-${{ secrets.CACHE_VERSION_GROMACS }}
+    - name: Load cached python modules
+      uses: actions/cache@v2
+      id: cache-python
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', './**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+    - name: Set up ~/.gromacswrapper.cfg
+      run: |
+        echo "import gromacs" >> script.py
+        echo "gromacs.config.setup()" >> script.py
+        python script.py
+        sed -i.bak "s|append_suffix = yes|append_suffix = no|" ~/.gromacswrapper.cfg
+        sed -i.bak "s|gmxrc =|gmxrc = ~/cache/${{ runner.os }}/gromacs/bin/GMXRC|" ~/.gromacswrapper.cfg
+        # backup config for current runner (default config shares name between different runner)
+        cp ~/.gromacswrapper.cfg ~/.gromacswrapper_${{ runner.os }}.cfg
+        echo "##################################"
+        echo "content of ~/.gromacswrapper.cfg:"
+        cat ~/.gromacswrapper.cfg
+    - name: Generate coverage report
+      run: |
+        pip install pytest
+        pip install pytest-cov
+        cd pyrexMD
+        # load config for current runner
+        cp  ~/.gromacswrapper_${{ runner.os }}.cfg ~/.gromacswrapper.cfg
+        python -m pytest --cov=pyrexMD --cov-report=xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: unittests
+        env_vars: ${{ matrix.os }},${{ matrix.python-version }}
+        name: codecov-umbrella
+        fail_ci_if_error: true
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
+
+
+  ## job 4 ##
+  update-docs:
+    needs: build-python
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    # trigger if the previous workflow succeeded
+    - name: Load cached python modules
+      uses: actions/cache@v2
+      id: cache-python
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', './**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+    - name: Install dependencies (build-docs)
+      run: |
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx-rtd-theme m2r2
+    - name: Cache docs
+      uses: actions/cache@v2
+      id: cache-docs
+      with:
+        path: pyrexMD/doc/sphinx/_build/html/
+        key: ${{ hashFiles('pyrexMD/doc/sphinx/_build/html/**') }}
+    - name: build-docs
+      run: |
+        export CWD=$(pwd)
+        cd pyrexMD/doc/sphinx
+        rm -rf _build/*
+        make html
+        touch _build/html/.nojekyll
+        cd $CWD
+
+
+  ## job 5 ##
+  deploy-docs:
+    needs: update-docs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12.x'
+    - run : npm install @jamesives/github-pages-deploy-action
+    - name: Load cached docs
+      uses: actions/cache@v2
+      id: cache-docs
+      with:
+        path: pyrexMD/doc/sphinx/_build/html/
+        key: ${{ hashFiles('pyrexMD/doc/sphinx/_build/html/**') }}
+    - name: Deploy docs to gh-pages
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages  # The branch where action should deploy to.
+        folder: pyrexMD/doc/sphinx/_build/html   # The source folder to deploy.
+        target-folder: docs                      # The target folder to deploy.

@@ -2,7 +2,7 @@
 # @Date:   11.05.2021
 # @Filename: setup.py
 # @Last modified by:   arthur
-# @Last modified time: 26.06.2021
+# @Last modified time: 29.06.2021
 
 from setuptools import setup, find_packages
 import sys

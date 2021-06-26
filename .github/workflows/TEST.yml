@@ -1,0 +1,114 @@
+name: TEST CUSTOM BADGE UPDATE
+
+### NOTE:
+### This method is not optimal! The badges are STATIC and handled by changing
+### the entries in README.md, which requires a pull request on each badge update
+
+on:
+  push:
+    branches: [ master ]
+
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+  build-python:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
+
+  update-badges:
+    needs: [build-python, coverage, deploy-docs]
+    runs-on: ubuntu-latest
+    env:
+      ######## read https://shields.io/ about how to config custom badges
+      ## docs: custom
+      file: ./BADGES.txt
+      docs-badge-passing: 'https://img.shields.io/badge/docs-1.0-blue?&logo=github'
+      docs-badge-failing: 'https://img.shields.io/badge/docs-failing-red?&logo=github'
+      docs-link: 'https://kit-mbs.github.io/pyrexMD/'
+      docs-version: 1.0
+      ## build: custom
+      build-badge-passing: 'https://img.shields.io/badge/build-passing-brightgreen?&logo=github'
+      build-badge-failing: 'https://img.shields.io/badge/build-failing-red?&logo=github'
+      build-link: 'https://github.com/ArtVoro/gh-autodoc/'
+      ## ci: custom
+      ci-badge-passing: 'https://img.shields.io/badge/GH_Action_CI-passing-brightgreen?&logo=github'
+      ci-badge-failing: 'https://img.shields.io/badge/GH_Action_CI-failing-red?&logo=github'
+      ci-link: 'https://github.com/ArtVoro/gh-autodoc/actions/workflows/gh-actions-ci.yml'
+      ## codevoc: original
+      codecov-badge: 'https://codecov.io/gh/ArtVoro/gh-autodoc/branch/master/graph/badge.svg?token=NFDY6BNSZ9'
+      codecov-link: 'https://codecov.io/gh/ArtVoro/gh-autodoc'
+
+    ### note: how to trigger github action steps via job result instead of bash condition
+    ## if: ${{ always() && needs.<job-id>.result == 'success' }}
+    ## if: ${{ always() && needs.<job-id>.result == 'failure' }}
+    if: always()
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up badges file
+        run: touch ${{ env.file }}
+      - name: update badge (docs)
+        run: |
+          if ${{ needs.deploy-docs.result == 'success' }}
+          then
+            echo '''<a href=${{ env.docs-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.docs-badge-passing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          else
+            echo '''<a href=${{ env.docs-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.docs-badge-failing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          fi
+      - name: update badge (build)
+        run: |
+          if ${{ needs.build-python.result == 'success' }}
+          then
+            echo '''<a href=${{ env.build-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.build-badge-passing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          else
+            echo '''<a href=${{ env.build-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.build-badge-failing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          fi
+      - name: update badge (GH Actions CI)
+        run: |
+          if ${{ needs.build-python.result == 'success' }} && ${{ needs.coverage.result == 'success' }} && ${{ needs.deploy-docs.result == 'success' }}
+          then
+            echo '''<a href=${{ env.ci-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.ci-badge-passing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          else
+            echo '''<a href=${{ env.ci-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.ci-badge-failing }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+          fi
+      - name: update badge (codecov)
+        run: |
+            echo '''<a href=${{ env.codecov-link }}>''' >> ${{ env.file }}
+            echo '''<img src=${{ env.codecov-badge }}/>''' >> ${{ env.file }}
+            echo '''</a>''' >> ${{ env.file }}
+      # - name: update README.md
+      #   run: |
+      #     # remove badge lines from README
+      #     head -n 30 README.md | grep ">.*" > TEMP.txt
+      #     export N_LINES=$(($(wc -l < TEMP.txt)+1))
+      #     tail -n +$N_LINES README.md > README_TAIL.txt
+      #
+      #     # add badge lines to README
+      #     mv README.md README_bak.md
+      #     cat BADGES.txt >> README.md
+      #     cat README_TAIL.txt >> README.md
+      # - name: add and commit (README.md)
+      #   uses: EndBug/add-and-commit@v7
+      #   with:
+      #     add: "./README.md"
+      #     message: "GH ACTIONS CI: updated badges of README.md"
