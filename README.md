@@ -2,7 +2,7 @@
 [![GH Actions CI](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml/badge.svg)](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml)
 [![codecov](https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW)](https://codecov.io/gh/KIT-MBS/pyrexMD)
 
-\
+
 About pyrexMD
 =============
 
