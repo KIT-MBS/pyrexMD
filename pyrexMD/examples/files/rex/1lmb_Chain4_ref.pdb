@@ -1,4 +1,4 @@
-TITLE     Green Red Orange Magenta Azure Cyan Skyblue
+TITLE     Giant Rising Ordinary Mutants for A Clerical Setup
 MODEL        1
 ATOM      1  N   SER 4   1       7.407  11.245   0.360  1.00  0.00           N
 ATOM      2  H1  SER 4   1       8.198  10.731   0.027  1.00  0.00            
@@ -673,7 +673,7 @@ ATOM    670  O   MET 4  40       2.857 -15.174  -2.179  1.00  0.00           O
 ATOM    671  N   GLY 4  41       1.014 -15.674  -3.273  1.00  0.00           N
 ATOM    672  H   GLY 4  41       0.569 -15.991  -4.111  1.00  0.00            
 ATOM    673  CA  GLY 4  41       0.244 -15.315  -2.098  1.00  0.00           C
-ATOM    674  HA1 GLY 4  41       0.707 -15.729  -1.315  1.00  0.00            
+ATOM    674  HA1 GLY 4  41       0.707 -15.729  -1.314  1.00  0.00            
 ATOM    675  HA2 GLY 4  41      -0.659 -15.730  -2.209  1.00  0.00            
 ATOM    676  C   GLY 4  41       0.097 -13.781  -1.875  1.00  0.00           C
 ATOM    677  O   GLY 4  41       0.208 -13.318  -0.732  1.00  0.00           O

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 26.06.2021
+# @Last modified time: 29.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -596,7 +596,7 @@ def cd(path, verbose=True):
 
 def cp(source, target, create_dir=True, verbose=True):
     """
-    Copy file(s) from <source> to <target>.
+    Copy file(s) from <source> to <target>. Will overwrite existing files and directories.
 
     Args:
         source (str, list, array): source path or list of source paths
@@ -615,14 +615,22 @@ def cp(source, target, create_dir=True, verbose=True):
     target = realpath(target)
 
     if isinstance(source, str):
-        shutil.copy(source, target)
-        if verbose:
-            cprint(f"Copied source file to: {target}", "blue")
+        if os.path.isdir(source):
+            shutil.copytree(source, target, dirs_exist_ok=True)
+            if verbose:
+                cprint(f"Copied source files to: {target}", "blue")
+        else:
+            shutil.copy(source, target)
+            if verbose:
+                cprint(f"Copied source file to: {target}", "blue")
     elif isinstance(source, list):
         if create_dir:
             mkdir(target, verbose=False)
         for item in source:
-            shutil.copy(item, target)
+            if os.path.isdir(item):
+                shutil.copytree(item, target, dirs_exist_ok=True)
+            else:
+                shutil.copy(item, target)
         if verbose:
             cprint(f"Copied source files to: {target}", "blue")
     else:
@@ -834,7 +842,6 @@ def get_python_version():
     micro = sys.version_info[2]
     version = f"{major}.{minor}.{micro}"
     return version
-
 
 
 def percent(num, div, prec=2):

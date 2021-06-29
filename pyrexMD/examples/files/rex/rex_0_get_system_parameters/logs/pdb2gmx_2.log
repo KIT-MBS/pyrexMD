@@ -1,6 +1,6 @@
 STDERR:
 
-                     :-) GROMACS - gmx pdb2gmx, 2020.5 (-:
+                     :-) GROMACS - gmx pdb2gmx, 2020.6 (-:
 
                             GROMACS is written by:
      Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
@@ -28,7 +28,7 @@ under the terms of the GNU Lesser General Public License
 as published by the Free Software Foundation; either version 2.1
 of the License, or (at your option) any later version.
 
-GROMACS:      gmx pdb2gmx, version 2020.5
+GROMACS:      gmx pdb2gmx, version 2020.6
 Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 Data prefix:  /usr/local/gromacs_2020
 Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters
@@ -78,7 +78,7 @@ Writing coordinate file...
 
 Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/protein.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/#protein.gro.1#
 
-GROMACS reminds you: "Throwing the Baby Away With the SPC" (S. Hayward)
+GROMACS reminds you: "You Own the Sun" (Throwing Muses)
 
 
 STDOUT:

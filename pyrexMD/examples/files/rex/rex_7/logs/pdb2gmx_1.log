@@ -1,0 +1,106 @@
+STDERR:
+
+                     :-) GROMACS - gmx pdb2gmx, 2020.6 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx pdb2gmx, version 2020.6
+Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
+Data prefix:  /usr/local/gromacs_2020
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_7
+Command line:
+  gmx_mpi pdb2gmx -f 1LMB_285_ref.pdb -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_7/protein.gro -ff amber99sb-ildn -water tip3p -ignh -nov
+
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.r2b
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/dna.r2b
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/rna.r2b
+All occupancies are one
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/atomtypes.atp
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.rtp
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/dna.rtp
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/rna.rtp
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.hdb
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/dna.hdb
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/rna.hdb
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.n.tdb
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.c.tdb
+8 out of 8 lines of specbond.dat converted successfully
+Special Atom Distance matrix:
+                   MET40   MET42
+                   SD320   SD332
+   MET42   SD332   0.540
+   MET87   SD667   1.895   1.889
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.arn
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/dna.arn
+Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/rna.arn
+Making bonds...
+Number of bonds was 1451, now 1450
+Generating angles, dihedrals and pairs...
+Before cleaning: 3815 pairs
+Before cleaning: 3930 dihedrals
+Keeping all generated dihedrals
+Making cmap torsions...
+There are 3930 dihedrals,  261 impropers, 2636 angles
+          3797 pairs,     1450 bonds and     0 virtual sites
+Total mass 10124.714 a.m.u.
+Total charge 1.000 e
+Writing topology
+
+Writing coordinate file...
+
+GROMACS reminds you: "Sir, spare your threats: The bug which you would fright me with I seek." (Hermione, Act III, scene II of Shakespeare's Winter's Tale)
+
+
+STDOUT:
+
+
+Using the Amber99sb-ildn force field in directory amber99sb-ildn.ff
+
+going to rename amber99sb-ildn.ff/aminoacids.r2b
+going to rename amber99sb-ildn.ff/dna.r2b
+going to rename amber99sb-ildn.ff/rna.r2b
+Reading 1LMB_285_ref.pdb...
+Read '11-SEP-20   XXXX', 710 atoms
+Analyzing pdb file
+Splitting chemical chains based on TER records or chain id changing.
+There are 1 chains and 0 blocks of water and 92 residues with 710 atoms
+
+  chain  #res #atoms
+  1 'A'    92    710  
+
+Reading residue database... (Amber99sb-ildn)
+Processing chain 1 'A' (710 atoms, 92 residues)
+Identified residue SER1 as a starting terminus.
+Identified residue SER92 as a ending terminus.
+Checking for duplicate atoms....
+Generating any missing hydrogen atoms and/or adding termini.
+Now there are 92 residues with 1443 atoms
+		--------- PLEASE NOTE ------------
+You have successfully generated a topology from: 1LMB_285_ref.pdb.
+The Amber99sb-ildn force field and the tip3p water model are used.
+		--------- ETON ESAELP ------------
+

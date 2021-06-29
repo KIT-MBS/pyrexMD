@@ -92,8 +92,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about_link.html">About pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../about_link.html#pyrexmd">pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_guide_link.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API Docs</a></li>
 </ul>
 
             
@@ -166,7 +166,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: misc.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 23.06.2021</span>
+<span class="c1"># @Last modified time: 29.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is a collection of miscellaneous functions.</span>
@@ -760,7 +760,7 @@
 
 <div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Copy file(s) from &lt;source&gt; to &lt;target&gt;.</span>
+<span class="sd">    Copy file(s) from &lt;source&gt; to &lt;target&gt;. Will overwrite existing files and directories.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source (str, list, array): source path or list of source paths</span>
@@ -779,14 +779,22 @@
     <span class="n">target</span> <span class="o">=</span> <span class="n">realpath</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source file to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source files to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source file to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">create_dir</span><span class="p">:</span>
             <span class="n">mkdir</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source files to: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -998,23 +1006,6 @@
     <span class="n">micro</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">minor</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">micro</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">version</span></div>
-
-
-<div class="viewcode-block" id="input_python_x"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.input_python_x">[docs]</a><span class="k">def</span> <span class="nf">input_python_x</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Uses raw_input(msg) in python 2.x or input(msg) in python 3.x</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        msg (str): promt message</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        msg (str)</span>
-<span class="sd">            user input message</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">raw_input</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">input</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="percent"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.misc.percent">[docs]</a><span class="k">def</span> <span class="nf">percent</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">div</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -1531,7 +1522,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;get_PDBid(ref): Warning</span><span class="se">\</span>
 <span class="s2">             </span><span class="se">\n</span><span class="s2">Found multiple possible PDB ids by splitting the ref path.&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">PDBid</span><span class="p">)</span>
-        <span class="n">PDBid</span> <span class="o">=</span> <span class="n">input_python_x</span><span class="p">(</span><span class="s1">&#39;Enter correct PDB id:&#39;</span><span class="p">)</span>
+        <span class="n">PDBid</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Enter correct PDB id:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">PDBid</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;get_PDBid(ref): Warning</span><span class="se">\</span>

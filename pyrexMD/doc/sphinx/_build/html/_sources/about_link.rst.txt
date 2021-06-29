@@ -1,8 +1,5 @@
-About pyrexMD
-=============
-
 .. mdinclude:: ../../../README.md
-   :start-line: 2
+   :start-line: 0
 
 License
 -------

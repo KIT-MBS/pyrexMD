@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 22.06.2021
+# @Last modified time: 29.06.2021
 
 
 """
@@ -336,6 +336,89 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, ve
     else:
         raise ValueError("No matching selection found.")
     return sel1, sel2
+
+
+def check_matching_selection(mobile, ref, sel="protein", verbose=True):
+    """
+    Gets matching selection strings for mobile and reference and then tests if
+    matching selections have equal atoms and residues. Returns matchin selection
+    strings.
+
+    Args:
+        mobile (universe)
+        ref (universe)
+        sel (str): selection string
+        verbose (bool):
+          | True: prints detailed report
+          | False: prints only selection strings and if atoms/residues match
+    """
+    # modify selection string if necessary
+    sel1, sel2 = get_matching_selection(mobile, ref, sel=sel)
+    _misc.cprint("Matching selection strings:", "blue")
+    print(f"Mobile:    sel1 = {sel1}")
+    print(f"Reference: sel2 = {sel2}")
+
+    a1 = mobile.select_atoms(sel1)
+    a2 = ref.select_atoms(sel2)
+    if verbose:
+        _misc.cprint("\nAtom counts:", "blue")
+        print(f"Mobile:    sel1 contains {a1.n_atoms} of {mobile.atoms.n_atoms} atoms.")
+        print(f"Reference: sel2 contains {a2.n_atoms} of {ref.atoms.n_atoms} atoms.")
+    if (a1.atoms.n_atoms == a2.atoms.n_atoms) and (mobile.atoms.n_atoms == ref.atoms.n_atoms):
+        _misc.cprint("Atom counts match", "green")
+    else:
+        _misc.cprint("Atom counts do not match", "red")
+
+    if verbose:
+        _misc.cprint("\nRES in sel1:", "blue")
+        print(a1.residues.resnames)
+        _misc.cprint("RES in sel2:", "blue")
+        print(a2.residues.resnames)
+    if np.all(a1.residues.resnames == a2.residues.resnames):
+        _misc.cprint("RES match\n", "green")
+    else:
+        _misc.cprint("RES do not match\n", "red")
+    return sel1, sel2
+
+
+def check_residues(mobile, ref, sel1="all", sel2="all", verbose=True):
+    """
+    Compares residues of mobile and reference universe using specific selections.
+
+    Args:
+        mobile (universe)
+        ref (universe)
+        sel1 (str): selection string of mobile
+        sel2 (str): selection string of ref
+        verbose (bool):
+          | True: prints detailed report
+          | False: prints only if residue ids and names match
+    """
+    a1 = mobile.atoms.select_atoms(sel1)
+    a2 = ref.atoms.select_atoms(sel2)
+    if verbose:
+        _misc.cprint("Mobile:", "blue")
+        print(a1.residues.resids)
+        print(a1.residues.resnames)
+
+        _misc.cprint("\nRef:", "blue")
+        print(a2.residues.resids)
+        print(a2.residues.resnames)
+        print()
+
+    if np.all(a1.residues.resids == a1.residues.resids):
+        _misc.cprint("RES ids match", "green")
+    else:
+        _misc.cprint("RES ids do not match", "red")
+    if np.all(a2.residues.resnames == a2.residues.resnames):
+        _misc.cprint("RES names match", "green")
+    else:
+        _misc.cprint("RES names do not match", "red")
+    if len(a1.atoms) != len(a2.atoms):
+        _misc.cprint("Warning: sel1 and sel2 have unequal atom counts!", "red")
+        _misc.cprint(f"Atoms in mobile: {len(a1.atoms)}", "red")
+        _misc.cprint(f"Atoms in reference: {len(a2.atoms)}", "red")
+    return
 
 
 def sel2selid(u, sel, norm=True, filter_rna=True):

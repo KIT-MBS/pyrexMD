@@ -2,12 +2,12 @@
 ;	File 'topol.top' was generated
 ;	By user: arthur (1000)
 ;	On host: fractal-r9
-;	At date: Mon Jun 21 03:51:09 2021
+;	At date: Tue Jun 29 22:22:01 2021
 ;
 ;	This is a standalone topology file
 ;
 ;	Created by:
-;	                    :-) GROMACS - gmx pdb2gmx, 2020.5 (-:
+;	                    :-) GROMACS - gmx pdb2gmx, 2020.6 (-:
 ;	
 ;	Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 ;	Data prefix:  /usr/local/gromacs_2020

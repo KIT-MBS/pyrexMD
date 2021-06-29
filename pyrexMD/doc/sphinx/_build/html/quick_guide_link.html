@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Quick Guide &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyrexMD" href="modules.html" />
+    <link rel="prev" title="About pyrexMD" href="about_link.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_link.html">About pyrexMD</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup-of-normal-md">Setup of normal MD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-of-contact-guided-rex-md">Setup of contact-guided REX MD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-plots">Interactive Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contact-and-bias-analyses">Contact and Bias Analyses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gdt-and-la-analyses">GDT and LA Analyses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cluster-analyses">Cluster Analyses</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API Docs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quick Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/quick_guide_link.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-guide">
+<h1>Quick Guide<a class="headerlink" href="#quick-guide" title="Permalink to this headline">¶</a></h1>
+<p>Here you can find a short overview of some core functions and workflows which
+can be performed with pyrexMD. Since pyrexMD is workflow orientated, you can
+perform large tasks (e.g. system setup, specific analyses, etc.) within a few
+commands. This guide is kept very short intentionally because most commands have
+obvious ‘core’-functionality. Plot-related functions have a wide range of
+possible keyword arguments, in which case you have to dig through the API docs
+to get the most potential out of the functions.</p>
+<div class="section" id="setup-of-normal-md">
+<h2>Setup of normal MD<a class="headerlink" href="#setup-of-normal-md" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+
+<span class="c1"># create ref pdb:</span>
+<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># generate topology &amp; box</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
+
+<span class="c1"># generate solvent &amp; ions</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
+
+<span class="c1"># NVT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;nvt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;nvt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;nvt&quot;</span><span class="p">)</span>
+
+<span class="c1"># NPT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;npt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;npt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;nvt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
+
+<span class="c1"># MD run</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-of-contact-guided-rex-md">
+<h2>Setup of contact-guided REX MD<a class="headerlink" href="#setup-of-contact-guided-rex-md" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+
+<span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
+
+<span class="c1"># create rex_i directories and assign decoys</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">assign_best_decoys</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
+<span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">get_REX_DIRS</span><span class="p">()</span>
+
+<span class="c1"># check for consistent topology</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">check_REX_PDBS</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
+
+<span class="c1"># dump mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp)</span>
+<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+<span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
+<span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="o">=</span><span class="s2">&quot;./rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
+
+<span class="c1"># create systems for each replica</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># add bias contacts (defined in DCA_fin)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
+
+<span class="c1"># prepare temperature distribution</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
+
+<span class="c1"># create mdp and tpr files</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+
+<span class="c1"># upload run files on HPC and execute production run</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="interactive-plots">
+<h2>Interactive Plots<a class="headerlink" href="#interactive-plots" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
+
+
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+
+<span class="c1"># show ref structure in trajectory viewer</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlayer</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+<span class="n">tv</span><span class="p">()</span>
+
+<span class="c1"># check RMSD</span>
+<span class="n">FRAMES</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># check for formed bias contacts</span>
+<span class="n">bias</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;path/to/bias/contacts&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">CM</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">get_QBias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bias</span><span class="p">)</span>
+
+<span class="c1"># interactive plot (ctrl-click into the plot to jump to frame)</span>
+<span class="n">ip</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlot</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;RMSD (A)&quot;</span><span class="p">)</span>
+<span class="n">ip</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contact-and-bias-analyses">
+<h2>Contact and Bias Analyses<a class="headerlink" href="#contact-and-bias-analyses" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span>
+<span class="n">TODO</span>
+<span class="n">TODO</span>
+<span class="n">TODO</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gdt-and-la-analyses">
+<h2>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.gdt</span> <span class="k">as</span> <span class="nn">gdt</span>
+
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">top</span><span class="o">.</span><span class="n">norm_and_align_universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+
+<span class="c1"># perform GDT (Global Distance Test)</span>
+<span class="n">GDT</span> <span class="o">=</span> <span class="n">gdt</span><span class="o">.</span><span class="n">GDT</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="n">GDT_percent</span><span class="p">,</span> <span class="n">GDT_resids</span><span class="p">,</span> <span class="n">GDT_cutoff</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">,</span> <span class="n">FRAME</span> <span class="o">=</span> <span class="n">GDT</span>
+
+<span class="c1"># calculate GDT scores</span>
+<span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">gdt</span><span class="o">.</span><span class="n">get_GDT_TS</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
+<span class="n">GDT_HA</span> <span class="o">=</span> <span class="n">gdt</span><span class="o">.</span><span class="n">get_GDT_HA</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">)</span>
+
+<span class="c1"># rank scores</span>
+<span class="n">SCORES</span> <span class="o">=</span> <span class="n">gdt</span><span class="o">.</span><span class="n">GDT_rank_scores</span><span class="p">(</span><span class="n">GDT_percent</span><span class="p">,</span> <span class="n">ranking_order</span><span class="o">=</span><span class="s2">&quot;GDT_TS&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span> <span class="o">=</span> <span class="n">SCORES</span>
+
+<span class="c1"># generate plots</span>
+<span class="n">ana</span><span class="o">.</span><span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">frames</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Frame&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;GDT TS&quot;</span><span class="p">)</span>
+<span class="n">ana</span><span class="o">.</span><span class="n">plot_hist</span><span class="p">(</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;GDT TS&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Counts&quot;</span><span class="p">)</span>
+
+<span class="c1"># Local Accuracy plot</span>
+<span class="n">gdt</span><span class="o">.</span><span class="n">plot_LA</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">GDT_TS_ranked</span><span class="p">,</span> <span class="n">GDT_HA_ranked</span><span class="p">,</span> <span class="n">GDT_ndx_ranked</span><span class="p">,</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cluster-analyses">
+<h2>Cluster Analyses<a class="headerlink" href="#cluster-analyses" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.decoy.cluster</span> <span class="k">as</span> <span class="nn">clu</span>
+
+<span class="c1"># load data</span>
+<span class="n">QDATA</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/QDATA.pickle&quot;</span><span class="p">)</span>
+<span class="n">RMSD</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/RMSD.pickle&quot;</span><span class="p">)</span>
+<span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/GDT_TS.pickle&quot;</span><span class="p">)</span>
+<span class="n">score_file</span> <span class="o">=</span> <span class="s2">&quot;./data/energies.log&quot;</span>
+<span class="n">ENERGY</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">score_file</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">DM</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">read_h5</span><span class="p">(</span><span class="s2">&quot;./data/DM.h5&quot;</span><span class="p">)</span>
+
+<span class="c1"># apply TSNE for dimension reduction</span>
+<span class="n">tsne</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">apply_TSNE</span><span class="p">(</span><span class="n">DM</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">### apply KMeans on TSNE-transformed data (two variants with low and high cluster number)</span>
+<span class="c1"># note: here we set the high number only to 20 because our sample is small with only 500 frames</span>
+<span class="n">cluster10</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">apply_KMEANS</span><span class="p">(</span><span class="n">tsne</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cluster20</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">apply_KMEANS</span><span class="p">(</span><span class="n">tsne</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">### map scores (energies) and accuracy (GDT, RMSD) to clusters</span>
+<span class="n">cluster10_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
+<span class="n">cluster10_accuracy</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">GDT</span><span class="o">=</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">RMSD</span><span class="o">=</span><span class="n">RMSD</span><span class="p">)</span>
+<span class="n">cluster20_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
+<span class="n">cluster20_accuracy</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">GDT</span><span class="o">=</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">RMSD</span><span class="o">=</span><span class="n">RMSD</span><span class="p">)</span>
+
+<span class="c1">### plot cluster data</span>
+<span class="c1"># here: TSNE-transformed data with n_clusters = 10</span>
+<span class="c1"># also: plot cluster centers with different colors</span>
+<span class="c1">#     - red dot: n20 centers</span>
+<span class="c1">#     - black dot: n10 centers</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_data</span><span class="p">(</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">tsne</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="c1">### plot cluster data</span>
+<span class="c1"># here: TSNE-transformed data with n_clusters = 20</span>
+<span class="c1"># also: plot cluster centers with different colors</span>
+<span class="c1">#     - red dot: n20 centers</span>
+<span class="c1">#     - black dot: n10 centers</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_data</span><span class="p">(</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">tsne</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="c1">### print table with cluster scores stats</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">cluster_scores</span><span class="o">=</span><span class="n">cluster10_scores</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">cluster_scores</span><span class="o">=</span><span class="n">cluster20_scores</span><span class="p">)</span>
+
+<span class="c1">### print table with cluster accuracy stats</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">cluster_accuracy</span><span class="o">=</span><span class="n">cluster10_accuracy</span><span class="p">)</span>
+<span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">cluster_accuracy</span><span class="o">=</span><span class="n">cluster20_accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-right" title="pyrexMD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="about_link.html" class="btn btn-neutral float-left" title="About pyrexMD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

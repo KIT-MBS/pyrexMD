@@ -2,9 +2,9 @@
 [![GH Actions CI](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml/badge.svg)](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-ci.yml)
 [![codecov](https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW)](https://codecov.io/gh/KIT-MBS/pyrexMD)
 
-
-pyrexMD
-=======
+\
+About pyrexMD
+=============
 
 `pyrexMD` is designed as an interactive 'all-purpose' toolkit for research
 projects which rely on (contact-guided) Replica Exchange Molecular Dynamics.
@@ -63,3 +63,7 @@ and open htmlcov with any browser to see code coverage, e.g.
 To run one of the short examples, go into the pyrexMD/examples folder and run
 
     jupyter notebook
+
+## Contributing to pyrexMD
+`pyrexMD` is free and open source under the MIT license. Feel free to ask questions,
+report bugs, fork, etc.

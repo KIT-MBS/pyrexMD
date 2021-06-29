@@ -92,8 +92,8 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about_link.html">About pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html#pyrexmd">pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_guide_link.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Docs</a></li>
 </ul>
 
             
@@ -166,12 +166,66 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: cluster.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 23.06.2021</span>
+<span class="c1"># @Last modified time: 29.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions for:</span>
 <span class="sd">    - decoy clustering</span>
 <span class="sd">    - post-REX clustering (for analyses)</span>
+
+
+<span class="sd">Example:</span>
+
+<span class="sd">    import pyrexMD.misc as misc</span>
+<span class="sd">    import pyrexMD.decoy.cluster as clu</span>
+
+<span class="sd">    # load data</span>
+<span class="sd">    QDATA = misc.pickle_load(&quot;./data/QDATA.pickle&quot;)</span>
+<span class="sd">    RMSD = misc.pickle_load(&quot;./data/RMSD.pickle&quot;)</span>
+<span class="sd">    GDT_TS = misc.pickle_load(&quot;./data/GDT_TS.pickle&quot;)</span>
+<span class="sd">    score_file = &quot;./data/energies.log&quot;</span>
+<span class="sd">    ENERGY = misc.read_file(score_file, usecols=1, skiprows=1)</span>
+<span class="sd">    DM = clu.read_h5(&quot;./data/DM.h5&quot;)</span>
+
+<span class="sd">    # apply TSNE for dimension reduction</span>
+<span class="sd">    tsne = clu.apply_TSNE(DM, n_components=2, perplexity=50, random_state=1)</span>
+
+<span class="sd">    ### apply KMeans on TSNE-transformed data (two variants with low and high cluster number)</span>
+<span class="sd">    # note: here we set the high number only to 20 because our sample is small with only 500 frames</span>
+<span class="sd">    cluster10 = clu.apply_KMEANS(tsne, n_clusters=10, random_state=1)</span>
+<span class="sd">    cluster20 = clu.apply_KMEANS(tsne, n_clusters=20, random_state=1)</span>
+
+<span class="sd">    ### map scores (energies) and accuracy (GDT, RMSD) to clusters</span>
+<span class="sd">    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_file=score_file)</span>
+<span class="sd">    cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=cluster10, GDT=GDT_TS, RMSD=RMSD)</span>
+<span class="sd">    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_file=score_file)</span>
+<span class="sd">    cluster20_accuracy = clu.map_cluster_accuracy(cluster_data=cluster20, GDT=GDT_TS, RMSD=RMSD)</span>
+
+<span class="sd">    ### plot cluster data</span>
+<span class="sd">    # here: TSNE-transformed data with n_clusters = 10</span>
+<span class="sd">    # also: plot cluster centers with different colors</span>
+<span class="sd">    #     - red dot: n20 centers</span>
+<span class="sd">    #     - black dot: n10 centers</span>
+<span class="sd">    clu.plot_cluster_data(cluster10, tsne, ms=40)</span>
+<span class="sd">    clu.plot_cluster_center(cluster10, marker=&quot;o&quot;, color=&quot;red&quot;, ms=20)</span>
+<span class="sd">    clu.plot_cluster_center(cluster20, marker=&quot;o&quot;, color=&quot;black&quot;)</span>
+
+<span class="sd">    ### plot cluster data</span>
+<span class="sd">    # here: TSNE-transformed data with n_clusters = 20</span>
+<span class="sd">    # also: plot cluster centers with different colors</span>
+<span class="sd">    #     - red dot: n20 centers</span>
+<span class="sd">    #     - black dot: n10 centers</span>
+<span class="sd">    clu.plot_cluster_data(cluster20, tsne)</span>
+<span class="sd">    clu.plot_cluster_center(cluster10, marker=&quot;o&quot;, color=&quot;red&quot;, ms=20)</span>
+<span class="sd">    clu.plot_cluster_center(cluster20, marker=&quot;o&quot;, color=&quot;black&quot;)</span>
+
+<span class="sd">    ### print table with cluster scores stats</span>
+<span class="sd">    clu.WF_print_cluster_scores(cluster_data=cluster10, cluster_scores=cluster10_scores)</span>
+<span class="sd">    clu.WF_print_cluster_scores(cluster_data=cluster20, cluster_scores=cluster20_scores)</span>
+
+<span class="sd">    ### print table with cluster accuracy stats</span>
+<span class="sd">    clu.WF_print_cluster_accuracy(cluster_data=cluster10, cluster_accuracy=cluster10_accuracy)</span>
+<span class="sd">    clu.WF_print_cluster_accuracy(cluster_data=cluster20, cluster_accuracy=cluster20_accuracy)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -1240,7 +1294,8 @@
             <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="n">_ndx</span><span class="p">:</span>
                 <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">GDT_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">GDT_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">GDT_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">RMSD_mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">RMSD_std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_accuracy</span><span class="o">.</span><span class="n">RMSD_minmax</span><span class="p">[</span><span class="n">ndx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Saved log as: </span><span class="si">{</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
+    <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="WF_print_cluster_scores"><a class="viewcode-back" href="../../../pyrexMD.decoy.html#pyrexMD.decoy.cluster.WF_print_cluster_scores">[docs]</a><span class="k">def</span> <span class="nf">WF_print_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">cluster_scores</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1294,7 +1349,8 @@
                     <span class="c1"># move scores by 1 digit if positive (looks nicer)</span>
                     <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ndx</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">^4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_data</span><span class="o">.</span><span class="n">compact_score</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> |</span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">std</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">max</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">cluster_scores</span><span class="o">.</span><span class="n">DELTA</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Saved log as: </span><span class="si">{</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">_misc</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
+    <span class="k">return</span></div>
 <span class="c1">################################################################################</span>
 <span class="c1">################################################################################</span>
 <span class="c1">### CLASSES / OBJECTS</span>

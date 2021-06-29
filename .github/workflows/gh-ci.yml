@@ -14,8 +14,7 @@ jobs:
         python-version: ['3.8']
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install MPI (ubuntu)
@@ -76,8 +75,7 @@ jobs:
         python-version: ['3.8']
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install MPI (ubuntu)
@@ -111,8 +109,7 @@ jobs:
         python-version: ['3.8']
     steps:
     - uses: actions/checkout@master
-    - name: Set up Python
-      uses: actions/setup-python@master
+    - uses: actions/setup-python@master
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install MPI (ubuntu)
@@ -171,28 +168,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         python-version: 3.8
-    # trigger if the previous workflow succeeded
-    - name: Load cached python modules
-      uses: actions/cache@v2
-      id: cache-python
-      with:
-        path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', './**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
     - name: Install dependencies (build-docs)
       run: |
         python -m pip install --upgrade pip
         pip install sphinx sphinx-rtd-theme m2r2
-    - name: Cache docs
-      uses: actions/cache@v2
-      id: cache-docs
-      with:
-        path: pyrexMD/doc/sphinx/_build/html/
-        key: ${{ hashFiles('pyrexMD/doc/sphinx/_build/html/**') }}
-    - name: build-docs
+    - name: Build docs
       run: |
         export CWD=$(pwd)
         cd pyrexMD/doc/sphinx
@@ -200,25 +183,10 @@ jobs:
         make html
         touch _build/html/.nojekyll
         cd $CWD
-
-
-  ## job 5 ##
-  deploy-docs:
-    needs: update-docs
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up node.js
-      uses: actions/setup-node@v2
+    - uses: actions/setup-node@v2
       with:
         node-version: '12.x'
     - run : npm install @jamesives/github-pages-deploy-action
-    - name: Load cached docs
-      uses: actions/cache@v2
-      id: cache-docs
-      with:
-        path: pyrexMD/doc/sphinx/_build/html/
-        key: ${{ hashFiles('pyrexMD/doc/sphinx/_build/html/**') }}
     - name: Deploy docs to gh-pages
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:

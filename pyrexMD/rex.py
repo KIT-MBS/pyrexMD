@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 22.06.2021
+# @Last modified time: 29.06.2021
 
 
 """
@@ -49,13 +49,14 @@ Module contents:
 """
 
 #from __future__ import division, print_function
-from builtins import next
 from tqdm.notebook import tqdm
 import pyrexMD.misc as _misc
 import pyrexMD.gmx as _gmx
 import pyrexMD.topology as _top
 import numpy as np
 import glob
+import os
+from MDAnalysis import Universe
 
 
 def apply_ff_best_decoys(best_decoys_dir, n_decoys=None, odir="./PDBID_best_decoys_ref",
@@ -141,10 +142,11 @@ def apply_ff_best_decoys(best_decoys_dir, n_decoys=None, odir="./PDBID_best_deco
     return odir
 
 
-def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=False, **kwargs):
+def assign_best_decoys(best_decoys_dir, rex_dir="./", verbose=False, **kwargs):
     """
     Assigns decoys based on ranking taken from <best_decoys_dir>/decoy_scores.log
     to each rex subdirectory rex_1, rex_2, ...
+    Also creates a 'rex_0_get_system_parameters' directory, which is a copy of rex_1.
 
     Args:
         best_decoys_dir (str): directory with
@@ -152,26 +154,34 @@ def assign_best_decoys(best_decoys_dir, rex_dir="./", create_dir=True, verbose=F
           - best decoys (output of cluster.rank_cluster_decoys() -> cluster.copy_cluster.decoys())
           - decoys_score.log (output of cluster.log_cluster.decoys())
         rex_dir (str): rex directory with folders rex_1, rex_2, ...
-        create_dir (bool)
         verbose (bool)
 
     Keyword Args:
         cprint_color (str)
+        realpath (bool): prints realpaths
     """
-    default = {"cprint_color": "blue"}
+    default = {"cprint_color": "blue",
+               "realpath": False}
     cfg = _misc.CONFIG(default, **kwargs)
-
+    ############################################################################
     DECOY_PATHS = [f"{best_decoys_dir}/{item}" for item in
                    _misc.read_file(f"{best_decoys_dir}/decoy_scores.log",
                                    usecols=0, skiprows=1, dtype=str)]
+
     for ndx, item in enumerate(DECOY_PATHS, start=1):
-        target = _misc.joinpath(rex_dir, f"rex_{ndx}")
-        if create_dir:
-            _misc.mkdir(target, verbose=verbose)
+        target = _misc.joinpath(rex_dir, f"rex_{ndx}/")
+        _misc.mkdir(target)
         _misc.cp(item, target, verbose=verbose)
+        if ndx == 1:    # rex_0_get_system_parameters: copy of rex_1
+            target = _misc.joinpath(rex_dir, "rex_0_get_system_parameters/")
+            _misc.mkdir(target)
+            _misc.cp(item, target, verbose=verbose)
 
     if not verbose:
-        _misc.cprint(f"Copied source files to directories: {_misc.realpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
+        if cfg.realpath:
+            _misc.cprint(f"Copied source files to directories: {_misc.realpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
+        else:
+            _misc.cprint(f"Copied source files to directories: {_misc.relpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
     return
 
 
@@ -221,36 +231,106 @@ def get_REX_PDBS(main_dir="./", realpath=True):
     return REX_PDBS
 
 
-def test_REX_PDBS(REX_PDBS, ref_pdb, sel="protein", verbose=True, **kwargs):
+def check_REX_PDBS(REX_PDBS, ref_pdb=None, sel="protein", verbose=True, **kwargs):
     """
-    Test if all REX PDBS have equal RES, ATOM, NAME arrays. Uses ref as "template PDB".
+    Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb
+    as template for tests if passed, otherwise uses first REX pdb as template.
+
+    .. Note ::
+
+        - if target is known -> apply ff -> save as ref -> use as ref
+        - if target is unknown -> use ref_pdb=None or use one of REX_PDBS -> apply ff -> use as ref
+        - use check2_REX_PDBS() for debugging if check_REX_PDBS() fails.
 
     Args:
         REX_PDBS (list): output of get_REX_PDBS()
-        ref_pdb (str):
+        ref_pdb (None, str):
           | reference pdb
-          | if target is known: apply ff -> save as ref -> use as ref
-          | if target is unknown: use one of REX_PDBS -> apply ff -> use as ref
+          | None: use ref_pdb as template for tests
+          | str: use first REX pdb as template for tests
         sel (str): selection string
+        ref_is_known(bool):
+          | True:  use ref_pdb as template for tests
+          | False: use first REX DPB as template for tests
         verbose (bool)
-
-    Keyword Args:
-        cprint_color (None, str)
     """
-    default = {"cprint_color": "green"}
-    cfg = _misc.CONFIG(default, **kwargs)
-    ############################################################################
-    # treat first pdb as "template pdb" with target array lengths
-    template_pdb = ref_pdb
+    if ref_pdb is None:
+        # treat first pdb as "template pdb" with target arrays
+        template_pdb = REX_PDBS[0]
+        if verbose:
+            _misc.cprint("Using first REX PDB as template for tests...", "red")
+    else:
+        # treat ref pdb as "template pdb" with target arrays
+        template_pdb = ref_pdb
+        if verbose:
+            _misc.cprint("Using ref_pdb as template for tests...", "blue")
+
     template_RESID, template_RESNAME, template_ID, template_NAME = _top.parsePDB(template_pdb, sel=sel)
 
     for pdb_file in tqdm(REX_PDBS):
         RESID, RESNAME, ID, NAME = _top.parsePDB(template_pdb, sel=sel)
 
         if template_RESID != RESID or template_ID != ID or template_NAME != NAME:
-            raise _misc.Error(f"Parsed arrays of {template_pdb} do not match with {pdb_file}.")
-    if verbose:
-        _misc.cprint("All tested PDBs have equal RES, ID, NAME arrays.", cfg.cprint_color)
+            raise _misc.Error(f"Parsed arrays of {template_pdb} do not match with {pdb_file}. Use check2_REX_PDBS() for debugging.")
+
+    _misc.cprint("Check passed: All REX PDBs have equal RES, ID, NAME arrays", "green")
+    return
+
+
+def check2_REX_PDBS(REX_PDBS, ref_pdb=None, verbose=False):
+    """
+    Used for debbuging if check_REX_PDBS() fails.
+
+    Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb
+    as template for tests if passed, otherwise uses first REX pdb as template.
+
+    .. Note ::
+
+        - if target is known -> apply ff -> save as ref -> use as ref
+        - if target is unknown -> use ref_pdb=None or use one of REX_PDBS -> apply ff -> use as ref
+
+    Args:
+        REX_PDBS (list): output of get_REX_PDBS()
+        ref_pdb (None, str):
+          | reference pdb
+          | None: use ref_pdb as template for tests
+          | str: use first REX pdb as template for tests
+        sel (str): selection string
+        ref_is_known(bool):
+          | True:  use ref_pdb as template for tests
+          | False: use first REX DPB as template for tests
+        verbose (bool)
+    """
+    if ref_pdb is None:
+        ref_pdb = REX_PDBS[0]
+    _misc.cprint(f"ref pdb: {ref_pdb}", "blue")
+
+    check_passed = True
+    for test_pdb in tqdm(REX_PDBS):
+        x1 = Universe(ref_pdb)
+        x2 = Universe(test_pdb)
+
+        if np.all(x1.residues.resnames == x2.residues.resnames) == False:
+            check_passed = False
+            print("###########################################################################################")
+            _misc.cprint(f"RES NAMES are not equal ({test_pdb}):", "red")
+            print(x1.residues.resnames == x2.residues.resnames)
+        elif verbose:
+            print("###########################################################################################")
+            _misc.cprint(f"RES NAMES are equal ({test_pdb}).", "green")
+        if np.all(x1.atoms.names == x2.atoms.names) == False:
+            check_passed = False
+            _misc.cprint(f"ATOM NAMES are not equal ({test_pdb}):", "red")
+            for i in range(len(x1.atoms.names)):
+                if x1.atoms.names[i] != x2.atoms.names[i]:
+                    _misc.cprint(f"resid1: {x1.atoms.resids[i]}    resid2: {x2.atoms.resids[i]} || atom-id1: {x1.atoms.ids[i]}    atom-id2: {x2.atoms.ids[i]} || atom-name1:{x1.atoms.names[i]}    atom-name2:{x2.atoms.names[i]}")
+        elif verbose:
+            _misc.cprint(f"ATOM NAMES are equal ({test_pdb}).", "green")
+
+    if check_passed:
+        _misc.cprint("Check passed: All REX PDBs have equal RES, ID, NAME arrays", "green")
+    else:
+        _misc.cprint("Check failed.", "red")
     return
 
 
@@ -290,7 +370,7 @@ def WF_getParameter_boxsize(logfile="./logs/editconf.log", base=0.2, verbose=Tru
         if boxsize is None:
             raise _misc.Error("No boxsize parameters found.")
         else:
-            _misc.cprint(f"suggested box size: {boxsize}", "green", end='')
+            _misc.cprint(f"suggested box size: {boxsize}", "green")
     return boxsize
 
 
@@ -319,11 +399,89 @@ def WF_getParameter_maxsol(logfile="./logs/solvate.log", maxsol_reduce=50, verbo
                 if verbose:
                     _misc.cprint(f"Reading logfile: {logfile}")
                     _misc.cprint(line, "blue", end="")
-                    _misc.cprint(f"suggested max solution: {maxsol}", "green", end="")
+                    _misc.cprint(f"suggested max solution: {maxsol}", "green")
 
     if maxsol is None:
         raise _misc.Error("No solution parameter found.")
     return maxsol
+
+
+def WF_get_system_parameters(wdir, verbose=False, **kwargs):
+    """
+    Get system parameters "boxsize" and "maxsol" for system in working directory
+    wdir. Typically, wdir is supposed to be the folder "rex_0_get_system_parameters"
+    which is created during the Workflow for setup of REX MD simulations during
+    the execution of rex.assign_best_decoys().
+
+    Args:
+        wdir (str): working directory
+        verbose (bool)
+
+    Keyword Args:
+        d (int): distance between model and system edges. Defaults to 2.
+        bt (str): box type. Defaults to "cubic".
+
+    Returns:
+        boxsize (float)
+            suggested value for maximum boxsize
+        maxsol (int)
+            suggested value for maximum solvent molecules
+    """
+    default = {"d": 2,
+               "bt": "cubic"}
+    cfg = _misc.CONFIG(default, **kwargs)
+    ########################################################################
+    if not os.path.isdir(wdir):
+        raise ValueError("The working directory wdir does not exist or is not a directory.")
+
+    # save cwd and go to wdir
+    cwd = _misc.cwd()
+    wdir = _misc.cd(wdir)
+
+    pdbs = glob.glob("*.pdb")
+    ref_pdbs = glob.glob("*_ref.pdb")
+    if len(ref_pdbs) > 1:
+        raise ValueError(f"Found multiple '_ref.pdbs' in working directory {wdir}.")
+    if len(ref_pdbs) == 1:
+        decoy_pdb = ref_pdbs[0]
+    if len(ref_pdbs) == 0:
+        _misc.cprint("Found no '_ref.pdbs' in working directory {wdir}.")
+    if len(pdbs) > 1:
+        raise ValueError(f"Found multiple pdbs in working directory {wdir}.")
+    if len(pdbs) == 1:
+        decoy_pdb = pdbs[0]
+    if len(pdbs) == 0:
+        raise ValueError("Found no pdbs in working directory {wdir}.")
+
+    with _misc.HiddenPrints(verbose=verbose):
+        # generate topology
+        protein_gro = _gmx.pdb2gmx(f=decoy_pdb, verbose=False)
+
+        # generate box
+        box_gro = _gmx.editconf(f=protein_gro, o="box.gro", bt=cfg.bt, d=cfg.d, verbose=False)
+
+    # get boxsize
+    boxsize = WF_getParameter_boxsize("./logs/editconf_1.log")
+
+    with _misc.HiddenPrints(verbose=verbose):
+        # apply fixed boxsize
+        box_gro = _gmx.editconf(f=protein_gro, o="box.gro", bt=cfg.bt, box=boxsize, c=True, verbose=False)
+
+    if boxsize == WF_getParameter_boxsize("./logs/editconf_2.log"):
+        _misc.cprint(f"Success: new box vectors have fixed size: {boxsize}", "green")
+    else:
+        _misc.cprint(f"Check above if new box vectors have fixed size: {boxsize}", "red")
+
+    with _misc.HiddenPrints(verbose=verbose):
+        # generate solvent
+        _ = _gmx.solvate(cp=box_gro, verbose=verbose)
+
+    # get maximum solvent number
+    maxsol = WF_getParameter_maxsol("./logs/solvate_1.log")
+
+    # go back to cwd
+    _misc.cd(cwd)
+    return boxsize, maxsol
 
 
 def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
@@ -344,7 +502,7 @@ def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
         _misc.cprint(f"Using decoy pdb: {decoy_pdb}")
 
         # 1) generate topology
-        _misc.cprint(f"\nGenerating topology...", "red")
+        _misc.cprint("\nGenerating topology...", "red")
         with _misc.HiddenPrints(verbose=verbose):
             protein_gro = _gmx.pdb2gmx(f=decoy_pdb, verbose=False)
 
@@ -359,7 +517,7 @@ def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
             _gmx.solvate(cp="box.gro", maxsol=maxsol, verbose=verbose_gmx)
 
         # 4) generate ions
-        _misc.cprint(f"Generating ions...", "red")
+        _misc.cprint("Generating ions...", "red")
         with _misc.HiddenPrints(verbose=verbose):
             _gmx.grompp(f="../ions.mdp", o="ions.tpr", c="solvent.gro", p="topol.top", verbose=verbose_gmx)
             _gmx.genion(s="ions.tpr", o="ions.gro", p="topol.top", verbose=False)
@@ -387,7 +545,7 @@ def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
         _misc.cd(rex_dir)
 
         # 5) energy minimization
-        _misc.cprint(f"Performing energy minimization...", "red")
+        _misc.cprint("Performing energy minimization...", "red")
         with _misc.HiddenPrints(verbose=verbose):
             _ = _gmx.grompp(f="../min.mdp", o="em.tpr", c="ions.gro", p="topol.top")
             if nsteps is None:

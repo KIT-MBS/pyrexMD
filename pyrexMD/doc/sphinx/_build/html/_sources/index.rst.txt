@@ -10,7 +10,8 @@ Welcome to pyrexMD's documentation!
    :maxdepth: 2
 
    About pyrexMD <about_link>
-   modules
+   Quick Guide <quick_guide_link>
+   API Docs <modules>
 
 Indices and tables
 ==================

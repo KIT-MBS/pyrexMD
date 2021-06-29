@@ -1,0 +1,61 @@
+STDERR:
+
+                     :-) GROMACS - gmx editconf, 2020.6 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar      Christian Blau   Viacheslav Bolnykh     Kevin Boyd    
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra       Alan Gray     
+  Gerrit Groenhof     Anca Hamuraru    Vincent Hindriksen  M. Eric Irrgang  
+  Aleksei Iupinov   Christoph Junghans     Joe Jordan     Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul    Viveca Lindahl    Magnus Lundborg     Erik Marklund   
+    Pascal Merz     Pieter Meulenhoff    Teemu Murtola       Szilard Pall   
+    Sander Pronk      Roland Schulz      Michael Shirts    Alexey Shvetsov  
+   Alfons Sijbers     Peter Tieleman      Jon Vincent      Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf      Artem Zhmurov   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2019, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx editconf, version 2020.6
+Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
+Data prefix:  /usr/local/gromacs_2020
+Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters
+Command line:
+  gmx_mpi editconf -f /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/protein.gro -o /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/box.gro -bt cubic -d 2
+
+
+Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/box.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/#box.gro.1#
+
+GROMACS reminds you: "All sorts of things can happen when you're open to new ideas and playing around with things." (Stephanie Kwolek, inventor of Kevlar)
+
+
+STDOUT:
+
+Note that major changes are planned in future for editconf, to improve usability and utility.
+Read 1443 atoms
+Volume: 69.4631 nm^3, corresponds to roughly 31200 electrons
+No velocities found
+    system size :  3.681  4.557  4.142 (nm)
+    diameter    :  5.398               (nm)
+    center      :  0.560 -0.742  1.739 (nm)
+    box vectors :  3.681  4.556  4.142 (nm)
+    box angles  :  90.00  90.00  90.00 (degrees)
+    box volume  :  69.46               (nm^3)
+    shift       :  4.139  5.441  2.960 (nm)
+new center      :  4.699  4.699  4.699 (nm)
+new box vectors :  9.398  9.398  9.398 (nm)
+new box angles  :  90.00  90.00  90.00 (degrees)
+new box volume  : 830.16               (nm^3)
+

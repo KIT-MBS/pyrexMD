@@ -1,6 +1,6 @@
 STDERR:
 
-                     :-) GROMACS - gmx solvate, 2020.5 (-:
+                     :-) GROMACS - gmx solvate, 2020.6 (-:
 
                             GROMACS is written by:
      Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
@@ -28,7 +28,7 @@ under the terms of the GNU Lesser General Public License
 as published by the Free Software Foundation; either version 2.1
 of the License, or (at your option) any later version.
 
-GROMACS:      gmx solvate, version 2020.5
+GROMACS:      gmx solvate, version 2020.6
 Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 Data prefix:  /usr/local/gromacs_2020
 Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters
@@ -50,8 +50,6 @@ Found 1 molecule type:
 Generated solvent containing 78276 atoms in 26092 residues
 Writing generated configuration to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/solvent.gro
 
-Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/solvent.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/#solvent.gro.1#
-
 Output configuration contains 79719 atoms in 26184 residues
 Volume                 :     830.584 (nm^3)
 Density                :     961.442 (g/l)
@@ -61,7 +59,7 @@ Processing topology
 
 Back Off! I just backed up topol.top to ./#topol.top.1#
 
-GROMACS reminds you: "If everything seems under control, you're just not going fast enough." (Mario Andretti)
+GROMACS reminds you: "People who do QM/MM must be rather patient and enjoy quality over speed" (Kresten Lindorff-Larsen)
 
 
 STDOUT:

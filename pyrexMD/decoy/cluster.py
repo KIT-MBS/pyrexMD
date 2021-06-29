@@ -2,12 +2,66 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 29.06.2021
 
 """
 This module contains functions for:
     - decoy clustering
     - post-REX clustering (for analyses)
+
+
+Example:
+
+    import pyrexMD.misc as misc
+    import pyrexMD.decoy.cluster as clu
+
+    # load data
+    QDATA = misc.pickle_load("./data/QDATA.pickle")
+    RMSD = misc.pickle_load("./data/RMSD.pickle")
+    GDT_TS = misc.pickle_load("./data/GDT_TS.pickle")
+    score_file = "./data/energies.log"
+    ENERGY = misc.read_file(score_file, usecols=1, skiprows=1)
+    DM = clu.read_h5("./data/DM.h5")
+
+    # apply TSNE for dimension reduction
+    tsne = clu.apply_TSNE(DM, n_components=2, perplexity=50, random_state=1)
+
+    ### apply KMeans on TSNE-transformed data (two variants with low and high cluster number)
+    # note: here we set the high number only to 20 because our sample is small with only 500 frames
+    cluster10 = clu.apply_KMEANS(tsne, n_clusters=10, random_state=1)
+    cluster20 = clu.apply_KMEANS(tsne, n_clusters=20, random_state=1)
+
+    ### map scores (energies) and accuracy (GDT, RMSD) to clusters
+    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_file=score_file)
+    cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=cluster10, GDT=GDT_TS, RMSD=RMSD)
+    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_file=score_file)
+    cluster20_accuracy = clu.map_cluster_accuracy(cluster_data=cluster20, GDT=GDT_TS, RMSD=RMSD)
+
+    ### plot cluster data
+    # here: TSNE-transformed data with n_clusters = 10
+    # also: plot cluster centers with different colors
+    #     - red dot: n20 centers
+    #     - black dot: n10 centers
+    clu.plot_cluster_data(cluster10, tsne, ms=40)
+    clu.plot_cluster_center(cluster10, marker="o", color="red", ms=20)
+    clu.plot_cluster_center(cluster20, marker="o", color="black")
+
+    ### plot cluster data
+    # here: TSNE-transformed data with n_clusters = 20
+    # also: plot cluster centers with different colors
+    #     - red dot: n20 centers
+    #     - black dot: n10 centers
+    clu.plot_cluster_data(cluster20, tsne)
+    clu.plot_cluster_center(cluster10, marker="o", color="red", ms=20)
+    clu.plot_cluster_center(cluster20, marker="o", color="black")
+
+    ### print table with cluster scores stats
+    clu.WF_print_cluster_scores(cluster_data=cluster10, cluster_scores=cluster10_scores)
+    clu.WF_print_cluster_scores(cluster_data=cluster20, cluster_scores=cluster20_scores)
+
+    ### print table with cluster accuracy stats
+    clu.WF_print_cluster_accuracy(cluster_data=cluster10, cluster_accuracy=cluster10_accuracy)
+    clu.WF_print_cluster_accuracy(cluster_data=cluster20, cluster_accuracy=cluster20_accuracy)
 """
 
 
@@ -1076,7 +1130,8 @@ def WF_print_cluster_accuracy(cluster_data, cluster_accuracy, targets=[None], sa
             for ndx in _ndx:
                 fout.write(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {cluster_accuracy.GDT_mean[ndx]:<6}  {cluster_accuracy.GDT_std[ndx]:<6} {cluster_accuracy.GDT_minmax[ndx][0]:<6}  {cluster_accuracy.GDT_minmax[ndx][1]:<6} | {cluster_accuracy.RMSD_mean[ndx]:<5}  {cluster_accuracy.RMSD_std[ndx]:<5}  {cluster_accuracy.RMSD_minmax[ndx][0]:<5}  {cluster_accuracy.RMSD_minmax[ndx][1]:<5}\n")
         print(f"\n Saved log as: {save_as}")
-    return _misc.realpath(save_as)
+        return _misc.realpath(save_as)
+    return
 
 
 def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_as=None):
@@ -1130,7 +1185,8 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
                     # move scores by 1 digit if positive (looks nicer)
                     fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}   {cluster_scores.DELTA[ndx]:<6}\n")
         print(f"\n Saved log as: {save_as}")
-    return _misc.realpath(save_as)
+        return _misc.realpath(save_as)
+    return
 ################################################################################
 ################################################################################
 ### CLASSES / OBJECTS

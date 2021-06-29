@@ -1,6 +1,6 @@
 STDERR:
 
-                     :-) GROMACS - gmx pdb2gmx, 2020.5 (-:
+                     :-) GROMACS - gmx pdb2gmx, 2020.6 (-:
 
                             GROMACS is written by:
      Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
@@ -28,7 +28,7 @@ under the terms of the GNU Lesser General Public License
 as published by the Free Software Foundation; either version 2.1
 of the License, or (at your option) any later version.
 
-GROMACS:      gmx pdb2gmx, version 2020.5
+GROMACS:      gmx pdb2gmx, version 2020.6
 Executable:   /usr/local/gromacs_2020/bin/gmx_mpi
 Data prefix:  /usr/local/gromacs_2020
 Working dir:  /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters
@@ -48,8 +48,6 @@ Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ild
 Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/rna.hdb
 Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.n.tdb
 Opening force field file /usr/local/gromacs_2020/share/gromacs/top/amber99sb-ildn.ff/aminoacids.c.tdb
-
-Back Off! I just backed up topol.top to ./#topol.top.1#
 8 out of 8 lines of specbond.dat converted successfully
 Special Atom Distance matrix:
                    MET40   MET42
@@ -72,13 +70,9 @@ Total mass 10124.714 a.m.u.
 Total charge 1.000 e
 Writing topology
 
-Back Off! I just backed up posre.itp to ./#posre.itp.1#
-
 Writing coordinate file...
 
-Back Off! I just backed up /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/protein.gro to /home/arthur/Dropbox/#PhD/#my_scripts/myPKG/pyrexMD/pyrexMD/examples/files/rex/rex_0_get_system_parameters/#protein.gro.1#
-
-GROMACS reminds you: "Everybody has a plan until they get punched in the mouth" (Mike Tyson)
+GROMACS reminds you: "People who do QM/MM must be rather patient and enjoy quality over speed" (Kresten Lindorff-Larsen)
 
 
 STDOUT:

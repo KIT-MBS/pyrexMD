@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 29.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -551,7 +551,7 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     return fig, ax
 
 
-def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid', **kwargs):
+def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid', verbose=True, **kwargs):
     """
     Plots true positive rate (TPR) for number of used DCA contacts.
 
@@ -574,6 +574,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
         d_cutoff (float): cutoff distance for native contacts
         sel (str): selection string
         pdbid (str): pdbid; used for plot title and figure name
+        verbose (bool): prints the total residue length of reference
 
     Keyword Args:
         DCA_cols (tuple, list): columns containing the RES pairs in DCA_fin
@@ -716,6 +717,8 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
         if cfg.nDCA_opt_color is not None:
             _misc.set_pad(ax, xpad=10, ypad=10)    # set padding after tight_layout()
 
+        if verbose:
+            _misc.cprint(f"Reference has {len(ref.residues)} residues", "blue")
         if cfg.save_plot:
             _misc.savefig(filename=f"{pdbid}_Fig_DCA_TPR.png", filedir="./plots")
         if cfg.save_log:

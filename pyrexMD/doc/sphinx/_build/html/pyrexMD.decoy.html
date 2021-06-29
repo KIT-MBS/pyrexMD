@@ -93,8 +93,8 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about_link.html">About pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_link.html#pyrexmd">pyrexMD</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyrexMD</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_guide_link.html">Quick Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Docs</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html">contents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.core">pyrexMD.core module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
@@ -576,6 +576,49 @@
 </ul>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p>import pyrexMD.misc as misc
+import pyrexMD.decoy.cluster as clu</p>
+<p># load data
+QDATA = misc.pickle_load(“./data/QDATA.pickle”)
+RMSD = misc.pickle_load(“./data/RMSD.pickle”)
+GDT_TS = misc.pickle_load(“./data/GDT_TS.pickle”)
+score_file = “./data/energies.log”
+ENERGY = misc.read_file(score_file, usecols=1, skiprows=1)
+DM = clu.read_h5(“./data/DM.h5”)</p>
+<p># apply TSNE for dimension reduction
+tsne = clu.apply_TSNE(DM, n_components=2, perplexity=50, random_state=1)</p>
+<p>### apply KMeans on TSNE-transformed data (two variants with low and high cluster number)
+# note: here we set the high number only to 20 because our sample is small with only 500 frames
+cluster10 = clu.apply_KMEANS(tsne, n_clusters=10, random_state=1)
+cluster20 = clu.apply_KMEANS(tsne, n_clusters=20, random_state=1)</p>
+<p>### map scores (energies) and accuracy (GDT, RMSD) to clusters
+cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_file=score_file)
+cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=cluster10, GDT=GDT_TS, RMSD=RMSD)
+cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_file=score_file)
+cluster20_accuracy = clu.map_cluster_accuracy(cluster_data=cluster20, GDT=GDT_TS, RMSD=RMSD)</p>
+<p>### plot cluster data
+# here: TSNE-transformed data with n_clusters = 10
+# also: plot cluster centers with different colors
+#     - red dot: n20 centers
+#     - black dot: n10 centers
+clu.plot_cluster_data(cluster10, tsne, ms=40)
+clu.plot_cluster_center(cluster10, marker=”o”, color=”red”, ms=20)
+clu.plot_cluster_center(cluster20, marker=”o”, color=”black”)</p>
+<p>### plot cluster data
+# here: TSNE-transformed data with n_clusters = 20
+# also: plot cluster centers with different colors
+#     - red dot: n20 centers
+#     - black dot: n10 centers
+clu.plot_cluster_data(cluster20, tsne)
+clu.plot_cluster_center(cluster10, marker=”o”, color=”red”, ms=20)
+clu.plot_cluster_center(cluster20, marker=”o”, color=”black”)</p>
+<p>### print table with cluster scores stats
+clu.WF_print_cluster_scores(cluster_data=cluster10, cluster_scores=cluster10_scores)
+clu.WF_print_cluster_scores(cluster_data=cluster20, cluster_scores=cluster20_scores)</p>
+<p>### print table with cluster accuracy stats
+clu.WF_print_cluster_accuracy(cluster_data=cluster10, cluster_accuracy=cluster10_accuracy)
+clu.WF_print_cluster_accuracy(cluster_data=cluster20, cluster_accuracy=cluster20_accuracy)</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyrexMD.decoy.cluster.CLUSTER_DATA">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.decoy.cluster.</span></span><span class="sig-name descname"><span class="pre">CLUSTER_DATA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inertia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wss_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compact_score</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/decoy/cluster.html#CLUSTER_DATA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.decoy.cluster.CLUSTER_DATA" title="Permalink to this definition">¶</a></dt>
