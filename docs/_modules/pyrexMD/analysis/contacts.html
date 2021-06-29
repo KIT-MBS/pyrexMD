@@ -91,9 +91,9 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html">About pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about_link.html#pyrexmd">pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Docs</a></li>
 </ul>
 
             
@@ -166,7 +166,7 @@
 <span class="c1"># @Date:   07.05.2021</span>
 <span class="c1"># @Filename: contacts.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 21.06.2021</span>
+<span class="c1"># @Last modified time: 29.06.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains functions related to native contact and bias contact analyses.</span>
@@ -715,7 +715,7 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
 
 
-<div class="viewcode-block" id="plot_DCA_TPR"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.plot_DCA_TPR">[docs]</a><span class="k">def</span> <span class="nf">plot_DCA_TPR</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">pdbid</span><span class="o">=</span><span class="s1">&#39;pdbid&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_DCA_TPR"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.plot_DCA_TPR">[docs]</a><span class="k">def</span> <span class="nf">plot_DCA_TPR</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="p">,</span> <span class="n">n_DCA</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="n">pdbid</span><span class="o">=</span><span class="s1">&#39;pdbid&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots true positive rate (TPR) for number of used DCA contacts.</span>
 
@@ -738,6 +738,7 @@
 <span class="sd">        d_cutoff (float): cutoff distance for native contacts</span>
 <span class="sd">        sel (str): selection string</span>
 <span class="sd">        pdbid (str): pdbid; used for plot title and figure name</span>
+<span class="sd">        verbose (bool): prints the total residue length of reference</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        DCA_cols (tuple, list): columns containing the RES pairs in DCA_fin</span>
@@ -880,6 +881,8 @@
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">nDCA_opt_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_misc</span><span class="o">.</span><span class="n">set_pad</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>    <span class="c1"># set padding after tight_layout()</span>
 
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="p">)</span><span class="si">}</span><span class="s2"> residues&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_plot</span><span class="p">:</span>
             <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_Fig_DCA_TPR.png&quot;</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;./plots&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_log</span><span class="p">:</span>

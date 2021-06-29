@@ -93,9 +93,9 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about_link.html">About pyrexMD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_link.html#pyrexmd">pyrexMD</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyrexMD</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Docs</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html">contents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.core">pyrexMD.core module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyrexMD.html#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
@@ -1488,7 +1488,7 @@ is protein or nucleic to select pre-defined color map.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.plot_DCA_TPR">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">plot_DCA_TPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#plot_DCA_TPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.plot_DCA_TPR" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">plot_DCA_TPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdbid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdbid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#plot_DCA_TPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.plot_DCA_TPR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots true positive rate (TPR) for number of used DCA contacts.</p>
 <ul class="simple">
 <li><p>calculates shortest RES distance of the selection (only heavy atoms if ignh is True)</p></li>
@@ -1514,6 +1514,7 @@ is protein or nucleic to select pre-defined color map.</p></li>
 <li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance for native contacts</p></li>
 <li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
 <li><p><strong>pdbid</strong> (<em>str</em>) – pdbid; used for plot title and figure name</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – prints the total residue length of reference</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
