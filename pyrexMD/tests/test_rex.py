@@ -2,21 +2,15 @@
 # @Date:   22.06.2021
 # @Filename: test_rex.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 30.06.2021
 
 
 import pyrexMD.misc as misc
 import pyrexMD.rex as rex
-import pyrexMD.gmx as gmx
-import MDAnalysis as mda
-import numpy as np
-from numpy.testing import assert_allclose
 import pathlib
 import pytest
 import os
 import shutil
-import glob
-
 
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
@@ -60,9 +54,9 @@ def test_get_REX_PDBS():
     return
 
 
-def test_test_REX_PDBS():
+def test_check_REX_PDBS():
     REX_PDBS = rex.get_REX_PDBS(realpath=False)
-    rex.test_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb)
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb)
     return
 
 

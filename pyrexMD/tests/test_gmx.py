@@ -2,7 +2,7 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 30.06.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx
@@ -30,7 +30,7 @@ def test_get_sel_code():
     assert gmx._get_sel_code("protein") == "1"
     assert gmx._get_sel_code("ca") == "3"
     assert gmx._get_sel_code("bb") == "4"
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         gmx._get_sel_code("unsupported_selection_string")
     return
 

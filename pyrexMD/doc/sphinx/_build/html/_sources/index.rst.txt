@@ -9,8 +9,8 @@ Welcome to pyrexMD's documentation!
 .. toctree::
    :maxdepth: 2
 
-   About pyrexMD <about_link>
-   Quick Guide <quick_guide_link>
+   About pyrexMD <about_pyrexMD>
+   Quick Guide <quick_guide>
    API Docs <modules>
 
 Indices and tables

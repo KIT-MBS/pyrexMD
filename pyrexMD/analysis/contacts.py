@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 30.06.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -718,7 +718,7 @@ def plot_DCA_TPR(ref, DCA_fin, n_DCA, d_cutoff=6.0, sel='protein', pdbid='pdbid'
             _misc.set_pad(ax, xpad=10, ypad=10)    # set padding after tight_layout()
 
         if verbose:
-            _misc.cprint(f"Reference has {len(ref.residues)} residues", "blue")
+            _misc.cprint(f"Reference has {len(u.residues)} residues", "blue")
         if cfg.save_plot:
             _misc.savefig(filename=f"{pdbid}_Fig_DCA_TPR.png", filedir="./plots")
         if cfg.save_log:
