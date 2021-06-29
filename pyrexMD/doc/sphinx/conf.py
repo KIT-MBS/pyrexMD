@@ -22,8 +22,9 @@ project = 'pyrexMD'
 author = 'Arthur Voronin'
 copyright = '2021, KIT-MBS'
 
+
 # The full version, including alpha/beta/rc tags
-packageversion = str(__import__('pyrexMD').__version__)
+packageversion = packageversion = str(__import__('pyrexMD').__version__)
 release = packageversion
 version = packageversion
 

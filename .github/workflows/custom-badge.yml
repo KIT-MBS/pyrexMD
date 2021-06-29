@@ -38,14 +38,14 @@ jobs:
       ## build: custom
       build-badge-passing: 'https://img.shields.io/badge/build-passing-brightgreen?&logo=github'
       build-badge-failing: 'https://img.shields.io/badge/build-failing-red?&logo=github'
-      build-link: 'https://github.com/ArtVoro/gh-autodoc/'
+      build-link: 'https://github.com/KIT-MBS/pyrexMD/'
       ## ci: custom
       ci-badge-passing: 'https://img.shields.io/badge/GH_Action_CI-passing-brightgreen?&logo=github'
       ci-badge-failing: 'https://img.shields.io/badge/GH_Action_CI-failing-red?&logo=github'
-      ci-link: 'https://github.com/ArtVoro/gh-autodoc/actions/workflows/gh-actions-ci.yml'
+      ci-link: 'https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-actions-ci.yml'
       ## codevoc: original
-      codecov-badge: 'https://codecov.io/gh/ArtVoro/gh-autodoc/branch/master/graph/badge.svg?token=NFDY6BNSZ9'
-      codecov-link: 'https://codecov.io/gh/ArtVoro/gh-autodoc'
+      codecov-badge: 'https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=NFDY6BNSZ9'
+      codecov-link: 'https://codecov.io/gh/KIT-MBS/pyrexMD'
 
     ### note: how to trigger github action steps via job result instead of bash condition
     ## if: ${{ always() && needs.<job-id>.result == 'success' }}

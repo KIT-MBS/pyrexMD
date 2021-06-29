@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 30.06.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -25,6 +25,14 @@ import subprocess
 import time
 import copy
 import termcolor
+
+
+def apply_TEST_NEW_CHANGE2():
+    """
+    BLABLA
+    """
+    x = 1
+    return
 
 
 def apply_matplotlib_rc_settings():

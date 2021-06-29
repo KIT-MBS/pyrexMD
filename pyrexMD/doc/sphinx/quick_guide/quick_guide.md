@@ -85,7 +85,7 @@ Setup of contact-guided REX MD
     rex.prep_REX_mdp(main_dir="./", n_REX=len(rex_dirs))
     rex.prep_REX_tpr(main_dir="./", n_REX=len(rex_dirs))
 
-    # upload run files on HPC and execute production run
+    # next: upload run files on HPC and execute production run
 
 
 
@@ -124,11 +124,7 @@ Interactive Plots
 Contact and Bias Analyses
 --------------------------
 
-    TODO
-    TODO
-    TODO
-    TODO
-
+    TEST NEW CHANGE2
 
 
 GDT and LA Analyses
