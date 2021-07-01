@@ -71,11 +71,11 @@ def test_check2_REX_PDBS():
     REX_PDBS = rex.get_REX_PDBS(realpath=False)
 
     # check pass
-    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb, verbose=True)
-    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=None, verbose=True)
+    rex.check2_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb, verbose=True)
+    rex.check2_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=None, verbose=True)
 
     # check fail
-    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb2, verbose=True)
+    rex.check2_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb2, verbose=True)
     return
 
 
