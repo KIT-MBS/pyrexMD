@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 01.07.2021
 
 
 import pyrexMD.analysis.analysis as ana
@@ -39,7 +39,7 @@ def test_get_timeconversion():
     mobile.trajectory.units["time"] = "ns"
     ana.get_time_conversion(mobile, tu="ps")
 
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         ana.get_time_conversion("wrong_type", tu="ps")
     return
 
@@ -80,7 +80,7 @@ def test_get_RMSF(mock_show):
 
     # coverage 2nd plot case
     val = ana.get_RMSF(mobile, "protein and name CA", plot=True)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         val = ana.get_RMSF("wrong_type", "backbone", plot=True)
     plt.close("all")
     return
@@ -125,7 +125,7 @@ def test_get_Distance_Matrices():
     mobile_list = [f"{pdb}", f"{pdb}"]
     ana.get_Distance_Matrices(mobile_list, flatten=True)
     ana.get_Distance_Matrices(mobile_list, flatten=False)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         mobile_list = [f"{pdb}", f"non_pdb_extension.txt"]
         ana.get_Distance_Matrices(mobile_list)
     return
@@ -157,7 +157,7 @@ def test_get_trendline():
     # coverage
     ana.get_trendline(np.array(X), np.array(Y), compress=2)   # type: array
     ana.get_trendline(np.array(X), np.array(Y), compress=20)  # remainder != 0
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         ana.get_trendline(X, Y[:-2], compress=2)
     return
 

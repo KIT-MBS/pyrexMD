@@ -5,8 +5,7 @@ name: TEST CUSTOM BADGE UPDATE
 ### the entries in README.md, which requires a pull request on each badge update
 
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch
 
 
 jobs:

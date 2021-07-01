@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 01.07.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.contacts as con
@@ -60,7 +60,7 @@ def test_get_NC_distances(mock_show):
     con.get_NC_distances(pdb, pdb, plot=True, save_as="./temp.png")
     misc.rm("./temp.png")
     con.get_NC_distances(pdb, pdb, method="contact_distance")
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         con.get_NC_distances(mobile, ref, method="value_raising_error")
     plt.close("all")
     return
@@ -83,7 +83,7 @@ def test_get_BC_distances(mock_show):
     # coverage
     con.get_BC_distances(mobile, bc=BC_expected, method="contact_distance", save_as="./temp.txt", plot=True)
     misc.rm("./temp.txt")
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         con.get_BC_distances(mobile.filename, bc=BC_expected, method="value_raising_error")
     plt.close("all")
     return
@@ -142,7 +142,7 @@ def test_get_QNative(mock_show):
     # coverage
     con.get_QNative(mobile, ref, sel="protein and name CA", d_cutoff=6.0, plot=True, save_plot=True, save_as="./temp.png")
     misc.rm("./temp.png")
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         con.get_QNative(mobile, ref, sel1="backbone")
     plt.close("all")
     return
@@ -177,7 +177,7 @@ def test_get_QBias_TPFP(mock_show):
 
     # coverage
     con.get_QBias_TPFP(mobile, BC=BC, NC=NC, include_selfcontacts=True, prec=3)
-    # with pytest.raises(misc.Error) as e_info:
+    # with pytest.raises(misc.Error):
     #     con.get_QBias_TPFP(mobile, BC=np.array(BC), NC=NC)
     #     con.get_QBias_TPFP(mobile, BC=BC, NC=np.array(NC))
     return
@@ -192,7 +192,7 @@ def test_get_formed_contactpairs():
 
     # coverage
     con.get_formed_contactpairs(u, cm, include_selfcontacts=True)
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         con.get_formed_contactpairs(u, cm.reshape((20, 4, 5)))
     return
 

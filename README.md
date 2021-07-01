@@ -14,6 +14,7 @@ notebooks and requires `GROMACS` to run MD simulations.
 
 ## Documentation
 You can access the documentation via https://kit-mbs.github.io/pyrexMD/
+<br/>and the quick guide via https://kit-mbs.github.io/pyrexMD/quick_guide.html
 
 
 ## Installation Instructions

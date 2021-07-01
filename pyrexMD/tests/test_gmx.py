@@ -2,7 +2,7 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 01.07.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx
@@ -102,7 +102,7 @@ def test_trjconv():
 
     # coverage
     gmx.trjconv(s=tpr, f=xtc, o="traj_bb.xtc", sel="bb", center=True)
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         gmx.trjconv(s=pdb, f=xtc, o="traj_bb.xtc", sel="bb", center=True)
     return
 
@@ -117,7 +117,7 @@ def test_fix_TRAJ():
     assert xtc_file == misc.realpath("fix_TRAJ.xtc")
 
     # coverage
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         gmx.fix_TRAJ(tpr=tpr, xtc=xtc, o="NOT_A_LIST")
     return
 
@@ -127,7 +127,7 @@ def test_get_RMSD():
     o_file = gmx.get_RMSD(ref, xtc)
     assert o_file == misc.realpath("rmsd.xvg")
     # coverage
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         o_file = gmx.get_RMSD(pdb, xtc)
     return
 
@@ -138,11 +138,11 @@ def test_create_complex():
     assert o_file == misc.realpath("complex.gro")
 
     # coverage
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         gmx.create_complex(pdb, o="complex.gro")
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         gmx.create_complex([pdb], o="complex.gro")
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         gmx.create_complex([pdb, pdb], o="complex.gro")
 
     return
@@ -177,7 +177,7 @@ def test_create_positions_dat():
     # coverage
     file_dir = gmx.create_positions_dat()
     file_dir = gmx.create_positions_dat(nmol=100)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         file_dir = gmx.create_positions_dat(nmol="100")
     return
 

@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 01.07.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.gdt as gdt
@@ -13,7 +13,6 @@ from numpy.testing import assert_allclose
 from unittest.mock import patch
 import pathlib
 import pytest
-import os
 
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
@@ -166,7 +165,7 @@ def test_rank_scores():
     # coverage
     gdt.rank_scores(GDT_TS, GDT_HA, ranking_order="GDT_HA")
     gdt.rank_scores(GDT_TS, GDT_HA, ranking_order=None)
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         gdt.rank_scores(GDT_TS, GDT_HA, ranking_order="invalid_value")
     return
 

@@ -2,7 +2,7 @@
 # @Date:   22.06.2021
 # @Filename: test_dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 27.06.2021
+# @Last modified time: 01.07.2021
 
 
 import pyrexMD.misc as misc
@@ -101,6 +101,6 @@ def test_get_chi1_values():
 def test_get_chi2_values():
     # coverage: 1l2y has no chi2
     mobile = mda.Universe(tpr, xtc)
-    with pytest.raises(AttributeError) as e_info:
+    with pytest.raises(AttributeError):
         val = dih.get_chi2_values(mobile, sel="protein")
     return

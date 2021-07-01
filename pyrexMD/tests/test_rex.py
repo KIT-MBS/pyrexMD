@@ -2,7 +2,7 @@
 # @Date:   22.06.2021
 # @Filename: test_rex.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 01.07.2021
 
 
 import pyrexMD.misc as misc
@@ -21,8 +21,9 @@ main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main direc
 cwd = misc.cwd(verbose=False)
 pre = f"{main_dir}/examples/files/rex/"
 pre2 = f"{main_dir}/tests/files/"
-pdb = f"{pre}/1lmb_Chain4.pdb"
 score_fin = f"{pre}/1LMB.rr"
+pdb = f"{pre}/1lmb_Chain4.pdb"
+pdb2 = f"{main_dir}/examples/files/traj/2hba_ChainB_ref.pdb"
 
 
 def test_apply_ff_best_decoys():
@@ -56,7 +57,25 @@ def test_get_REX_PDBS():
 
 def test_check_REX_PDBS():
     REX_PDBS = rex.get_REX_PDBS(realpath=False)
-    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb)
+
+    # check pass
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb, verbose=True)
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=None, verbose=True)
+
+    # check fail
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb2, verbose=True)
+    return
+
+
+def test_check2_REX_PDBS():
+    REX_PDBS = rex.get_REX_PDBS(realpath=False)
+
+    # check pass
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb, verbose=True)
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=None, verbose=True)
+
+    # check fail
+    rex.check_REX_PDBS(REX_PDBS=REX_PDBS, ref_pdb=pdb2, verbose=True)
     return
 
 
@@ -66,7 +85,7 @@ def test_WF_getParameter_boxsize():
     assert boxsize == 9.4
 
     # coverage
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         logfile = f"{pre}/important_files/solvate_1.log"
         boxsize = rex.WF_getParameter_boxsize(logfile=logfile)
     return
@@ -78,9 +97,16 @@ def test_WF_getParameter_maxsol():
     assert maxsol == 26042
 
     # coverage
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         logfile = f"{pre}/important_files/editconf_1.log"
         maxsol = rex.WF_getParameter_maxsol(logfile=logfile)
+    return
+
+
+def test_WF_get_system_parameters():
+    boxsize, maxsol = rex.WF_get_system_parameters(wdir="./rex_0_get_system_parameters")
+    assert boxsize == 9.4
+    assert 26200 > maxsol > 26000
     return
 
 
@@ -155,8 +181,8 @@ def test_clean_up_after_tests():
     misc.rm("posre.itp")
     misc.rm("rex_temps.log")
 
-    if os.path.exists('./1LMB_best_decoys_ref'):
-        shutil.rmtree('./1LMB_best_decoys_ref')
+    shutil.rmtree('./1LMB_best_decoys_ref')
+    shutil.rmtree("./rex_0_get_system_parameters")
     for dir in rex.get_REX_DIRS():
         shutil.rmtree(dir)
     return

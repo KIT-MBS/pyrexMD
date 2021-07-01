@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 01.07.2021
 
 
 """
@@ -258,7 +258,7 @@ def check_REX_PDBS(REX_PDBS, ref_pdb=None, sel="protein", verbose=True, **kwargs
         # treat first pdb as "template pdb" with target arrays
         template_pdb = REX_PDBS[0]
         if verbose:
-            _misc.cprint("Using first REX PDB as template for tests...", "red")
+            _misc.cprint("Using first REX PDB as template for tests...", "blue")
     else:
         # treat ref pdb as "template pdb" with target arrays
         template_pdb = ref_pdb

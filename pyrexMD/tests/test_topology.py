@@ -2,7 +2,7 @@
 # @Date:   21.05.2021
 # @Filename: test_topology.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 01.07.2021
 
 
 import pyrexMD.misc as misc
@@ -12,7 +12,6 @@ import numpy as np
 from numpy.testing import assert_allclose
 import pathlib
 import pytest
-import os
 
 
 # find main directory of pyrexMD
@@ -82,7 +81,7 @@ def test_norm_ids():
     assert assert_allclose(ref.atoms.ids, expected) == None
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         top.norm_ids("wrong_type")
     return
 
@@ -97,8 +96,18 @@ def test_norm_resids():
     assert assert_allclose(ref.residues.resids, expected) == None
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         top.norm_resids("wrong_type")
+    return
+
+
+def test_norm_universe():
+    ref = mda.Universe(pdb)
+    ref2 = mda.Universe(pdb)
+    ref2.residues.resids += 5
+
+    top.norm_universe([ref, ref2])
+    assert np.all(ref.residues.resids == ref2.residues.resids)
     return
 
 
@@ -141,11 +150,11 @@ def test_norm_and_align_universe():
     ref = mda.Universe(pdb)
     ref_shifted = mda.Universe(pdb)
     # len of ids do not match
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         top.norm_and_align_universe(ref, ref_shifted.select_atoms("resid 1-10"))
 
     # len of resids do not match
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         top.norm_and_align_universe(ref.select_atoms("name CA and resid 1-3"), ref_shifted.select_atoms("index 1 3 25"))
 
     # ref and mobile resids do not match
@@ -190,6 +199,44 @@ def test_get_matching_selection():
     return
 
 
+def test_check_matching_selection():
+    mobile = mda.Universe(pdb)
+    ref = mobile
+
+    sel1, sel2 = top.check_matching_selection(mobile, ref, sel="protein and name CA")
+    assert sel1 == "protein and name CA and resid 1-20"
+    assert sel2 == "protein and name CA"
+    ####################################
+    mobile = mda.Universe(pdb)
+    ref = mobile
+    ref_sub = ref.select_atoms("resid 2-6")
+
+    sel1, sel2 = top.check_matching_selection(mobile, ref_sub, sel="protein and name CA")
+    assert sel1 == "protein and name CA and resid 2-6"
+    assert sel2 == "protein and name CA"
+    return
+
+
+def test_check_residues():
+    mobile = mda.Universe(pdb)
+    ref = mobile
+    top.check_residues(mobile, ref)
+    ####################################
+    # test unmatching resids and resnames
+    mobile = mda.Universe(pdb)
+    ref = mda.Universe(pdb)
+    ref.residues.resids += 5
+    ref.residues.resnames[0] = "random_resname"
+    top.check_residues(mobile, ref)
+
+    # test unmatching atom counts
+    mobile = mda.Universe(pdb)
+    ref = mda.Universe(pdb)
+    ref_sub = ref.select_atoms("resid 1-5")
+    top.check_residues(mobile, ref_sub)
+    return
+
+
 def test_sel2selid():
     ref = mda.Universe(pdb)
     sel = "protein and name CA"
@@ -214,7 +261,7 @@ def test_dump_structure():
     assert dirpath == misc.realpath(".")
 
     # coverage
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         top.dump_structure(ref, frames=0, save_as="temp")
     misc.rm("./temp_0.pdb")
     return

@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_misc.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 01.07.2021
 
 
 import pyrexMD.misc as misc
@@ -81,7 +81,7 @@ def test_split_lists():
     # coverage
     misc.split_lists(10, 2)
     misc.split_lists(range(10), 2)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         misc.split_lists("wrong_dtype", 2)
     return
 
@@ -116,7 +116,7 @@ def test_insert_str():
     assert val == expected
 
     # coverage
-    with pytest.raises(misc.Error) as e_info:
+    with pytest.raises(misc.Error):
         misc.insert_str(str1, str2, sep=" ", loc="")
     return
 
@@ -192,7 +192,7 @@ def test_get_subarray_start_ndx():
     A = [0, 1, 2, 3, 9, 8, 7]
     assert misc.get_subarray_start_ndx(A, [999]) == None
 
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         A = [0, 1, 2, 3, 9, 8, 7]
         misc.get_subarray_start_ndx([1, 2], A)
     return
@@ -358,7 +358,7 @@ def test_convert_multiple_images():
 
 def test_cprint():
     misc.cprint("text messsage", cprint_color="red")
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         misc.cprint(0)
     return
 
@@ -393,7 +393,7 @@ def test_print_table():
         if i <= 10:
             misc.print_table(DATA)
         else:
-            with pytest.raises(misc.Error) as e_info:
+            with pytest.raises(misc.Error):
                 misc.print_table(DATA)
     return
 
@@ -475,7 +475,7 @@ def test_pickle_dump(mock_show):
     plt.close("all")
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         misc.pickle_dump(fig)
     return
 
@@ -486,7 +486,7 @@ def test_pickle_plot(mock_show):
     fig, ax = misc.pickle_plot([f"{pre4}/RMSD_PLOT.pickle", f"{pre4}/RMSD_HIST.pickle"], save_as="./temp.png")
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         fig, ax = misc.pickle_plot()
 
     misc.rm("./temp.png")

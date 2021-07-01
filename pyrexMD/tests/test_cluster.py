@@ -43,7 +43,7 @@ def test_get_decoy_list():
                 f'{pre3}/decoys/1LMB_23.pdb',
                 f'{pre3}/decoys/1LMB_45.pdb']
     assert np.all(decoy_list == expected)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.get_decoy_list(None)
 
     return
@@ -108,11 +108,11 @@ def test_copy_cluster_decoys():
         assert misc.get_filename(decoy_list[i]) == misc.get_filename(decoy_list2[i])
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.copy_cluster_decoys(decoy_list=None, target_dir=target_dir)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.copy_cluster_decoys(decoy_list=decoy_list, target_dir=None)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.copy_cluster_decoys(decoy_list=list(range(10)), target_dir=target_dir)
 
     # cleanup
@@ -179,9 +179,9 @@ def test_heat_KMeans():
     assert hasattr(cluster10, "compact_score")
     # coverage
     clu.heat_KMeans(h5_file, n_clusters=10, center_type='medoid', stop=10)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.heat_KMeans(["wrong_dtype"], n_clusters=10, center_type='centroid', stop=10)
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         clu.heat_KMeans(h5_file, n_clusters=10, center_type='wrong_center_type', stop=10)
 
     return
@@ -258,7 +258,7 @@ def test_apply_elbow_method(mock_show):
         assert isinstance(item, float)
 
     # coverage
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.apply_elbow_method(h5_file, n_clusters=10, stop=10)   # wrong dtype of n_clusters
     return
 
@@ -276,7 +276,7 @@ def test_scatterplot_clustermapping(mock_show):
                                    xlabel="xlabel", ylabel="ylabel",
                                    legend_loc="lower left", plot_only=[0, 1, 2],
                                    markers=["^" for i in range(10)])
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(ValueError):
         clu.scatterplot_clustermapping(xdata=xdata, ydata=ydata, labels=[0])
 
     return
@@ -382,18 +382,18 @@ def test_WF_print_cluster_accuracy_AND_test_WF_print_cluster_scores():
     misc.rm("./log2.log")
 
     # coverage type checks of WF_print_cluster_accuracy()
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_accuracy(cluster_data=0, cluster_accuracy=cluster10_accuracy)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_accuracy(cluster_data=KMEANS, cluster_accuracy=0)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_accuracy(cluster_data=KMEANS, cluster_accuracy=cluster10_accuracy, targets=0)
 
     # coverage type checks of WF_print_cluster_scores()
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_scores(cluster_data=0, cluster_scores=cluster10_scores)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_scores(cluster_data=KMEANS, cluster_scores=0)
-    with pytest.raises(TypeError) as e_info:
+    with pytest.raises(TypeError):
         clu.WF_print_cluster_scores(cluster_data=KMEANS, cluster_scores=cluster10_scores, targets=0)
     return
