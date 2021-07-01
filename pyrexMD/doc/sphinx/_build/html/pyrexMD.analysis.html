@@ -7,8 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyrexMD.analysis package &mdash; pyrexMD 1.1
- documentation</title>
+  <title>pyrexMD.analysis package &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -68,8 +67,7 @@
             
             
               <div class="version">
-                1.1
-
+                1.0
               </div>
             
           
@@ -1031,7 +1029,7 @@ requires 1 extra bin.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.contacts.get_NC_distances">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shortest_distance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.contacts.</span></span><span class="sig-name descname"><span class="pre">get_NC_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shortest_distance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/contacts.html#get_NC_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.contacts.get_NC_distances" title="Permalink to this definition">¶</a></dt>
 <dd><p>get native contact distances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1057,6 +1055,7 @@ requires 1 extra bin.</p></li>
 </p></li>
 <li><p><strong>d_cutoff</strong> (<em>float</em>) – cutoff distance</p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – show/hide progress bar</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1187,9 +1186,9 @@ QBias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
 <li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
-<li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – None (old default: “.”)</p></li>
 <li><p><strong>ms</strong> (<em>int</em>) – 4</p></li>
-<li><p><strong>lw</strong> (<em>int</em>) – 0</p></li>
+<li><p><strong>lw</strong> (<em>int</em>) – 1 (old default: 0)</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – “QBias.png”</p></li>
 <li><p><strong>disable</strong> (<em>bool</em>) – hide/show progress bar</p></li>
@@ -1326,9 +1325,9 @@ QBias will not be zero due to the selfcontact counts)</p>
 <li><p><strong>step</strong> (<em>None</em><em>, </em><em>int</em>) – step size</p></li>
 <li><p><strong>color</strong> (<em>str</em>) – “r”</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – 1</p></li>
-<li><p><strong>marker</strong> (<em>str</em>) – “.”</p></li>
+<li><p><strong>marker</strong> (<em>str</em>) – None (old default: “.”)</p></li>
 <li><p><strong>ms</strong> (<em>int</em>) – 4</p></li>
-<li><p><strong>lw</strong> (<em>int</em>) – 0</p></li>
+<li><p><strong>lw</strong> (<em>int</em>) – 1 (old default: 0)</p></li>
 <li><p><strong>save_plot</strong> (<em>bool</em>) – </p></li>
 <li><p><strong>save_as</strong> (<em>str</em>) – “QNative.png”</p></li>
 </ul>

@@ -7,8 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyrexMD.analysis.contacts &mdash; pyrexMD 1.1
- documentation</title>
+  <title>pyrexMD.analysis.contacts &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -66,8 +65,7 @@
             
             
               <div class="version">
-                1.1
-
+                1.0
               </div>
             
           
@@ -303,7 +301,7 @@
     <span class="k">return</span><span class="p">(</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_NC_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_NC_distances">[docs]</a><span class="k">def</span> <span class="nf">get_NC_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;shortest_distance&quot;</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_NC_distances"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.contacts.get_NC_distances">[docs]</a><span class="k">def</span> <span class="nf">get_NC_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;shortest_distance&quot;</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get native contact distances.</span>
 
@@ -323,6 +321,7 @@
 <span class="sd">          |     RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()</span>
 <span class="sd">        d_cutoff (float): cutoff distance</span>
 <span class="sd">        plot (bool)</span>
+<span class="sd">        verbose (bool): show/hide progress bar</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        start (None, int): start frame</span>
@@ -366,12 +365,12 @@
     <span class="n">NC</span><span class="p">,</span> <span class="n">NC_d</span> <span class="o">=</span> <span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid2</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="n">d_cutoff</span><span class="p">,</span>
                                    <span class="n">ignh</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ignh</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;shortest_distance&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;shortest_distance&quot;</span><span class="p">:</span>
         <span class="n">DM</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">):</span>
             <span class="n">SD</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_shortest_RES_distances</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid1</span><span class="p">)</span>
             <span class="n">DM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SD</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;contact_distance&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;contact_distance&quot;</span><span class="p">:</span>
         <span class="n">DM</span> <span class="o">=</span> <span class="n">_ana</span><span class="o">.</span><span class="n">get_Distance_Matrices</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">selid1</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;method must be either &#39;shortest_distance&#39; or &#39;contact_distance&#39;&quot;</span><span class="p">)</span>
@@ -941,9 +940,9 @@
 <span class="sd">        step (None, int): step size</span>
 <span class="sd">        color (str): &quot;r&quot;</span>
 <span class="sd">        alpha (float): 1</span>
-<span class="sd">        marker (str): &quot;.&quot;</span>
+<span class="sd">        marker (str): None (old default: &quot;.&quot;)</span>
 <span class="sd">        ms (int): 4</span>
-<span class="sd">        lw (int): 0</span>
+<span class="sd">        lw (int): 1 (old default: 0)</span>
 <span class="sd">        save_plot (bool)</span>
 <span class="sd">        save_as (str): &quot;QNative.png&quot;</span>
 
@@ -963,9 +962,9 @@
                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">sss</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>   <span class="c1"># old default: &quot;.&quot;,</span>
                <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>          <span class="c1"># old default: 0</span>
                <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QNative.png&quot;</span><span class="p">}</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1049,9 +1048,9 @@
 <span class="sd">        figsize (tuple)</span>
 <span class="sd">        color (str): &quot;r&quot;</span>
 <span class="sd">        alpha (float): 1</span>
-<span class="sd">        marker (str): &quot;.&quot;</span>
+<span class="sd">        marker (str): None (old default: &quot;.&quot;)</span>
 <span class="sd">        ms (int): 4</span>
-<span class="sd">        lw (int): 0</span>
+<span class="sd">        lw (int): 1 (old default: 0)</span>
 <span class="sd">        save_plot (bool)</span>
 <span class="sd">        save_as (str): &quot;QBias.png&quot;</span>
 <span class="sd">        disable (bool): hide/show progress bar</span>
@@ -1083,9 +1082,9 @@
                <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
                <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># old default: &quot;.&quot;,</span>
                <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="s2">&quot;lw&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>         <span class="c1"># old default: 0</span>
                <span class="s2">&quot;save_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                <span class="s2">&quot;save_as&quot;</span><span class="p">:</span> <span class="s2">&quot;QBias.png&quot;</span><span class="p">,</span>
                <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>

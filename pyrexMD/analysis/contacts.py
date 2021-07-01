@@ -137,7 +137,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     return(NC, NC_d)
 
 
-def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method="shortest_distance", d_cutoff=6.0, plot=False, **kwargs):
+def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method="shortest_distance", d_cutoff=6.0, plot=False, verbose=True, **kwargs):
     """
     get native contact distances.
 
@@ -157,6 +157,7 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method=
           |     RNA target ~ use distances of N1 and N3 atoms based on nucleic residues according to topology.sel2selid()
         d_cutoff (float): cutoff distance
         plot (bool)
+        verbose (bool): show/hide progress bar
 
     Keyword Args:
         start (None, int): start frame
@@ -200,12 +201,12 @@ def get_NC_distances(mobile, ref, sss=[None, None, None], sel="protein", method=
     NC, NC_d = get_Native_Contacts(ref, sel=selid2, d_cutoff=d_cutoff,
                                    ignh=cfg.ignh, save_as=cfg.save_as)
 
-    if method == "shortest_distance":
+    if method.lower() == "shortest_distance":
         DM = []
-        for ts in mobile.trajectory[cfg.start:cfg.stop:cfg.step]:
+        for ts in tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step], disable=not verbose):
             SD, _ = _ana.get_shortest_RES_distances(mobile, sel=selid1)
             DM.append(SD)
-    elif method == "contact_distance":
+    elif method.lower() == "contact_distance":
         DM = _ana.get_Distance_Matrices(mobile, sel=selid1, sss=[cfg.start, cfg.stop, cfg.step])
     else:
         raise ValueError("method must be either 'shortest_distance' or 'contact_distance'")
@@ -775,9 +776,9 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
         step (None, int): step size
         color (str): "r"
         alpha (float): 1
-        marker (str): "."
+        marker (str): None (old default: ".")
         ms (int): 4
-        lw (int): 0
+        lw (int): 1 (old default: 0)
         save_plot (bool)
         save_as (str): "QNative.png"
 
@@ -797,9 +798,9 @@ def get_QNative(mobile, ref, sel="protein and name CA", sss=[None, None, None],
                "step": sss[2],
                "color": "r",
                "alpha": 1,
-               "marker": ".",
+               "marker": None,   # old default: ".",
                "ms": 4,
-               "lw": 0,
+               "lw": 1,          # old default: 0
                "save_plot": False,
                "save_as": "QNative.png"}
     cfg = _misc.CONFIG(default, **kwargs)
@@ -883,9 +884,9 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
         figsize (tuple)
         color (str): "r"
         alpha (float): 1
-        marker (str): "."
+        marker (str): None (old default: ".")
         ms (int): 4
-        lw (int): 0
+        lw (int): 1 (old default: 0)
         save_plot (bool)
         save_as (str): "QBias.png"
         disable (bool): hide/show progress bar
@@ -917,9 +918,9 @@ def get_QBias(mobile, bc, sss=[None, None, None], d_cutoff=8.0,
                "figsize": (7, 5),
                "color": "r",
                "alpha": 1,
-               "marker": ".",
+               "marker": None,  # old default: ".",
                "ms": 4,
-               "lw": 0,
+               "lw": 1,         # old default: 0
                "save_plot": False,
                "save_as": "QBias.png",
                "disable": False}

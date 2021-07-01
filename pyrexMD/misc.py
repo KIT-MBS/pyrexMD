@@ -27,14 +27,6 @@ import copy
 import termcolor
 
 
-def apply_TEST_NEW_CHANGE2():
-    """
-    BLABLA
-    """
-    x = 1
-    return
-
-
 def apply_matplotlib_rc_settings():
     """
     apply matplotlib rc settings:

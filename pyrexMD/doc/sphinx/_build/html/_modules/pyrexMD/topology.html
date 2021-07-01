@@ -7,8 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pyrexMD.topology &mdash; pyrexMD 1.1
- documentation</title>
+  <title>pyrexMD.topology &mdash; pyrexMD 1.0 documentation</title>
   
 
   
@@ -66,8 +65,7 @@
             
             
               <div class="version">
-                1.1
-
+                1.0
               </div>
             
           
@@ -168,7 +166,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 29.06.2021</span>
+<span class="c1"># @Last modified time: 30.06.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -184,6 +182,7 @@
 <span class="c1">################################################################################</span>
 <span class="c1">################################################################################</span>
 <span class="c1">### Modify universe / topology</span>
+
 
 <div class="viewcode-block" id="get_resids_shift"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.get_resids_shift">[docs]</a><span class="k">def</span> <span class="nf">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -352,23 +351,28 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="norm_universe"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.norm_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="norm_universe"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.norm_universe">[docs]</a><span class="k">def</span> <span class="nf">norm_universe</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Executes the functions</span>
+<span class="sd">    Executes for each universe:</span>
 
 <span class="sd">      - norm_ids(u, info)</span>
 <span class="sd">      - norm_resids(u, info)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (universe, atomgrp): structure</span>
+<span class="sd">        u (universe, atomgrp, list, array): universe or list/array with universes</span>
 <span class="sd">        info (str):</span>
 <span class="sd">          | additional info for print message</span>
 <span class="sd">          | &#39;reference&#39;</span>
 <span class="sd">          | &#39;mobile&#39;</span>
 <span class="sd">        verbose (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-    <span class="n">norm_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">norm_ids</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+            <span class="n">norm_resids</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">norm_ids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">norm_resids</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 

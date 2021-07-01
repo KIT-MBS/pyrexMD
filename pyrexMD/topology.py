@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 30.06.2021
 
 
 """
@@ -18,6 +18,7 @@ from tqdm.notebook import tqdm
 ################################################################################
 ################################################################################
 ### Modify universe / topology
+
 
 def get_resids_shift(mobile, ref):
     """
@@ -186,23 +187,28 @@ def norm_resids(u, info='', verbose=True):
     return
 
 
-def norm_universe(u, info='', verbose=True):
+def norm_universe(u, *args, info='', verbose=True):
     """
-    Executes the functions
+    Executes for each universe:
 
       - norm_ids(u, info)
       - norm_resids(u, info)
 
     Args:
-        u (universe, atomgrp): structure
+        u (universe, atomgrp, list, array): universe or list/array with universes
         info (str):
           | additional info for print message
           | 'reference'
           | 'mobile'
         verbose (bool)
     """
-    norm_ids(u, info, verbose)
-    norm_resids(u, info, verbose)
+    if isinstance(u, (list, np.ndarray)):
+        for item in u:
+            norm_ids(item, info, verbose)
+            norm_resids(item, info, verbose)
+    else:
+        norm_ids(u, info, verbose)
+        norm_resids(u, info, verbose)
     return
 
 

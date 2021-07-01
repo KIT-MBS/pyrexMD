@@ -162,6 +162,8 @@ jobs:
 
 
   ## job 4 ##
+  ## NOTE: make sure that package was installed in editable mode (pip install -e .)
+  ##       so that submitted changes are updated immediately.
   update-docs:
     needs: build-python
     runs-on: ubuntu-latest
