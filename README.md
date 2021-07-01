@@ -65,6 +65,5 @@ To run one of the short examples, go into the pyrexMD/examples folder and run
 
     jupyter notebook
 
-## Contributing to pyrexMD
-`pyrexMD` is free and open source under the MIT license. Feel free to ask questions,
-report bugs, fork, etc.
+## Participating
+`pyrexMD` is free and open source under the MIT license. We welcome your contribution so feel free to ask questions, report bugs, fork, etc. 
