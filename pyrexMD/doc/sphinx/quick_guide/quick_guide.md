@@ -19,7 +19,7 @@ Setup of normal MD
     import pyrexMD.gmx as gmx
 
     # create ref pdb:
-    pdb = "./1l2y.pdb"
+    pdb = "path/to/pdb"
     ref = gmx.get_ref_structure(pdb, ff='amber99sb-ildn', water='tip3p', ignh=True)
 
     # generate topology & box
@@ -150,7 +150,7 @@ REX is a very powerful and versatile enhanced sampling method and especially sui
 
 The figure shows:
 - blue line: TPR for number of ranked contacts
-- red line: 75% cutoff threshold (TPR of used contacts should be above approx. 75% for contact-guided REX MD, see  https://doi.org/10.1371/journal.pone.0242072)
+- red line: 75% threshold (TPR of used contacts should be above approx. 75% for contact-guided REX MD, see  https://doi.org/10.1371/journal.pone.0242072)
 - orange lines: suggested/guessed optimum number of contacts and the corresponding TPR
 - orange region: suggested region of interest between L/2 and L contacts
 
@@ -275,7 +275,7 @@ filtering and clustering of structure ensembles will be necessary.
     import pyrexMD.misc as misc
     import pyrexMD.decoy.cluster as clu
 
-    # load data
+    # load data of pre-filtered frames
     QDATA = misc.pickle_load("./data/QDATA.pickle")
     RMSD = misc.pickle_load("./data/RMSD.pickle")
     GDT_TS = misc.pickle_load("./data/GDT_TS.pickle")
@@ -295,8 +295,8 @@ filtering and clustering of structure ensembles will be necessary.
     ### plot cluster data
     # here: TSNE-transformed data with n_clusters = 20
     # also: plot cluster centers with different colors
-    #     - red dot: n20 centers
-    #     - black dot: n10 centers
+    #     - red dot: n10 centers
+    #     - black dot: n20 centers
     clu.plot_cluster_data(cluster20, tsne)
     clu.plot_cluster_center(cluster10, marker="o", color="red", ms=20)
     clu.plot_cluster_center(cluster20, marker="o", color="black")

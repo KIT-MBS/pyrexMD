@@ -31,26 +31,25 @@ bibliography: paper.bib
 
 # Summary
 
-Proteins are complex biomolecules which fulfill important and diverse tasks in
-living organisms. Studying and understanding their structure, function, and
+Proteins are complex biomolecules which fulfill a wide range of critical tasks
+in living organisms. Studying and understanding their structure, function, and
 dynamics is essential for life sciences and can be applied for, e.g., disease
 control or advanced drug design. Molecular dynamics (MD) is a computational
-method relying on physical models to simulate biomolecular systems. The
-movements of all atoms can be 'viewed' like a movie and analyzed to improve the
-understanding of specific interactions or complement experimental measurements.
-Replica Exchange (REX) [@sugita1999replica; @zhang2005convergence] is a powerful
-method used to enhance the sampling of protein conformations and generates large
-amounts of data.
+method relying on physical models to simulate biomolecular systems. Movements of
+all atoms can be 'viewed' like a movie and analyzed to improve the understanding
+of specific interactions or complement experimental measurements. Replica
+Exchange (REX) is a powerful method used to enhance the sampling of protein
+conformations and generates large amounts of data.
 
-`pyrexMD` is designed as an interactive 'all-purpose' toolkit for
-research projects which rely on (contact-guided) Replica Exchange Molecular
-Dynamics using `GROMACS` [@van2005gromacs]. Due to its workflow-orientated
-design, it is possible to rapidly create whole setup or analysis workflows,
-thereby significantly enhancing productivity and reducing the time spent at
-various stages of the project.
+`pyrexMD` is designed as an interactive 'all-purpose' toolkit for research
+projects which rely on (contact-guided) Replica Exchange Molecular Dynamics
+using `GROMACS`. Due to its workflow-orientated design, it is possible to
+rapidly create whole setup or analysis workflows, thereby significantly
+enhancing productivity and reducing the time spent at various stages of the
+project.
 
 
-# Statement of need
+# Theoretical background
 
 Timescales of various biomolecular interactions of interest, such as protein
 folding, conformation transitions, or ligand binding, are typically in the order
@@ -58,68 +57,116 @@ of µs to s. MD simulations, however, operate in 1-2 fs steps, which makes
 in-silico studies of proteins computationally demanding. Besides, observations
 of native configurations during MD simulations are often not guaranteed and
 proteins can become trapped in certain conformations. One possibility to
-overcome this problem is utilizing an enhanced sampling technique such as REX.
-Depending on the research goal, it is also possible to integrate an additional
-theoretically [@morcos2011direct] or experimentally derived [@perilla2017cryoem]
-bias into MD simulations to restrict the search space and thus effectively lower
-computational costs.
+overcome this problem is to utilize an enhanced sampling technique such as REX
+[@sugita1999replica; @zhang2005convergence]. REX simulates N non-interacting
+copies (“replicas”) of a system at different temperatures T$_i$. At certain time
+intervals adjacent replicas can be exchanged which leads to a walk in
+temperature space. REX is therefore suited to obtain physically meaningful
+structure ensembles at specific temperatures. Based on the chosen temperature
+range and distribution is is also possible to obtain native-like conformations
+within a single run. Depending on the research goal, it is beneficial to
+integrate additional theoretically [@morcos2011direct] or experimentally derived
+[@perilla2017cryoem] biases into REX simulations to restrict the sampling space
+and thus effectively lower computational costs.
 
-Research studies relying on REX, however, can become very arduous and time
-consuming. REX simulations usually not only require knowledge of various program
-tools but also consist of many individual steps ranging from simulation setup
-and pre-processing over testing and simulation-monitoring to post-processing and
-data analyses. Furthermore, REX generates large amounts of data and requires in
-particular a systematic handling of I/O.
 
-`pyrexMD` is designed as an interactive 'all-purpose' toolkit specifically for
-(contact-guided) REX projects using `GROMACS` and is intended to be used in
-jupyter notebooks. It efficiently integrates the following popular MD-related
+# Statement of need
+
+In particular analyzing research studies relying on REX can become quite arduous
+and time consuming. REX simulations usually not only require knowledge of
+various program tools but also consist of many individual steps ranging from
+simulation setup and pre-processing over testing and simulation-monitoring to
+post-processing and data analyses. Furthermore, REX can generate terabytes of
+data and requires in particular a systematic handling of I/O.
+
+One of the most used software packages for MD is `Gromacs` [@van2005gromacs],
+a free open source solution enabling the user to choose from many different
+force fields such as  GROMOS [@schmid2011definition], AMBER
+[@wang2004development], CHARMM [@mackerell2000development], or OPLS
+[@jorgensen1996development]. The core functionality of `Gromacs` can be extended
+by plug-ins such as `PLUMED` [@bonomi2009plumed; @tribello2014plumed] or
+`SSAGES` [@sidky2018ssages]. They implement additional algorithms and enhanced
+sampling methods which interact during the MD simulation itself or can give
+access to user-defined collective variables enabling new types of analyses.
+
+`pyrexMD` on the other hand focuses on improvements during the simulation setup
+or post-simulation analyses. It provides efficient and robust methods for
+setting up optimized (contact-guided) MD or REX MD simulations. Furthermore it
+offers many different structure analysis and comparison functions to explore the
+large I/O sets generated by REX. `pyrexMD` is designed as an interactive
+'all-purpose' toolkit which should be used in jupyter notebooks. The provided
+functions primarily combine many individual steps into workflow-orientated
+functions which simplify and partially automate large tasks. This allows the
+user to rapidly create whole setups or analysis workflows by using just a few
+commands which greatly increases the productivity and reduces the time spent at
+various stages of the project. Examples of currently available functions include:
+
+- set up systems for normal MD or REX MD simulations
+- integration of bias contacts and bias potentials
+- topology comparison and consistency checks across different systems or replicas
+- trajectory viewer and interactive plots
+- wide range of analyses functions related to structure comparison (e.g. contact
+maps, Qvalues, global distance test, local accuracy, dihedrals, cluster
+analyses, etc.)
+- functions that calculate meaningful measurements such as RMSD, Qvalues, etc. are
+coupled to plot or logging functions
+
+`pyrexMD` efficiently integrates and extends the following popular MD-related
 python packages:
 
 - `MDAnalysis` [@oliver_beckstein-proc-scipy-2016; @michaud2011mdanalysis],
-
 - `nglview` [@nguyen2018nglview],
-
 - `GromacsWrapper` [@oliver_beckstein_2019_2654393].
 
-By covering all important aspects with its functionality, `pyrexMD` eliminates the
-need of switching to additional programs which unnecessarily interrupts the
-workflow and often requires know-how of different command line syntaxes.
-Furthermore, `pyrexMD` offers many workflow-orientated functions and templates for
-different stages of a REX study. Its main focuses are 1) providing efficient and
-robust methods for setting up optimized (contact-guided) REX simulations and 2)
-offering many different structure analysis functions to exploit the large I/O
-sets generated by REX. It also adds a variety of useful general functions and
-QoL improvements, such as interactive links between a figure and trajectory or
-creation of multi-panel figures from .pickle files. With `pyrexMD`, it becomes
-especially easy to share and reproduce research results or transfer the work on
-other target structures of interest. Furthermore, it lowers the technical
-boundaries for newcomers who want to do research using REX enhanced sampling.
+By covering various important aspects, `pyrexMD` allows to execute the whole project
+from start to finish without switching to other programs which unnecessarily
+interrupts the workflow and often requires know-how of different command line
+syntaxes. Alongside the workflow-orientated functions, it also adds a variety of
+useful general functions and quality of life improvements, such as an integrated trajectory
+viewer, interactive figures linked to a trajectory or creation of multi-panel
+figures from saved .pickle files. With `pyrexMD`, it becomes especially easy to
+create, share and reproduce research results or transfer the work on other
+target structures of interest. Furthermore, it lowers the technical boundaries
+for newcomers who want to do research utilizing REX for enhanced sampling.
 
-# Applications
+# Example applications
 
 `pyrexMD` was initially developed during the work of [@voronin2020including]. It
-is currently applied in two ongoing REX studies about protein and RNA structure
-refinement. Fig. 1 exemplarily shows an analysis of used bias contacts with
-regards to the true positive rate. Fig. 2 shows the local accuracy based on a
-global distance test for models generated during a REX study.
+is currently applied in ongoing REX studies about protein and RNA structure
+refinement.
+
+Fig. 1 exemplarily shows the application of the trajectory viewer with an
+interactive plot. Fig. 2 displays a true positive rate analysis of predicted
+bias contacts based on the number of ranked contacts. Fig. 3 shows the local
+accuracy of conformations based on a global distance test for models generated
+during a REX study.
+
+![Trajectory viewer on top which is linked to the interactive plot (here RMSD)
+at the bottom. It is possible to quickly inspect conformations at specific values by
+interacting with the graph itself (e.g. via ctrl-click) in order to get
+additional valueable information accessible through the trajectory
+viewer.](paper_figs/fig1.png){ width=85% }
 
 ![Analysis of the true positive rate (TPR) for bias contacts using `pyrexMD`.
-The figure shows the TPR of considered bias contacts in blue, a TPR-cutoff of 75% in
-red, a region of interested shaded in orange and an estimated ideal number of
-contacts based on selection rules from
-[@voronin2020including]](paper_figs/fig1.png)
+The figure shows the TPR of considered bias contacts in addition to other
+relevant value guidelines according to [@voronin2020including] such as a minimal
+TPR threshold of 75% in red and a suggested optimal number of contacts in orange
+between L/2 and L contacts, vizualized by the orange
+region.](paper_figs/fig2.png){ width=82% }
 
 ![Local accuracy of REX-generated models based on global distance test scores.
-The figure shows a color-coded CA-CA distance for each residue of the model and the
-corresponding global distance test scores on the left
-side.](paper_figs/fig2.png)
+The figure gives a clear representation of how good each part of the model is
+refined compared to a reference structure. Each residue is color-coded to
+represent the CA-CA distance between the model and reference structure after
+fitting. Corresponding global distance test scores are shown on the left
+side.](paper_figs/fig3.png){ width=82% }
 
 # Availability
 
 `pyrexMD` can be downloaded from
 [https://github.com/KIT-MBS/pyrexMD](https://github.com/KIT-MBS/pyrexMD) under the
-MIT license.
+MIT license. Both online documentation and quick guide can be accessed via
+[https://kit-mbs.github.io/pyrexMD](https://kit-mbs.github.io/pyrexMD)
 
 
 # Acknowledgments
