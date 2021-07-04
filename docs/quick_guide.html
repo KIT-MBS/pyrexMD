@@ -191,7 +191,7 @@ examples as jupyter notebooks in the examples folder.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
 
 <span class="c1"># create ref pdb:</span>
-<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
+<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;path/to/pdb&quot;</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># generate topology &amp; box</span>
@@ -410,7 +410,7 @@ filtering and clustering of structure ensembles will be necessary.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.decoy.cluster</span> <span class="k">as</span> <span class="nn">clu</span>
 
-<span class="c1"># load data</span>
+<span class="c1"># load data of pre-filtered frames</span>
 <span class="n">QDATA</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/QDATA.pickle&quot;</span><span class="p">)</span>
 <span class="n">RMSD</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/RMSD.pickle&quot;</span><span class="p">)</span>
 <span class="n">GDT_TS</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">pickle_load</span><span class="p">(</span><span class="s2">&quot;./data/GDT_TS.pickle&quot;</span><span class="p">)</span>
@@ -430,8 +430,8 @@ filtering and clustering of structure ensembles will be necessary.</p>
 <span class="c1">### plot cluster data</span>
 <span class="c1"># here: TSNE-transformed data with n_clusters = 20</span>
 <span class="c1"># also: plot cluster centers with different colors</span>
-<span class="c1">#     - red dot: n20 centers</span>
-<span class="c1">#     - black dot: n10 centers</span>
+<span class="c1">#     - red dot: n10 centers</span>
+<span class="c1">#     - black dot: n20 centers</span>
 <span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_data</span><span class="p">(</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">tsne</span><span class="p">)</span>
 <span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">clu</span><span class="o">.</span><span class="n">plot_cluster_center</span><span class="p">(</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
