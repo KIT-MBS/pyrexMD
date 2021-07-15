@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 07.07.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -1034,6 +1034,7 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
     o_file = _misc.realpath(o)
     _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
     return o_file
+
 
 ################################################################################
 ################################################################################
