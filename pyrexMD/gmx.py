@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 07.07.2021
+# @Last modified time: 17.07.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -90,6 +90,66 @@ def __fix_ResourceWarning__():
 __fix_ResourceWarning__()
 ################################################################################
 ################################################################################
+# Help functions
+
+
+def _setup_config(**kwargs):
+    """
+    setup default config
+    """
+    default = {"cprint_color": "blue",
+               "log": True,
+               "log_overwrite": False,
+               "stderr": None,
+               "stdout": None}
+    cfg = _misc.CONFIG(default, **kwargs)
+    return cfg
+
+
+def _clean_func(ofile):
+    odir = _misc.dirpath(_misc.realpath(ofile))
+    clean_up("./", verbose=False)
+    clean_up(odir, verbose=False)
+    return odir
+
+
+def _save_func(ofile, cprint_color):
+    _misc.cprint(f"Saved file as: {_misc.realpath(ofile)}", cprint_color)
+    return _misc.realpath(ofile)
+
+
+def _log_func(logdir, logfile, cfg):
+    """
+    Creates logfile and cleans up log direcotry.
+
+    Args:
+        logdir (str): logdir path
+        logfile (str): logfile name
+        cfg (misc.CONFIG): config with cfg.cprint_color, cfg.log,
+                           cfg.log_overwrite, cfg.stderr, cfg.stdout
+    """
+    if not cfg.log:
+        return
+
+    logdir = _misc.mkdir(logdir)
+    logfile = f"{logdir}/{logfile}"
+    if not cfg.log_overwrite:
+        log_names = [f"{logdir}/{_misc.get_base(logfile)}_{i}.log" for i in range(1, 1000)]
+        for name in log_names:
+            if name in glob.glob(f"{logdir}/*.log"):
+                continue  # skip existing log_name
+            else:
+                logfile = name
+                break  # stop at first new log_name
+    with open(logfile, "w") as fout:
+        _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
+        fout.write(f"STDERR:\n\n{cfg.stderr}\n")
+        fout.write(f"STDOUT:\n\n{cfg.stdout}\n")
+        clean_up(logdir, verbose=False)
+    return
+
+################################################################################
+################################################################################
 
 
 def clean_up(path="./", pattern="gmx_pattern", ignore=None, verbose=True):
@@ -171,7 +231,7 @@ def _get_sel_code(sel, **kwargs):
 
 
 def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
-            ignh=True, log=True, log_overwrite=False, verbose=True, **kwargs):
+            ignh=True, verbose=True, **kwargs):
     """
     Modified function of gromacs.pdb2gmx().
 
@@ -193,10 +253,6 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
           | "amber14sb_OL15" etc. for RNAs
         water (str): water model
         ignh (bool): ignore hydrogen
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/pdb2gmx.log>
-          | False: save log file as <logs/pdb2gmx_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Keyword Args:
@@ -204,6 +260,10 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
         i (str): include file for topology: posre.itp
         n (str): index file: index.ndx
         cprint_color (str)
+        log (bool): save log file
+        log_overwrite (bool):
+          | True: save log file as <logs/pdb2gmx.log>
+          | False: save log file as <logs/pdb2gmx_{i}.log> for i=1,...,999
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -211,55 +271,28 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
         - terminal -> gmx pdb2gmx -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _setup_config(**kwargs)
     ############################################################################
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), ignh=ignh, v=verbose)
-        print(stderr)
-        print()
-        print(stdout)
+        _, cfg.stdout, cfg.stderr = gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), ignh=ignh, v=verbose)
+        print(f"{cfg.stderr} /n {cfg.stdout}")
 
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/pdb2gmx.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/pdb2gmx_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-
-    return o_file
+    odir = _clean_func(o)
+    ofile = _save_func(o, cfg.cprint_color)
+    _log_func(logdir=f"{odir}/logs", logfile="pdb2gmx.log", cfg=cfg)
+    return ofile
 
 
-# same function as TPR2PDB()
-def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
+def editconf(f, o="default", odir="./", verbose=True, **kwargs):
     """
     - Modified function of gromacs.editconf()
-    - Alias function of TPR2PDB()
+    - Alias function of convert_TPR2PDB()
 
     Gromacs info:
         'gmx editconf' converts generic structure format to .pdb, .gro, or .g96.
@@ -273,10 +306,6 @@ def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=T
         odir (str):
           | output directory
           | special case: odir is ignored when o is relative/absolute path
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/editconf.log>
-          | False: save log file as <logs/editconf_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Keyword Args:
@@ -287,6 +316,10 @@ def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=T
         c (bool): center molecule in box
         d (str): distance between the solute and the box
         cprint_color (str)
+        log (bool): save log file
+        log_overwrite (bool):
+          | True: save log file as <logs/editconf.log>
+          | False: save log file as <logs/editconf_{i}.log> for i=1,...,999
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -294,11 +327,10 @@ def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=T
         - terminal -> gmx editconf -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _setup_config(**kwargs)
     ############################################################################
     if o == "default":
         if _misc.get_extension(f) == ".tpr":
@@ -310,123 +342,17 @@ def editconf(f, o="default", odir="./", log=True, log_overwrite=False, verbose=T
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.editconf(f=f, o=o, **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
+        _, cfg.stdout, cfg.stderr = gromacs.editconf(f=f, o=o, **kwargs)
+        print(f"{cfg.stderr} /n {cfg.stdout}")
 
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/editconf.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/editconf_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-
-    return o_file
+    odir = _clean_func(o)
+    ofile = _save_func(o, cfg.cprint_color)
+    _log_func(logdir=f"{odir}/logs", logfile="editconf.log", cfg=cfg)
+    return ofile
 
 
-# same function as editconf()
-def convert_TPR2PDB(tpr, o="default", odir="./", log=True, log_overwrite=False, verbose=True, **kwargs):
-    """
-    - Modified function of gromacs.editconf()
-    - Alias function of editconf()
-
-    Gromacs info:
-        'gmx editconf' converts generic structure format to .pdb, .gro or .g96.
-
-    Args:
-        tpr (str): tpr (gro g96 pdb brk ent esp)
-        o (str):
-          | pdb (gro g96)
-          | "default": <filename>.tpr -> <filename>.pdb
-          |            <filename>.gro -> box.gro
-        odir (str):
-          | output directory
-          | special case: odir is ignored when o is relative/absolute path
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/editconf.log>
-          | False: save log file as <logs/editconf_{i}.log> for i=1,...,999
-        verbose (bool): print/mute gromacs messages
-
-    Keyword Args:
-        bt (str): box type: cubic triclinic dodecahedron octahedron
-        c (bool): center molecule in box
-        d (str): distance between the solute and the box
-
-    .. Hint:: Find more valid Keyword Args via
-
-        - python -> gromacs.editconf.help()
-        - terminal -> gmx editconf -h
-
-    Returns:
-        o_file (str)
-            realpath of output file
-    """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
-    ############################################################################
-    if o == "default":
-        if _misc.get_extension(tpr) == ".tpr":
-            o = _misc.joinpath(odir, f"{_misc.get_base(tpr)}.pdb")
-        elif _misc.get_extension(tpr) == ".gro":
-            o = _misc.joinpath(odir, "box.gro")
-    else:
-        o = _misc.joinpath(odir, o)  # special case for joinpath
-
-    # GromacsWrapper
-    with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.editconf(f=tpr, o=o, **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
-
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/editconf_TPR2PDB.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/editconf_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-
-    return o_file
+# alias function of editconf()
+convert_TPR2PDB = editconf
 
 
 def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs):
@@ -464,7 +390,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
         - terminal -> gmx convert_tpr -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
     default = {"cprint_color": "blue"}
@@ -480,17 +406,13 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     with _misc.HiddenPrints(verbose=verbose):
         gromacs.convert_tpr(s=s, o=o, input=sel_code, **kwargs)
 
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    #clean up
-    clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
-    clean_up(path=_misc.dirpath(o_file), pattern="#*_protein.tpr*#", verbose=False)
-    return o_file
+    ofile = _save_func(o, cfg.cprint_color)
+    clean_up(path=_misc.dirpath(ofile), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=_misc.dirpath(ofile), pattern="#*_protein.tpr*#", verbose=False)
+    return ofile
 
 
-def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, **kwargs):
+def grompp(f, o, c, p="topol.top", verbose=True, **kwargs):
     """
     Modified function of gromacs.grompp().
 
@@ -499,10 +421,6 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
         o (str): output file: tpr
         c (str): structure file: gro tpr pdb (g96 brk ent esp)
         p (str): topology file: top
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/grompp.log>
-          | False: save log file as <logs/grompp_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Keyword Args:
@@ -510,6 +428,10 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
           | Number of allowed warnings during input processing.
           | Not for normal use and may generate unstable systems.
         cprint_color (str)
+        log (bool): save log file
+        log_overwrite (bool):
+          | True: save log file as <logs/grompp.log>
+          | False: save log file as <logs/grompp_{i}.log> for i=1,...,999
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -517,12 +439,12 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
         - terminal -> gmx grompp -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
-    default = {"maxwarn": 10,
-               "cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _setup_config(**kwargs)
+    if "maxwarn" not in kwargs:
+        cfg.update_config(maxwarn=10)
     if "maxwarn" in kwargs:
         del kwargs["maxwarn"]
     if "cprint_color" in kwargs:
@@ -533,42 +455,17 @@ def grompp(f, o, c, p="topol.top", log=True, log_overwrite=False, verbose=True, 
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.grompp(f=f, o=o, c=c, p=p, v=verbose,
-                                               maxwarn=cfg.maxwarn, **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
+        _, cfg.stdout, cfg.stderr = gromacs.grompp(f=f, o=o, c=c, p=p, v=verbose,
+                                                   maxwarn=cfg.maxwarn, **kwargs)
+        print(f"{cfg.stderr} /n {cfg.stdout}")
 
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/grompp.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/grompp_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-    return o_file
+    odir = _clean_func(o)
+    ofile = _save_func(o, cfg.cprint_color)
+    _log_func(logdir=f"{odir}/logs", logfile="grompp.log", cfg=cfg)
+    return ofile
 
 
-def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
-            log=True, log_overwrite=False, verbose=True, **kwargs):
+def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top", verbose=True, **kwargs):
     """
     Modified function of gromacs.solvate(). cp is usually "box.gro"
 
@@ -582,10 +479,6 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
           | default case: save in same directory as cp
           | special case: if o is relative/absolute path -> save there
         p (str): topology file: topol.top
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/solvate.log>
-          | False: save log file as <logs/solvate_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Keyword Args:
@@ -593,6 +486,10 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
           | maximum number of solvent molecules to add if they fit in the box.
           | 0 (default): ignore this setting
         cprint_color (str)
+        log (bool): save log file
+        log_overwrite (bool):
+          | True: save log file as <logs/solvate.log>
+          | False: save log file as <logs/solvate_{i}.log> for i=1,...,999
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -600,52 +497,27 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top",
         - terminal -> gmx solvate -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _setup_config(**kwargs)
     ############################################################################
     odir = _misc.realpath(_misc.dirpath(cp))
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.solvate(cp=cp, cs=cs, o=o, p=p, **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
+        _, cfg.stdout, cfg.stderr = gromacs.solvate(cp=cp, cs=cs, o=o, p=p, **kwargs)
+        print(f"{cfg.stderr} /n {cfg.stdout}")
 
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/solvate.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/solvate_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-    return o_file
+    odir = _clean_func(o)
+    ofile = _save_func(o, cfg.cprint_color)
+    _log_func(logdir=f"{odir}/logs", logfile="solvate.log", cfg=cfg)
+    return ofile
 
 
 def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
-           neutral=True, log=True, log_overwrite=False, verbose=True, **kwargs):
+           neutral=True, verbose=True, **kwargs):
     """
     Modified fuction of gromacs.genion().
 
@@ -666,14 +538,14 @@ def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
         conc (float): add salt concentration (mol/liter) and rescale to box size
         neutral (bool): add enough ions to neutralize the system. These ions are
           added on top of those specified with -np/-nn or -conc
-        log (bool): save log file
-        log_overwrite (bool):
-          | True: save log file as <logs/genion.log>
-          | False: save log file as <logs/genion_{i}.log> for i=1,...,999
         verbose (bool): print/mute gromacs messages
 
     Keyword Args:
         cprint_color (str)
+        log (bool): save log file
+        log_overwrite (bool):
+          | True: save log file as <logs/genion.log>
+          | False: save log file as <logs/genion_{i}.log> for i=1,...,999
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -681,50 +553,25 @@ def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
         - terminal -> gmx genion -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
-    default = {"cprint_color": "blue"}
-    cfg = _misc.CONFIG(default, **kwargs)
+    cfg = _setup_config(**kwargs)
     ############################################################################
     odir = _misc.realpath(_misc.dirpath(o))
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.genion(s=s, o=o, p=p, pname=pname,
-                                               nname=nname, neutral=neutral,
-                                               input=str(input), **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
+        _, cfg.stdout, cfg.stderr = gromacs.genion(s=s, o=o, p=p, pname=pname,
+                                                   nname=nname, neutral=neutral,
+                                                   input=str(input), **kwargs)
+        print(f"{cfg.stderr} /n {cfg.stdout}")
 
-    # clean up
-    odir = _misc.dirpath(_misc.realpath(o))
-    clean_up("./", verbose=False)
-    clean_up(odir, verbose=False)
-
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    if log:
-        logdir = _misc.mkdir(f"{odir}/logs")
-        logfile = f"{logdir}/genion.log"
-        if not log_overwrite:
-            log_names = [f"{logdir}/genion_{i}.log" for i in range(1, 1000)]
-            for name in log_names:
-                if name in glob.glob(f"{logdir}/*.log"):
-                    continue  # skip existing log_name
-                else:
-                    logfile = name
-                    break  # stop at first new log_name
-        with open(logfile, "w") as fout:
-            _misc.cprint(f"Saved log as: {logfile}", cfg.cprint_color)
-            fout.write(f"STDERR:\n\n{stderr}\n")
-            fout.write(f"STDOUT:\n\n{stdout}\n")
-            clean_up(logdir, verbose=False)
-    return o_file
+    odir = _clean_func(o)
+    ofile = _save_func(o, cfg.cprint_color)
+    _log_func(logdir=f"{odir}/logs", logfile="genion.log", cfg=cfg)
+    return ofile
 
 
 def mdrun(verbose=True, **kwargs):
@@ -749,10 +596,8 @@ def mdrun(verbose=True, **kwargs):
     """
     # GromacsWrapper
     with _misc.HiddenPrints(verbose=verbose):
-        stdin, stdout, stderr = gromacs.mdrun(v=True, **kwargs)
-        print(stderr)
-        print()
-        print(stdout)
+        _, stdout, stderr = gromacs.mdrun(v=True, **kwargs)
+        print(f"{stderr} /n {stdout}")
     return
 
 
@@ -796,7 +641,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
        - terminal -> gmx trjconv -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
     default = {"cprint_color": "blue"}
@@ -824,14 +669,10 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
     with _misc.HiddenPrints(verbose=verbose):
         gromacs.trjconv(s=s, f=f, o=o, input=sel_code, **kwargs)
 
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-
-    #clean up
-    clean_up(path=_misc.dirpath(o_file), pattern=".*offsets.npz", verbose=False)
-    clean_up(path=_misc.dirpath(o_file), pattern="#*_protein.xtc*#", verbose=False)
-    return o_file
+    ofile = _save_func(o, cfg.cprint_color)
+    clean_up(path=_misc.dirpath(ofile), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=_misc.dirpath(ofile), pattern="#*_protein.xtc*#", verbose=False)
+    return ofile
 
 
 def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol", center=True,
@@ -916,7 +757,6 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
     xtc_file = trjconv(s=tpr_file, f=xtc, o=o[1], odir=odir, tu=tu, sel=sel, pbc=pbc,
                        center=center, verbose=verbose, **kwargs)
 
-    #clean up
     clean_up(path=_misc.dirpath(tpr_file), verbose=verbose)
     clean_up(path=_misc.dirpath(xtc_file), verbose=verbose)
     return tpr_file, xtc_file
@@ -953,7 +793,7 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel=["bb", "bb"], verbos
         - terminal -> gmx rms -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
     default = {"cprint_color": "blue"}
@@ -980,10 +820,8 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel=["bb", "bb"], verbos
             sel_code += f"{_get_sel_code(item)} "
         gromacs.rms(s=ref, f=xtc, o=o, tu=tu, input=sel_code, **kwargs)
 
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-    return o_file
+    ofile = _save_func(o, cfg.cprint_color)
+    return ofile
 
 
 def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip3p",
@@ -1015,7 +853,7 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
         - terminal -> gmx pdb2gmx -h
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
     default = {"cprint_color": "blue"}
@@ -1030,10 +868,8 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
     with _misc.HiddenPrints(verbose=verbose):
         gromacs.pdb2gmx(f=f, o=o, ff=ff, water=water.lower(), ignh=ignh, **kwargs)
 
-    # save message
-    o_file = _misc.realpath(o)
-    _misc.cprint(f"Saved file as: {o_file}", cfg.cprint_color)
-    return o_file
+    ofile = _save_func(o, cfg.cprint_color)
+    return ofile
 
 
 ################################################################################
@@ -1052,7 +888,7 @@ def create_complex(f=[], o="complex.gro", verbose=True):
         verbose (bool)
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
     if not isinstance(f, list):
@@ -1096,11 +932,10 @@ def create_complex(f=[], o="complex.gro", verbose=True):
         for line in data:
             handle.write(line)
 
-    o_file = _misc.realpath(o)
+    ofile = _misc.realpath(o)
     if verbose:
-        _misc.cprint(f"Saved complex as: {o_file}", "blue")
-
-    return o_file
+        _misc.cprint(f"Saved complex as: {ofile}", "blue")
+    return ofile
 
 
 def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, top="topol.top", top_out="topol_complex.top", verbose=True):
@@ -1117,7 +952,7 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
         verbose (bool)
 
     Returns:
-        o_file (str)
+        ofile (str)
             realpath of output file
     """
 
@@ -1167,11 +1002,11 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
             temp = f"{ligand_name}{whitespace}{ligand_nmol}\n"
         handle.write(temp)
 
-    o_file = _misc.realpath(top_out)
+    ofile = _misc.realpath(top_out)
     if verbose:
-        _misc.cprint(f"Saved extended complex topology as: {o_file}", "blue")
+        _misc.cprint(f"Saved extended complex topology as: {ofile}", "blue")
 
-    return o_file
+    return ofile
 
 
 def create_positions_dat(box_vec=[25, 25, 25],

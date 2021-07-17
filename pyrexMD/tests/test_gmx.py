@@ -2,7 +2,7 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 17.07.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx
@@ -37,54 +37,54 @@ def test_get_sel_code():
 
 def test_pdb2gmx():
     ref = gmx.get_ref_structure(pdb, ff='amber99sb-ildn', water='tip3p', ignh=True)
-    o_file = gmx.pdb2gmx(f=ref, o="protein.gro", ff='amber99sb-ildn', water='tip3p', ignh=True)
-    assert o_file == misc.realpath(f"{cwd}/protein.gro")
+    ofile = gmx.pdb2gmx(f=ref, o="protein.gro", ff='amber99sb-ildn', water='tip3p', ignh=True)
+    assert ofile == misc.realpath(f"{cwd}/protein.gro")
     return
 
 
 def test_editconf():
-    o_file = gmx.editconf(f="protein.gro", o="default", d=2.0, c=True, bt="cubic")
-    assert o_file == misc.realpath(f"{cwd}/box.gro")
+    ofile = gmx.editconf(f="protein.gro", o="default", d=2.0, c=True, bt="cubic")
+    assert ofile == misc.realpath(f"{cwd}/box.gro")
 
-    o_file = gmx.editconf(f="protein.gro", o="box.gro", odir="./", d=2.0, c=True, bt="cubic")
-    assert o_file == misc.realpath(f"{cwd}/box.gro")
+    ofile = gmx.editconf(f="protein.gro", o="box.gro", odir="./", d=2.0, c=True, bt="cubic")
+    assert ofile == misc.realpath(f"{cwd}/box.gro")
     return
 
 
 def test_convert_TPR2PDB():
-    o_file = gmx.convert_TPR2PDB(tpr=tpr, o="default", d=2.0, c=True, bt="cubic")
-    assert o_file == misc.realpath(f"{cwd}/traj_protein.pdb")
+    ofile = gmx.convert_TPR2PDB(tpr, o="default", d=2.0, c=True, bt="cubic")
+    assert ofile == misc.realpath(f"{cwd}/traj_protein.pdb")
 
-    o_file = gmx.convert_TPR2PDB(tpr="protein.gro", o="box.gro", odir="./", d=2.0, c=True, bt="cubic")
-    assert o_file == misc.realpath(f"{cwd}/box.gro")
+    ofile = gmx.convert_TPR2PDB("protein.gro", o="box.gro", odir="./", d=2.0, c=True, bt="cubic")
+    assert ofile == misc.realpath(f"{cwd}/box.gro")
     return
 
 
 def test_convert_TPR():
-    o_file = gmx.convert_TPR(s=tpr, o="default")
-    assert o_file == misc.realpath(f"{cwd}/traj_protein_protein.tpr")
+    ofile = gmx.convert_TPR(s=tpr, o="default")
+    assert ofile == misc.realpath(f"{cwd}/traj_protein_protein.tpr")
     return
 
 
 def test_solvate():
-    o_file = gmx.solvate(cp="box.gro", o="solvent.gro")
-    assert o_file == misc.realpath(f"{cwd}/solvent.gro")
+    ofile = gmx.solvate(cp="box.gro", o="solvent.gro")
+    assert ofile == misc.realpath(f"{cwd}/solvent.gro")
     return
 
 
 def test_grompp():
-    o_file = gmx.grompp(f=f"{pre}/ions.mdp", o="ions.tpr", c="solvent.gro", maxwarn=2, cprint_color="red")
-    o_file = gmx.grompp(f=f"{pre}/ions.mdp", o="ions.tpr", c="solvent.gro", maxwarn=2, cprint_color="red")  # coverage skip existing log
-    assert o_file == misc.realpath(f"{cwd}/ions.tpr")
+    ofile = gmx.grompp(f=f"{pre}/ions.mdp", o="ions.tpr", c="solvent.gro", maxwarn=2, cprint_color="red")
+    ofile = gmx.grompp(f=f"{pre}/ions.mdp", o="ions.tpr", c="solvent.gro", maxwarn=2, cprint_color="red")  # coverage skip existing log
+    assert ofile == misc.realpath(f"{cwd}/ions.tpr")
     return
 
 
 def test_genion():
     misc.cp("topol.top", "topol_bak.top")  # make copy for later
-    o_file = gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")
-    o_file = gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")  # coverage skip existing log
+    ofile = gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")
+    ofile = gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")  # coverage skip existing log
     misc.rm("ions.gro")
-    assert o_file == misc.realpath(f"{cwd}/ions.gro")
+    assert ofile == misc.realpath(f"{cwd}/ions.gro")
     return
 
 
@@ -97,8 +97,8 @@ def test_mdrun():
 
 
 def test_trjconv():
-    o_file = gmx.trjconv(s=tpr, f=xtc, o="default", center=True)
-    assert o_file == misc.realpath(f"{cwd}/traj_protein_protein.xtc")
+    ofile = gmx.trjconv(s=tpr, f=xtc, o="default", center=True)
+    assert ofile == misc.realpath(f"{cwd}/traj_protein_protein.xtc")
 
     # coverage
     gmx.trjconv(s=tpr, f=xtc, o="traj_bb.xtc", sel="bb", center=True)
@@ -124,18 +124,18 @@ def test_fix_TRAJ():
 
 def test_get_RMSD():
     ref = gmx.get_ref_structure(tpr, ff='amber99sb-ildn', water='tip3p', ignh=True)
-    o_file = gmx.get_RMSD(ref, xtc)
-    assert o_file == misc.realpath("rmsd.xvg")
+    ofile = gmx.get_RMSD(ref, xtc)
+    assert ofile == misc.realpath("rmsd.xvg")
     # coverage
     with pytest.raises(ValueError):
-        o_file = gmx.get_RMSD(pdb, xtc)
+        ofile = gmx.get_RMSD(pdb, xtc)
     return
 
 
 def test_create_complex():
     gro = "min.gro"
-    o_file = gmx.create_complex([gro, gro], o="complex.gro")
-    assert o_file == misc.realpath("complex.gro")
+    ofile = gmx.create_complex([gro, gro], o="complex.gro")
+    assert ofile == misc.realpath("complex.gro")
 
     # coverage
     with pytest.raises(misc.Error):
@@ -153,23 +153,23 @@ def test_extend_complex_topology():
     ligand_itp = f"{pre}/../atp/atp.itp"
     ligand_prm = f"{pre}/../atp/atp.prm"
     ligand_nmol = 2
-    o_file = gmx.extend_complex_topology(ligand_name=ligand_name,
-                                         ligand_itp=ligand_itp,
-                                         ligand_prm=ligand_prm,
-                                         ligand_nmol=ligand_nmol,
-                                         top="topol.top",
-                                         top_out="topol_complex.top")
-    assert o_file == misc.realpath("topol_complex.top")
+    ofile = gmx.extend_complex_topology(ligand_name=ligand_name,
+                                        ligand_itp=ligand_itp,
+                                        ligand_prm=ligand_prm,
+                                        ligand_nmol=ligand_nmol,
+                                        top="topol.top",
+                                        top_out="topol_complex.top")
+    assert ofile == misc.realpath("topol_complex.top")
 
     # coverage: add 2nd ligand
     ligand_name = "random_name2"
-    o_file = gmx.extend_complex_topology(ligand_name=ligand_name,
-                                         ligand_itp=ligand_itp,
-                                         ligand_prm=ligand_prm,
-                                         ligand_nmol=ligand_nmol,
-                                         top="topol_complex.top",
-                                         top_out="topol_complex.top")
-    assert o_file == misc.realpath("topol_complex.top")
+    ofile = gmx.extend_complex_topology(ligand_name=ligand_name,
+                                        ligand_itp=ligand_itp,
+                                        ligand_prm=ligand_prm,
+                                        ligand_nmol=ligand_nmol,
+                                        top="topol_complex.top",
+                                        top_out="topol_complex.top")
+    assert ofile == misc.realpath("topol_complex.top")
     return
 
 
