@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 19.07.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -1863,6 +1863,59 @@ def figure(num=None, figsize=(6.5, 4), dpi=None, grid=[1, 1], hr=[], wr=[],
     return (fig, ax)
 
 
+def scatter(x, y, z=None, **kwargs):
+    """
+    Creates scatter plot. Applies cmap for z values if z is passed.
+
+    Args:
+        x (array)
+        y (array)
+        z (None, array)
+
+    Keyword Args:
+        figsize (tuple)
+        aspect ('auto', 'equal', 'int'):
+
+        marker (None, str)
+        ms (None, int): marker size
+        cmap (str):
+          | colormap name, e.g. 'virids', 'plasma', 'inferno', 'summer', 'winter', 'cool', etc.
+          | You can reverse the cmap by appending '_r' to the name.
+          | See https://matplotlib.org/stable/tutorials/colors/colormaps.html
+        vmin (None, float): min value of cmap and colorbar
+        vmax (None, float): max value of cmap and colorbar
+        cbar_label (None, str)
+        xlabel (None, str)
+        ylabel (None, str)
+
+    Returns:
+        fig (class)
+            matplotlib.figure.Figure
+        ax (class, list)
+            ax or list of axes ~ matplotlib.axes._subplots.Axes
+    """
+    default = {"figsize": (6.6, 6.6),
+               "aspect": "auto",
+               "marker": None,
+               "ms": None,
+               "cmap": "viridis",
+               "vmin": None,
+               "vmax": None,
+               "cbar_label": None,
+               "xlabel": None,
+               "ylabel": None}
+    cfg = CONFIG(default, **kwargs)
+    ###########################################################
+    fig, ax = figure(**cfg)
+    plt.scatter(x=x, y=y, c=z, s=cfg.ms, marker=cfg.marker, cmap=cfg.cmap, vmin=cfg.vmin, vmax=cfg.vmax)
+    plt.xlabel(cfg.xlabel, fontweight="bold")
+    plt.ylabel(cfg.ylabel, fontweight="bold")
+    add_cbar(ax=ax, **cfg)
+    ax.set_aspect(cfg.aspect)
+    plt.tight_layout()
+    return (fig, ax)
+
+
 def set_pad(fig_or_ax, xpad=None, ypad=None):
     """
     Set pad (spacing) between axis and axis labels
@@ -3095,10 +3148,10 @@ def add_cbar(ax, cbar_ax=None, cmap=None, bounds="auto", location="right", orien
     Keyword Args:
         vmin (None, float): colorbar min value
         vmax (None, float): colorbar max value
-        cbar_label/label (str)
-        cbar_fontweight/fontweight (str): "normal", "bold"
-        cbar_location/location (str): "right", "bottom", "left", "top"
-        cbar_orientation/orientation (str): "vertical", "horizontal"
+        cbar_label/label (None, str)
+        cbar_fontweight/fontweight (None, str): "bold", "normal"
+        cbar_location/location (None, str): "right", "bottom", "left", "top"
+        cbar_orientation/orientation (None, str): "vertical", "horizontal"
 
     Returns:
         cbar (matplotlib.colorbar.Colorbar)
@@ -3106,8 +3159,8 @@ def add_cbar(ax, cbar_ax=None, cmap=None, bounds="auto", location="right", orien
     """
     default = {"vmin": None,
                "vmax": None,
-               "cbar_label": "",
-               "cbar_fontweight": "normal",
+               "cbar_label": None,
+               "cbar_fontweight": "bold",
                "cbar_location": location,
                "cbar_orientation": orientation
                }

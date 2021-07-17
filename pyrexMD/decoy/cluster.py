@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 29.06.2021
+# @Last modified time: 19.07.2021
 
 """
 This module contains functions for:
@@ -951,7 +951,7 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
 
 def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     """
-    plot cluster data
+    plot cluster data in a scatter plot.
 
     .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.
 
@@ -965,7 +965,12 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
         markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
         markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.
         ms (int): marker size. Defaults to 40.
-        figsize (tuple): Defaults to(9, 9)
+        figsize (tuple): Defaults to (6.6, 5.4)
+        aspect ('auto', 'equal', int):
+          | aspect ratio of figure. Defaults to 'auto'.
+          | 'auto': fill the position rectangle with data.
+          | 'equal': synonym for aspect=1, i.e. same scaling for x and y.
+          | int: a circle will be stretched such that the height is *int* times the width.
 
     Returns:
         fig (class)
@@ -978,7 +983,8 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                "markers_list": ["o", "^", "s", "v", "P", "X"],
                "markers_repeats": [10, 10, 10, 10, 10, 10],
                "ms": 40,
-               "figsize": (6.6, 6.6)}
+               "figsize": (6.6, 5.4),
+               "aspect": "auto"}
     default = _misc.CONFIG(default, **kwargs)
     default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
     modified = {"cmap": default.cmap[:size],
@@ -1005,6 +1011,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     h, l = ax.get_legend_handles_labels()
     ax.legend_.remove()
     ax.legend(h, l, ncol=2, bbox_to_anchor=(1.0, 1.0), loc='upper left', fontsize='xx-small')
+    ax.set_aspect(cfg.aspect)
     plt.tight_layout()
 
     return fig, ax

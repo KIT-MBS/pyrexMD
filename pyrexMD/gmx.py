@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 17.07.2021
+# @Last modified time: 19.07.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
