@@ -95,7 +95,7 @@ __fix_ResourceWarning__()
 
 def _setup_config(**kwargs):
     """
-    setup default config
+    setup default config.
     """
     default = {"cprint_color": "blue",
                "log": True,
