@@ -534,7 +534,7 @@ run MD simulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -544,25 +544,23 @@ run MD simulations.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.convert_TPR2PDB">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">convert_TPR2PDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tpr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#convert_TPR2PDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.convert_TPR2PDB" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">convert_TPR2PDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrexMD.gmx.convert_TPR2PDB" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
 <li><p>Modified function of gromacs.editconf()</p></li>
-<li><p>Alias function of editconf()</p></li>
+<li><p>Alias function of convert_TPR2PDB()</p></li>
 </ul>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro or .g96.</p>
+<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tpr</strong> (<em>str</em>) – tpr (gro g96 pdb brk ent esp)</p></li>
+<li><p><strong>f</strong> (<em>str</em>) – tpr (gro g96 pdb brk ent esp)</p></li>
 <li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
 <div class="line">pdb (gro g96)</div>
-<div class="line">”default”: &lt;filename&gt;.tpr -&gt; &lt;filename&gt;.pdb</div>
-<div class="line-block">
-<div class="line">&lt;filename&gt;.gro -&gt; box.gro</div>
-</div>
+<div class="line">”default”: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</div>
+<div class="line">&lt;f&gt;.gro -&gt; box.gro</div>
 </div>
 </p></li>
 <li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
@@ -570,20 +568,26 @@ run MD simulations.</p>
 <div class="line">special case: odir is ignored when o is relative/absolute path</div>
 </div>
 </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>box</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">box vector lengths xyz (only 1 value for bt=”cubic”).</div>
+<div class="line">requires center=False to work.</div>
+</div>
+</p></li>
+<li><p><strong>bt</strong> (<em>str</em>) – box type: cubic triclinic dodecahedron octahedron</p></li>
+<li><p><strong>c</strong> (<em>bool</em>) – center molecule in box</p></li>
+<li><p><strong>d</strong> (<em>str</em>) – distance between the solute and the box</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
 <li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
 <li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
 <div class="line">True: save log file as &lt;logs/editconf.log&gt;</div>
 <div class="line">False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,…,999</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>bt</strong> (<em>str</em>) – box type: cubic triclinic dodecahedron octahedron</p></li>
-<li><p><strong>c</strong> (<em>bool</em>) – center molecule in box</p></li>
-<li><p><strong>d</strong> (<em>str</em>) – distance between the solute and the box</p></li>
 </ul>
 </dd>
 </dl>
@@ -591,14 +595,14 @@ run MD simulations.</p>
 <p class="admonition-title">Hint</p>
 <p>Find more valid Keyword Args via</p>
 <ul class="simple">
-<li><p>python -&gt; gromacs.editconf.help()</p></li>
+<li><p>python  -&gt; gromacs.editconf.help()</p></li>
 <li><p>terminal -&gt; gmx editconf -h</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -621,7 +625,7 @@ largest box.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -660,10 +664,10 @@ insert-molecule cmd)</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.editconf">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">editconf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#editconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.editconf" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">editconf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#editconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.editconf" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
 <li><p>Modified function of gromacs.editconf()</p></li>
-<li><p>Alias function of TPR2PDB()</p></li>
+<li><p>Alias function of convert_TPR2PDB()</p></li>
 </ul>
 <dl class="simple">
 <dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
@@ -684,12 +688,6 @@ insert-molecule cmd)</p></li>
 <div class="line">special case: odir is ignored when o is relative/absolute path</div>
 </div>
 </p></li>
-<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
-<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: save log file as &lt;logs/editconf.log&gt;</div>
-<div class="line">False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,…,999</div>
-</div>
-</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
 </ul>
 </dd>
@@ -704,6 +702,12 @@ insert-molecule cmd)</p></li>
 <li><p><strong>c</strong> (<em>bool</em>) – center molecule in box</p></li>
 <li><p><strong>d</strong> (<em>str</em>) – distance between the solute and the box</p></li>
 <li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/editconf.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -718,7 +722,7 @@ insert-molecule cmd)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -744,7 +748,7 @@ insert-molecule cmd)</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -839,7 +843,7 @@ insert-molecule cmd)</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.genion">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SOL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SOL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified fuction of gromacs.genion().</p>
 <dl class="simple">
 <dt>Gromacs info:</dt><dd><p>gmx genion randomly replaces solvent molecules with monoatomic ions.
@@ -863,17 +867,19 @@ should have the same number of atoms.</p>
 <li><p><strong>conc</strong> (<em>float</em>) – add salt concentration (mol/liter) and rescale to box size</p></li>
 <li><p><strong>neutral</strong> (<em>bool</em>) – add enough ions to neutralize the system. These ions are
 added on top of those specified with -np/-nn or -conc</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
 <li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
 <li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
 <div class="line">True: save log file as &lt;logs/genion.log&gt;</div>
 <div class="line">False: save log file as &lt;logs/genion_{i}.log&gt; for i=1,…,999</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
 </ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – </p>
 </dd>
 </dl>
 <div class="admonition hint">
@@ -887,7 +893,7 @@ added on top of those specified with -np/-nn or -conc</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -941,7 +947,7 @@ added on top of those specified with -np/-nn or -conc</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -990,7 +996,7 @@ applying force field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -1040,7 +1046,7 @@ applying force field.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.grompp">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">grompp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#grompp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.grompp" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">grompp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#grompp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.grompp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.grompp().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1049,12 +1055,6 @@ applying force field.</p>
 <li><p><strong>o</strong> (<em>str</em>) – output file: tpr</p></li>
 <li><p><strong>c</strong> (<em>str</em>) – structure file: gro tpr pdb (g96 brk ent esp)</p></li>
 <li><p><strong>p</strong> (<em>str</em>) – topology file: top</p></li>
-<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
-<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: save log file as &lt;logs/grompp.log&gt;</div>
-<div class="line">False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,…,999</div>
-</div>
-</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
 </ul>
 </dd>
@@ -1066,6 +1066,12 @@ applying force field.</p>
 </div>
 </p></li>
 <li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/grompp.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -1080,7 +1086,7 @@ applying force field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -1121,7 +1127,7 @@ instead</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.pdb2gmx">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">pdb2gmx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#pdb2gmx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.pdb2gmx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">pdb2gmx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#pdb2gmx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.pdb2gmx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.pdb2gmx().</p>
 <dl class="simple">
 <dt>Gromacs info:</dt><dd><p>‘pdb2gmx’ reads a .pdb (or .gro) file, reads some database files, adds
@@ -1148,12 +1154,6 @@ can subsequently be processed to generate a run input file.</p>
 </p></li>
 <li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
-<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
-<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: save log file as &lt;logs/pdb2gmx.log&gt;</div>
-<div class="line">False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,…,999</div>
-</div>
-</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
 </ul>
 </dd>
@@ -1163,6 +1163,12 @@ can subsequently be processed to generate a run input file.</p>
 <li><p><strong>i</strong> (<em>str</em>) – include file for topology: posre.itp</p></li>
 <li><p><strong>n</strong> (<em>str</em>) – index file: index.ndx</p></li>
 <li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/pdb2gmx.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -1177,7 +1183,7 @@ can subsequently be processed to generate a run input file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -1187,7 +1193,7 @@ can subsequently be processed to generate a run input file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.solvate">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">solvate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spc216.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solvent.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#solvate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.solvate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">solvate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spc216.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solvent.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#solvate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.solvate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.solvate(). cp is usually “box.gro”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1205,12 +1211,6 @@ can subsequently be processed to generate a run input file.</p>
 </div>
 </p></li>
 <li><p><strong>p</strong> (<em>str</em>) – topology file: topol.top</p></li>
-<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
-<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
-<div class="line">True: save log file as &lt;logs/solvate.log&gt;</div>
-<div class="line">False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,…,999</div>
-</div>
-</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
 </ul>
 </dd>
@@ -1222,6 +1222,12 @@ can subsequently be processed to generate a run input file.</p>
 </div>
 </p></li>
 <li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/solvate.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -1236,7 +1242,7 @@ can subsequently be processed to generate a run input file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
@@ -1299,7 +1305,7 @@ can subsequently be processed to generate a run input file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>o_file (str)</dt><dd><p>realpath of output file</p>
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
 </dd>
 </dl>
 </p>
