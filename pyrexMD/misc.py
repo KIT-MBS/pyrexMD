@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 19.07.2021
+# @Last modified time: 20.07.2021
 
 """
 This module is a collection of miscellaneous functions.
@@ -1892,9 +1892,12 @@ def scatter(x, y, z=None, **kwargs):
         z (None, array)
 
     Keyword Args:
-        figsize (tuple)
-        aspect ('auto', 'equal', 'int'):
-
+        figsize (tuple): Defaults to (6.6, 5.6)
+        aspect ('auto', 'equal', int):
+          | aspect ratio of figure. Defaults to 'auto'.
+          | 'auto': fill the position rectangle with data.
+          | 'equal': synonym for aspect=1, i.e. same scaling for x and y.
+          | int: a circle will be stretched such that the height is *int* times the width.
         marker (None, str)
         ms (None, int): marker size
         cmap (str):
@@ -1913,7 +1916,7 @@ def scatter(x, y, z=None, **kwargs):
         ax (class, list)
             ax or list of axes ~ matplotlib.axes._subplots.Axes
     """
-    default = {"figsize": (6.6, 6.6),
+    default = {"figsize": (6.6, 5.6),
                "aspect": "auto",
                "marker": None,
                "ms": None,

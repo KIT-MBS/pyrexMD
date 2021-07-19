@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 19.07.2021
+# @Last modified time: 20.07.2021
 
 """
 This module contains functions for:
@@ -559,11 +559,11 @@ def get_DM_WSS(DM, centers, labels, sss=[None, None, None], **kwargs):
         WSS_DATA (WSS_DATA)
           | .wss (float)
           |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-          | .sse (list)
+          | .sse (array)
           |     Sum of Squared Errors (of individual clusters)
-          | .se_mean (list)
+          | .se_mean (array)
           |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
-          | .se_std (list)
+          | .se_std (array)
           |     std values of Squared Errors for each cluster
     """
     default = {"start": sss[0],
@@ -621,11 +621,11 @@ def get_WSS(data, centers, labels, **kwargs):
         WSS_DATA (WSS_DATA)
           | .wss (float)
           |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
-          | .sse (list)
+          | .sse (array)
           |     Sum of Squared Errors (of individual clusters)
-          | .se_mean (list)
+          | .se_mean (array)
           |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
-          | .se_std (list)
+          | .se_std (array)
           |     std values of Squared Errors for each cluster
     """
     default = {"prec": 3,
@@ -901,6 +901,47 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
     return cluster_accuracy
 
 
+def sort_cluster_data(cluster_data, cluster_accuracy):
+    """
+    sort cluster data based on GDT_mean values of cluster_accuracy.
+      -> cluster 0 will have highest GDT_mean
+      -> cluster <max> will have lowest GDT_mean
+
+    Args:
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().
+        cluster_accuracy (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
+
+    Returns:
+        sorted_cluster_data (CLUSTER_DATA)
+            sorted cluster_data
+    """
+    if not isinstance(cluster_data, CLUSTER_DATA):
+        raise TypeError("cluster_data has wrong data type.")
+    if not isinstance(cluster_accuracy, CLUSTER_DATA_ACCURACY):
+        raise TypeError("cluster_accuracy has wrong data type.")
+
+    # rank and test if labels have same range
+    ranked_array, ranked_ndx = _misc.get_ranked_array(cluster_accuracy.GDT_mean, verbose=False)
+    if set(cluster_data.labels) != set(ranked_ndx):
+        raise ValueError("labels of cluster_data and cluster_accuracy do not match.")
+
+    # remap data
+    sorted_labels = [ranked_ndx.tolist().index(i) for i in cluster_data.labels]
+    sorted_wss_data = WSS_DATA_obj(wss=cluster_data.wss_data.wss,                      # float
+                                   sse=cluster_data.wss_data.sse[ranked_ndx],          # sorted
+                                   se_mean=cluster_data.wss_data.se_mean[ranked_ndx],  # sorted
+                                   se_std=cluster_data.wss_data.se_std[ranked_ndx])    # sorted
+
+    # create new object
+    sorted_cluster_data = CLUSTER_DATA(centers=cluster_data.centers[ranked_ndx],  # sorted
+                                       counts=cluster_data.counts[ranked_ndx],    # sorted
+                                       labels=sorted_labels,                      # sorted
+                                       inertia=cluster_data.inertia,              # float
+                                       wss_data=sorted_wss_data,                  # sorted
+                                       compact_score=cluster_data.compact_score[ranked_ndx])  # sorted
+    return sorted_cluster_data
+
+
 def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
     """
     apply t-distributed stochastic neighbor embedding on data.
@@ -965,7 +1006,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
         markers_repeats (list): Defaults to [10, 10, 10, 10, 10, 10]. Specifies how often each marker should be repeated before changing to the next marker.
         markers (list): list of markers used to plot. Will be generated based on markers_list and markers_repeats or can be passed directly.
         ms (int): marker size. Defaults to 40.
-        figsize (tuple): Defaults to (6.6, 5.4)
+        figsize (tuple): Defaults to (6.6, 5.6)
         aspect ('auto', 'equal', int):
           | aspect ratio of figure. Defaults to 'auto'.
           | 'auto': fill the position rectangle with data.
@@ -983,7 +1024,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                "markers_list": ["o", "^", "s", "v", "P", "X"],
                "markers_repeats": [10, 10, 10, 10, 10, 10],
                "ms": 40,
-               "figsize": (6.6, 5.4),
+               "figsize": (6.6, 5.6),
                "aspect": "auto"}
     default = _misc.CONFIG(default, **kwargs)
     default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
@@ -1212,11 +1253,11 @@ class CLUSTER_DATA(object):
             wss_data (None, WSS_DATA)
             compact_score (None, array): mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
         """
-        self.centers = centers
-        self.counts = counts
-        self.labels = labels
-        self.inertia = inertia
-        self.wss_data = wss_data
+        self.centers = np.array(centers)
+        self.counts = np.array(counts)
+        self.labels = np.array(labels)
+        self.inertia = float(inertia)
+        self.wss_data = WSS_DATA_obj(wss=wss_data.wss, sse=wss_data.sse, se_mean=wss_data.se_mean, se_std=wss_data.se_std)
         self.compact_score = np.array(compact_score)
         return
 
@@ -1357,8 +1398,18 @@ class CLUSTER_DATA_ACCURACY(object):
 
 class WSS_DATA_obj(object):
     def __init__(self, wss=None, sse=None, se_mean=None, se_std=None):
+        """
+        | .wss (float)
+        |     Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+        | .sse (array)
+        |     Sum of Squared Errors (of individual clusters)
+        | .se_mean (array)
+        |     mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+        | .se_std (array)
+        |     std values of Squared Errors for each cluster
+        """
         self.wss = wss
-        self.sse = sse
-        self.se_mean = se_mean
-        self.se_std = se_std
+        self.sse = np.array(sse)
+        self.se_mean = np.array(se_mean)
+        self.se_std = np.array(se_std)
         return
