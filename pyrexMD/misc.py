@@ -1649,7 +1649,7 @@ def get_subarray(array, ndx_sel):
     return np.array(subarray)
 
 
-def get_sorted_array(array):
+def get_sorted_array(array, reverse=False, verbose=True, **kwargs):
     """
     Returns sorted array (increasing order) and the coresponding element indices
     of the input array.
@@ -1662,6 +1662,19 @@ def get_sorted_array(array):
             sorted array
         SORTED_NDX (array)
             corresponding indices
+        reverse (bool):
+          | False: ascending ranking order (low to high)
+          | True:  decending ranking order (high to low)
+        verbose (bool): print table with RANKED_VALUES, RANKED_NDX
+
+    Keyword Args:
+        prec(None, int):
+          | None: rounding off
+          | int:  rounding on
+        spacing (int):
+          | spacing between columns (via "".expandtabs(spacing))
+          | 8: default \\t width
+        verbose_stop (None, int): stop printing after N lines
 
     Example:
         | >> A = np.array([1, 3, 2, 4])
@@ -1671,8 +1684,15 @@ def get_sorted_array(array):
     if not isinstance(array, np.ndarray):
         array = np.array(array)
 
-    SORTED_ARRAY = np.sort(array)
-    SORTED_NDX = np.argsort(array)
+    if not reverse:
+        SORTED_ARRAY = np.sort(array)
+        SORTED_NDX = np.argsort(array)
+    else:
+        SORTED_ARRAY = np.flip(np.sort(array))
+        SORTED_NDX = np.flip(np.argsort(array))
+
+    if verbose:
+        print_table([SORTED_ARRAY, SORTED_NDX], **kwargs)
 
     return (SORTED_ARRAY, SORTED_NDX)
 
@@ -1684,8 +1704,8 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
     Args:
         array (array, list): array-like object
         reverse (bool):
-          | True:  ascending ranking order (low to high)
           | False: decending ranking order (high to low)
+          | True:  ascending ranking order (low to high)
         verbose (bool): print table with RANKED_VALUES, RANKED_NDX
 
     Keyword Args:
@@ -1720,7 +1740,6 @@ def get_ranked_array(array, reverse=False, verbose=True, **kwargs):
 
     if verbose:
         print_table([RANKED_ARRAY, RANKED_NDX], **kwargs)
-
     return (RANKED_ARRAY, RANKED_NDX)
 
 

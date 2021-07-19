@@ -503,7 +503,7 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
 
     TOPX_CLUSTER = CLUSTER[-topx:][::-1]
     if verbose:
-        _misc.cprint(f"Returned clusters:", "blue")
+        _misc.cprint("Returned clusters:", "blue")
         for ndx, item in enumerate(TOPX_CLUSTER):
             _misc.cprint(f"index: {ndx}\tWSS: {item.wss_data.wss}", "blue")
     return TOPX_CLUSTER
@@ -709,7 +709,7 @@ def apply_elbow_method(h5_file, n_clusters=range(10, 31, 5), sss=[None, None, No
 
         if verbose:
             if first_print:
-                _misc.cprint(f"\nN Clusters\tWSS ", "blue")
+                _misc.cprint("\nN Clusters\tWSS ", "blue")
                 first_print = False
             _misc.cprint(f"{i}\t{cluster_data.wss_data.wss}")
 
@@ -1283,6 +1283,7 @@ class CLUSTER_DATA_SCORES(object):
 
             # DELTA[i] = mean[i] - mean_all
             self.DELTA.append(round(self.mean[ndx]-self.mean_all_filtered, prec))
+
         return
 
 
