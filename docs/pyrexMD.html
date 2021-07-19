@@ -1548,10 +1548,10 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>vmin</strong> (<em>None</em><em>, </em><em>float</em>) – colorbar min value</p></li>
 <li><p><strong>vmax</strong> (<em>None</em><em>, </em><em>float</em>) – colorbar max value</p></li>
-<li><p><strong>cbar_label/label</strong> (<em>str</em>) – </p></li>
-<li><p><strong>cbar_fontweight/fontweight</strong> (<em>str</em>) – “normal”, “bold”</p></li>
-<li><p><strong>cbar_location/location</strong> (<em>str</em>) – “right”, “bottom”, “left”, “top”</p></li>
-<li><p><strong>cbar_orientation/orientation</strong> (<em>str</em>) – “vertical”, “horizontal”</p></li>
+<li><p><strong>cbar_label/label</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>cbar_fontweight/fontweight</strong> (<em>None</em><em>, </em><em>str</em>) – “bold”, “normal”</p></li>
+<li><p><strong>cbar_location/location</strong> (<em>None</em><em>, </em><em>str</em>) – “right”, “bottom”, “left”, “top”</p></li>
+<li><p><strong>cbar_orientation/orientation</strong> (<em>None</em><em>, </em><em>str</em>) – “vertical”, “horizontal”</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
@@ -3405,6 +3405,49 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>realpath (str)</dt><dd><p>realpath to saved figure</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.misc.scatter">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">scatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#scatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.scatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates scatter plot. Applies cmap for z values if z is passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – </p></li>
+<li><p><strong>y</strong> (<em>array</em>) – </p></li>
+<li><p><strong>z</strong> (<em>None</em><em>, </em><em>array</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
+<li><p><strong>aspect</strong> (<em>'auto'</em><em>, </em><em>'equal'</em><em>, </em><em>'int'</em>) – </p></li>
+<li><p><strong>marker</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>ms</strong> (<em>None</em><em>, </em><em>int</em>) – marker size</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">colormap name, e.g. ‘virids’, ‘plasma’, ‘inferno’, ‘summer’, ‘winter’, ‘cool’, etc.</div>
+<div class="line">You can reverse the cmap by appending ‘_r’ to the name.</div>
+<div class="line">See <a class="reference external" href="https://matplotlib.org/stable/tutorials/colors/colormaps.html">https://matplotlib.org/stable/tutorials/colors/colormaps.html</a></div>
+</div>
+</p></li>
+<li><p><strong>vmin</strong> (<em>None</em><em>, </em><em>float</em>) – min value of cmap and colorbar</p></li>
+<li><p><strong>vmax</strong> (<em>None</em><em>, </em><em>float</em>) – max value of cmap and colorbar</p></li>
+<li><p><strong>cbar_label</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>xlabel</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
+<li><p><strong>ylabel</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>fig (class)</dt><dd><p>matplotlib.figure.Figure</p>
+</dd>
+<dt>ax (class, list)</dt><dd><p>ax or list of axes ~ matplotlib.axes._subplots.Axes</p>
 </dd>
 </dl>
 </p>
