@@ -3447,8 +3447,14 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
-<li><p><strong>aspect</strong> (<em>'auto'</em><em>, </em><em>'equal'</em><em>, </em><em>'int'</em>) – </p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Defaults to (6.6, 5.6)</p></li>
+<li><p><strong>aspect</strong> (<em>'auto'</em><em>, </em><em>'equal'</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">aspect ratio of figure. Defaults to ‘auto’.</div>
+<div class="line">’auto’: fill the position rectangle with data.</div>
+<div class="line">’equal’: synonym for aspect=1, i.e. same scaling for x and y.</div>
+<div class="line">int: a circle will be stretched such that the height is <em>int</em> times the width.</div>
+</div>
+</p></li>
 <li><p><strong>marker</strong> (<em>None</em><em>, </em><em>str</em>) – </p></li>
 <li><p><strong>ms</strong> (<em>None</em><em>, </em><em>int</em>) – marker size</p></li>
 <li><p><strong>cmap</strong> (<em>str</em>) – <div class="line-block">
