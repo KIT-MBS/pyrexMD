@@ -3,7 +3,6 @@
 [![codecov](https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW)](https://codecov.io/gh/KIT-MBS/pyrexMD)
 
 
-
 About pyrexMD
 =============
 

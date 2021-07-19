@@ -1024,7 +1024,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                "markers_list": ["o", "^", "s", "v", "P", "X"],
                "markers_repeats": [10, 10, 10, 10, 10, 10],
                "ms": 40,
-               "figsize": (6.6, 5.6),
+               "figsize": (6.6, 6.6),
                "aspect": "auto"}
     default = _misc.CONFIG(default, **kwargs)
     default_markers = [default.markers_list[ndx] for ndx, item in enumerate(default.markers_repeats) for _ in range(item)]
@@ -1256,8 +1256,8 @@ class CLUSTER_DATA(object):
         self.centers = np.array(centers)
         self.counts = np.array(counts)
         self.labels = np.array(labels)
-        self.inertia = float(inertia)
-        self.wss_data = WSS_DATA_obj(wss=wss_data.wss, sse=wss_data.sse, se_mean=wss_data.se_mean, se_std=wss_data.se_std)
+        self.inertia = inertia
+        self.wss_data = wss_data
         self.compact_score = np.array(compact_score)
         return
 
