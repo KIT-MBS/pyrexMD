@@ -564,7 +564,7 @@ update_alias_docstring(rm, remove)
 
 def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
     """
-    Alias function of termcolor.cprint(). Apply colored print.
+    Modified function of termcolor.cprint(). Apply colored print.
 
     Args:
         msg (str)

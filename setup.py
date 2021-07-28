@@ -2,7 +2,7 @@
 # @Date:   11.05.2021
 # @Filename: setup.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 29.07.2021
 
 from setuptools import setup, find_packages
 import sys
@@ -44,7 +44,7 @@ if sys.version_info.minor == 8:
               'pytest-cov>=2.12.1',
               'seaborn>=0.11.1',
               'termcolor>=1.1.0',
-              'tqdm>=4.61.1',
+              'tqdm>=4.61.2',
               'widgetsnbextension>=3.5.1'
           ]
           )
@@ -79,7 +79,7 @@ if sys.version_info.minor == 6:
               'pytest-cov>=2.12.1',
               'seaborn>=0.11.1',
               'termcolor>=1.1.0',
-              'tqdm>=4.60.0',
+              'tqdm>=4.61.2',
               'widgetsnbextension>=3.4.2'
           ]
           )
