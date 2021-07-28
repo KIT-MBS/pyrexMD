@@ -3,9 +3,7 @@ import os
 import pytest
 import pathlib
 from unittest.mock import patch
-from numpy.testing import assert_allclose
 import numpy as np
-import MDAnalysis as mda
 import pyrexMD.decoy.cluster as clu
 import pyrexMD.misc as misc
 
@@ -13,10 +11,11 @@ import pyrexMD.misc as misc
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
 pathname = posixpath.send(None).as_posix()        # get first path name
-main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+main_dir = os.path.relpath(os.path.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
 # set up test paths
-cwd = misc.cwd(verbose=False)
+cwd = os.getcwd()
+print(f"cwd: {cwd}")
 pre = f"{main_dir}"
 pre2 = f"{main_dir}/examples/files/cluster"
 pre3 = f"{main_dir}/examples/files/rex"
@@ -60,11 +59,11 @@ def test_rank_cluster_decoys():
     expected_BEST_SCORES = [-240.863, -230.116]
     expected_CLUSTER_DECOYS = [[f'{pre3}/decoys/1LMB_23.pdb',
                                 f'{pre3}/decoys/1LMB_104.pdb',
-                               f'{pre3}/decoys/1LMB_16.pdb',
+                                f'{pre3}/decoys/1LMB_16.pdb',
                                 f'{pre3}/decoys/1LMB_96.pdb',
                                 f'{pre3}/decoys/1LMB_45.pdb'],
                                [f'{pre3}/decoys/1LMB_303.pdb',
-                               f'{pre3}/decoys/1LMB_348.pdb',
+                                f'{pre3}/decoys/1LMB_348.pdb',
                                 f'{pre3}/decoys/1LMB_155.pdb',
                                 f'{pre3}/decoys/1LMB_285.pdb',
                                 f'{pre3}/decoys/1LMB_361.pdb']]
@@ -80,11 +79,11 @@ def test_rank_cluster_decoys():
     BEST_DECOYS, BEST_SCORES, CLUSTER_DECOYS, CLUSTER_SCORES = clu.rank_cluster_decoys(decoy_list=decoy_list, scores=scores, labels=labels, return_path=False)
     expected_CLUSTER_DECOYS = [['1LMB_23.pdb',
                                 '1LMB_104.pdb',
-                               '1LMB_16.pdb',
+                                '1LMB_16.pdb',
                                 '1LMB_96.pdb',
                                 '1LMB_45.pdb'],
                                ['1LMB_303.pdb',
-                               '1LMB_348.pdb',
+                                '1LMB_348.pdb',
                                 '1LMB_155.pdb',
                                 '1LMB_285.pdb',
                                 '1LMB_361.pdb']]
@@ -99,9 +98,9 @@ def test_copy_cluster_decoys():
     target_dir = "./copied_decoys"
 
     val = clu.copy_cluster_decoys(decoy_list=decoy_list, target_dir=target_dir)
-    assert val == misc.realpath(target_dir)
+    assert val == os.path.realpath(target_dir)
 
-    decoy_list2 = clu.get_decoy_list(misc.realpath(target_dir))
+    decoy_list2 = clu.get_decoy_list(os.path.realpath(target_dir))
     print("length:", len(decoy_list2))
     print("length:", len(decoy_list))
     for i in range(len(decoy_list)):
@@ -142,7 +141,7 @@ def test_save_h5():
     DM = clu.read_h5(f"{pre2}/DM")                   # coverage: append .h5
     h5_file = clu.save_h5(DM, save_as="./temp")   # coverage: append .h5
 
-    assert h5_file == misc.realpath("./temp.h5")
+    assert h5_file == os.path.realpath("./temp.h5")
     misc.rm("./temp.h5")
     return
 
@@ -376,8 +375,8 @@ def test_WF_print_cluster_accuracy_AND_test_WF_print_cluster_scores():
     log1 = clu.WF_print_cluster_accuracy(cluster_data=KMEANS, cluster_accuracy=cluster10_accuracy, targets=[0], save_as="./log1.log")
     log2 = clu.WF_print_cluster_scores(cluster_data=KMEANS, cluster_scores=cluster10_scores, targets=[0], save_as="./log2.log")
 
-    assert log1 == misc.realpath("./log1.log")
-    assert log2 == misc.realpath("./log2.log")
+    assert log1 == os.path.realpath("./log1.log")
+    assert log2 == os.path.realpath("./log2.log")
     misc.rm("./log1.log")
     misc.rm("./log2.log")
 

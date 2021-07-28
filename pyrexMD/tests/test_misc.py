@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_misc.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 28.07.2021
 
 
 import pyrexMD.misc as misc
@@ -19,10 +19,11 @@ import os
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
 pathname = posixpath.send(None).as_posix()        # get first path name
-main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+main_dir = os.path.relpath(os.path.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
 # set up test paths
-cwd = misc.cwd(verbose=False)
+cwd = os.getcwd()
+print(f"cwd: {cwd}")
 pre = f"{main_dir}/tests"
 pre2 = f"{main_dir}/tests/files/figs/"
 pre3 = f"{main_dir}/examples/files/protein/"
@@ -290,11 +291,6 @@ def test_CONFIG():
 ### coverage of less important functions
 
 
-def test_apply_matplotlib_rc_settings():
-    misc.apply_matplotlib_rc_settings()
-    return
-
-
 def test_HiddenPrints_ALL():
     with misc.HiddenPrints_ALL():
         print("will be hidden")
@@ -304,26 +300,6 @@ def test_HiddenPrints_ALL():
 def test_timeit():
     t = misc.timeit()
     t = misc.timeit(t)
-    return
-
-
-def test_cwd():
-    misc.cwd()
-    return
-
-
-def test_pwd():
-    misc.pwd()
-    return
-
-
-def test_pathexists():
-    misc.pathexists(".")
-    return
-
-
-def test_dirpath():
-    misc.dirpath(".", realpath=False)
     return
 
 
@@ -338,33 +314,10 @@ def test_rm():
     return
 
 
-def test_bash_cmd():
-    misc.bash_cmd("echo", verbose=True)
-    return
-
-
-def test_convert_image():
-    image = f"{pre2}/TSNE_n10_v2.png"
-    misc.convert_image(fin=image, fout="./temp.png")
-    misc.rm("./temp.png")
-    return
-
-
-def test_convert_multiple_images():
-    misc.convert_multiple_images(folder_in=pre2, folder_out=pre2, format="tiff")
-    misc.rm(pre2, pattern="*tiff")
-    return
-
-
 def test_cprint():
     misc.cprint("text messsage", cprint_color="red")
     with pytest.raises(TypeError):
         misc.cprint(0)
-    return
-
-
-def test_get_python_version():
-    misc.get_python_version()
     return
 
 

@@ -1,0 +1,12 @@
+# render math text including greek letters in italic font by default
+# render math text including greek letters in non-italic font using \\mathrm{}
+# does not require an external LaTeX installation
+
+font.size : 12
+font.weight : normal
+font.family : sans-serif
+font.sans-serif : Arial
+mathtext.fontset : custom
+mathtext.rm : sans
+mathtext.it : sans:italic
+mathtext.default : it

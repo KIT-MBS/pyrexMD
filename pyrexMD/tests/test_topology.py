@@ -2,7 +2,7 @@
 # @Date:   21.05.2021
 # @Filename: test_topology.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 28.07.2021
 
 
 import pyrexMD.misc as misc
@@ -12,15 +12,16 @@ import numpy as np
 from numpy.testing import assert_allclose
 import pathlib
 import pytest
-
+import os
 
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
 pathname = posixpath.send(None).as_posix()        # get first path name
-main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+main_dir = os.path.relpath(os.path.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
 # set up test paths
-cwd = misc.cwd(verbose=False)
+cwd = os.getcwd()
+print(f"cwd: {cwd}")
 pre = f"{main_dir}/tests/files/1l2y"
 pdb = f"{pre}/1l2y_ref.pdb"
 tpr = f"{pre}/traj.tpr"
@@ -258,7 +259,7 @@ def test_sel2selid():
 def test_dump_structure():
     ref = mda.Universe(pdb)
     dirpath = top.dump_structure(ref, frames=0, save_as="./temp.pdb")
-    assert dirpath == misc.realpath(".")
+    assert dirpath == os.path.realpath(".")
 
     # coverage
     with pytest.raises(misc.Error):

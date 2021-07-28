@@ -2,15 +2,13 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 29.07.2021
 
 """
 This module is a collection of miscellaneous functions.
 """
 
 # miscellaneous
-import PIL
-import pdf2image
 import pickle as pl
 import numpy as np
 import matplotlib
@@ -25,36 +23,6 @@ import subprocess
 import time
 import copy
 import termcolor
-
-
-def apply_matplotlib_rc_settings():
-    """
-    apply matplotlib rc settings:
-
-      - render math text including greek letters in italic font by default
-      - render math text including greek letters in non-italic font using \\mathrm{}
-      - does not require an external LaTeX installation
-
-    Code:
-
-      - matplotlib.rcParams['font.size'] = 12
-      - matplotlib.rcParams['font.weight'] = "normal"
-      - matplotlib.rcParams['font.family'] = 'sans-serif'
-      - matplotlib.rcParams['font.sans-serif'] = 'Arial'
-      - matplotlib.rcParams['mathtext.fontset'] = 'custom'
-      - matplotlib.rcParams['mathtext.rm'] = 'sans'
-      - matplotlib.rcParams['mathtext.it'] = 'sans:italic'
-      - matplotlib.rcParams['mathtext.default'] = 'it'
-    """
-    matplotlib.rcParams['font.size'] = 12
-    matplotlib.rcParams['font.weight'] = "normal"
-    matplotlib.rcParams['font.family'] = 'sans-serif'
-    matplotlib.rcParams['font.sans-serif'] = 'Arial'
-    matplotlib.rcParams['mathtext.fontset'] = 'custom'
-    matplotlib.rcParams['mathtext.rm'] = 'sans'
-    matplotlib.rcParams['mathtext.it'] = 'sans:italic'
-    matplotlib.rcParams['mathtext.default'] = 'it'
-    return
 
 
 def update_alias_docstring(f1, f2):
@@ -398,89 +366,6 @@ def timeit(timer=None, msg="elapsed time:"):
 
 ################################################################################
 ################################################################################
-### linux-like cmds ~ os package
-
-def cwd(verbose=True):
-    """
-    Alias function of pwd(). Get/Print current working directory.
-
-    Args:
-        verbose (bool): print cwd
-
-    Returns:
-        cwd (str)
-            current working directory
-    """
-    if verbose:
-        cprint(f"cwd: {os.getcwd()}", "blue")
-    return os.getcwd()
-
-
-def pwd(verbose=True):
-    return cwd(verbose=verbose)
-
-
-update_alias_docstring(cwd, pwd)
-
-
-def isdir(path):
-    """
-    Return true if the path refers to an existing directory.
-    """
-    return os.path.isdir(path)
-
-
-def isfile(path):
-    """
-    Return true if the path refers to an existing file.
-    """
-    return os.path.isfile(path)
-
-
-def pathexists(path):
-    """
-    Return true if path exists.
-    """
-    return os.path.exists(path)
-
-
-def realpath(path):
-    """
-    Return realpath.
-    """
-    return os.path.realpath(path)
-
-
-def relpath(path):
-    """
-    Return relative path.
-    """
-    return os.path.relpath(path)
-
-
-def dirpath(path, realpath=True):
-    """
-    Alias function of get_filedir(). Get realpath or relpath of the last directory of <path>.
-
-    Args:
-        path (str)
-
-    Returns:
-        dirpath (str)
-    """
-    if realpath:
-        return os.path.dirname(os.path.realpath(path))
-    else:
-        return os.path.dirname(os.path.relpath(path))
-
-
-### Alias function of dirpath
-def get_filedir(path, realpath=True):
-    return dirpath(path, realpath=realpath)
-
-
-update_alias_docstring(dirpath, get_filedir)
-
 
 def get_filename(path, search_file=True):
     """
@@ -501,8 +386,8 @@ def get_filename(path, search_file=True):
         if len(file_list) >= 1:
             path = glob.glob(path)[0]
 
-    real_path = realpath(path)
-    dir_path = dirpath(path)
+    real_path = os.path.realpath(path)
+    dir_path = os.path.dirname(os.path.realpath(path))
     filename = real_path[len(dir_path)+1:]
     return filename
 
@@ -612,7 +497,7 @@ def cp(source, target, create_dir=True, verbose=True):
         raise dtypeError("Wrong datatype: <target> must be str (path/realpath).")
     if "*" in source:
         source = glob.glob(source)
-    target = realpath(target)
+    target = os.path.realpath(target)
 
     if isinstance(source, str):
         if os.path.isdir(source):
@@ -673,109 +558,6 @@ def remove(path, pattern=None, verbose=True):
 update_alias_docstring(rm, remove)
 
 
-def bash_cmd(cmd, verbose=False):
-    """
-    Execute any bash command via python.
-
-    .. Note:: works with pipe.
-
-    Args:
-        cmd (str): bash cmd
-        verbose (bool): print executed shell command
-
-    Example:
-        | >> bash_cmd("ls")
-        | >> bash_cmd("touch test")
-        | >> bash_cmd("ls")
-        | test
-    """
-    if verbose:
-        print("executing shell command:", cmd)
-
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE, shell=True)
-
-    # wait until subprocess is finished
-    while True:
-        p.poll()
-        if p.returncode is not None:
-            break
-    return p.returncode
-
-
-################################################################################
-################################################################################
-### pillow/PIL stuff
-
-
-def convert_image(fin, fout, format="auto", **kwargs):
-    """
-    Converts image type. Currently ONLY tested for
-
-        - pdf -> png
-        - png -> tiff
-        - tiff -> png
-
-
-    Args:
-        fin (str): file path for file in (including extension)
-        fout (str): file path for file out (including extension)
-        format (str):
-          | fout format/extension
-          | "auto"
-          | "png"
-
-    Keyword Args:
-        dpi (tuple): dpi for each direction
-        quality (int): compression quality:  0 to 100
-    """
-    default = {"dpi": (300, 300),
-               "quality": 100}
-    cfg = CONFIG(default, **kwargs)
-    ###############################
-    if "pdf" in fin:
-        image = pdf2image.convert_from_path(fin)[0]
-    else:
-        image = PIL.Image.open(fin)
-        image.convert(mode="RGB")
-    # output format
-    if format == "auto":
-        format = get_extension(fout)[1:]
-    image.save(fout, format=format, **cfg)
-    return
-
-
-def convert_multiple_images(folder_in, folder_out, format="png", **kwargs):
-    """
-    convert multiple images. Currently ONLY tested for
-
-        - pdf -> png
-        - png -> tiff
-        - tiff -> png
-
-    Args:
-        folder_in (str):  file path for folder with input  images
-        folder_out (str): file path for folder with output images
-        format (str):
-          | fout format/extension
-          | "auto"
-          | "png"
-
-    Keyword Args:
-        dpi (tuple): dpi for each direction
-        quality (int): compression quality:  0 to 100
-    """
-    default = {"dpi": (300, 300),
-               "quality": 100}
-    cfg = CONFIG(default, **kwargs)
-    ###############################
-    images = [os.path.join(folder_in, file) for file in os.listdir(folder_in) if os.path.isfile(os.path.join(folder_in, file))]
-    for i in images:
-        name = get_base(i)
-        name_out = f"{folder_out}/{name}.{format.lower()}"
-        convert_image(fin=i, fout=name_out, format=format, **cfg)
-    return
-
-
 ################################################################################
 ################################################################################
 ### misc
@@ -804,44 +586,6 @@ def cprint(msg, color=None, on_color=None, attr=None, **kwargs):
         del kwargs["cprint_color"]
     termcolor.cprint(msg, color, on_color, attrs=attr, **kwargs)
     return
-
-
-def UNZIP(iterable):
-    """
-    alias function of zip(\*iterable)
-
-    Args:
-        iterable
-
-    Returns:
-        zip(\*iterable)
-    """
-    return zip(*iterable)
-
-
-def unzip(iterable):
-    """
-    Unzips iterable into two objects.
-    """
-    A = list(UNZIP(iterable))[0]
-    B = list(UNZIP(iterable))[1]
-    return (A, B)
-
-
-def get_python_version():
-    """
-    Returns python version.
-
-    Returns:
-        version (str):
-            python version in format major.minor.micro (e.g. 3.8.5)
-
-    """
-    major = sys.version_info[0]
-    minor = sys.version_info[1]
-    micro = sys.version_info[2]
-    version = f"{major}.{minor}.{micro}"
-    return version
 
 
 def percent(num, div, prec=2):

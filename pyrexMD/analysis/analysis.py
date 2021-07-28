@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 21.06.2021
+# @Last modified time: 28.07.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -49,9 +49,7 @@ import logging
 import warnings
 logging.getLogger('matplotlib.font_manager').disabled = True
 
-
 # global update for plots
-# matplotlib.rcParams.update({'font.family': "sans-serif", 'font.weight': "normal", 'font.size': 16})
 cp = sns.color_palette()  # access seaborn colors via cp[0] - cp[9]
 
 
@@ -1416,7 +1414,7 @@ def plot_HEATMAP(data, **kwargs):
             print("""Too much data within the heatmap to save it as a .pdf file.
     (vector graphic ~ number of objects too high)
     Saving figure as .png with 300 dpi instead...""")
-            save_as = f"{_misc.dirpath(cfg.save_as)}/{_misc.get_base(cfg.save_as)}.png"
+            save_as = f"{os.path.dirname(os.path.realpath((cfg.save_as)))}/{_misc.get_base(cfg.save_as)}.png"
         _misc.savefig(filename=save_as)
 
     return(fig, ax)

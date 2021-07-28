@@ -1,8 +1,15 @@
-# @Author: Arthur Voronin
+import logging
+import numpy as np
+import pyrexMD.misc as _misc
+import MDAnalysis as mda
+import gromacs
+import glob
+import os
+os.path.realpath  # @Author: Arthur Voronin
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 19.07.2021
+# @Last modified time: 29.07.2021
 
 """
 This module contains functions to interact with `GROMACS` to setup systems and
@@ -49,13 +56,6 @@ Module contents:
 ----------------
 """
 
-import os
-import glob
-import gromacs
-import MDAnalysis as mda
-import pyrexMD.misc as _misc
-import numpy as np
-import logging
 logging.getLogger('gromacs.config').disabled = True
 gromacs.environment.flags['capture_output'] = True  # print gromacs output
 
@@ -67,7 +67,7 @@ def __fix_ResourceWarning__():
     """
     Fix 'ResourceWarning: unclosed file' of GromacsWrapper's config.py module
     """
-    module_path = f"{_misc.get_filedir(gromacs.__file__)}/config.py"
+    module_path = f"{os.path.dirname(os.path.realpath(gromacs.__file__))}/config.py"
     old_str = "import sys"
     new_str = "import sys       ### fixed warning\n"
     new_str += "import warnings  ### fixed warning\n"
@@ -107,15 +107,15 @@ def _setup_config(**kwargs):
 
 
 def _clean_func(ofile):
-    odir = _misc.dirpath(_misc.realpath(ofile))
+    odir = os.path.dirname(os.path.realpath(os.path.realpath(ofile)))
     clean_up("./", verbose=False)
     clean_up(odir, verbose=False)
     return odir
 
 
 def _save_func(ofile, cprint_color):
-    _misc.cprint(f"Saved file as: {_misc.realpath(ofile)}", cprint_color)
-    return _misc.realpath(ofile)
+    _misc.cprint(f"Saved file as: {os.path.realpath(ofile)}", cprint_color)
+    return os.path.realpath(ofile)
 
 
 def _log_func(logdir, logfile, cfg):
@@ -407,8 +407,8 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
         gromacs.convert_tpr(s=s, o=o, input=sel_code, **kwargs)
 
     ofile = _save_func(o, cfg.cprint_color)
-    clean_up(path=_misc.dirpath(ofile), pattern=".*offsets.npz", verbose=False)
-    clean_up(path=_misc.dirpath(ofile), pattern="#*_protein.tpr*#", verbose=False)
+    clean_up(path=os.path.dirname(os.path.realpath(ofile)), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=os.path.dirname(os.path.realpath(ofile)), pattern="#*_protein.tpr*#", verbose=False)
     return ofile
 
 
@@ -450,7 +450,7 @@ def grompp(f, o, c, p="topol.top", verbose=True, **kwargs):
     if "cprint_color" in kwargs:
         del kwargs["cprint_color"]
     ############################################################################
-    odir = _misc.realpath(_misc.dirpath(o))
+    odir = os.path.realpath(os.path.dirname(os.path.realpath(o)))
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
@@ -502,7 +502,7 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top", verbose=True, *
     """
     cfg = _setup_config(**kwargs)
     ############################################################################
-    odir = _misc.realpath(_misc.dirpath(cp))
+    odir = os.path.realpath(os.path.dirname(os.path.realpath(cp)))
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
@@ -558,7 +558,7 @@ def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
     """
     cfg = _setup_config(**kwargs)
     ############################################################################
-    odir = _misc.realpath(_misc.dirpath(o))
+    odir = os.path.realpath(os.path.dirname(os.path.realpath(o)))
     o = _misc.joinpath(odir, o)  # special case for joinpath
 
     # GromacsWrapper
@@ -670,8 +670,8 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
         gromacs.trjconv(s=s, f=f, o=o, input=sel_code, **kwargs)
 
     ofile = _save_func(o, cfg.cprint_color)
-    clean_up(path=_misc.dirpath(ofile), pattern=".*offsets.npz", verbose=False)
-    clean_up(path=_misc.dirpath(ofile), pattern="#*_protein.xtc*#", verbose=False)
+    clean_up(path=os.path.dirname(os.path.realpath(ofile)), pattern=".*offsets.npz", verbose=False)
+    clean_up(path=os.path.dirname(os.path.realpath(ofile)), pattern="#*_protein.xtc*#", verbose=False)
     return ofile
 
 
@@ -757,8 +757,8 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
     xtc_file = trjconv(s=tpr_file, f=xtc, o=o[1], odir=odir, tu=tu, sel=sel, pbc=pbc,
                        center=center, verbose=verbose, **kwargs)
 
-    clean_up(path=_misc.dirpath(tpr_file), verbose=verbose)
-    clean_up(path=_misc.dirpath(xtc_file), verbose=verbose)
+    clean_up(path=os.path.dirname(os.path.realpath(tpr_file)), verbose=verbose)
+    clean_up(path=os.path.dirname(os.path.realpath(xtc_file)), verbose=verbose)
     return tpr_file, xtc_file
 
 
@@ -932,7 +932,7 @@ def create_complex(f=[], o="complex.gro", verbose=True):
         for line in data:
             handle.write(line)
 
-    ofile = _misc.realpath(o)
+    ofile = os.path.realpath(o)
     if verbose:
         _misc.cprint(f"Saved complex as: {ofile}", "blue")
     return ofile
@@ -1002,7 +1002,7 @@ def extend_complex_topology(ligand_name, ligand_itp, ligand_prm, ligand_nmol, to
             temp = f"{ligand_name}{whitespace}{ligand_nmol}\n"
         handle.write(temp)
 
-    ofile = _misc.realpath(top_out)
+    ofile = os.path.realpath(top_out)
     if verbose:
         _misc.cprint(f"Saved extended complex topology as: {ofile}", "blue")
 

@@ -1,8 +1,16 @@
-# @Author: Arthur Voronin
+from MDAnalysis import Universe
+import os
+import glob
+import numpy as np
+import pyrexMD.topology as _top
+import pyrexMD.gmx as _gmx
+import pyrexMD.misc as _misc
+from tqdm.notebook import tqdm
+os.path.isfile  # @Author: Arthur Voronin
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 28.07.2021
 
 
 """
@@ -49,14 +57,6 @@ Module contents:
 """
 
 #from __future__ import division, print_function
-from tqdm.notebook import tqdm
-import pyrexMD.misc as _misc
-import pyrexMD.gmx as _gmx
-import pyrexMD.topology as _top
-import numpy as np
-import glob
-import os
-from MDAnalysis import Universe
 
 
 def apply_ff_best_decoys(best_decoys_dir, n_decoys=None, odir="./PDBID_best_decoys_ref",
@@ -179,9 +179,9 @@ def assign_best_decoys(best_decoys_dir, rex_dir="./", verbose=False, **kwargs):
 
     if not verbose:
         if cfg.realpath:
-            _misc.cprint(f"Copied source files to directories: {_misc.realpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
+            _misc.cprint(f"Copied source files to directories: {os.path.realpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
         else:
-            _misc.cprint(f"Copied source files to directories: {_misc.relpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
+            _misc.cprint(f"Copied source files to directories: {os.path.relpath(rex_dir)}/rex_<i> (i=1,...,{len(DECOY_PATHS)})", cfg.cprint_color)
     return
 
 
@@ -198,13 +198,13 @@ def get_REX_DIRS(main_dir="./", realpath=True):
             list with REX directory paths
     """
     n_REX = 300   # hardcoded but will be filtered automatically
-    REX_DIRS = _misc.flatten_array([glob.glob(_misc.realpath(main_dir) + f"/rex_{i}") for i in range(0, n_REX+1)
-                                    if len(glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
+    REX_DIRS = _misc.flatten_array([glob.glob(os.path.realpath(main_dir) + f"/rex_{i}") for i in range(0, n_REX+1)
+                                    if len(glob.glob(os.path.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
     if not realpath:
-        REX_DIRS = [_misc.relpath(item) for item in REX_DIRS]
+        REX_DIRS = [os.path.relpath(item) for item in REX_DIRS]
 
     # filter for directories
-    REX_DIRS = [item for item in REX_DIRS if _misc.isdir(item)]
+    REX_DIRS = [item for item in REX_DIRS if os.path.isdir(item)]
     return REX_DIRS
 
 
@@ -221,13 +221,13 @@ def get_REX_PDBS(main_dir="./", realpath=True):
             list with PDB paths within folders rex_1, rex_2, etc.
     """
     n_REX = 300   # hardcoded but will be filtered automatically
-    REX_PDBS = _misc.flatten_array([glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb") for i in range(0, n_REX+1)
-                                    if len(glob.glob(_misc.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
+    REX_PDBS = _misc.flatten_array([glob.glob(os.path.realpath(main_dir) + f"/rex_{i}/*.pdb") for i in range(0, n_REX+1)
+                                    if len(glob.glob(os.path.realpath(main_dir) + f"/rex_{i}/*.pdb")) != 0])   # remove emptry entries
     if not realpath:
-        REX_PDBS = [_misc.relpath(item) for item in REX_PDBS]
+        REX_PDBS = [os.path.relpath(item) for item in REX_PDBS]
 
     # filter for files
-    REX_PDBS = [item for item in REX_PDBS if _misc.isfile(item)]
+    REX_PDBS = [item for item in REX_PDBS if os.path.isfile(item)]
     return REX_PDBS
 
 
@@ -435,7 +435,7 @@ def WF_get_system_parameters(wdir, verbose=False, **kwargs):
         raise ValueError("The working directory wdir does not exist or is not a directory.")
 
     # save cwd and go to wdir
-    cwd = _misc.cwd()
+    cwd = os.getcwd()
     wdir = _misc.cd(wdir)
 
     pdbs = glob.glob("*.pdb")
@@ -575,7 +575,7 @@ def create_special_group_ndx(ref_pdb, sel="name CA", save_as="special_group.ndx"
         for i in range(len(ATOM)):
             fout.write(f"\t{ATOM[i]}")
         fout.write("\n")
-        realpath = _misc.realpath(save_as)
+        realpath = os.path.realpath(save_as)
         _misc.cprint(f"Saved file as: {realpath}")
     return
 
@@ -594,7 +594,7 @@ def create_pull_group_ndx(ref_pdb, sel="name CA", save_as="pull_group.ndx"):
         for i in range(len(RESID)):
             fout.write(f"[ pull_res{RESID[i]} ]\n")
             fout.write(f"\t{ATOM[i]}\n")
-        realpath = _misc.realpath(save_as)
+        realpath = os.path.realpath(save_as)
         _misc.cprint(f"Saved file as: {realpath}")
     return
 
@@ -634,7 +634,7 @@ def prep_REX_temps(T_0=None, n_REX=None, k=None):
     print("REX Temperature Distribution: T_i = T_0*exp(k*i)")
 
     with open("rex_temps.log", "w") as fout:
-        _misc.cprint(f"Saved log as: {_misc.realpath('rex_temps.log')}", "blue")
+        _misc.cprint(f"Saved log as: {os.path.realpath('rex_temps.log')}", "blue")
         fout.write("Function: T_i = {}*exp({}*i)\n".format(T_0, k))
         fout.write("Temperatures:\n")
         for i in range(0, n_REX):
@@ -668,7 +668,7 @@ def prep_REX_temps(T_0=None, n_REX=None, k=None):
     print("T_i = T_(i-1) + a_i * DELTA")
 
     with open("rex_temps.log", "w") as fout:    # same fout name as method 1 -> will overwrite
-        _misc.cprint(f"Saved log as: {_misc.realpath('rex_temps.log')}", "blue")
+        _misc.cprint(f"Saved log as: {os.path.realpath('rex_temps.log')}", "blue")
         fout.write("REX Temperature Distribution:\n")
         fout.write("T_0 = {} K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))\n".format(T_0))
         fout.write("T_i = T_(i-1) + a_j * DELTA\n")

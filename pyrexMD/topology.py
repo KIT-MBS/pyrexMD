@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 28.07.2021
 
 
 """
@@ -12,6 +12,7 @@ This module contains functions to modify universe topologies and include contact
 import pyrexMD.misc as _misc
 import MDAnalysis as mda
 import numpy as np
+import os
 from tqdm.notebook import tqdm
 
 
@@ -497,7 +498,7 @@ def dump_structure(u, frames, save_as, default_dir="./structures", sel="protein"
     """
     if "." in save_as:
         realpath = _misc.joinpath(default_dir, save_as, create_dir=True)
-        dirpath = _misc.dirpath(realpath)
+        dirpath = os.path.dirname(os.path.realpath(realpath))
         base = _misc.get_base(realpath)
         ext = _misc.get_extension(realpath)
 
@@ -645,7 +646,7 @@ def DCA_res2atom_mapping(ref_pdb, DCA_fin, n_DCA, usecols, DCA_skiprows="auto",
                 cfg.pdbid = _misc.get_PDBid(ref_pdb)
             new_dir = _misc.mkdir(cfg.default_dir)
             cfg.save_as = f"{new_dir}/{cfg.pdbid.upper()}_DCA_used.txt"
-        print("Saved log as:", _misc.realpath(cfg.save_as))
+        print("Saved log as:", os.path.realpath(cfg.save_as))
         with open(cfg.save_as, "w") as fout:
             fout.write(f"#DCA contacts top{n_DCA} (1 bond per contact)\n")
             fout.write("{}\t{}\t{}\t{}\n".format("#RESi", "RESj", "ATOMi", "ATOMj"))
@@ -731,7 +732,7 @@ def DCA_modify_topology(top_fin, DCA_used_fin, n_DCA=None, k=10, skiprows="auto"
                             fout.write("{:5d} {:5d} {:5d} {:13d} {:13.2f}\n".format(ATOM_I[i], ATOM_J[i], 9, 0, float(k)))
                 fout.write("; native bonds\n")
 
-    print("Saved modified topology as:", _misc.realpath(cfg.save_as))
+    print("Saved modified topology as:", os.path.realpath(cfg.save_as))
     return
 
 
@@ -771,12 +772,12 @@ def DCA_modify_scoreFile(score_fin, shift_res, res_cols=(0, 1), score_col=(2), *
     resj += shift_res
 
     if cfg.save_as == "PDBID_mod.score":
-        dirpath = _misc.dirpath(score_fin)
+        dirpath = os.path.dirname(os.path.realpath(score_fin))
         base = _misc.get_base(score_fin)
         ext = _misc.get_extension(score_fin)
         cfg.save_as = f"{dirpath}/{base}_mod{ext}"
 
-    cfg.save_as = _misc.realpath(cfg.save_as)
+    cfg.save_as = os.path.realpath(cfg.save_as)
     with open(cfg.save_as, "w") as fout:
         for i in range(len(resi)):
             fout.write(f"{resi[i]}\t{resj[i]}\t{score[i]}\n")

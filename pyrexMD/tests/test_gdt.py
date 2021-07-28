@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 28.07.2021
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.gdt as gdt
@@ -13,14 +13,16 @@ from numpy.testing import assert_allclose
 from unittest.mock import patch
 import pathlib
 import pytest
+import os
 
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
 pathname = posixpath.send(None).as_posix()        # get first path name
-main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+main_dir = os.path.relpath(os.path.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
 # set up test paths
-cwd = misc.cwd(verbose=False)
+cwd = os.getcwd()
+print(f"cwd: {cwd}")
 pre = f"{main_dir}/tests/files/1l2y"
 pdb = f"{pre}/1l2y_ref.pdb"
 tpr = f"{pre}/traj.tpr"

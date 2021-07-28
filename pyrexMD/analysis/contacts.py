@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 28.07.2021
 
 """
 This module contains functions related to native contact and bias contact analyses.
@@ -45,6 +45,7 @@ import seaborn as sns
 import MDAnalysis as mda
 from MDAnalysis.analysis import contacts as _contacts, distances as _distances
 import operator
+import os
 from tqdm.notebook import tqdm
 
 
@@ -122,7 +123,7 @@ def get_Native_Contacts(ref, d_cutoff=6.0, sel="protein", **kwargs):
     NC_d = sorted(NC_d)
 
     if cfg.save_as != None:
-        cfg.save_as = _misc.realpath(cfg.save_as)
+        cfg.save_as = os.path.realpath(cfg.save_as)
         if len(a.select_atoms("nucleic")) == 0:
             # hardcoded protein selection
             resid, resname, id, name = _top.parsePDB(u.filename, sel="protein and name CA", norm=cfg.norm)
@@ -507,7 +508,7 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
     _ = _misc.add_cbar(ax, cmap=_CMAP, **_CFG)
 
     # conditions for markersize
-    I, J = _misc.unzip(NC)
+    I, J = zip(*NC)
     res_min = min(min(I), min(J))
     res_max = max(max(I), max(J))
     if cfg.ms is None and res_max - res_min >= 70:

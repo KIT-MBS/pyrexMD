@@ -2,7 +2,7 @@
 # @Date:   22.06.2021
 # @Filename: test_rex.py
 # @Last modified by:   arthur
-# @Last modified time: 01.07.2021
+# @Last modified time: 28.07.2021
 
 
 import pyrexMD.misc as misc
@@ -15,10 +15,11 @@ import shutil
 # find main directory of pyrexMD
 posixpath = pathlib.Path(".").rglob("*core.py")   # generator for matching paths
 pathname = posixpath.send(None).as_posix()        # get first path name
-main_dir = misc.relpath(misc.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
+main_dir = os.path.relpath(os.path.realpath(pathname).rstrip("core.py"))  # main directory of pyrexMD
 
 # set up test paths
-cwd = misc.cwd(verbose=False)
+cwd = os.getcwd()
+print(f"cwd: {cwd}")
 pre = f"{main_dir}/examples/files/rex/"
 pre2 = f"{main_dir}/tests/files/"
 score_fin = f"{pre}/1LMB.rr"
@@ -30,7 +31,7 @@ def test_apply_ff_best_decoys():
     decoy_dir = f"{pre}/decoys/"
     n_decoys = 2    # use only 2 for test
     odir = rex.apply_ff_best_decoys(decoy_dir, n_decoys=n_decoys, verbose=True)
-    assert odir == misc.realpath("./1LMB_best_decoys_ref")
+    assert odir == os.path.realpath("./1LMB_best_decoys_ref")
 
     # coverage
     rex.apply_ff_best_decoys(decoy_dir, n_decoys=1, verbose=True, pdbid="1LMB")

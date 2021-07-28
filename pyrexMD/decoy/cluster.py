@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 20.07.2021
+# @Last modified time: 28.07.2021
 
 """
 This module contains functions for:
@@ -79,6 +79,7 @@ from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from tqdm.notebook import tqdm
 import glob
+import os
 
 
 def get_decoy_list(decoy_dir, pattern="*.pdb", ndx_range=(None, None)):
@@ -1170,7 +1171,6 @@ def WF_print_cluster_accuracy(cluster_data, cluster_accuracy, targets=[None], sa
 
     # save log
     if save_as is not None:
-        #save_as = _misc.realpath(save_as)
         with open(save_as, "w") as fout:
             fout.write(f"cluster n{len(cluster_data.counts)} accuracy (ranked by GDT mean)\n\n")
             fout.write("                   | GDT     GDT    GDT     GDT    | RMSD   RMSD   RMSD   RMSD\n")
@@ -1178,7 +1178,7 @@ def WF_print_cluster_accuracy(cluster_data, cluster_accuracy, targets=[None], sa
             for ndx in _ndx:
                 fout.write(f"{ndx:>3}   {cluster_data.counts[ndx]:^4} {cluster_data.compact_score[ndx]:>7} | {cluster_accuracy.GDT_mean[ndx]:<6}  {cluster_accuracy.GDT_std[ndx]:<6} {cluster_accuracy.GDT_minmax[ndx][0]:<6}  {cluster_accuracy.GDT_minmax[ndx][1]:<6} | {cluster_accuracy.RMSD_mean[ndx]:<5}  {cluster_accuracy.RMSD_std[ndx]:<5}  {cluster_accuracy.RMSD_minmax[ndx][0]:<5}  {cluster_accuracy.RMSD_minmax[ndx][1]:<5}\n")
         print(f"\n Saved log as: {save_as}")
-        return _misc.realpath(save_as)
+        return os.path.realpath(save_as)
     return
 
 
@@ -1222,7 +1222,6 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
 
     # save log
     if save_as is not None:
-        #save_as = _misc.realpath(save_as)
         with open(save_as, "w") as fout:
             fout.write(f"cluster n{len(cluster_data.counts)} scores (ranked by Emean)\n")
             fout.write("\nndx  size  compact | Emean    Estd    Emin      Emax     DELTA\n")
@@ -1233,7 +1232,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
                     # move scores by 1 digit if positive (looks nicer)
                     fout.write(f"{ndx:>3}  {cluster_data.counts[ndx]:^4}  {cluster_data.compact_score[ndx]:>7} |{cluster_scores.mean[ndx]:<8}  {cluster_scores.std[ndx]:<5}  {cluster_scores.min[ndx]:<8}  {cluster_scores.max[ndx]:<8}   {cluster_scores.DELTA[ndx]:<6}\n")
         print(f"\n Saved log as: {save_as}")
-        return _misc.realpath(save_as)
+        return os.path.realpath(save_as)
     return
 ################################################################################
 ################################################################################

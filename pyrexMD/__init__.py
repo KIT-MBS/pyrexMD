@@ -2,14 +2,15 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 30.06.2021
+# @Last modified time: 28.07.2021
 
-
+import pyrexMD
 import pyrexMD.misc as misc
 import pyrexMD.core as core
 import pyrexMD.gmx as gmx
 import pyrexMD.topology as topology
 import pyrexMD.analysis as analysis
+import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Element information is absent or missing for a few")
@@ -19,6 +20,8 @@ warnings.filterwarnings("ignore", message="1 A\^3 CRYST1 record,")
 warnings.filterwarnings("ignore", message="Found no information for attr:")
 warnings.filterwarnings("ignore", message="!!! WARNING !!! Manipulating the local contents of a DNDarray needs")
 # MDAnalysis throws many unnecessary warnings when warnings module is used
+
+plt.style.use(f"{pyrexMD.__path__[0]}/.mplstyle")
 
 
 __version__ = 1.0
@@ -49,6 +52,5 @@ import pyrexMD.analysis.analysis as ana
 #import pyrexMD.rex as rex
 
 from tqdm.notebook import tqdm
-misc.apply_matplotlib_rc_settings()
     """)
     return

@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 26.06.2021
+# @Last modified time: 28.07.2021
 
 
 """
@@ -62,7 +62,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm.notebook import tqdm
-
 ################################################################################
 ################################################################################
 # GDT (Global Distance Test) Analyses

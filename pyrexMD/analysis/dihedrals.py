@@ -2,7 +2,7 @@
 # @Date:   06.05.2021
 # @Filename: dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 22.06.2021
+# @Last modified time: 28.07.2021
 
 """
 This module contains functions related to dihedral analyses.

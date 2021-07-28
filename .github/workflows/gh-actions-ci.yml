@@ -19,7 +19,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install MPI (ubuntu)
       if: ${{ startsWith(matrix.os, 'ubuntu') }}
-      run: sudo apt-get install openmpi-bin libopenmpi-dev
+      run: sudo apt-get update && sudo apt-get install openmpi-bin libopenmpi-dev
     - name: Install MPI (macOS)
       if: ${{ startsWith(matrix.os, 'mac') }}
       run: brew install mpich
@@ -89,7 +89,7 @@ jobs:
       id: cache-python
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements_python3.8.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
     - name: Install python dependencies
       run: |
         python -m pip install --upgrade pip
@@ -113,7 +113,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install MPI (ubuntu)
       if: ${{ startsWith(matrix.os, 'ubuntu') }}
-      run: sudo apt-get install openmpi-bin libopenmpi-dev
+      run: sudo apt-get update && sudo apt-get install openmpi-bin libopenmpi-dev
     - name: Install MPI (macOS)
       if: ${{ startsWith(matrix.os, 'mac') }}
       run: brew install mpich
@@ -128,7 +128,7 @@ jobs:
       id: cache-python
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements_python3.8.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
     - name: Set up ~/.gromacswrapper.cfg
       run: |
         echo "import gromacs" >> script.py
@@ -177,7 +177,7 @@ jobs:
       id: cache-python
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements_python3.8.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
+        key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py', 'requirements.txt', '**.py') }}-${{ secrets.CACHE_VERSION_PYTHON }}
     - name: Install dependencies (build-docs)
       run: |
         python -m pip install --upgrade pip
