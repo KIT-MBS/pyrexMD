@@ -102,17 +102,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents:</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Example:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Module contents:</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.misc">pyrexMD.misc module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id11">Example:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id12">Module contents:</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.topology">pyrexMD.topology module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis package</a></li>
@@ -412,45 +404,6 @@ Interactive red bar can be moved by pressing any key.</p>
 </div>
 <div class="section" id="module-pyrexMD.gmx">
 <span id="pyrexmd-gmx-module"></span><h1>pyrexMD.gmx module<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline">¶</a></h1>
-<p>This module contains functions to interact with <cite>GROMACS</cite> to setup systems and
-run MD simulations.</p>
-<div class="section" id="id1">
-<h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
-
-<span class="c1"># create ref pdb:</span>
-<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># generate topology &amp; box</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
-
-<span class="c1"># generate solvent &amp; ions</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
-
-<span class="c1"># minimize</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
-
-<span class="c1"># NVT equilibration</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;nvt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;nvt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;nvt&quot;</span><span class="p">)</span>
-
-<span class="c1"># NPT equilibration</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;npt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;npt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;nvt.cpt&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
-
-<span class="c1"># MD run</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id2">
-<h2>Module contents:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.clean_up">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gmx_pattern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.clean_up" title="Permalink to this definition">¶</a></dt>
@@ -1314,7 +1267,6 @@ can subsequently be processed to generate a run input file.</p>
 </dd></dl>
 
 </div>
-</div>
 <div class="section" id="module-pyrexMD.misc">
 <span id="pyrexmd-misc-module"></span><h1>pyrexMD.misc module<a class="headerlink" href="#module-pyrexMD.misc" title="Permalink to this headline">¶</a></h1>
 <p>This module is a collection of miscellaneous functions.</p>
@@ -1383,7 +1335,7 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">“color_negative”: “orange”,</div>
 <div class="line">“markersize”: 5}</div>
 </div>
-<div class="line">cfg = misc.CONFIG(default, <a href="#id3"><span class="problematic" id="id4">**</span></a>alias_dict)</div>
+<div class="line">cfg = misc.CONFIG(default, <a href="#id1"><span class="problematic" id="id2">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -1394,9 +1346,9 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">markersize          5</div>
 <div class="line"><br /></div>
 </div>
-<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id5"><span class="problematic" id="id6">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id7"><span class="problematic" id="id8">**</span></a>alias_dict)</div>
-<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id9"><span class="problematic" id="id10">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”markersize”, key=”ms”, <a href="#id3"><span class="problematic" id="id4">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_positive”, key=”colors”, key_ndx=0, <a href="#id5"><span class="problematic" id="id6">**</span></a>alias_dict)</div>
+<div class="line">cfg.update_by_alias(alias=”color_negative”, key=”colors”, key_ndx=1, <a href="#id7"><span class="problematic" id="id8">**</span></a>alias_dict)</div>
 <div class="line">cfg.print_config()</div>
 <div class="line">&gt;&gt;  key                 value</div>
 <div class="line-block">
@@ -1501,20 +1453,6 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 <dt class="sig sig-object py" id="pyrexMD.misc.TIMER">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">TIMER</span></span><a class="reference internal" href="_modules/pyrexMD/misc.html#TIMER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.TIMER" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.UNZIP">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">UNZIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#UNZIP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.UNZIP" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias function of zip(*iterable)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iterable</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>zip(*iterable)</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1649,32 +1587,6 @@ ONCE upon initialization of the module and appends the missing parts.</p>
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.apply_matplotlib_rc_settings">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">apply_matplotlib_rc_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#apply_matplotlib_rc_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.apply_matplotlib_rc_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>apply matplotlib rc settings:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>render math text including greek letters in italic font by default</p></li>
-<li><p>render math text including greek letters in non-italic font using mathrm{}</p></li>
-<li><p>does not require an external LaTeX installation</p></li>
-</ul>
-</div></blockquote>
-<p>Code:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>matplotlib.rcParams[‘font.size’] = 12</p></li>
-<li><p>matplotlib.rcParams[‘font.weight’] = “normal”</p></li>
-<li><p>matplotlib.rcParams[‘font.family’] = ‘sans-serif’</p></li>
-<li><p>matplotlib.rcParams[‘font.sans-serif’] = ‘Arial’</p></li>
-<li><p>matplotlib.rcParams[‘mathtext.fontset’] = ‘custom’</p></li>
-<li><p>matplotlib.rcParams[‘mathtext.rm’] = ‘sans’</p></li>
-<li><p>matplotlib.rcParams[‘mathtext.it’] = ‘sans:italic’</p></li>
-<li><p>matplotlib.rcParams[‘mathtext.default’] = ‘it’</p></li>
-</ul>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -1814,72 +1726,6 @@ ymin, ymax values.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.convert_image">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">convert_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#convert_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.convert_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts image type. Currently ONLY tested for</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>pdf -&gt; png</p></li>
-<li><p>png -&gt; tiff</p></li>
-<li><p>tiff -&gt; png</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fin</strong> (<em>str</em>) – file path for file in (including extension)</p></li>
-<li><p><strong>fout</strong> (<em>str</em>) – file path for file out (including extension)</p></li>
-<li><p><strong>format</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">fout format/extension</div>
-<div class="line">”auto”</div>
-<div class="line">”png”</div>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>dpi</strong> (<em>tuple</em>) – dpi for each direction</p></li>
-<li><p><strong>quality</strong> (<em>int</em>) – compression quality:  0 to 100</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.convert_multiple_images">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">convert_multiple_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#convert_multiple_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.convert_multiple_images" title="Permalink to this definition">¶</a></dt>
-<dd><p>convert multiple images. Currently ONLY tested for</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>pdf -&gt; png</p></li>
-<li><p>png -&gt; tiff</p></li>
-<li><p>tiff -&gt; png</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>folder_in</strong> (<em>str</em>) – file path for folder with input  images</p></li>
-<li><p><strong>folder_out</strong> (<em>str</em>) – file path for folder with output images</p></li>
-<li><p><strong>format</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">fout format/extension</div>
-<div class="line">”auto”</div>
-<div class="line">”png”</div>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Keyword Arguments</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>dpi</strong> (<em>tuple</em>) – dpi for each direction</p></li>
-<li><p><strong>quality</strong> (<em>int</em>) – compression quality:  0 to 100</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.convert_ticklabels">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">convert_ticklabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiplier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#convert_ticklabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.convert_ticklabels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read ticklabels of axes and multiply with “multiplier”</p>
@@ -1973,38 +1819,6 @@ should be increasing and in the interval (0,1).</p></li>
 <p class="rubric">Example</p>
 <p>seq = [“lightblue”, 2/6, “lightgreen”, 3/6, “yellow”, 4/6, “orange”, 5/6, “red”]
 cmap = misc.create_cmap(seq, vmin=0, vmax=12)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.cwd">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">cwd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#cwd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.cwd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias function of pwd(). Get/Print current working directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – print cwd</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>cwd (str)</dt><dd><p>current working directory</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.dirpath">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">dirpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#dirpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.dirpath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias function of get_filedir(). Get realpath or relpath of the last directory of &lt;path&gt;.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dirpath (str)</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py exception">
@@ -2223,20 +2037,6 @@ as well as the corresponding indices.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.get_filedir">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">get_filedir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#get_filedir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.get_filedir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias function of dirpath(). Get realpath or relpath of the last directory of &lt;path&gt;.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dirpath (str)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.get_filename">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">get_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#get_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.get_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>get filename (removes prefix of realpath of &lt;path&gt;).</p>
@@ -2303,20 +2103,6 @@ the observations may be found.</p>
 <div class="line">&gt;&gt; get_precision(5.12300)</div>
 <div class="line">3</div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.get_python_version">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">get_python_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#get_python_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.get_python_version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns python version.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>python version in format major.minor.micro (e.g. 3.8.5)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>version (str)</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2590,18 +2376,6 @@ inches. If number is passed, apply on figure with that number.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.isdir">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">isdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#isdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.isdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return true if the path refers to an existing directory.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.isfile">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">isfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#isfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.isfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return true if the path refers to an existing file.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.joinpath">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">joinpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filedir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#joinpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.joinpath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns joined path of (filedir + filename).</p>
@@ -2734,12 +2508,6 @@ e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2</p>
 <div class="line">self.pos_base10_factors: [3, 2, 1]</div>
 <div class="line">self.neg_base10_factors: None</div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.pathexists">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">pathexists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#pathexists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.pathexists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return true if path exists.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -3063,24 +2831,6 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.pwd">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">pwd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#pwd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.pwd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias function of cwd(). Get/Print current working directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – print cwd</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>cwd (str)</dt><dd><p>current working directory</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.read_DCA_file">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">read_DCA_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RES_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#read_DCA_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.read_DCA_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read DCA file and return DCA pairs IJ.</p>
@@ -3170,18 +2920,6 @@ in the notebook (i.e. saving a pickle_plot figure is working fine.)</p>
 <div class="line"># multiple columns per fin</div>
 <div class="line">X,Y = read_file(‘data.txt’, usecols=(0,1))</div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.realpath">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">realpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#realpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.realpath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return realpath.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.relpath">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">relpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#relpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.relpath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return relative path.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -3630,12 +3368,6 @@ where B2 contains every n-th element of A.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrexMD.misc.unzip">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">unzip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#unzip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.unzip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unzips iterable into two objects.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.misc.update_alias_docstring">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.misc.</span></span><span class="sig-name descname"><span class="pre">update_alias_docstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/misc.html#update_alias_docstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.misc.update_alias_docstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use an existing docstring as template and replace ‘Alias function of &lt;alias&gt;’ part</p>
@@ -3663,43 +3395,6 @@ where B2 contains every n-th element of A.</p>
 </div>
 <div class="section" id="module-pyrexMD.rex">
 <span id="pyrexmd-rex-module"></span><h1>pyrexMD.rex module<a class="headerlink" href="#module-pyrexMD.rex" title="Permalink to this headline">¶</a></h1>
-<p>This module contains functions related to (contact-guided) Replica Exchange
-Molecular Dynamics. It contains mainly functions to speed-up the process of
-generating REX simulations and modify topologies to include contact bias etc.</p>
-<div class="section" id="id11">
-<h2>Example:<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
-
-<span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
-
-<span class="c1"># create rex directories and assign decoys</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">assign_best_decoys</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
-<span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">get_REX_DIRS</span><span class="p">()</span>
-
-<span class="c1"># create systems for each replica</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
-
-<span class="c1"># minimize</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># add bias contacts</span>
-<span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
-
-<span class="c1"># prepare temperature distribution</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
-
-<span class="c1"># create mdp and tpr files</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
-
-<span class="c1"># upload files on HPC and execute production run</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id12">
-<h2>Module contents:<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.WF_REX_setup">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_gmx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup" title="Permalink to this definition">¶</a></dt>
@@ -4091,7 +3786,6 @@ as template for tests if passed, otherwise uses first REX pdb as template.</p>
 </div>
 </dd></dl>
 
-</div>
 </div>
 <div class="section" id="module-pyrexMD.topology">
 <span id="pyrexmd-topology-module"></span><h1>pyrexMD.topology module<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline">¶</a></h1>
