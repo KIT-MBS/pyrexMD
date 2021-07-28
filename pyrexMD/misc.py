@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: misc.py
 # @Last modified by:   arthur
-# @Last modified time: 20.07.2021
+# @Last modified time: 28.07.2021
 
 """
 This module is a collection of miscellaneous functions.
