@@ -54,7 +54,7 @@ def test_shift_resids():
 
 def test_align_resids():
     ref = mda.Universe(pdb)
-    mobile = mda.Universe(tpr, xtc)
+    mobile = mda.Universe(tpr, xtc, tpr_resid_from_one=False)
 
     if np.all(ref.residues.resids != mobile.residues.resids):
         expected = np.array(ref.residues.resids)
