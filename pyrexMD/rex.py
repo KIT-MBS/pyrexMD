@@ -10,13 +10,13 @@ os.path.isfile  # @Author: Arthur Voronin
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 24.08.2021
 
 
 """
 This module contains functions related to (contact-guided) Replica Exchange
-Molecular Dynamics. It contains mainly functions to speed-up the process of
-generating REX simulations and modify topologies to include contact bias etc.
+Molecular Dynamics. It contains mainly functions to automate and speed-up the
+process of setting up REX simulations.
 
 
 Example:
