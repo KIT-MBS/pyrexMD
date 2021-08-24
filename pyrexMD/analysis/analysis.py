@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 24.08.2021
 
 """
 This module contains functions various functions for trajectory analysis.
@@ -256,87 +256,6 @@ def get_RMSD(mobile, ref, sel1, sel2, sss=[None, None, None], prec=3,
         PLOT(xdata=TIME, ydata=RMSD, xlabel='Time (ps)', ylabel=f'RMSD ($\AA$)', **kwargs)
     return FRAME, TIME, RMSD
 
-    # def get_RMSD(mobile, ref, sel1='backbone', sel2='backbone', weights='mass', plot=False, alt_return=True, **kwargs):
-    #     """
-    #     Calculates the RMSD between mobile and ref. Alias function of
-    #     MDAnalysis.analysis.rms.RMSD. See help(MDAnalysis.analysis.rms.RMSD) for
-    #     more information.
-    #
-    #     Args:
-    #         mobile (universe, atomgrp): mobile structure
-    #         ref (universe, atomgrp): reference structure
-    #         sel1 (str): selection string of mobile structure
-    #         sel2 (str): selection string of reference structure
-    #         weights (bool, str, array_like):
-    #           | weights during superposition of mobile and reference
-    #           | None: no weights
-    #           | "mass": atom masses as weights
-    #           | array_like: If a float array of the same length as "mobile" is
-    #             provided, use each element of the "array_like" as a weight for the
-    #             corresponding atom in "mobile".
-    #         plot (bool):
-    #         alt_return (bool): toggle alternative return datatype. See example below
-    #
-    #     .. Hint :: Args and Keyword Args of misc.figure() are valid Keyword Args.
-    #
-    #     Keyword Args:
-    #         start (None, int): start frame
-    #         stop (None, int): stop frame
-    #         step (None, int): step size
-    #         superimpose (bool): translate + rotate before RMSD calculation
-    #
-    #     Returns:
-    #         ftr_tuple (tuple)
-    #             returns ftr tuple if alt_return is True (see example below)
-    #         ftr_array (array)
-    #             returns ftr_array if alt_return is False (see example below)
-    #
-    #     Example:
-    #         | # return type case 1
-    #         | >> ftr_tuple = RMSD(alt_return=True)  # tuple of arrays with shape (length, )
-    #         | >> frame, time, rmsd = ftr_tuple
-    #         |
-    #         | # return type case 2
-    #         | >> ftr_array = get_RMSD(alt_return=False) # single array  with shape (length, 3)
-    #         | >> frame= ftr_array[:,0]
-    #         | >> time = ftr_array[:,1]
-    #         | >> rmsd = ftr_array[:,2]
-    #
-    #     """
-    #     default = {"start": None,
-    #                "stop": None,
-    #                "step": None,
-    #                "superimpose": True}
-    #     cfg = _misc.CONFIG(default, **kwargs)
-    #     ############################################################################
-    #     if not (isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup))
-    #             and isinstance(ref, (mda.core.universe.Universe, mda.core.groups.AtomGroup))):
-    #         raise TypeError(f'''{get_RMSD.__module__}.{get_RMSD.__name__}():\
-    #         \nmobile and ref must be MDA universe or atomgrp!''')
-    #         return
-    #
-    #     else:
-    #         if cfg.superimpose:
-    #             for ts in mobile.trajectory[cfg.start:cfg.stop:cfg.step]:
-    #                 alignto(mobile, ref, sel1=sel1, sel2=sel2, weights=weights, strict=False)
-    #         RMSD = _rms.RMSD(mobile.select_atoms(sel1), ref.select_atoms(sel2), weights=weights)
-    #         RMSD.run(start=cfg.start, stop=cfg.stop, step=cfg.step)
-    #         RMSD.rmsd[0]
-    #
-    #         ftr_array = RMSD.rmsd
-    #         frame = RMSD.rmsd[:, 0]
-    #         time = RMSD.rmsd[:, 1]
-    #         rmsd = RMSD.rmsd[:, 2]
-    #
-    #     if plot:
-    #         #PLOT(xdata=frame, ydata=rmsd, xlabel='Frame', ylabel=f'RMSD ($\AA$)', **kwargs)
-    #         PLOT(xdata=time, ydata=rmsd, xlabel='Time (ps)', ylabel=f'RMSD ($\AA$)', **kwargs)
-    #
-    #     if alt_return:
-    #         return frame, time, rmsd
-    #     else:
-    #         return ftr_array
-
 
 def get_RMSF(mobile, sel='protein and name CA', plot=False):
     """
@@ -501,7 +420,6 @@ def get_Distance_Matrices(mobile, sel="protein and name CA", sss=[None, None, No
     return DM
 ################################################################################
 ################################################################################
-#
 
 
 def get_shortest_RES_distances(u, sel):
