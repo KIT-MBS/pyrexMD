@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 24.08.2021
 
 """
 This module contains functions for:
@@ -75,8 +75,8 @@ import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 #from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 import pandas as pd
-from sklearn.manifold import TSNE
-from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE, MDS
+from sklearn.cluster import KMeans, DBSCAN
 from tqdm.notebook import tqdm
 import glob
 import os
@@ -403,6 +403,8 @@ def heat_KMeans(h5_file, HDF_group="/distance_matrices", n_clusters=20, center_t
           |     counts per cluster
           | .labels (array)
           |     data point cluster labels
+          | .noise_label (None, int)
+          |     noise label used for algorithms such as DBSCAN
           | .wss_data (WSS_DATA)
           |      output of get_WSS() or get_DM_WSS()
           |      .wss_data.wss (float)
@@ -469,7 +471,7 @@ def heat_KMeans_bestofN(h5_file, n_clusters, N=50, topx=5, verbose=True, **kwarg
         topx (int): number of best ranked clusters to return
         verbose (bool)
 
-    .. Hint:: Args and Keyword Args of heat_Kmeans are valid Keyword Args.
+    .. Hint:: Args and Keyword Args of heat_KMeans are valid Keyword Args.
 
     Returns:
         TOPX_CLUSTER (list)
@@ -830,7 +832,7 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
-        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score().
+        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score()
         filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
         filter_tol (float):
           | defines filter_min and filter_max values
@@ -874,7 +876,7 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
     map cluster accuracy between `cluster_data`, cluster `GDT` and cluster `RMSD`.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
         GDT (list, array): GDT data for each frame of cluster_data
         RMSD (list, array): RMSD data for each frame of cluster_data
         prec (None, int): rounding precision
@@ -908,8 +910,10 @@ def sort_cluster_data(cluster_data, cluster_accuracy):
       -> cluster 0 will have highest GDT_mean
       -> cluster <max> will have lowest GDT_mean
 
+    .. Note :: if cluster_data has noise_label assigned, will move this label to the end of the sorted cluster data.
+
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans().
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
         cluster_accuracy (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
 
     Returns:
@@ -921,26 +925,73 @@ def sort_cluster_data(cluster_data, cluster_accuracy):
     if not isinstance(cluster_accuracy, CLUSTER_DATA_ACCURACY):
         raise TypeError("cluster_accuracy has wrong data type.")
 
-    # rank and test if labels have same range
+    ### rank and test if labels have same range
     ranked_array, ranked_ndx = _misc.get_ranked_array(cluster_accuracy.GDT_mean, verbose=False)
     if set(cluster_data.labels) != set(ranked_ndx):
         raise ValueError("labels of cluster_data and cluster_accuracy do not match.")
 
-    # remap data
+    if cluster_data.noise_label is not None:
+        # move noise label to the very end
+        noise_ndx = np.where(ranked_ndx == cluster_data.noise_label)[0]
+        other_ndx = np.where(ranked_ndx != cluster_data.noise_label)[0]
+        ranked_array = np.append(ranked_array[other_ndx], ranked_array[noise_ndx])
+        ranked_ndx = np.append(ranked_ndx[other_ndx], ranked_ndx[noise_ndx])
+
+    ### REMOVE ###
+    # # algorithms with -1 label for noise (e.g. DBSCAN, OPTICS)
+    # else:
+    #     ranked_array, ranked_ndx = _misc.get_ranked_array(cluster_accuracy.GDT_mean, verbose=False)
+    #     if set(cluster_data.labels + 1) != set(ranked_ndx):
+    #         raise ValueError("labels of cluster_data and cluster_accuracy do not match.")
+    #     # move noise label (here: max(ranked_ndx)) to the very end
+    #     noise_ndx = np.where(ranked_ndx == max(ranked_ndx))[0]
+    #     other_ndx = np.where(ranked_ndx != max(ranked_ndx))[0]
+    #     ranked_array = np.append(ranked_array[other_ndx], ranked_array[noise_ndx])
+    #     ranked_ndx = np.append(ranked_ndx[other_ndx], ranked_ndx[noise_ndx])
+    ### REMOVE ###
+
+    ### remap data
     sorted_labels = [ranked_ndx.tolist().index(i) for i in cluster_data.labels]
+
+    ### REMOVE ###
+    # # algorithms with -1 label for noise (e.g. DBSCAN, OPTICS)
+    # else:
+    #     _misc.cprint(f"Note: shifted labels from {min(cluster_data.labels)}..{max(cluster_data.labels)} to {min(ranked_ndx)}..{max(ranked_ndx)} with {max(ranked_ndx)} being the 'noise'.", "red")
+    #     sorted_labels = [ranked_ndx.tolist().index(i) for i in cluster_data.labels + 1]  # shift labels
+    ### REMOVE ###
+
+    ### create new object
     sorted_wss_data = WSS_DATA_obj(wss=cluster_data.wss_data.wss,                      # float
                                    sse=cluster_data.wss_data.sse[ranked_ndx],          # sorted
                                    se_mean=cluster_data.wss_data.se_mean[ranked_ndx],  # sorted
                                    se_std=cluster_data.wss_data.se_std[ranked_ndx])    # sorted
-
-    # create new object
     sorted_cluster_data = CLUSTER_DATA(centers=cluster_data.centers[ranked_ndx],  # sorted
                                        counts=cluster_data.counts[ranked_ndx],    # sorted
                                        labels=sorted_labels,                      # sorted
+                                       noise_label=cluster_data.noise_label,      # reassign
                                        inertia=cluster_data.inertia,              # float
                                        wss_data=sorted_wss_data,                  # sorted
                                        compact_score=cluster_data.compact_score[ranked_ndx])  # sorted
     return sorted_cluster_data
+
+
+def apply_MDS(data, n_components=2, random_state=None):
+    """
+    apply multidimensional scaling on data.
+
+    Args:
+        data (array)
+        n_components (int): MDS number of components
+        random_state (None, int): Determines the random number generator
+
+    Returns:
+        mds_data (array)
+            MDS transformed data
+    """
+    nsamples, nx, ny = np.array(data).shape
+    data_reshaped = np.array(data).reshape((nsamples, nx*ny))
+    mds_data = MDS(n_components=n_components, random_state=random_state).fit_transform(data_reshaped)
+    return mds_data
 
 
 def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
@@ -963,6 +1014,54 @@ def apply_TSNE(data, n_components=2, perplexity=50, random_state=None):
     return tsne_data
 
 
+def apply_DBSCAN(data, eps=0.5, min_samples=20):
+    """
+    apply DBSCAN on data
+
+    Args:
+        data (array)
+        eps (float): maximum (epsilon) distance between two samples to be considered neighbors. Most important DBSCAN parameter.
+        min_samples (int): The number of samples in a neighborhood for a point to be considered as a core point during DBSCAN algorithm.
+
+    Returns:
+        cluster_data (CLUSTER_DATA)
+          | .centers (array)
+          |     cluster centers
+          | .counts (array)
+          |     counts per cluster
+          | .labels (array)
+          |     data point cluster labels
+          | .noise_label (None, int)
+          |     noise label used for algorithms such as DBSCAN
+          | .inertia (None, float)
+          |     inertia of data
+          | .wss_data (WSS_DATA)
+          |      output of get_WSS() or get_DM_WSS()
+          |      .wss_data.wss (float)
+          |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          |      .wss_data.sse (list)
+          |         Sum of Squared Errors (of individual clusters)
+          |      .wss_data.se_mean (list)
+          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+          |      .wss_data.se_std (list)
+          |             std values of Squared Errors for each cluster
+          | .compact_score (array)
+          |      mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+    """
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples).fit(data)
+
+    labels = np.array([item if item != -1 else max(dbscan.labels_)+1 for item in dbscan.labels_])  # DBSCAN uses -1 label for noise. remap noise to highest index.
+    noise_label = max(dbscan.labels_)+1
+    centers = get_cluster_centers(data=data, labels=labels)
+    counts = np.bincount(labels)
+    wss_data = get_WSS(data, centers=centers, labels=labels)
+
+    cluster_data = CLUSTER_DATA(centers=centers, counts=counts, labels=labels,
+                                noise_label=noise_label, inertia=None,
+                                wss_data=wss_data, compact_score=wss_data.se_mean)
+    return cluster_data
+
+
 def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     """
     apply KMeans on tsne_data
@@ -975,9 +1074,27 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     Returns:
         cluster_data (CLUSTER_DATA)
           | .centers (array)
+          |     cluster centers
           | .counts (array)
+          |     counts per cluster
           | .labels (array)
-          | .inertia (float)
+          |     data point cluster labels
+          | .noise_label (None, int)
+          |     noise label used for algorithms such as DBSCAN
+          | .inertia (None, float)
+          |     inertia of data
+          | .wss_data (WSS_DATA)
+          |      output of get_WSS() or get_DM_WSS()
+          |      .wss_data.wss (float)
+          |         Within Cluster Sums of Squares ~ Sum of Squared Errors of all clusters
+          |      .wss_data.sse (list)
+          |         Sum of Squared Errors (of individual clusters)
+          |      .wss_data.se_mean (list)
+          |             mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
+          |      .wss_data.se_std (list)
+          |             std values of Squared Errors for each cluster
+          | .compact_score (array)
+          |      mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
     """
     kmeans = KMeans(n_clusters=n_clusters, random_state=None).fit(tsne_data)
 
@@ -991,7 +1108,7 @@ def apply_KMEANS(tsne_data, n_clusters=30, random_state=None):
     return cluster_data
 
 
-def plot_cluster_data(cluster_data, tsne_data, **kwargs):
+def plot_cluster_data(cluster_data, tsne_data, plot_only=None, **kwargs):
     """
     plot cluster data in a scatter plot.
 
@@ -1000,6 +1117,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
         tsne_data (array): output of apply_TSNE()
+        plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
 
     Keyword Args:
         cmap (sns.color_palette(n_colors))
@@ -1034,10 +1152,13 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     cfg = _misc.CONFIG(default, **modified)   # use default settings, overwrite with modified settings
     cfg = _misc.CONFIG(cfg, **kwargs)     # overwrite with kwargs settings
     ###################################################################
-    pandas = pd.DataFrame({'X': tsne_data[:, 0],
-                           'Y': tsne_data[:, 1],
-                           'label': cluster_data.labels})
-
+    df = pd.DataFrame({'X': tsne_data[:, 0],
+                       'Y': tsne_data[:, 1],
+                       'label': cluster_data.labels})
+    if plot_only is not None:
+        for i in sorted(set(cluster_data.labels)):
+            if i not in plot_only:
+                df = df[df.label != i]
     # PLOT
     fig, ax = _misc.figure(figsize=cfg.figsize)
     sns.scatterplot(x="X", y="Y",
@@ -1045,7 +1166,7 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
                     style="label", markers=cfg.markers,
                     s=cfg.ms,
                     legend='full',
-                    data=pandas)
+                    data=df)
     plt.xlabel("X", fontweight="bold")
     plt.ylabel("Y", fontweight="bold")
 
@@ -1059,20 +1180,56 @@ def plot_cluster_data(cluster_data, tsne_data, **kwargs):
     return fig, ax
 
 
-def plot_cluster_center(cluster_data, color="black", marker="s", ms=10):
+def plot_cluster_centers(cluster_data, plot_only=None, color="black", marker="s", ms=10):
     """
-    plot cluster center in existing figure.
+    plot cluster centers in existing figure. If cluster_data has a noise_label
+    assigned it will be automatically ignored and not plotted.
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        plot_only (None, list):
+          | list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
+          | None: plot all labels
+          | list: plot only labels within list
         color (str)
         marker (str)
         ms (int): marker size
     """
     X = cluster_data.centers[:, 0]
     Y = cluster_data.centers[:, 1]
-    plt.scatter(X, Y, color=color, marker=marker, s=ms)
+
+    if plot_only is None:
+        plot_only = sorted(set(cluster_data.labels))
+    if cluster_data.noise_label in plot_only:
+        plot_only.remove(cluster_data.noise_label)
+    for label in plot_only:
+        plt.scatter(X[label], Y[label], color=color, marker=marker, s=ms)
+
     return
+
+
+def get_cluster_centers(data, labels):
+    """
+    get cluster centers of data.
+
+
+    Args:
+        data (np.array): data with shape (n_samples, n_dim)
+        labels (np.array): data labels with length = n_samples
+
+    Returns:
+        centers (np.array)
+            cluster centers
+    """
+    if len(data) != len(labels):
+        raise ValueError("data and labels must have equal length.")
+
+    centers = []
+    for label in sorted(set(labels)):
+        current_data = np.array([data[ndx] for ndx, item in enumerate(labels) if item == label])
+        centers.append(sum(current_data)/len(current_data))
+    centers = np.array(centers)
+    return centers
 
 
 def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, verbose=True):
@@ -1189,7 +1346,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
     .. Note:: 'compact score' is mean(squared errors) of individual clusters.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_Kmeans()
+        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
         cluster_scores (CLUSTER_DATA_SCORES): output of map_cluster_scores()
         targets (list): target labels, which will be colored red in printed table
         save_as (None, str): realpath or name of logfile
@@ -1240,7 +1397,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
 
 
 class CLUSTER_DATA(object):
-    def __init__(self, centers=None, counts=None, labels=None, inertia=None, wss_data=None, compact_score=None):
+    def __init__(self, centers=None, counts=None, labels=None, noise_label=None, inertia=None, wss_data=None, compact_score=None):
         """
         saves cluster data as object
 
@@ -1248,6 +1405,7 @@ class CLUSTER_DATA(object):
             centers (None, array): cluster centers
             counts (None, array): counts
             labels (None, array): labels
+            noise_label (None, int): noise label used for book-keeping for certain algorithms, such as DBSCAN
             inertia (None, float): intertia
             wss_data (None, WSS_DATA)
             compact_score (None, array): mean values of Squared Errors for each cluster ~ can be interpreted as a compactness score
@@ -1255,6 +1413,7 @@ class CLUSTER_DATA(object):
         self.centers = np.array(centers)
         self.counts = np.array(counts)
         self.labels = np.array(labels)
+        self.noise_label = noise_label
         self.inertia = inertia
         self.wss_data = wss_data
         self.compact_score = np.array(compact_score)

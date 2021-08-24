@@ -337,11 +337,11 @@ def test_plot_cluster_data(mock_show):
 
 
 @ patch("matplotlib.pyplot.show")
-def test_plot_cluster_center(mock_show):
+def test_plot_cluster_centers(mock_show):
     centers = np.array([[0, 0], [1, 1]])
-    cluster_data = clu.CLUSTER_DATA(centers=centers)
+    cluster_data = clu.CLUSTER_DATA(centers=centers, labels=[0, 1])
 
-    clu.plot_cluster_center(cluster_data)
+    clu.plot_cluster_centers(cluster_data)
     return
 
 

@@ -2,7 +2,7 @@
 # @Date:   22.06.2021
 # @Filename: test_dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 24.08.2021
 
 
 import pyrexMD.misc as misc
