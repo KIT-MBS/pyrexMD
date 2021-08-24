@@ -5,7 +5,7 @@
 # @Last modified time: 24.08.2021
 
 """
-This module contains functions various functions for trajectory analysis.
+This module contains various functions related to trajectory analyses.
 
 
 Example:
