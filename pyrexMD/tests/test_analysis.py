@@ -2,7 +2,7 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
 
 
 import pyrexMD.analysis.analysis as ana

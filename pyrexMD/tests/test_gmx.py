@@ -2,7 +2,8 @@
 # @Date:   21.06.2021
 # @Filename: test_gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
+
 
 import pyrexMD.misc as misc
 import pyrexMD.gmx as gmx

@@ -2,7 +2,8 @@
 # @Date:   09.05.2021
 # @Filename: test_contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
+
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.contacts as con

@@ -4,6 +4,7 @@
 /* --- page layout --------------------------------------------------------- */
 
 body {
+    --themecolor: black
     font-family: Helvetica, Arial;
     font-size: 17px;
 }

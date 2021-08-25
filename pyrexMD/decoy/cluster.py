@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 24.08.2021
+# @Last modified time: 26.08.2021
 
 """
 This module contains functions for:
@@ -831,7 +831,7 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
               Otherwise the index mapping from enumerate(labels) within this function will be wrong.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score()
         filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
         filter_tol (float):
@@ -876,7 +876,7 @@ def map_cluster_accuracy(cluster_data, GDT, RMSD, prec=3):
     map cluster accuracy between `cluster_data`, cluster `GDT` and cluster `RMSD`.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         GDT (list, array): GDT data for each frame of cluster_data
         RMSD (list, array): RMSD data for each frame of cluster_data
         prec (None, int): rounding precision
@@ -913,7 +913,7 @@ def sort_cluster_data(cluster_data, cluster_accuracy):
     .. Note :: if cluster_data has noise_label assigned, will move this label to the end of the sorted cluster data.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         cluster_accuracy (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
 
     Returns:
@@ -1115,7 +1115,7 @@ def plot_cluster_data(cluster_data, tsne_data, plot_only=None, **kwargs):
     .. Note:: Uses modified default values if cluster_data has n_clusters = 10 or n_clusters = 30.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         tsne_data (array): output of apply_TSNE()
         plot_only (None, list): list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
 
@@ -1186,7 +1186,7 @@ def plot_cluster_centers(cluster_data, plot_only=None, color="black", marker="s"
     assigned it will be automatically ignored and not plotted.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMEANS() or heat_KMEANS()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         plot_only (None, list):
           | list of cluster labels to plot. Ignores (xdata, ydata) of other labels.
           | None: plot all labels
@@ -1297,7 +1297,7 @@ def WF_print_cluster_accuracy(cluster_data, cluster_accuracy, targets=[None], sa
     .. Note:: 'compact score' is mean(squared errors) of individual clusters.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         cluster_accuracy (CLUSTER_DATA_ACCURACY): output of map_cluster_accuracy()
         targets (list): target labels, which will be colored red in printed table
         save_as (None, str): realpath or name of logfile
@@ -1346,7 +1346,7 @@ def WF_print_cluster_scores(cluster_data, cluster_scores, targets=[None], save_a
     .. Note:: 'compact score' is mean(squared errors) of individual clusters.
 
     Args:
-        cluster_data (CLUSTER_DATA): output of apply_KMeans() or heat_KMeans()
+        cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
         cluster_scores (CLUSTER_DATA_SCORES): output of map_cluster_scores()
         targets (list): target labels, which will be colored red in printed table
         save_as (None, str): realpath or name of logfile
@@ -1423,7 +1423,7 @@ class CLUSTER_DATA(object):
 class CLUSTER_DATA_SCORES(object):
     def __init__(self, cluster_data, scores, prec=3, filter=True, filter_tol=2.0):
         """
-        maps cluster_data to cluster scores
+        mapping between cluster_data and scores.
 
         Args:
             cluster_data (CLUSTER_DATA)
@@ -1450,6 +1450,8 @@ class CLUSTER_DATA_SCORES(object):
                 min values of individual cluster scores
             obj.max (list)
                 max values of individual cluster scores
+            obj.DELTA (list)
+                difference between individual cluster mean and total mean, i.e. DELTA[i] = mean[i] - mean_all
         """
         self.scores = [[] for i in range(len(cluster_data.centers))]
         if filter:
@@ -1489,13 +1491,13 @@ class CLUSTER_DATA_SCORES(object):
 class CLUSTER_DATA_ACCURACY(object):
     def __init__(self, cluster_data, GDT, RMSD, prec=3):
         """
-        maps cluster_data to cluster GDT and cluster RMSD.
+        mapping between cluster_data and accuracy (GDT and RMSD).
 
         Args:
-            cluster_data(CLUSTER_DATA)
-            GDT(list, array): GDT data for each frame of cluster_data
-            RMSD(list, array): RMSD data for each frame of cluster_data
-            prec(int): rounding precision
+            cluster_data (CLUSTER_DATA)
+            GDT (list, array): GDT data for each frame of cluster_data
+            RMSD (list, array): RMSD data for each frame of cluster_data
+            prec (int): rounding precision
 
         Returns:
             obj.GDT (list)
