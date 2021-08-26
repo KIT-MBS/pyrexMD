@@ -1,32 +1,32 @@
-pyrexMD.analysis package
-========================
+pyrexMD.analysis
+================
 
-pyrexMD.analysis.analysis module
---------------------------------
+pyrexMD.analysis.analysis
+-------------------------
 
 .. automodule:: pyrexMD.analysis.analysis
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.analysis.contacts module
---------------------------------
+pyrexMD.analysis.contacts
+-------------------------
 
 .. automodule:: pyrexMD.analysis.contacts
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.analysis.dihedrals module
----------------------------------
+pyrexMD.analysis.dihedrals
+--------------------------
 
 .. automodule:: pyrexMD.analysis.dihedrals
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.analysis.gdt module
----------------------------
+pyrexMD.analysis.gdt
+--------------------
 
 .. automodule:: pyrexMD.analysis.gdt
    :members:
