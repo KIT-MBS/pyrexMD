@@ -1,0 +1,2346 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.core &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyrexMD.analysis" href="pyrexMD.analysis.html" />
+    <link rel="prev" title="pyrexMD" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Docs</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pyrexMD.core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#content">Content:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.gmx">pyrexMD.gmx</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Example:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Content:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.rex">pyrexMD.rex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Example:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Content:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyrexMD.topology">pyrexMD.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.decoy.html">pyrexMD.decoy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrexMD.misc.html">pyrexMD.misc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">pyrexMD</a> &raquo;</li>
+        
+      <li>pyrexMD.core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pyrexMD.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pyrexMD.core">
+<span id="pyrexmd-core"></span><h1>pyrexMD.core<a class="headerlink" href="#module-pyrexMD.core" title="Permalink to this headline">¶</a></h1>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>This module contains functions to enable interactive analyses.
+Its main purpose are the iPlayer and iPlot classes.</p>
+</div>
+<div class="section" id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
+
+<span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
+<span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
+
+<span class="c1"># show ref structure in trajectory viewer</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlayer</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+<span class="n">tv</span><span class="p">()</span>
+
+<span class="c1"># check for formed bias contacts</span>
+<span class="n">bias</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="s2">&quot;path/to/bias/contacts&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">FRAMES</span><span class="p">,</span> <span class="n">QBIAS</span><span class="p">,</span> <span class="n">CM</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">get_Qbias</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">bias</span><span class="p">)</span>
+
+<span class="c1"># interactive plot (ctrl-click into the plot to jump to frame)</span>
+<span class="n">ip</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">iPlot</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">xdata</span><span class="o">=</span><span class="n">FRAMES</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">QBIAS</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Qbias&quot;</span><span class="p">)</span>
+<span class="n">ip</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="content">
+<h2>Content:<a class="headerlink" href="#content" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyrexMD.core.cp">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[(0.12156862745098039,</span> <span class="pre">0.4666666666666667,</span> <span class="pre">0.7058823529411765),</span> <span class="pre">(1.0,</span> <span class="pre">0.4980392156862745,</span> <span class="pre">0.054901960784313725),</span> <span class="pre">(0.17254901960784313,</span> <span class="pre">0.6274509803921569,</span> <span class="pre">0.17254901960784313),</span> <span class="pre">(0.8392156862745098,</span> <span class="pre">0.15294117647058825,</span> <span class="pre">0.1568627450980392),</span> <span class="pre">(0.5803921568627451,</span> <span class="pre">0.403921568627451,</span> <span class="pre">0.7411764705882353),</span> <span class="pre">(0.5490196078431373,</span> <span class="pre">0.33725490196078434,</span> <span class="pre">0.29411764705882354),</span> <span class="pre">(0.8901960784313725,</span> <span class="pre">0.4666666666666667,</span> <span class="pre">0.7607843137254902),</span> <span class="pre">(0.4980392156862745,</span> <span class="pre">0.4980392156862745,</span> <span class="pre">0.4980392156862745),</span> <span class="pre">(0.7372549019607844,</span> <span class="pre">0.7411764705882353,</span> <span class="pre">0.13333333333333333),</span> <span class="pre">(0.09019607843137255,</span> <span class="pre">0.7450980392156863,</span> <span class="pre">0.8117647058823529)]</span></em><a class="headerlink" href="#pyrexMD.core.cp" title="Permalink to this definition">¶</a></dt>
+<dd><p>access seaborn colors via core.cp[0] - core.cp[9]</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.core.iColor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">iColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iPlayer_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iColor.get_color_scheme">
+<span class="sig-name descname"><span class="pre">get_color_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iColor.get_color_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iColor.get_color_scheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns color scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>universe</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>color_scheme (array)</dt><dd><p>HEX colors for each RES taken from iPlayer.universe (default) or universe.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<dl>
+<dt>Accepted colors (simple):</dt><dd><div class="line-block">
+<div class="line">‘red’       ‘black’</div>
+<div class="line">‘orange’    ‘grey_80’</div>
+<div class="line">‘yellow’    ‘grey_60’</div>
+<div class="line">‘green’     ‘grey_40’</div>
+<div class="line">‘cyan’      ‘grey_20’</div>
+<div class="line">‘blue’      ‘white’</div>
+<div class="line">‘purple’</div>
+<div class="line">‘magenta’</div>
+</div>
+</dd>
+<dt>Accepted colors (complex):</dt><dd><div class="line-block">
+<div class="line">‘baw’: black and white</div>
+<div class="line">‘b/w’: black and white</div>
+<div class="line">‘rainbow’: red to magenta</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iColor.set_color_scheme">
+<span class="sig-name descname"><span class="pre">set_color_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iColor.set_color_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iColor.set_color_scheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies color scheme. If ci=None, then target is determinded by &lt;iPlayer_object&gt;.widgets.Components.description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>universe</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>color_scheme (array)</dt><dd><p>HEX colors for each RES taken from iPlayer.universe (default) or universe.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<dl>
+<dt>Accepted colors (simple):</dt><dd><div class="line-block">
+<div class="line">‘red’       ‘black’</div>
+<div class="line">‘orange’    ‘grey_80’</div>
+<div class="line">‘yellow’    ‘grey_60’</div>
+<div class="line">‘green’     ‘grey_40’</div>
+<div class="line">cyan’      ‘grey_20’</div>
+<div class="line">‘blue’      ‘white’</div>
+<div class="line">‘purple’</div>
+<div class="line">‘magenta’</div>
+</div>
+</dd>
+<dt>Accepted colors (complex):</dt><dd><div class="line-block">
+<div class="line">‘baw’: black and white</div>
+<div class="line">‘b/w’: black and white</div>
+<div class="line">‘rainbow’: red to magenta</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.core.iPlayer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">iPlayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iPlayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iPlayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iPlayer.show_player">
+<span class="sig-name descname"><span class="pre">show_player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iPlayer.show_player"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iPlayer.show_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show trajectory viewer with GUI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layout</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">‘default’: default layout</div>
+<div class="line">’Marie’: special layout for special person</div>
+</div>
+</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Alternative:</dt><dd><p>Execute show_player() method by calling the object.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>tv = core.iPlayer(&lt;universe&gt;)
+tv()   # short version of tv.show_player()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iPlayer.sync_view">
+<span class="sig-name descname"><span class="pre">sync_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iPlayer.sync_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iPlayer.sync_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for &lt;iPlayer_object&gt;.player.sync_view().</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.core.iPlot">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">iPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xdata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(8,</span> <span class="pre">4.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyrexMD.core.iPlayer" title="pyrexMD.core.iPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrexMD.core.iPlayer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iPlot.show_plot">
+<span class="sig-name descname"><span class="pre">show_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(8,</span> <span class="pre">4.5)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iPlot.show_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iPlot.show_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show trajectory viewer with GUI and interactive matplotlib plot.
+Interactive red bar can be moved by pressing any key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xdata</strong> (<em>array</em>) – </p></li>
+<li><p><strong>ydata</strong> (<em>array</em>) – </p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – </p></li>
+<li><p><strong>title</strong> (<em>str</em>) – </p></li>
+<li><p><strong>tu</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">time unit of plot. Either ‘ps’, ‘ns’ or ‘frame’.</div>
+<div class="line">If ‘ns’ is selected, time stamps of MDAnalysis universe are converted from ps to ns.</div>
+<div class="line">Important to make the interactive red bar work properly.</div>
+</div>
+</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Alternatively execute show_plot() method by calling the object.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">ip = core.iPlot(&lt;universe&gt;)</div>
+<div class="line">ip()   # short version of ip.show_plot()</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrexMD.core.iWidgets">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrexMD.core.</span></span><span class="sig-name descname"><span class="pre">iWidgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iPlayer_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iWidgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iWidgets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrexMD.core.iWidgets.toggle_UI">
+<span class="sig-name descname"><span class="pre">toggle_UI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/core.html#iWidgets.toggle_UI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.core.iWidgets.toggle_UI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle UI with a=True/False. If a=None, then UI will switch to other state.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-pyrexMD.gmx">
+<span id="pyrexmd-gmx"></span><h1>pyrexMD.gmx<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline">¶</a></h1>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>This module contains modified GromacsWrapper functions to streamline
+the interaction with <cite>GROMACS</cite> for system setups etc.</p>
+</div>
+<div class="section" id="id1">
+<h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+
+<span class="c1"># create ref pdb:</span>
+<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># generate topology &amp; box</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
+
+<span class="c1"># generate solvent &amp; ions</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
+
+<span class="c1"># NVT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;nvt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;nvt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;min.gro&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;nvt&quot;</span><span class="p">)</span>
+
+<span class="c1"># NPT equilibration</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;npt.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;npt.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="s2">&quot;nvt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;nvt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
+
+<span class="c1"># MD run</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Content:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.clean_up">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gmx_pattern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean up gromacs backup files with the patterns #*# and .*offsets.npz</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>pattern can be implemented into path variable directly.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – directory path</p></li>
+<li><p><strong>pattern</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">pattern</div>
+<div class="line">None: check for files with path only</div>
+<div class="line">str:  check for files with joined path of path + pattern</div>
+<div class="line">”gmx_pattern”: remove files with the patterns #*# and .*offsets.npz</div>
+</div>
+</p></li>
+<li><p><strong>ignore</strong> (<em>None</em><em>, </em><em>str</em><em>, </em><em>list of str</em><em>, </em><em>tuple of str</em>) – <div class="line-block">
+<div class="line">one or multiple ignore pattern</div>
+<div class="line">None: no ignore pattern</div>
+<div class="line">str: single ignore pattern</div>
+<div class="line">list of str, tuple of str: list/tuple with multiple ignore patterns</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print message (‘removed file: … ‘)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.convert_TPR">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">convert_TPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#convert_TPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.convert_TPR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.convert_tpr().</p>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>‘gmx convert-tpr’ can edit run input files in three ways:
+- modify tpr settings
+- create new tpr for a subset of original tpr
+- setting the charges of a specified group to zero(useful when doing free energy estimates using the LIE (Linear Interaction Energy) method.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>str</em>) – tpr</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">tpr</div>
+<div class="line">”default”: &lt;s&gt;.tpr -&gt; &lt;s&gt;_&lt;sel&gt;.tpr</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">selection string(case independant)</div>
+<div class="line">”system” or “all”: all atoms</div>
+<div class="line">”protein”: protein atoms</div>
+<div class="line">”ca” or “calpha”: CA atoms</div>
+<div class="line">”bb” or “backbone”: backbone atoms</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – </p>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.convert_tpr.help()</p></li>
+<li><p>terminal -&gt; gmx convert_tpr -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.convert_TPR2PDB">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">convert_TPR2PDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrexMD.gmx.convert_TPR2PDB" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Modified function of gromacs.editconf()</p></li>
+<li><p>Alias function of convert_TPR2PDB()</p></li>
+</ul>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – tpr (gro g96 pdb brk ent esp)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">pdb (gro g96)</div>
+<div class="line">”default”: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</div>
+<div class="line">&lt;f&gt;.gro -&gt; box.gro</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>box</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">box vector lengths xyz (only 1 value for bt=”cubic”).</div>
+<div class="line">requires center=False to work.</div>
+</div>
+</p></li>
+<li><p><strong>bt</strong> (<em>str</em>) – box type: cubic triclinic dodecahedron octahedron</p></li>
+<li><p><strong>c</strong> (<em>bool</em>) – center molecule in box</p></li>
+<li><p><strong>d</strong> (<em>str</em>) – distance between the solute and the box</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/editconf.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python  -&gt; gromacs.editconf.help()</p></li>
+<li><p>terminal -&gt; gmx editconf -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.create_complex">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">create_complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'complex.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#create_complex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.create_complex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create complex using multiple .gro files. First .gro file in &lt;f&gt; must have
+largest box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>list</em>) – list of gro files</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – output structure file: gro</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.create_positions_dat">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">create_positions_dat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box_vec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[25,</span> <span class="pre">25,</span> <span class="pre">25]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">range(100,</span> <span class="pre">110,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#create_positions_dat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.create_positions_dat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create folder with position.dat files. Each file contains &lt;nmol&gt; copies of
+the box center. Use in combination with “gmx insert-molecule module”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>box_vec</strong> (<em>list</em>) – box vectors</p></li>
+<li><p><strong>nmol</strong> (<em>int</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>range</em>) – number of molecules to add (replaces -nmol from
+insert-molecule cmd)</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>file_dir (str)</dt><dd><p>realpath of folder containing positions.dat files</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; gmx insert-molecules -f “box_25.gro” -ci “../model_ATP/atp_ini.pdb”</div>
+<div class="line">-o “complex.gro” -ip “positions_dat/positions_100.dat” -dr 5 5 5 -try 100</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.editconf">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">editconf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#editconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.editconf" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Modified function of gromacs.editconf()</p></li>
+<li><p>Alias function of convert_TPR2PDB()</p></li>
+</ul>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – tpr (gro g96 pdb brk ent esp)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">pdb (gro g96)</div>
+<div class="line">”default”: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</div>
+<div class="line">&lt;f&gt;.gro -&gt; box.gro</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>box</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">box vector lengths xyz (only 1 value for bt=”cubic”).</div>
+<div class="line">requires center=False to work.</div>
+</div>
+</p></li>
+<li><p><strong>bt</strong> (<em>str</em>) – box type: cubic triclinic dodecahedron octahedron</p></li>
+<li><p><strong>c</strong> (<em>bool</em>) – center molecule in box</p></li>
+<li><p><strong>d</strong> (<em>str</em>) – distance between the solute and the box</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/editconf.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python  -&gt; gromacs.editconf.help()</p></li>
+<li><p>terminal -&gt; gmx editconf -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.extend_complex_topology">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">extend_complex_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ligand_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand_itp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand_prm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand_nmol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol_complex.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#extend_complex_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.extend_complex_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend an existing .top file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ligand_name</strong> (<em>str</em>) – ligand name</p></li>
+<li><p><strong>ligand_itp</strong> (<em>str</em>) – ligand .itp file</p></li>
+<li><p><strong>ligand_prm</strong> (<em>str</em>) – ligand .prm file</p></li>
+<li><p><strong>ligand_nmol</strong> (<em>int</em>) – number of ligand molecules</p></li>
+<li><p><strong>top</strong> (<em>str</em>) – topology input file (will be extended)</p></li>
+<li><p><strong>top_out</strong> (<em>str</em>) – topology output file</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.fix_TRAJ">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">fix_TRAJ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tpr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mol'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#fix_TRAJ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.fix_TRAJ" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Fix topology:</dt><dd><ul class="simple">
+<li><p>convert tpr to selection only</p></li>
+<li><p>if o=”default”: save as &lt;s&gt;_&lt;sel&gt;.tpr</p></li>
+</ul>
+</dd>
+<dt>Fix trajectory:</dt><dd><ul class="simple">
+<li><p>selection only</p></li>
+<li><p>tu ns</p></li>
+<li><p>pbc mol</p></li>
+<li><p>center</p></li>
+<li><p>if o=”default”: save as &lt;f&gt;_&lt;sel&gt;.xtc</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tpr</strong> (<em>str</em>) – structure: tpr</p></li>
+<li><p><strong>xtc</strong> (<em>str</em>) – trajectory: xtc (trr cpt gro g96 pdb tng)</p></li>
+<li><p><strong>o</strong> (<em>str</em><em>, </em><em>list</em>) – <div class="line-block">
+<div class="line">filenames of new structure and new trajectory (both selection only)</div>
+<div class="line">”default” (str):</div>
+<div class="line-block">
+<div class="line">&lt;tpr&gt;.tpr -&gt; &lt;xtc&gt;_&lt;sel&gt;.tpr</div>
+<div class="line">&lt;xtc&gt;.xtc -&gt; &lt;xtc&gt;_&lt;sel&gt;.xtc</div>
+</div>
+<div class="line">[os, of] (list):</div>
+<div class="line-block">
+<div class="line">os (str): filename of new structure (selection only)</div>
+<div class="line">of (str): filename of new trajectory (selection only)</div>
+</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>tu</strong> (<em>str</em>) – time unit: fs ps ns us ms s</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">selection string(case independant)</div>
+<div class="line">”system” or “all”: all atoms</div>
+<div class="line">”protein”: protein atoms</div>
+<div class="line">”ca” or “calpha”: CA atoms</div>
+<div class="line">”bb” or “backbone”: backbone atoms</div>
+</div>
+</p></li>
+<li><p><strong>pbc</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">PBC treatment: none mol res atom nojump cluster whole</div>
+<div class="line">”mol”: puts the center of mass of molecules in the box. requires structure file s.</div>
+<div class="line">”nojump”: checks if atoms jump across the box and then puts them back
+(i.e. all molecules will remain whole)</div>
+<div class="line">(see gromacs help text for other descriptions)</div>
+</div>
+</p></li>
+<li><p><strong>center</strong> (<em>bool</em>) – center atoms in box</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.trjconv.help()</p></li>
+<li><p>terminal -&gt; gmx trjconv -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>tpr_file (str)</dt><dd><p>realpath of new tpr file (selection only)</p>
+</dd>
+<dt>xtc_file (str)</dt><dd><p>realpath of new xtc file (selection only)</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.genion">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SOL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified fuction of gromacs.genion().</p>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>gmx genion randomly replaces solvent molecules with monoatomic ions.
+The group of solvent molecules should be continuous and all molecules
+should have the same number of atoms.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>str</em>) – structure file: tpr</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – output file: gro pdb (g96 brk ent esp)</p></li>
+<li><p><strong>p</strong> (<em>str</em>) – topology file: topol.top</p></li>
+<li><p><strong>input</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">selection grp</div>
+<div class="line">default: 13 (SOL)</div>
+</div>
+</p></li>
+<li><p><strong>pname</strong> (<em>str</em>) – positive ion name</p></li>
+<li><p><strong>nname</strong> (<em>str</em>) – negative ion name</p></li>
+<li><p><strong>conc</strong> (<em>float</em>) – add salt concentration (mol/liter) and rescale to box size</p></li>
+<li><p><strong>neutral</strong> (<em>bool</em>) – add enough ions to neutralize the system. These ions are
+added on top of those specified with -np/-nn or -conc</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/genion.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/genion_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.genion.help()</p></li>
+<li><p>terminal -&gt; gmx genion -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_RMSD">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_RMSD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ns'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['bb',</span> <span class="pre">'bb']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_RMSD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_RMSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.rms(). Calculate backbone RMSD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>str</em>) – reference structure: pdb (tpr gro g96 brk ent)</p></li>
+<li><p><strong>xtc</strong> (<em>str</em>) – trajectory: xtc (trr cpt gro g96 pdb tng)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">xvg</div>
+<div class="line">”default”: rmsd.xvg</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>tu</strong> (<em>str</em>) – time unit: fs ps ns us ms s</p></li>
+<li><p><strong>sel</strong> (<em>list</em>) – <div class="line-block">
+<div class="line">list with selection strings (case independant)</div>
+<div class="line">”system” or “all”: all atoms</div>
+<div class="line">”protein”: protein atoms</div>
+<div class="line">”ca” or “calpha”: CA atoms</div>
+<div class="line">”bb” or “backbone”: backbone atoms</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – </p>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.rms.help()</p></li>
+<li><p>terminal -&gt; gmx rms -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_ref_structure">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_ref_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_ref_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_ref_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates ref structure of input structure via pdb2gmx to fix atom count by
+applying force field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – input structure file: pdb gro tpr (g96 brk ent esp)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – output structure file: pdb gro trp (g96 brk ent esp)</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>ff</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
+<div class="line">”amber99sb-ildn” etc. for proteins</div>
+<div class="line">”amber14sb_OL15” etc. for RNAs</div>
+</div>
+</p></li>
+<li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – </p>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.pdb2gmx.help()</p></li>
+<li><p>terminal -&gt; gmx pdb2gmx -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_template_1_EM">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_template_1_EM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmx_mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_template_1_EM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_template_1_EM" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gmx_mpi</strong> (<em>bool</em>) – use gmx_mpi instead of gmx</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_template_2_NVT">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_template_2_NVT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmx_mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_template_2_NVT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_template_2_NVT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gmx_mpi</strong> (<em>bool</em>) – use gmx_mpi instead of gmx</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_template_3_NPT">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_template_3_NPT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmx_mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_template_3_NPT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_template_3_NPT" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gmx_mpi</strong> (<em>bool</em>) – use gmx_mpi instead of gmx</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.get_template_4_MD">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">get_template_4_MD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmx_mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#get_template_4_MD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.get_template_4_MD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gmx_mpi</strong> (<em>bool</em>) – use gmx_mpi instead of gmx</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.grompp">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">grompp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#grompp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.grompp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.grompp().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – input file: mdp</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – output file: tpr</p></li>
+<li><p><strong>c</strong> (<em>str</em>) – structure file: gro tpr pdb (g96 brk ent esp)</p></li>
+<li><p><strong>p</strong> (<em>str</em>) – topology file: top</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>maxwarn</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">Number of allowed warnings during input processing.</div>
+<div class="line">Not for normal use and may generate unstable systems.</div>
+</div>
+</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/grompp.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.grompp.help()</p></li>
+<li><p>terminal -&gt; gmx grompp -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.mdrun">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">mdrun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#mdrun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.mdrun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias fuction of gromacs.mdrun().</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>output can be printed only after mdrun has finished. To see
+realtime updates invoke the command using “!gmx_mpi mdrun &lt;parameters&gt;”
+instead</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>deffnm</strong> (<em>str</em>) – default filename</p></li>
+<li><p><strong>nsteps</strong> (<em>int</em>) – maximum number of steps (used instead of mdp setting)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.mdrun.help()</p></li>
+<li><p>terminal -&gt; gmx mdrun -h</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.pdb2gmx">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">pdb2gmx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#pdb2gmx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.pdb2gmx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.pdb2gmx().</p>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>‘pdb2gmx’ reads a .pdb (or .gro) file, reads some database files, adds
+hydrogens to the molecules and generates coordinates in GROMACS (GROMOS),
+or optionally .pdb, format and a topology in GROMACS format. These files
+can subsequently be processed to generate a run input file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – input structure file: pdb gro tpr (g96 brk ent esp)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – output structure file: pdb gro (g96 brk ent esp)</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>ff</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
+<div class="line">”amber99sb-ildn” etc. for proteins</div>
+<div class="line">”amber14sb_OL15” etc. for RNAs</div>
+</div>
+</p></li>
+<li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>p</strong> (<em>str</em>) – topology file: topol.top</p></li>
+<li><p><strong>i</strong> (<em>str</em>) – include file for topology: posre.itp</p></li>
+<li><p><strong>n</strong> (<em>str</em>) – index file: index.ndx</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/pdb2gmx.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.pdb2gmx.help()</p></li>
+<li><p>terminal -&gt; gmx pdb2gmx -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.solvate">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">solvate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spc216.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solvent.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#solvate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.solvate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.solvate(). cp is usually “box.gro”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cp</strong> (<em>str</em>) – structure file ~ solute:  gro pdb tpr (g96 brk ent esp)</p></li>
+<li><p><strong>cs</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">structure file ~ solvent: gro pdb tpr (g96 brk ent esp)</div>
+<div class="line">Note: “spc216.gro” is used for all 3-point water models</div>
+</div>
+</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">gro pdb (g96 brk ent esp)</div>
+<div class="line">default case: save in same directory as cp</div>
+<div class="line">special case: if o is relative/absolute path -&gt; save there</div>
+</div>
+</p></li>
+<li><p><strong>p</strong> (<em>str</em>) – topology file: topol.top</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>maxsol</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">maximum number of solvent molecules to add if they fit in the box.</div>
+<div class="line">0 (default): ignore this setting</div>
+</div>
+</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – save log file</p></li>
+<li><p><strong>log_overwrite</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: save log file as &lt;logs/solvate.log&gt;</div>
+<div class="line">False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,…,999</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.solvate.help()</p></li>
+<li><p>terminal -&gt; gmx solvate -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.gmx.trjconv">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">trjconv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#trjconv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.trjconv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified function of gromacs.trjconv().</p>
+<dl class="simple">
+<dt>Gromacs info:</dt><dd><p>gmx trjconv can convert trajectory files in many ways</p>
+<ul class="simple">
+<li><p>from one format to another</p></li>
+<li><p>select a subset of atoms</p></li>
+<li><p>center atoms in the box</p></li>
+<li><p>fit atoms to reference structure</p></li>
+<li><p>reduce the number of frames</p></li>
+<li><p>etc.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>str</em>) – structure: tpr (gro g96 pdb brk ent)</p></li>
+<li><p><strong>f</strong> (<em>str</em>) – trajectory: xtc (trr cpt gro g96 pdb tng)</p></li>
+<li><p><strong>o</strong> (<em>str</em>) – trajectory:
+| xtc (trr gro g96 pdb tng)
+| “default”: &lt;f&gt;.xtc -&gt; &lt;f&gt;_&lt;sel&gt;.xtc</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">special case: odir is ignored when o is relative/absolute path</div>
+</div>
+</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">selection string (case independant)</div>
+<div class="line">”system” or “all”: all atoms</div>
+<div class="line">”protein”: protein atoms</div>
+<div class="line">”ca” or “calpha”: CA atoms</div>
+<div class="line">”bb” or “backbone”: backbone atoms</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>str</em>) – </p>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Find more valid Keyword Args via</p>
+<ul class="simple">
+<li><p>python -&gt; gromacs.trjconv.help()</p></li>
+<li><p>terminal -&gt; gmx trjconv -h</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>ofile (str)</dt><dd><p>realpath of output file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-pyrexMD.rex">
+<span id="pyrexmd-rex"></span><h1>pyrexMD.rex<a class="headerlink" href="#module-pyrexMD.rex" title="Permalink to this headline">¶</a></h1>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>This module contains functions related to (contact-guided) Replica
+Exchange Molecular Dynamics. It contains mainly functions to automate and
+speed-up the process of setting up REX simulations.</p>
+</div>
+<div class="section" id="id3">
+<h2>Example:<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
+
+<span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
+
+<span class="c1"># create rex directories and assign decoys</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">assign_best_decoys</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
+<span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">get_REX_DIRS</span><span class="p">()</span>
+
+<span class="c1"># create systems for each replica</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
+
+<span class="c1"># minimize</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># add bias contacts</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
+
+<span class="c1"># prepare temperature distribution</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
+
+<span class="c1"># create mdp and tpr files</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
+
+<span class="c1"># upload files on HPC and execute production run</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>Content:<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.WF_REX_setup">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_gmx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workflow: REX setup (without energy minimization)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rex_dirs</strong> (<em>list</em>) – list with rex_dirs (output of rex.get_REX_DIRS())</p></li>
+<li><p><strong>boxsize</strong> (<em>float</em>) – suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())</p></li>
+<li><p><strong>maxsol</strong> (<em>int</em>) – suggested max solution parameter (output of gmx.WF_getParameter_max_solution())</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – show blue log messages (saved file as, saved log as)</p></li>
+<li><p><strong>verbose_gmx</strong> (<em>bool</em>) – show gmx module messages (requires verbose=True)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.WF_REX_setup_energy_minimization">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup_energy_minimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsteps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup_energy_minimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup_energy_minimization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workflow: REX energy minimization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rex_dirs</strong> (<em>list</em>) – list with rex_dirs (output of rex.get_REX_DIRS())</p></li>
+<li><p><strong>nsteps</strong> (<em>None</em><em>,</em><em>int</em>) – <div class="line-block">
+<div class="line">maximum number of steps</div>
+<div class="line">None: use .mdp option</div>
+<div class="line">int: use instead of .mdp option</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – show/hide gromacs output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.WF_getParameter_boxsize">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_getParameter_boxsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs/editconf.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_getParameter_boxsize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_getParameter_boxsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read &lt;logfile&gt; and suggest a ‘fixed boxsize’ parameter for REX simulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logfile</strong> (<em>str</em>) – path to &lt;editconf.log&gt; containing the line ‘system size: X Y Z’</p></li>
+<li><p><strong>base</strong> (<em>float</em>) – round up base for highest box dimension taken from &lt;logfile&gt;</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>boxsize (float)</dt><dd><p>suggested boxsize parameter</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.WF_getParameter_maxsol">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_getParameter_maxsol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./logs/solvate.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_getParameter_maxsol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_getParameter_maxsol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read &lt;logfile&gt; and suggest a ‘max solution’ parameter for REX simulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logfile</strong> (<em>str</em>) – path to &lt;editconf.log&gt; containing the line ‘system size: X Y Z’</p></li>
+<li><p><strong>maxsol_reduce</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">reduce max solution number taken from &lt;logfile&gt;</div>
+<div class="line">-&gt; guarantees fixed solution number for different start configurations</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>maxsol (int)</dt><dd><p>suggested max solution parameter</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.WF_get_system_parameters">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_get_system_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_get_system_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_get_system_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get system parameters “boxsize” and “maxsol” for system in working directory
+wdir. Typically, wdir is supposed to be the folder “rex_0_get_system_parameters”
+which is created during the Workflow for setup of REX MD simulations during
+the execution of rex.assign_best_decoys().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wdir</strong> (<em>str</em>) – working directory</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>d</strong> (<em>int</em>) – distance between model and system edges. Defaults to 2.</p></li>
+<li><p><strong>bt</strong> (<em>str</em>) – box type. Defaults to “cubic”.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>boxsize (float)</dt><dd><p>suggested value for maximum boxsize</p>
+</dd>
+<dt>maxsol (int)</dt><dd><p>suggested value for maximum solvent molecules</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.apply_ff_best_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">apply_ff_best_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_decoys_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_decoys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./PDBID_best_decoys_ref'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#apply_ff_best_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.apply_ff_best_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply forcefield on best decoys and save as &lt;filename&gt;_ref.pdb.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>best_decoys_dir</strong> (<em>str</em>) – <p>directory with</p>
+<ul>
+<li><p>best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</p></li>
+<li><p>decoy_scores.log (output of cluster.log_cluster.decoys())</p></li>
+</ul>
+</p></li>
+<li><p><strong>n_decoys</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">None: use all decoys from best_decoys_dir</div>
+<div class="line">int: use this number of decoys from best_decoys_dir</div>
+</div>
+</p></li>
+<li><p><strong>odir</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">output directory</div>
+<div class="line">Note: if “PDBID” in &lt;odir&gt; and no &lt;pdbid&gt; kwarg is passed -&gt; find and replace “PDBID” in &lt;odir&gt; automatically based on filenames</div>
+</div>
+</p></li>
+<li><p><strong>create_dir</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pdbid</strong> (<em>str</em>) – </p></li>
+<li><p><strong>logfile</strong> (<em>str</em>) – logfile name (default: “decoy_scores.log”)</p></li>
+<li><p><strong>water</strong> (<em>str</em>) – water model (default: “tip3p”)</p></li>
+<li><p><strong>input</strong> (<em>str</em>) – forcefield number (default: “6”)</p></li>
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>odir (str)</dt><dd><p>output directory with ref pdb files (forcefield is applied)</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.assign_best_decoys">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">assign_best_decoys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_decoys_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rex_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#assign_best_decoys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.assign_best_decoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assigns decoys based on ranking taken from &lt;best_decoys_dir&gt;/decoy_scores.log
+to each rex subdirectory rex_1, rex_2, …
+Also creates a ‘rex_0_get_system_parameters’ directory, which is a copy of rex_1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>best_decoys_dir</strong> (<em>str</em>) – <p>directory with</p>
+<ul>
+<li><p>best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</p></li>
+<li><p>decoys_score.log (output of cluster.log_cluster.decoys())</p></li>
+</ul>
+</p></li>
+<li><p><strong>rex_dir</strong> (<em>str</em>) – rex directory with folders rex_1, rex_2, …</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cprint_color</strong> (<em>str</em>) – </p></li>
+<li><p><strong>realpath</strong> (<em>bool</em>) – prints realpaths</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.check2_REX_PDBS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">check2_REX_PDBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">REX_PDBS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#check2_REX_PDBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.check2_REX_PDBS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for debbuging if check_REX_PDBS() fails.</p>
+<p>Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb
+as template for tests if passed, otherwise uses first REX pdb as template.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>if target is known -&gt; apply ff -&gt; save as ref -&gt; use as ref</p></li>
+<li><p>if target is unknown -&gt; use ref_pdb=None or use one of REX_PDBS -&gt; apply ff -&gt; use as ref</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>REX_PDBS</strong> (<em>list</em>) – output of get_REX_PDBS()</p></li>
+<li><p><strong>ref_pdb</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">reference pdb</div>
+<div class="line">None: use ref_pdb as template for tests</div>
+<div class="line">str: use first REX pdb as template for tests</div>
+</div>
+</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>ref_is_known</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  use ref_pdb as template for tests</div>
+<div class="line">False: use first REX DPB as template for tests</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.check_REX_PDBS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">check_REX_PDBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">REX_PDBS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#check_REX_PDBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.check_REX_PDBS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb
+as template for tests if passed, otherwise uses first REX pdb as template.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>if target is known -&gt; apply ff -&gt; save as ref -&gt; use as ref</p></li>
+<li><p>if target is unknown -&gt; use ref_pdb=None or use one of REX_PDBS -&gt; apply ff -&gt; use as ref</p></li>
+<li><p>use check2_REX_PDBS() for debugging if check_REX_PDBS() fails.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>REX_PDBS</strong> (<em>list</em>) – output of get_REX_PDBS()</p></li>
+<li><p><strong>ref_pdb</strong> (<em>None</em><em>, </em><em>str</em>) – <div class="line-block">
+<div class="line">reference pdb</div>
+<div class="line">None: use ref_pdb as template for tests</div>
+<div class="line">str: use first REX pdb as template for tests</div>
+</div>
+</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>ref_is_known</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True:  use ref_pdb as template for tests</div>
+<div class="line">False: use first REX DPB as template for tests</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.create_pull_group_ndx">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_pull_group_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pull_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_pull_group_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_pull_group_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index file for pull group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – PDB file (after applying force field)</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.create_special_group_ndx">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">create_special_group_ndx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'special_group.ndx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#create_special_group_ndx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.create_special_group_ndx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index file for special group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – PDB file (after applying force field)</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.get_REX_DIRS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">get_REX_DIRS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#get_REX_DIRS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.get_REX_DIRS" title="Permalink to this definition">¶</a></dt>
+<dd><p>get list with REX DIRS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_dir</strong> (<em>str</em>) – directory with folders rex_1, rex_2, etc.</p></li>
+<li><p><strong>realpath</strong> (<em>bool</em>) – return realpath</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>REX_DIRS (list)</dt><dd><p>list with REX directory paths</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.get_REX_PDBS">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">get_REX_PDBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#get_REX_PDBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.get_REX_PDBS" title="Permalink to this definition">¶</a></dt>
+<dd><p>get list with REX PDBS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_dir</strong> (<em>str</em>) – directory with folders rex_1, rex_2, etc.</p></li>
+<li><p><strong>realpath</strong> (<em>bool</em>) – return realpath</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>REX_PDBS (list)</dt><dd><p>list with PDB paths within folders rex_1, rex_2, etc.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.prep_REX_mdp">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">prep_REX_mdp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rex.mdp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_REX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#prep_REX_mdp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.prep_REX_mdp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare REX mdp -&gt; copy template and change tempereratures according to rex_temps.log</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_dir</strong> (<em>str</em>) – main directory with rex_1, rex_2, etc.</p></li>
+<li><p><strong>template</strong> (<em>str</em>) – template file</p></li>
+<li><p><strong>n_REX</strong> (<em>None/int</em>) – number of replica</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.prep_REX_temps">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">prep_REX_temps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_REX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#prep_REX_temps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.prep_REX_temps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare REX temperatures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_0</strong> (<em>None/float</em>) – starting temperature (Kelvin)</p></li>
+<li><p><strong>n_REX</strong> (<em>None/int</em>) – number of replica</p></li>
+<li><p><strong>k</strong> (<em>None/float</em>) – temperature distrubtion scaling factor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.rex.prep_REX_tpr">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">prep_REX_tpr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_REX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#prep_REX_tpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.prep_REX_tpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare REX tpr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_dir</strong> (<em>str</em>) – main directory with rex_1, rex_2, etc.</p></li>
+<li><p><strong>n_REX</strong> (<em>None/int</em>) – number of replica</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>f</strong> (<em>str</em>) – </p></li>
+<li><p><strong>o</strong> (<em>str</em>) – </p></li>
+<li><p><strong>c</strong> (<em>str</em>) – </p></li>
+<li><p><strong>p</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Keyword Args are parameter of gmx.grompp(f,o,c,r,p)</p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-pyrexMD.topology">
+<span id="pyrexmd-topology"></span><h1>pyrexMD.topology<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline">¶</a></h1>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>This module contains functions to modify universe topologies and
+include contact bias etc.</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_scoreFile">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_modify_scoreFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_modify_scoreFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_modify_scoreFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify score file (MSA scores) by shifting residues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>score_fin</strong> (<em>str</em>) – path to score file</p></li>
+<li><p><strong>shift_res</strong> (<em>int</em>) – shift residues by this value</p></li>
+<li><p><strong>outputFileName</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">realpath to modified score file.</div>
+<div class="line">if “PDBID_mod.score” is left as default: try to automatically detect</div>
+<div class="line">pattern based on score_fin and add the “_mod” part into filename.</div>
+</div>
+</p></li>
+<li><p><strong>res_cols</strong> (<em>tuple/list</em>) – score_fin columns with residue numbers</p></li>
+<li><p><strong>score_col</strong> (<em>tuple/list</em>) – score_fin column with score/confidence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_mod.score”</div>
+<div class="line">if “PDBID_mod.score” (default): try to automatically detect pattern</div>
+<div class="line">based on score_fin and insert the “_mod” part into filename.</div>
+</div>
+</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>save_as (str)</dt><dd><p>realpath to modified score file</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_topology">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_modify_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_used_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_modify_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_modify_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies topology by using the contacts written in “DCA_used.txt” file.
+“DCA_used.txt” is supposed to have 4 columns: RESi, RESj, ATOMi, ATOMj.</p>
+<p>Modify topology:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>top_fin (topol.top file): use as template</p></li>
+<li><p>DCA_used_fin (DCA_used.txt): use all contacts as restraints</p></li>
+<li><p>modify bond section of new topology by adding contacts with force constant</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>top_fin</strong> (<em>str</em>) – topology file (path)</p></li>
+<li><p><strong>DCA_used_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>n_DCA</strong> (<em>None</em><em>, </em><em>int</em>) – <div class="line-block">
+<div class="line">number of used DCA contacts</div>
+<div class="line">None: search header of <cite>DCA_used_fin</cite> for entry with topn_DCA</div>
+</div>
+</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>float</em>) – force coefficient of contact pairs</p></li>
+<li><p><strong>skiprows</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">ignore header rows of DCA_used_fin</div>
+<div class="line">-1 or “auto”: auto detect</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_topol_mod.top” (default)</div>
+<div class="line">detect and replace PDBID in save_as based on ref_PDB path</div>
+<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.DCA_res2atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">DCA_res2atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pdb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_DCA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DCA_skiprows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_DCA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#DCA_res2atom_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.DCA_res2atom_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get contact mapping. Returns lists of matching RES pairs and ATOM pairs for contacts
+specified in DCA_fin file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>maps only CA atoms if ref_pdb is protein.</p></li>
+<li><p>maps only N1 or N3 atoms if ref_pdb is nucleic.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_pdb</strong> (<em>str</em>) – reference PDB (path)</p></li>
+<li><p><strong>DCA_fin</strong> (<em>str</em>) – DCA file (path)</p></li>
+<li><p><strong>n_DCA</strong> (<em>int</em>) – number of DCA contacts which should be used</p></li>
+<li><p><strong>usecols</strong> (<em>tuple</em><em>, </em><em>list</em>) – columns containing the RES pairs in DCA_fin</p></li>
+<li><p><strong>DCA_skiprows</strong> (<em>int</em>) – <div class="line-block">
+<div class="line">ignore header rows of DCA_fin</div>
+<div class="line">-1 or “auto”: auto detect</div>
+</div>
+</p></li>
+<li><p><strong>filter_DCA</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: ignore DCA pairs with abs(i-j) &lt; 3</div>
+<div class="line">False: use all DCA pairs w/o applying filter</div>
+</div>
+</p></li>
+<li><p><strong>save_log</strong> (<em>bool</em>) – create log file with contact mapping</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p></li>
+<li><p><strong>pdbid</strong> (<em>str</em>) – “auto” (default): detect PDBID based on ref_PDB path</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – “./”</p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">“PDBID_DCA_used.txt”</div>
+<div class="line">detect and replace PDBID in kwarg &lt;save_as&gt; based on ref_PDB path</div>
+<div class="line">if kwarg &lt;pdbid&gt; is “auto” (default).</div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>RES_PAIR (list)</dt><dd><p>list with RES pair tuples (RESi, RESj)</p>
+</dd>
+<dt>ATOM_PAIR (list)</dt><dd><p>list with ATOM pair tuples (ATOMi, ATOMj)</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.align_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">align_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#align_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.align_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align resids of mobile and ref by comparing universe.residues.resnames and
+shifting the resids of reference (usually smaller than mobile).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_resids()</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>cprint_color</strong> (<em>None</em><em>, </em><em>str</em>) – colored print color</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.check_matching_selection">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">check_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#check_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.check_matching_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets matching selection strings for mobile and reference and then tests if
+matching selections have equal atoms and residues. Returns matchin selection
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: prints detailed report</div>
+<div class="line">False: prints only selection strings and if atoms/residues match</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.check_residues">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">check_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#check_residues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.check_residues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares residues of mobile and reference universe using specific selections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>sel1</strong> (<em>str</em>) – selection string of mobile</p></li>
+<li><p><strong>sel2</strong> (<em>str</em>) – selection string of ref</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – <div class="line-block">
+<div class="line">True: prints detailed report</div>
+<div class="line">False: prints only if residue ids and names match</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.dump_structure">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">dump_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./structures'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#dump_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.dump_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump structures for a list of frames with the file name “save_as”.
+Automatically prepends frame number to the extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – universe containing the structure</p></li>
+<li><p><strong>frames</strong> (<em>array</em><em>, </em><em>list</em>) – </p></li>
+<li><p><strong>save_as</strong> (<em>str</em>) – save name or realpath to save file. frame number will
+be prepended to the extension</p></li>
+<li><p><strong>default_dir</strong> (<em>str</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dirpath (str)</dt><dd><p>realpath to directory with dumped structures</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.get_matching_selection">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">get_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#get_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.get_matching_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get matching selection strings of mobile and reference after resids alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_resids()</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>sel1 (str)</dt><dd><p>matching selection string of mobile</p>
+</dd>
+<dt>sel2 (str)</dt><dd><p>matching selection string of ref</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.get_resids_shift">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">get_resids_shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#get_resids_shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.get_resids_shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares universe.residues.resnames between mobile and ref in order to get
+resids shift.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>shift (int)</dt><dd><p>shift value of ref residues to match mobile residues</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_and_align_universe">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_and_align_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_and_align_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_and_align_universe" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Norm reference and mobile universe</p></li>
+<li><p>Align mobile universe on reference universe (matching atom ids and res ids)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mobile</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – </p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_ids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify existing MDA universe/atomgrp and normalize ids according to
+min(universe.atoms.ids) = 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’mobile’</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
+<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
+<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; norm_ids(ref, ‘reference’)</div>
+<div class="line">Norming atom ids of reference…</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; print(ref.atoms.ids)</div>
+<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify existing MDA universe/atomgrp and normalize resids according to
+min(universe.residues.resids) = 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em>) – structure</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’topology’</div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; ref = mda.Universe(&lt;top&gt;)</div>
+<div class="line">&gt;&gt; print(ref.residues.resids)</div>
+<div class="line">[0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; norm_resids(u, ‘reference’)</div>
+<div class="line">Norming resids of reference…</div>
+<div class="line"><br /></div>
+<div class="line">&gt;&gt; print(ref.residues.resids)</div>
+<div class="line">[1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.norm_universe">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">norm_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#norm_universe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.norm_universe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes for each universe:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>norm_ids(u, info)</p></li>
+<li><p>norm_resids(u, info)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>atomgrp</em><em>, </em><em>list</em><em>, </em><em>array</em>) – universe or list/array with universes</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">additional info for print message</div>
+<div class="line">’reference’</div>
+<div class="line">’mobile’</div>
+</div>
+</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.parsePDB">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">parsePDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#parsePDB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.parsePDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads PDB file and returns the columns for residue id, residue name,
+atom id and atom name as lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fin</strong> (<em>str</em>) – PDB file</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply norm_universe() before parsing.</p></li>
+<li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>RESID (list)</dt><dd><p>residue id column of PDB</p>
+</dd>
+<dt>RESNAME (list)</dt><dd><p>residue name column of PDB</p>
+</dd>
+<dt>ID (list)</dt><dd><p>atom id column of PDB</p>
+</dd>
+<dt>NAME (list)</dt><dd><p>atom name column of PDB</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.sel2selid">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">sel2selid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_rna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#sel2selid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.sel2selid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts selection string to selection id string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em><em>, </em><em>str</em>) – structure universe or path to structure pdb</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply norm_universe()</p></li>
+<li><p><strong>filter_rna</strong> (<em>bool</em>) – filter selection only for N1 and N3 atoms based on nucleic residues</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>selid (str)</dt><dd><p>selection id string</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line">&gt;&gt; u = mda.Universe(“path/to/pdb”)</div>
+<div class="line">&gt;&gt; selid = sel2selid(u, sel=”protein and name CA”)</div>
+<div class="line">&gt;&gt; selid</div>
+<div class="line">‘index 4 18 37 58 77 94 118 137 159 171 178 193 199 210 221 228 260 274 288 294’</div>
+<div class="line">&gt;&gt; u.select_atoms(“protein and name CA”) == u.selectg_atoms(selid)</div>
+<div class="line">True</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.shift_resids">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">shift_resids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#shift_resids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.shift_resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift mda.universe.residues by &lt;shift&gt; value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>universe</em>) – </p></li>
+<li><p><strong>shift</strong> (<em>None</em><em>, </em><em>int</em>) – shift value</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrexMD.topology.true_select_atoms">
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">true_select_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#true_select_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.true_select_atoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create “true selection” (atomgroup copy in NEW universe) after applying</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>norm_ids()</p></li>
+<li><p>norm_resids()</p></li>
+</ul>
+</div></blockquote>
+<p>Note that atom indices are reassigned according to range(0, len(u.atoms))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>str</em><em>, </em><em>universe</em><em>, </em><em>atomgrp</em>) – structure path (PDB id) or universe with structure</p></li>
+<li><p><strong>sel</strong> (<em>str</em>) – selection string</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen (mass &lt; 1.2)</p></li>
+<li><p><strong>norm</strong> (<em>bool</em>) – apply topology.norm_universe()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>a (atomgrp)</dt><dd><p>”true selection” ~ atomgroup copy in NEW universe</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>mda.select_atoms() remembers information about the original
+universe configuration which is sometimes NOT WANTED.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="line-block">
+<div class="line"># Init universe</div>
+<div class="line">&gt;&gt; u = mda.Universe(&lt;top&gt;)</div>
+<div class="line"><br /></div>
+<div class="line"># select_atoms() behaviour</div>
+<div class="line">&gt;&gt; a = u.select_atoms(“protein and type C”)</div>
+<div class="line">&gt;&gt; a</div>
+<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
+<div class="line">&gt;&gt; a.residues.atoms</div>
+<div class="line">&lt;AtomGroup with 964 atoms&gt;</div>
+<div class="line"><br /></div>
+<div class="line"># true_select_atoms() behaviour</div>
+<div class="line">&gt;&gt; a = topology.true_select_atoms(u, sel=”protein and type C”)</div>
+<div class="line">&gt;&gt; a</div>
+<div class="line">&lt;Universe with 72 atoms&gt;</div>
+<div class="line">&gt;&gt; a.residue.atoms</div>
+<div class="line">&lt;AtomGroup with 72 atoms&gt;</div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyrexMD.analysis.html">pyrexMD.analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.analysis">pyrexMD.analysis.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.contacts">pyrexMD.analysis.contacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.dihedrals">pyrexMD.analysis.dihedrals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.analysis.html#module-pyrexMD.analysis.gdt">pyrexMD.analysis.gdt</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyrexMD.decoy.html">pyrexMD.decoy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.decoy.html#module-pyrexMD.decoy.abinitio">pyrexMD.decoy.abinitio</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyrexMD.misc.html">pyrexMD.misc</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.misc.html#module-pyrexMD.misc.classes">pyrexMD.misc.classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.misc.html#module-pyrexMD.misc.func">pyrexMD.misc.func</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.misc.html#module-pyrexMD.misc.plot">pyrexMD.misc.plot</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pyrexMD.analysis.html" class="btn btn-neutral float-right" title="pyrexMD.analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="pyrexMD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

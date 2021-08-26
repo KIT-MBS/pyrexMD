@@ -186,8 +186,23 @@ jobs:
       run: |
         export CWD=$(pwd)
         cd pyrexMD/doc/sphinx
-        rm -rf _build/*
+
+        # NOTE: pyrosetta is not installed during workflow
+        #    -> pyrexMD.decoy.abinitio docs cannot be build locally
+        #    -> make temporary tree copy of relevant files which contain decoy or abinitio in their name
+        mkdir TEMP
+        find _build/ -type f -name "*decoy*" | xargs -i cp {} --parents -t TEMP/
+        find _build/ -type f -name "*abinitio*" | xargs -i cp {} --parents -t TEMP/
+
+        # forced update of docs
+        rm -rf _build/html
+        rm -rf _build/doctree
         make html
+
+        # copy TEMP files back
+        cp -rp TEMP/_build/ ./
+
+        # add nojekyll file
         touch _build/html/.nojekyll
         cd $CWD
     - uses: actions/setup-node@v2

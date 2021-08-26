@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.misc.classes &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Docs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrexMD.misc.classes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrexMD.misc.classes</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+<span class="c1"># @Date:   26.08.2021</span>
+<span class="c1"># @Filename: class.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 26.08.2021</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. hint:: This module is a collection of general classes which are used</span>
+<span class="sd">    frequently to streamline pyrexMD.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### CUSTOM CLASSES</span>
+
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for exceptions&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="dtypeError"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.dtypeError">[docs]</a><span class="k">class</span> <span class="nc">dtypeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for dtype exceptions</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | &gt;&gt; misc.dtypeError(&quot;source&quot;, &quot;str&quot;)</span>
+<span class="sd">        | TypeError: &lt;source&gt; must be str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Warning</span><span class="p">(</span><span class="s2">&quot;dtypeError class usage: &lt;arg&gt; must be str&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Warning</span><span class="p">(</span><span class="s2">&quot;dtypeError class usage: &lt;dtype&gt; must be str&quot;</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">&gt; must be </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HiddenPrints"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.HiddenPrints">[docs]</a><span class="k">class</span> <span class="nc">HiddenPrints</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hide print commands.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (bool):</span>
+
+<span class="sd">          | True: show prints</span>
+<span class="sd">          | False: hide prints (default)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | with HiddenPrints():</span>
+<span class="sd">        |   print(&quot;This print is hidden&quot;)</span>
+<span class="sd">        | with HiddenPrints(verbose=True):</span>
+<span class="sd">        |   print(&quot;This print is shown&quot;)</span>
+<span class="sd">        | This print is shown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="HiddenPrints_ALL"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.HiddenPrints_ALL">[docs]</a><span class="k">class</span> <span class="nc">HiddenPrints_ALL</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hide all stdout and stderr prints.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (bool):</span>
+<span class="sd">          | True: show prints</span>
+<span class="sd">          | False: hide prints (default)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | with HiddenPrints_ALL():</span>
+<span class="sd">        |   print(&quot;This print is hidden&quot;)</span>
+<span class="sd">        | with HiddenPrints(verbose=True):</span>
+<span class="sd">        |   print(&quot;This print is shown&quot;)</span>
+<span class="sd">        | This print is shown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_stderr</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_stderr</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CONFIG"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG">[docs]</a><span class="k">class</span> <span class="nc">CONFIG</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to store config data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init config object by passing a dict, kwargs or both.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dict_</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dict_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias of print_config() method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_config</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set config object key via [] ~ backets, e.g. cfg[&quot;key&quot;] = value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete config object key via [] ~ backets, e.g. del cfg[&quot;key&quot;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__delattr__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make class objects subscriptable, i.e. access data via [] ~ brackets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="CONFIG.deepcopy"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.deepcopy">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return deep copy of object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CONFIG.deepcopy_without"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.deepcopy_without">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy_without</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return deep copy of cfg object but without passed keys.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            keys (str, list, tuple):</span>
+<span class="sd">              | str: single key</span>
+<span class="sd">              | list, tuple: multiple keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># case 1: keys is a single key ~str</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="c1"># case 2: keys is a list of keys</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">obj</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="CONFIG.keys"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return dict keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CONFIG.values"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.values">[docs]</a>    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return dict values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CONFIG.items"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return dict items (key-value pairs).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CONFIG.update_config"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.update_config">[docs]</a>    <span class="k">def</span> <span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update config object by passing a dict, kwargs or both.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dict_</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dict_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="CONFIG.update_by_alias"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.update_by_alias">[docs]</a>    <span class="k">def</span> <span class="nf">update_by_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key_ndx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update key value for an alias if alias is in kwargs.</span>
+
+<span class="sd">        Detailed Example:</span>
+<span class="sd">          | default = {&quot;colors&quot;: [&quot;g&quot;, &quot;r&quot;],</span>
+<span class="sd">          |            &quot;ms&quot;: 1}</span>
+<span class="sd">          | alias_dict = {&quot;color_positive&quot;: &quot;teal&quot;,</span>
+<span class="sd">          |               &quot;color_negative&quot;: &quot;orange&quot;,</span>
+<span class="sd">          |               &quot;markersize&quot;: 5}</span>
+<span class="sd">          | cfg = misc.CONFIG(default, **alias_dict)</span>
+<span class="sd">          | cfg.print_config()</span>
+<span class="sd">          | &gt;&gt;  key                 value</span>
+<span class="sd">          |     colors              [&#39;g&#39;, &#39;r&#39;]</span>
+<span class="sd">          |     ms                  1</span>
+<span class="sd">          |     color_positive      teal</span>
+<span class="sd">          |     color_negative      orange</span>
+<span class="sd">          |     markersize          5</span>
+<span class="sd">          |</span>
+<span class="sd">          | cfg.update_by_alias(alias=&quot;markersize&quot;, key=&quot;ms&quot;, **alias_dict)</span>
+<span class="sd">          | cfg.update_by_alias(alias=&quot;color_positive&quot;, key=&quot;colors&quot;, key_ndx=0, **alias_dict)</span>
+<span class="sd">          | cfg.update_by_alias(alias=&quot;color_negative&quot;, key=&quot;colors&quot;, key_ndx=1, **alias_dict)</span>
+<span class="sd">          | cfg.print_config()</span>
+<span class="sd">          | &gt;&gt;  key                 value</span>
+<span class="sd">          |     colors              [&#39;teal&#39;, &#39;orange&#39;]</span>
+<span class="sd">          |     ms                  5</span>
+<span class="sd">          |     color_positive      teal</span>
+<span class="sd">          |     color_negative      orange</span>
+<span class="sd">          |     markersize          5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key_ndx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">key_ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="CONFIG.pop"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        remove key from dict and return its value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CONFIG.print_config"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.CONFIG.print_config">[docs]</a>    <span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print and return stored data in table format with &quot;key&quot; and &quot;value&quot; columns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;key&#39;</span><span class="si">:</span><span class="s2">20</span><span class="si">}{</span><span class="s1">&#39;value&#39;</span><span class="si">:</span><span class="s2">20</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">20</span><span class="si">}{</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">_str</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_str</span></div></div>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### timer stuff</span>
+
+
+<div class="viewcode-block" id="TIMER"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.TIMER">[docs]</a><span class="k">class</span> <span class="nc">TIMER</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="timeit"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.classes.timeit">[docs]</a><span class="k">def</span> <span class="nf">timeit</span><span class="p">(</span><span class="n">timer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;elapsed time:&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test elapsed time of a process</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timer (None, TIMER CLASS)</span>
+<span class="sd">        msg (str): message</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        timer (TIMER CLASS)</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">      | t = TIMER()</span>
+<span class="sd">      | timeit(t)</span>
+<span class="sd">      | &lt;code&gt;</span>
+<span class="sd">      | timeit(t)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">timer</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">TIMER</span><span class="p">()</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">_get_time</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">timer</span><span class="o">.</span><span class="n">t0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">_get_time</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">timer</span><span class="o">.</span><span class="n">t0</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">_get_time</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">t1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">t_diff</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">t1</span> <span class="o">-</span> <span class="n">timer</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">t_diff</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">timer</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
