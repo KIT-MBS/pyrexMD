@@ -273,7 +273,7 @@ filtering and clustering of structure ensembles will be necessary.
 .. code:: ipython3
 
     import pyrexMD.misc as misc
-    import pyrexMD.decoy.cluster as clu
+    import pyrexMD.analysis.cluster as clu
 
     # load data of pre-filtered frames
     QDATA = misc.pickle_load("./data/QDATA.pickle")

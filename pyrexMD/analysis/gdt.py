@@ -2,12 +2,11 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 24.08.2021
+# @Last modified time: 26.08.2021
 
 
 """
-This module contains functions related to the Global Distance Test.
-
+.. hint:: This module contains functions related to the Global Distance Test.
 
 Example:
 --------
@@ -50,8 +49,8 @@ Example:
                     "text_pos_HA": [-6, -0.3]}
     _ = gdt.plot_LA(mobile, ref, GDT_TS_ranked, GDT_HA_ranked, GDT_ndx_ranked, **text_pos_kws)
 
-Module contents:
-----------------
+Content:
+--------
 """
 
 import pyrexMD.misc as _misc

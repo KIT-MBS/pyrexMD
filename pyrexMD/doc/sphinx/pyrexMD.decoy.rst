@@ -1,18 +1,10 @@
-pyrexMD.decoy package
-=====================
+pyrexMD.decoy
+=============
 
-pyrexMD.decoy.abinitio module
------------------------------
+pyrexMD.decoy.abinitio
+----------------------
 
 .. automodule:: pyrexMD.decoy.abinitio
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyrexMD.decoy.cluster module
-----------------------------
-
-.. automodule:: pyrexMD.decoy.cluster
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,52 +1,38 @@
 
-contents
---------
 
-.. automodule:: pyrexMD
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-pyrexMD.core module
--------------------
+pyrexMD.core
+------------
 
 .. automodule:: pyrexMD.core
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.gmx module
-------------------
+pyrexMD.gmx
+-----------
 
 .. automodule:: pyrexMD.gmx
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.misc module
--------------------
 
-.. automodule:: pyrexMD.misc
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyrexMD.rex module
-------------------
+pyrexMD.rex
+-----------
 
 .. automodule:: pyrexMD.rex
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyrexMD.topology module
------------------------
+pyrexMD.topology
+----------------
 
 .. automodule:: pyrexMD.topology
    :members:
    :undoc-members:
    :show-inheritance:
+
 
 Subpackages
 -----------
@@ -56,3 +42,4 @@ Subpackages
 
    pyrexMD.analysis
    pyrexMD.decoy
+   pyrexMD.misc

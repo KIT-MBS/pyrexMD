@@ -1,19 +1,12 @@
-import logging
-import numpy as np
-import pyrexMD.misc as _misc
-import MDAnalysis as mda
-import gromacs
-import glob
-import os
-os.path.realpath  # @Author: Arthur Voronin
+# @Author: Arthur Voronin
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 29.07.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains functions to interact with `GROMACS` to setup systems and
-run MD simulations.
+.. hint:: This module contains modified GromacsWrapper functions to streamline
+    the interaction with `GROMACS` for system setups etc.
 
 
 Example:
@@ -52,9 +45,18 @@ Example:
     gmx.grompp(-f"md.mdp", o="traj.tpr", c="npt.gro", t="npt.cpt")
     gmx.mdrun(deffn="traj")
 
-Module contents:
-----------------
+Content:
+--------
 """
+
+import logging
+import numpy as np
+import pyrexMD.misc as _misc
+import MDAnalysis as mda
+import gromacs
+import glob
+import os
+
 
 logging.getLogger('gromacs.config').disabled = True
 gromacs.environment.flags['capture_output'] = True  # print gromacs output

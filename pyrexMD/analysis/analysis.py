@@ -2,11 +2,10 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 24.08.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains various functions related to trajectory analyses.
-
+.. hint:: This module contains various functions related to general trajectory analyses.
 
 Example:
 --------
@@ -27,8 +26,8 @@ Example:
     # plot
     ana.PLOT(xdata=FRAME, ydata=RMSD, alpha=1, marker=None, xlabel="frame", ylabel=r"RMSD ($\AA$)")
 
-Module contents:
-----------------
+Content:
+--------
 """
 
 import pyrexMD.misc as _misc

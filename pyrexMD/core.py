@@ -2,11 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: core.py
 # @Last modified by:   arthur
-# @Last modified time: 18.05.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains functions to enable interactive analyses. Its main purpose
-are the iPlayer and iPlot classes.
+.. hint:: This module contains functions to enable interactive analyses.
+    Its main purpose are the iPlayer and iPlot classes.
 
 Example:
 --------
@@ -33,8 +33,8 @@ Example:
     ip = core.iPlot(u1, xdata=FRAMES, ydata=QBIAS, xlabel="frame", ylabel="Qbias")
     ip()
 
-Module contents:
-----------------
+Content:
+--------
 """
 
 

@@ -2,12 +2,12 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
 
 import pyrexMD
-import pyrexMD.misc as misc
 import pyrexMD.core as core
 import pyrexMD.gmx as gmx
+import pyrexMD.misc as misc
 import pyrexMD.topology as topology
 import pyrexMD.analysis as analysis
 import matplotlib.pyplot as plt
@@ -41,12 +41,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import MDAnalysis as mda
-import pyrexMD.misc as misc
 import pyrexMD.core as core
-import pyrexMD.topology as top
 import pyrexMD.gmx as gmx
+import pyrexMD.misc as misc
+import pyrexMD.topology as top
 import pyrexMD.analysis.analysis as ana
 #import pyrexMD.analysis.contacts as con
+#import pyrexMD.analysis.cluster as clu
 #import pyrexMD.analysis.dihedrals as dih
 #import pyrexMD.analysis.gdt as gdt
 #import pyrexMD.rex as rex

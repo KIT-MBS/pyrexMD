@@ -2,11 +2,11 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains functions related to native contact and bias contact analyses.
-
+.. hint:: This module contains functions related to native contact and bias
+    contact analyses.
 
 Example:
 --------
@@ -31,8 +31,8 @@ Example:
     n = 50
     con.plot_DCA_TPR(ref, DCA_fin="path/to/bias/contacts", n_DCA=n)
 
-Module contents:
-----------------
+Content:
+--------
 """
 
 import pyrexMD.analysis.analysis as _ana

@@ -2,10 +2,10 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 23.06.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains functions for decoy creation using `PyRosetta`.
+.. hint:: This module contains functions for decoy creation using `PyRosetta`.
 """
 
 

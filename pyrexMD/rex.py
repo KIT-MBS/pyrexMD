@@ -1,23 +1,14 @@
-from MDAnalysis import Universe
-import os
-import glob
-import numpy as np
-import pyrexMD.topology as _top
-import pyrexMD.gmx as _gmx
-import pyrexMD.misc as _misc
-from tqdm.notebook import tqdm
-os.path.isfile  # @Author: Arthur Voronin
+# @Author: Arthur Voronin
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 24.08.2021
+# @Last modified time: 26.08.2021
 
 
 """
-This module contains functions related to (contact-guided) Replica Exchange
-Molecular Dynamics. It contains mainly functions to automate and speed-up the
-process of setting up REX simulations.
-
+.. hint:: This module contains functions related to (contact-guided) Replica
+    Exchange Molecular Dynamics. It contains mainly functions to automate and
+    speed-up the process of setting up REX simulations.
 
 Example:
 --------
@@ -52,11 +43,18 @@ Example:
 
     # upload files on HPC and execute production run
 
-Module contents:
-----------------
+Content:
+--------
 """
 
-#from __future__ import division, print_function
+from MDAnalysis import Universe
+import os
+import glob
+import numpy as np
+import pyrexMD.topology as _top
+import pyrexMD.gmx as _gmx
+import pyrexMD.misc as _misc
+from tqdm.notebook import tqdm
 
 
 def apply_ff_best_decoys(best_decoys_dir, n_decoys=None, odir="./PDBID_best_decoys_ref",

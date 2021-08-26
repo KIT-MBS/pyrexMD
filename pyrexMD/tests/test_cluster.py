@@ -10,8 +10,8 @@ import pytest
 import pathlib
 from unittest.mock import patch
 import numpy as np
-import pyrexMD.decoy.cluster as clu
 import pyrexMD.misc as misc
+import pyrexMD.analysis.cluster as clu
 
 
 # find main directory of pyrexMD

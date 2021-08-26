@@ -5,15 +5,16 @@
 # @Last modified time: 26.08.2021
 
 """
-This module contains functions for:
+.. hint:: This module contains functions for:
+
     - decoy clustering
     - post-REX clustering (for analyses)
 
-
 Example:
+--------
 
     import pyrexMD.misc as misc
-    import pyrexMD.decoy.cluster as clu
+    import pyrexMD.analysis.cluster as clu
 
     # load data
     QDATA = misc.pickle_load("./data/QDATA.pickle")
@@ -62,6 +63,9 @@ Example:
     ### print table with cluster accuracy stats
     clu.WF_print_cluster_accuracy(cluster_data=cluster10, cluster_accuracy=cluster10_accuracy)
     clu.WF_print_cluster_accuracy(cluster_data=cluster20, cluster_accuracy=cluster20_accuracy)
+
+Content:
+--------
 """
 
 
@@ -73,7 +77,7 @@ import h5py
 import pyrexMD.misc as _misc
 import pyrexMD.analysis.analysis as _ana
 from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
-#from pyrexMD.decoy.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
+#from pyrexMD.analysis.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 import pandas as pd
 from sklearn.manifold import TSNE, MDS
 from sklearn.cluster import KMeans, DBSCAN

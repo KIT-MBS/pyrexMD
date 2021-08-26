@@ -2,11 +2,10 @@
 # @Date:   06.05.2021
 # @Filename: dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 28.07.2021
+# @Last modified time: 26.08.2021
 
 """
-This module contains functions related to dihedral analyses.
-
+.. hint:: This module contains functions related to dihedral analyses.
 
 Example:
 --------
@@ -26,8 +25,8 @@ Example:
     # plot ramachandran
     rama = dih.get_ramachandran(mobile)
 
-Module contents:
-----------------
+Content:
+--------
 """
 
 

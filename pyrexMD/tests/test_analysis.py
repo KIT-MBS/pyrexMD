@@ -297,6 +297,6 @@ def test_plot_HEATMAP_REX_RMSD(mock_show):
     # coverage
     fig, ax = ana.plot_HEATMAP_REX_RMSD(REX_RMSD_dir=f"{pre}/REX_RMSD_DIR", title="title", save_as="./temp.pdf")
     fig, ax = ana.plot_HEATMAP_REX_RMSD(REX_RMSD_dir=f"{pre}/REX_RMSD_DIR", auto_convert=False)
-    misc.remove("./temp.pdf")
+    misc.rm("./temp.pdf")
     plt.close("all")
     return
