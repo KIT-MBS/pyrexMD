@@ -98,8 +98,8 @@ example folder, which you can use to run and test the package on your own local
 machine.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Many analysis functions which calculate important values such as RMSD,
-QValues etc., can create figures in the same step if the keyword argument
+<p>Most analysis functions which calculate meaningful values such as
+RMSD, QValues etc., can create figures in the same step if the keyword argument
 <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have a wide range of possible
 keyword arguments, in which case you have to dig through the API docs to get
 the most potential out of the functions.</p>
@@ -152,10 +152,10 @@ Commands, such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">parameter</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The code example below shows a complete setup of a normal MD simulation by
-interacting with <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code>. Additionally, each gmx module function creates by
+<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function creates by
 default a unique log file with a meaningful name which is stored into the logs
 folder.</p>
+<p>The code example below shows a complete setup of a normal MD simulation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 
