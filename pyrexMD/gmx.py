@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 """
 .. hint:: This module contains modified GromacsWrapper functions to streamline
@@ -15,9 +15,10 @@ Example:
 .. code-block:: python
 
     import pyrexMD.gmx as gmx
+    import pyrexMD.misc as misc
 
     # create ref pdb:
-    pdb = "./1l2y.pdb"
+    pdb = "path/to/pdb"
     ref = gmx.get_ref_structure(pdb, ff='amber99sb-ildn', water='tip3p', ignh=True)
 
     # generate topology & box
@@ -28,6 +29,9 @@ Example:
     gmx.solvate(cp="box.gro", o="solvent.gro")
     gmx.grompp(f="ions.mdp", o="ions.tpr",c="solvent.gro")
     gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")
+
+    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory
+    misc.cp("path/to/mdp/files", ".")
 
     # minimize
     gmx.grompp(f="min.mdp", o="min.tpr", c="ions.gro")
@@ -42,7 +46,7 @@ Example:
     gmx.mdrun(deffnm="npt")
 
     # MD run
-    gmx.grompp(-f"md.mdp", o="traj.tpr", c="npt.gro", t="npt.cpt")
+    gmx.grompp(f="md.mdp", o="traj.tpr", c="npt.gro", t="npt.cpt")
     gmx.mdrun(deffn="traj")
 
 Content:

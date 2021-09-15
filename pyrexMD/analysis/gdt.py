@@ -2,11 +2,11 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 
 """
-.. hint:: This module contains functions related to the Global Distance Test.
+.. hint:: This module contains functions related to the Global Distance Test (GDT) analyses.
 
 Example:
 --------

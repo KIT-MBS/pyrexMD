@@ -2,11 +2,13 @@
 # @Date:   17.04.2021
 # @Filename: core.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 """
-.. hint:: This module contains functions to enable interactive analyses.
-    Its main purpose are the iPlayer and iPlot classes.
+.. hint:: This module contains functions to enable interactive analyses. Its
+    main purpose are the iPlayer and iPlot classes, which allow the application
+    of a trajectory viewer or the dynamical linking between trajectory viewer
+    and any 2D plot.
 
 Example:
 --------

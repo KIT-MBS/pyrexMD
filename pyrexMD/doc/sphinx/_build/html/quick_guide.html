@@ -96,12 +96,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about_pyrexMD.html">About pyrexMD</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#setup-of-normal-md">Setup of normal MD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#setup-of-contact-guided-rex-md">Setup of contact-guided REX MD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#interactive-plots">Interactive Plots</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contact-and-bias-analyses">Contact and Bias Analyses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gdt-and-la-analyses">GDT and LA Analyses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cluster-analyses">Cluster Analyses</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="#module-overview">Module Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#application-overview">Application Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-of-normal-md">Setup of normal MD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-of-contact-guided-rex-md">Setup of contact-guided REX MD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interactive-plots">Interactive Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contact-and-bias-analyses">Contact and Bias Analyses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gdt-and-la-analyses">GDT and LA Analyses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cluster-analyses">Cluster Analyses</a><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -176,19 +180,76 @@
             
   <div class="section" id="quick-guide">
 <h1>Quick Guide<a class="headerlink" href="#quick-guide" title="Permalink to this headline">¶</a></h1>
-<p>Here you can find a short overview of some core functions and workflows which
-can be performed with pyrexMD. Since pyrexMD is workflow orientated, you can
-perform large tasks (e.g. system setup, specific analyses, etc.) within a few
-commands. This guide is kept very short intentionally because most commands have
-obvious ‘core’ functionality. Many functions which calculate important values
-such as RMSD, QValues etc. can create figures in the same step if the keyword
-argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have a wide range of
-possible keyword arguments,  in which case you have to dig through the API docs
-to get the most potential out of the functions. You can find additional code
-examples as jupyter notebooks in the examples folder.</p>
+<p>Here you can find a short overview of all package modules as well as some main
+applications with <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>. Since most provided functions are
+workflow-orientated, you can perform large tasks (e.g. system setup, specific
+analyses, etc.) within a few commands. This guide is kept very short
+intentionally because most commands have obvious ‘core’ functionality.  All code
+snippets of this quick guide are taken from the <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks  within the
+example folder, which you can use to run and test the package on your own local
+machine.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Many analysis functions which calculate important values such as RMSD,
+QValues etc., can create figures in the same step if the keyword argument
+<code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have a wide range of possible
+keyword arguments, in which case you have to dig through the API docs to get
+the most potential out of the functions.</p>
+</div>
+<div class="section" id="module-overview">
+<h2>Module Overview<a class="headerlink" href="#module-overview" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>pyrexMD.core</dt><dd><p>Contains functions to enable interactive analyses. Its main purpose are the
+iPlayer and iPlot classes, which allow the application of a trajectory viewer
+or the dynamical linking between trajectory viewer and any 2D graph.</p>
+</dd>
+<dt>pyrexMD.gmx</dt><dd><p>Contains modified GromacsWrapper functions to streamline the interaction
+with <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> for system setups etc.</p>
+</dd>
+<dt>pyrexMD.rex</dt><dd><p>Contains functions related to (contact-guided) Replica Exchange Molecular
+Dynamics. It contains mainly functions to automate and speed-up the process
+of setting up REX simulations.</p>
+</dd>
+<dt>pyrexMD.topology</dt><dd><p>Contains functions to modify universe topologies, include contact bias etc.</p>
+</dd>
+<dt>pyrexMD.analysis.analysis</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
+RMSD, distances, etc.</p>
+</dd>
+<dt>pyrexMD.analysis.cluster</dt><dd><p>Contains functions for decoy clustering and post-REX clustering analyses.</p>
+</dd>
+<dt>pyrexMD.analysis.contacts</dt><dd><p>Contains functions related to native contact and bias contact analyses.</p>
+</dd>
+<dt>pyrexMD.analysis.dihedrals</dt><dd><p>Contains functions related to dihedral analyses.</p>
+</dd>
+<dt>pyrexMD.analysis.gdt</dt><dd><p>Contains functions related to the Global Distance Test (GDT) analyses.</p>
+</dd>
+<dt>pyrexMD.misc</dt><dd><p>Consists of pyrexMD.misc.classes, pyrexMD.misc.func and pyrexMD.misc.plot.
+This sub-package is a collection of miscellaneous functions and classes
+which are used frequently. Included functions may contain modified versions
+of small existing functions to extend their default behavior in order to
+streamline <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="application-overview">
+<h2>Application Overview<a class="headerlink" href="#application-overview" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="setup-of-normal-md">
-<h2>Setup of normal MD<a class="headerlink" href="#setup-of-normal-md" title="Permalink to this headline">¶</a></h2>
+<h3>Setup of normal MD<a class="headerlink" href="#setup-of-normal-md" title="Permalink to this headline">¶</a></h3>
+<p>The interaction with <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> is very similar compared to the known command-line syntax.
+Commands, such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span> <span class="n">function</span> <span class="o">-</span><span class="n">p</span> <span class="n">parameter</span>
+</pre></div>
+</div>
+<p>simply become:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">parameter</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function creates by
+default a unique log file with a meaningful name which is stored into the logs
+folder.</p>
+<p>The code example below shows a complete setup of a normal MD simulation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 
 <span class="c1"># create ref pdb:</span>
 <span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;path/to/pdb&quot;</span>
@@ -203,6 +264,9 @@ examples as jupyter notebooks in the examples folder.</p>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
 
+<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
+<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
 <span class="c1"># minimize</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
@@ -216,13 +280,18 @@ examples as jupyter notebooks in the examples folder.</p>
 <span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
 
 <span class="c1"># MD run</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="setup-of-contact-guided-rex-md">
-<h2>Setup of contact-guided REX MD<a class="headerlink" href="#setup-of-contact-guided-rex-md" title="Permalink to this headline">¶</a></h2>
+<h3>Setup of contact-guided REX MD<a class="headerlink" href="#setup-of-contact-guided-rex-md" title="Permalink to this headline">¶</a></h3>
+<p>The code example below shows a complete setup of a contact-guided REX MD
+simulation using different starting conformations (“decoys”) for each individual
+replica. It automates many system specific and ardous tasks in order to
+eliminate possible application errors, such as mismatching system sizes,
+incorrect mapping of bias contacts etc.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
@@ -236,7 +305,7 @@ examples as jupyter notebooks in the examples folder.</p>
 <span class="c1"># check for consistent topology</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">check_REX_PDBS</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
 
-<span class="c1"># dump mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp)</span>
+<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
 <span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
@@ -248,7 +317,7 @@ examples as jupyter notebooks in the examples folder.</p>
 <span class="c1"># minimize</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># add bias contacts (defined in DCA_fin)</span>
+<span class="c1"># add bias contacts (RES pairs defined in DCA_fin)</span>
 <span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
 
@@ -264,8 +333,12 @@ examples as jupyter notebooks in the examples folder.</p>
 </div>
 </div>
 <div class="section" id="interactive-plots">
-<h2>Interactive Plots<a class="headerlink" href="#interactive-plots" title="Permalink to this headline">¶</a></h2>
-<p>pyrexMD offers the ability to create interactive plots where a 2D graph is linked to the trajectory viewer of a specific universe. It allows to quickly inspect conformations at specific values by interacting with the graph itself (e.g. via ctrl-click) in order to get additional valueable information accessible through the trajectory viewer.</p>
+<h3>Interactive Plots<a class="headerlink" href="#interactive-plots" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> offers the ability to create interactive plots where a 2D graph is
+linked to the trajectory viewer of a specific universe. It allows to quickly
+inspect conformations at specific values by interacting with the graph itself
+(e.g. via ctrl-click) in order to get additional valueable information
+accessible through the trajectory viewer.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
@@ -288,8 +361,15 @@ examples as jupyter notebooks in the examples folder.</p>
 <p>In this example the interactive plot links the RMSD time evolution graph to the mobile trajectory.</p>
 </div>
 <div class="section" id="contact-and-bias-analyses">
-<h2>Contact and Bias Analyses<a class="headerlink" href="#contact-and-bias-analyses" title="Permalink to this headline">¶</a></h2>
-<p>REX is a very powerful and versatile enhanced sampling method and especially suited to obtain native-like conformations within a single run. However it can be computationally costly since it requires many replicas over a wide temperature range. By integrating (theoretical, experimental or mixed) bias contacts and coupling them to a bias potential one can narrow down the search space and guide the simulations towards specific conformations, which speeds up the process and lowers the computational costs. pyrexMD covers many different forms of contact and bias analyses.</p>
+<h3>Contact and Bias Analyses<a class="headerlink" href="#contact-and-bias-analyses" title="Permalink to this headline">¶</a></h3>
+<p>REX is a very powerful and versatile enhanced sampling method and especially
+suited to obtain native-like conformations within a single run. However it can
+be computationally costly since it requires many replicas over a wide
+temperature range. By integrating (theoretical, experimental or mixed) bias
+contacts and coupling them to a bias potential one can narrow down the search
+space and guide the simulations towards specific conformations, which speeds up
+the process and lowers the computational costs. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> covers many different
+forms of contact and bias analyses.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
@@ -320,10 +400,10 @@ examples as jupyter notebooks in the examples folder.</p>
 </pre></div>
 </div>
 <img alt="_images/QBias.png" src="_images/QBias.png" />
-<p>pyrexMD distinguishes mainly between two types of QValues. QNative (fraction of
-native contacts) and QBias (fraction of realized bias contacts). Both types can
-be used for structure analyses, however when simulating unknown target structures
-QNative becomes unaccessible due to the missing reference structure.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> distinguishes mainly between two types of QValues. QNative (fraction
+of native contacts) and QBias (fraction of realized bias contacts). Both types
+can be used for structure analyses, however when simulating unknown target
+structures QNative becomes unaccessible due to the missing reference structure.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create log files with native contacts at different conformations</span>
 <span class="n">con</span><span class="o">.</span><span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">unfolded</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;unfolded_contacts.txt&quot;</span><span class="p">)</span>
 <span class="n">con</span><span class="o">.</span><span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;folded_contacts.txt&quot;</span><span class="p">)</span>
@@ -333,10 +413,10 @@ QNative becomes unaccessible due to the missing reference structure.</p>
 </pre></div>
 </div>
 <img alt="_images/ContactMap.png" src="_images/ContactMap.png" />
-<p>pyrexMD Contact Maps are designed to show native contacts and checks if bias
-contacts are native or non-native. This functionality can be either used to
-compare and validate used bias contacts or to compare two structures and show
-which contacts got newly formed and which broke up.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>‘s Contact Maps are designed to show native contacts (grey) and checks
+if bias contacts are native (green) or non-native (red). This functionality can
+be either used to compare and validate used bias contacts or to compare two
+structures and show which contacts got newly formed (green) and which broke up (red).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># check native contact distances via ContactMap</span>
 <span class="n">NC</span><span class="p">,</span> <span class="n">NC_dist</span><span class="p">,</span> <span class="n">DM</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">get_NC_distances</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">folded</span><span class="p">)</span>
 <span class="n">con</span><span class="o">.</span><span class="n">plot_Contact_Map_Distances</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">NC</span><span class="o">=</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_dist</span><span class="o">=</span><span class="n">NC_dist</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">)</span>
@@ -347,7 +427,7 @@ which contacts got newly formed and which broke up.</p>
 as a contact map as well.</p>
 </div>
 <div class="section" id="gdt-and-la-analyses">
-<h2>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline">¶</a></h2>
+<h3>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline">¶</a></h3>
 <p>The so-called Global Distance Test (GDT) is a method for structure evaluation
 comparable to the root-mean-square deviation (RMSD).  However, RMSD is a
 suboptimal measure of structural similarity as it strongly correlates with the
@@ -361,10 +441,10 @@ the two structures are. In a last step, percentages of residues with
 displacements below a considered threshold are used to calculate score values.
 The two most common scores are the total score (TS),</p>
 <div class="math notranslate nohighlight">
-\[GDT_{TS} = \frac{1}{4} (P_1 + P_2 + P_4 + P_8),\]</div>
+\[GDT_{\rm{TS}} = \frac{1}{4} (P_1 + P_2 + P_4 + P_8),\]</div>
 <p>and the high-accuracy (HA) score,</p>
 <div class="math notranslate nohighlight">
-\[GDT_{TS} = \frac{1}{4} (P_{0.5} + P_1 + P_2 + P_4),\]</div>
+\[GDT_{\rm{TS}} = \frac{1}{4} (P_{0.5} + P_1 + P_2 + P_4),\]</div>
 <p>where <span class="math notranslate nohighlight">\(P_x\)</span> denote the percentage of residues with displacements below a
 distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
@@ -401,10 +481,11 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 </div>
 <img alt="_images/LA.png" src="_images/LA.png" />
 <p>The Local Accuracy (LA) figure gives a clear representation of how good each
-part of the model is refined compared to a reference structure.</p>
+part of the model is refined compared to a reference structure. It is possible
+to show/hide each of the information columns (FRAME, TS and HA) individually.</p>
 </div>
 <div class="section" id="cluster-analyses">
-<h2>Cluster Analyses<a class="headerlink" href="#cluster-analyses" title="Permalink to this headline">¶</a></h2>
+<h3>Cluster Analyses<a class="headerlink" href="#cluster-analyses" title="Permalink to this headline">¶</a></h3>
 <p>REX MD simulations generate large amounts of data. Depending on the project goal
 filtering and clustering of structure ensembles will be necessary.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
@@ -545,6 +626,7 @@ file if the <code class="docutils literal notranslate"><span class="pre">save_as
 </pre></div>
 </div>
 <!--- LAST LINE COMMENT AS THE FILE SHOULD NOT WITH AN INDENTATION  --><div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 </div>

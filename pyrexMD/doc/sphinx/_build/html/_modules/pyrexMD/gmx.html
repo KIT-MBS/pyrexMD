@@ -164,7 +164,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: gmx.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 26.08.2021</span>
+<span class="c1"># @Last modified time: 15.09.2021</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">.. hint:: This module contains modified GromacsWrapper functions to streamline</span>
@@ -177,9 +177,10 @@
 <span class="sd">.. code-block:: python</span>
 
 <span class="sd">    import pyrexMD.gmx as gmx</span>
+<span class="sd">    import pyrexMD.misc as misc</span>
 
 <span class="sd">    # create ref pdb:</span>
-<span class="sd">    pdb = &quot;./1l2y.pdb&quot;</span>
+<span class="sd">    pdb = &quot;path/to/pdb&quot;</span>
 <span class="sd">    ref = gmx.get_ref_structure(pdb, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
 
 <span class="sd">    # generate topology &amp; box</span>
@@ -190,6 +191,9 @@
 <span class="sd">    gmx.solvate(cp=&quot;box.gro&quot;, o=&quot;solvent.gro&quot;)</span>
 <span class="sd">    gmx.grompp(f=&quot;ions.mdp&quot;, o=&quot;ions.tpr&quot;,c=&quot;solvent.gro&quot;)</span>
 <span class="sd">    gmx.genion(s=&quot;ions.tpr&quot;, o=&quot;ions.gro&quot;, neutral=True, input=&quot;SOL&quot;)</span>
+
+<span class="sd">    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
+<span class="sd">    misc.cp(&quot;path/to/mdp/files&quot;, &quot;.&quot;)</span>
 
 <span class="sd">    # minimize</span>
 <span class="sd">    gmx.grompp(f=&quot;min.mdp&quot;, o=&quot;min.tpr&quot;, c=&quot;ions.gro&quot;)</span>
@@ -204,7 +208,7 @@
 <span class="sd">    gmx.mdrun(deffnm=&quot;npt&quot;)</span>
 
 <span class="sd">    # MD run</span>
-<span class="sd">    gmx.grompp(-f&quot;md.mdp&quot;, o=&quot;traj.tpr&quot;, c=&quot;npt.gro&quot;, t=&quot;npt.cpt&quot;)</span>
+<span class="sd">    gmx.grompp(f=&quot;md.mdp&quot;, o=&quot;traj.tpr&quot;, c=&quot;npt.gro&quot;, t=&quot;npt.cpt&quot;)</span>
 <span class="sd">    gmx.mdrun(deffn=&quot;traj&quot;)</span>
 
 <span class="sd">Content:</span>

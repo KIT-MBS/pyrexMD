@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 
 """
@@ -15,33 +15,43 @@ Example:
 
 .. code-block:: python
 
-    import pyrexMD.topology as top
+    import pyrexMD.misc as misc
     import pyrexMD.rex as rex
+    import pyrexMD.topology as top
 
     decoy_dir = "path/to/decoy/directory"
 
-    # create rex directories and assign decoys
+    # create rex_i directories and assign decoys
     rex.assign_best_decoys(decoy_dir)
     rex_dirs = rex.get_REX_DIRS()
+
+    # check for consistent topology
+    rex.check_REX_PDBS(decoy_dir)
+
+    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory
+    misc.cp("path/to/mdp/files", ".")
+
+    # get parameters for fixed boxsize and solvent molecules
+    boxsize, maxsol = rex.WF_get_system_parameters(wdir="./rex_0_get_system_parameters/")
 
     # create systems for each replica
     rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)
 
     # minimize
-    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=100, verbose=False)
+    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=10, verbose=False)
 
-    # add bias contacts
+    # add bias contacts (RES pairs defined in DCA_fin)
     top.DCA_res2atom_mapping(ref_pdb=<ref_pdb>, DCA_fin=<file_path>, n_DCA=50, usecols=(0,1))
     top.DCA_modify_topology(top_fin="topol.top", DCA_used_fin=<file_path> , k=10, save_as="topol_mod.top")
 
     # prepare temperature distribution
-    rex.prep_REX_temps(T_0=300, n_REX=len(rex_dirs), k=0.006)
+    rex.prep_REX_temps(T_0=280, n_REX=len(rex_dirs), k=0.006)
 
     # create mdp and tpr files
     rex.prep_REX_mdp(main_dir="./", n_REX=len(rex_dirs))
     rex.prep_REX_tpr(main_dir="./", n_REX=len(rex_dirs))
 
-    # upload files on HPC and execute production run
+    # next: upload REX MD run files on HPC and execute production run
 
 Content:
 --------

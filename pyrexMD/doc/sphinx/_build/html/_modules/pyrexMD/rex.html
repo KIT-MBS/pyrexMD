@@ -164,7 +164,7 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 26.08.2021</span>
+<span class="c1"># @Last modified time: 15.09.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -177,33 +177,43 @@
 
 <span class="sd">.. code-block:: python</span>
 
-<span class="sd">    import pyrexMD.topology as top</span>
+<span class="sd">    import pyrexMD.misc as misc</span>
 <span class="sd">    import pyrexMD.rex as rex</span>
+<span class="sd">    import pyrexMD.topology as top</span>
 
 <span class="sd">    decoy_dir = &quot;path/to/decoy/directory&quot;</span>
 
-<span class="sd">    # create rex directories and assign decoys</span>
+<span class="sd">    # create rex_i directories and assign decoys</span>
 <span class="sd">    rex.assign_best_decoys(decoy_dir)</span>
 <span class="sd">    rex_dirs = rex.get_REX_DIRS()</span>
+
+<span class="sd">    # check for consistent topology</span>
+<span class="sd">    rex.check_REX_PDBS(decoy_dir)</span>
+
+<span class="sd">    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
+<span class="sd">    misc.cp(&quot;path/to/mdp/files&quot;, &quot;.&quot;)</span>
+
+<span class="sd">    # get parameters for fixed boxsize and solvent molecules</span>
+<span class="sd">    boxsize, maxsol = rex.WF_get_system_parameters(wdir=&quot;./rex_0_get_system_parameters/&quot;)</span>
 
 <span class="sd">    # create systems for each replica</span>
 <span class="sd">    rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)</span>
 
 <span class="sd">    # minimize</span>
-<span class="sd">    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=100, verbose=False)</span>
+<span class="sd">    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=10, verbose=False)</span>
 
-<span class="sd">    # add bias contacts</span>
+<span class="sd">    # add bias contacts (RES pairs defined in DCA_fin)</span>
 <span class="sd">    top.DCA_res2atom_mapping(ref_pdb=&lt;ref_pdb&gt;, DCA_fin=&lt;file_path&gt;, n_DCA=50, usecols=(0,1))</span>
 <span class="sd">    top.DCA_modify_topology(top_fin=&quot;topol.top&quot;, DCA_used_fin=&lt;file_path&gt; , k=10, save_as=&quot;topol_mod.top&quot;)</span>
 
 <span class="sd">    # prepare temperature distribution</span>
-<span class="sd">    rex.prep_REX_temps(T_0=300, n_REX=len(rex_dirs), k=0.006)</span>
+<span class="sd">    rex.prep_REX_temps(T_0=280, n_REX=len(rex_dirs), k=0.006)</span>
 
 <span class="sd">    # create mdp and tpr files</span>
 <span class="sd">    rex.prep_REX_mdp(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
 <span class="sd">    rex.prep_REX_tpr(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
 
-<span class="sd">    # upload files on HPC and execute production run</span>
+<span class="sd">    # next: upload REX MD run files on HPC and execute production run</span>
 
 <span class="sd">Content:</span>
 <span class="sd">--------</span>

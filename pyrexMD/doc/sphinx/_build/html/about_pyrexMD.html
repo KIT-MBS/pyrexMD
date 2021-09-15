@@ -177,9 +177,23 @@
 <div class="section" id="about-pyrexmd">
 <h1>About pyrexMD<a class="headerlink" href="#about-pyrexmd" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is designed as an interactive ‘all-purpose’ toolkit for research
-projects which rely on (contact-guided) Replica Exchange Molecular Dynamics.
-Due to its workflow-orientated design, it is possible to rapidly create whole setup or analysis workflows, thereby significantly enhancing productivity and reducing the time spent at various stages of the project. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used in <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>
-notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run MD simulations.</p>
+projects which rely on (contact-guided) Replica Exchange Molecular Dynamics or
+(contact-guided) Molecular Dynamics. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> has three main goals:</p>
+<ol class="arabic simple">
+<li><p>By utilizing various modified <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings,
+this package provides an environment to design, run and analyze the entire
+project within <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks.</p></li>
+<li><p>Provided functions often combine many individual steps into larger,
+workflow-orientated functions with additional automating features to simplify
+the application. It is possible to rapidly create whole setup or structure
+analysis workflows with a few commands, thereby significantly enhancing
+productivity and reducing the time spent at various stages of the project.</p></li>
+<li><p>Data vizualization is important. Most analysis functions which calculate
+meaningful values such as RMSD, QValues, contact distances etc., can create
+specialized figures in the same step if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is
+passed.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used in <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run MD simulations.</p>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>You can access the documentation via <a class="reference external" href="https://kit-mbs.github.io/pyrexMD/">https://kit-mbs.github.io/pyrexMD/</a>
@@ -190,11 +204,12 @@ notebooks and requires <code class="docutils literal notranslate"><span class="p
 <ol class="arabic simple">
 <li><p>install MPI:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># on ubuntu:</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
-
-<span class="c1"># on macOS:</span>
-<span class="n">brew</span> <span class="n">install</span> <span class="n">mpich</span>
+<p>on ubuntu:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>macOS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">mpich</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
@@ -216,7 +231,7 @@ notebooks and requires <code class="docutils literal notranslate"><span class="p
 <span class="n">jupyter</span> <span class="n">nbextension</span> <span class="n">enable</span> <span class="o">--</span><span class="n">py</span> <span class="n">nglview</span>
 </pre></div>
 </div>
-<p>(Optional): download and install <code class="docutils literal notranslate"><span class="pre">PyRosetta</span></code> if you want to use pyrexMD.decoy.abinitio:</p>
+<p>(Optional): download and install <code class="docutils literal notranslate"><span class="pre">PyRosetta</span></code> if you want to use the pyrexMD.decoy.abinitio module:</p>
 <p><a class="reference external" href="http://www.pyrosetta.org/home">http://www.pyrosetta.org/home</a></p>
 </div>
 <div class="section" id="tests">

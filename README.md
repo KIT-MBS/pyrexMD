@@ -7,9 +7,23 @@ About pyrexMD
 =============
 
 `pyrexMD` is designed as an interactive 'all-purpose' toolkit for research
-projects which rely on (contact-guided) Replica Exchange Molecular Dynamics.
-Due to its workflow-orientated design, it is possible to rapidly create whole setup or analysis workflows, thereby significantly enhancing productivity and reducing the time spent at various stages of the project. `pyrexMD` should be used in `jupyter`
-notebooks and requires `GROMACS` to run MD simulations.
+projects which rely on (contact-guided) Replica Exchange Molecular Dynamics or
+(contact-guided) Molecular Dynamics. `pyrexMD` has three main goals:
+
+1. By utilizing various modified `GROMACS` and `MDAnalysis` python bindings,
+this package provides an environment to design, run and analyze the entire
+project within `jupyter` notebooks.
+2. Data vizualization is important. Most analysis functions which calculate
+meaningful values such as RMSD, QValues, contact distances etc., can create
+specialized figures in the same step if the keyword argument `plot=True` is
+passed.
+3. Provided functions often combine many individual steps into larger,
+workflow-orientated functions with additional automating features to simplify
+the application. It is possible to rapidly create whole setup or structure
+analysis workflows within a few commands, thereby significantly enhancing
+productivity and reducing the time spent at various stages of the project.
+
+`pyrexMD` should be used in `jupyter` notebooks and requires `GROMACS` to run MD simulations.
 
 
 ## Documentation
@@ -20,10 +34,12 @@ You can access the documentation via https://kit-mbs.github.io/pyrexMD/
 ## Installation Instructions
 (1) install MPI:
 
-    # on ubuntu:
+on ubuntu:
+
     sudo apt-get install openmpi-bin libopenmpi-dev
 
-    # on macOS:
+macOS:
+
     brew install mpich
 
 (2) download and install MPI-enabled version of `GROMACS` following instructions:
@@ -44,7 +60,7 @@ https://manual.gromacs.org/documentation/current/index.html
     jupyter nbextension enable --py nglview
 
 
-(Optional): download and install `PyRosetta` if you want to use pyrexMD.decoy.abinitio:
+(Optional): download and install `PyRosetta` if you want to use the pyrexMD.decoy.abinitio module:
 
 http://www.pyrosetta.org/home
 

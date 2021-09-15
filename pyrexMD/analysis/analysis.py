@@ -2,10 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 """
-.. hint:: This module contains various functions related to general trajectory analyses.
+.. hint:: This module contains various functions related to very basic trajectory
+    analyses, e.g. RMSD, distances, etc.
 
 Example:
 --------
