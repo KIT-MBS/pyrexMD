@@ -120,7 +120,7 @@ of setting up REX simulations.</p>
 </dd>
 <dt>pyrexMD.topology</dt><dd><p>Contains functions to modify universe topologies, include contact bias etc.</p>
 </dd>
-<dt>pyrexMD.analysis.analysis</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
+<dt>pyrexMD.analysis.analyze</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
 RMSD, distances, etc.</p>
 </dd>
 <dt>pyrexMD.analysis.cluster</dt><dd><p>Contains functions for decoy clustering and post-REX clustering analyses.</p>
@@ -251,7 +251,7 @@ accessible through the trajectory viewer.</p>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 
 <span class="c1"># set up universe</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="o">&lt;</span><span class="n">pdb_file</span><span class="o">&gt;</span><span class="p">)</span>
@@ -281,7 +281,7 @@ forms of contact and bias analyses.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
 
 <span class="c1"># set up universes</span>
@@ -359,7 +359,7 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.gdt</span> <span class="k">as</span> <span class="nn">gdt</span>
 
 <span class="c1"># set up universes</span>

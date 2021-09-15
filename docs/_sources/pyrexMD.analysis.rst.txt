@@ -1,10 +1,10 @@
 pyrexMD.analysis
 ================
 
-pyrexMD.analysis.analysis
+pyrexMD.analysis.analyze
 -------------------------
 
-.. automodule:: pyrexMD.analysis.analysis
+.. automodule:: pyrexMD.analysis.analyze
    :members:
    :undoc-members:
    :show-inheritance:
