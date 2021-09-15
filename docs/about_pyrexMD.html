@@ -91,15 +91,15 @@ projects which rely on (contact-guided) Replica Exchange Molecular Dynamics or
 <li><p>By utilizing various modified <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings,
 this package provides an environment to design, run and analyze the entire
 project within <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks.</p></li>
+<li><p>Data vizualization is important. Most analysis functions which calculate
+meaningful values such as RMSD, QValues, contact distances etc., can create
+specialized figures in the same step if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is
+passed.</p></li>
 <li><p>Provided functions often combine many individual steps into larger,
 workflow-orientated functions with additional automating features to simplify
 the application. It is possible to rapidly create whole setup or structure
 analysis workflows within a few commands, thereby significantly enhancing
 productivity and reducing the time spent at various stages of the project.</p></li>
-<li><p>Data vizualization is important. Most analysis functions which calculate
-meaningful values such as RMSD, QValues, contact distances etc., can create
-specialized figures in the same step if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is
-passed.</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used in <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run MD simulations.</p>
 <section id="documentation">
