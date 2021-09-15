@@ -2,12 +2,12 @@
 # @Date:   09.05.2021
 # @Filename: test_gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 
 import pyrexMD.misc as misc
 import pyrexMD.analysis.gdt as gdt
-from pyrexMD.analysis.analysis import get_Distance_Matrices
+from pyrexMD.analysis.analyze import get_Distance_Matrices
 import MDAnalysis as mda
 import numpy as np
 from numpy.testing import assert_allclose

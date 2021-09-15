@@ -176,23 +176,30 @@
 <a class="reference external image-reference" href="https://codecov.io/gh/KIT-MBS/pyrexMD"><img alt="codecov" src="https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW" /></a>
 <div class="section" id="about-pyrexmd">
 <h1>About pyrexMD<a class="headerlink" href="#about-pyrexmd" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is designed as an interactive ‘all-purpose’ toolkit for research
-projects which rely on (contact-guided) Replica Exchange Molecular Dynamics or
-(contact-guided) Molecular Dynamics. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> has three main goals:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is mainly designed for research projects which:</p>
+<ul class="simple">
+<li><p>rely on (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics</p></li>
+<li><p>or focus on structure analyses and comparison</p></li>
+</ul>
+<p>It has three main goals:</p>
 <ol class="arabic simple">
-<li><p>By utilizing various modified <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings,
-this package provides an environment to design, run and analyze the entire
-project within <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks.</p></li>
-<li><p>Provided functions often combine many individual steps into larger,
-workflow-orientated functions with additional automating features to simplify
-the application. It is possible to rapidly create whole setup or structure
-analysis workflows with a few commands, thereby significantly enhancing
-productivity and reducing the time spent at various stages of the project.</p></li>
+<li><p>Interactive ‘all purpose’ environment. By utilizing various modified
+<code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings, this package provides a <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>
+notebooks based environment to design, run and analyze the entire project.</p></li>
 <li><p>Data vizualization is important. Most analysis functions which calculate
 meaningful values such as RMSD, QValues, contact distances etc., can create
-specialized figures in the same step if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is
-passed.</p></li>
+specialized figures in the same step by passing the keyword argument
+<code class="docutils literal notranslate"><span class="pre">plot=True</span></code>.</p></li>
+<li><p>User-friendly and simplified application. Provided functions often combine many
+individual steps into larger, workflow-orientated functions with additional
+automation features. It is possible to rapidly create whole setup or structure
+analysis workflows within a few commands, thereby significantly enhancing
+productivity and reducing the time spent at various stages of the project.</p></li>
 </ol>
+<p>With <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>, it becomes especially easy to create, share and reproduce
+research results or transfer the work on other target structures of interest.
+Furthermore, it lowers the technical boundaries for newcomers who want to do
+research utilizing Replica Exchange for enhanced sampling.</p>
 <p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used in <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run MD simulations.</p>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>

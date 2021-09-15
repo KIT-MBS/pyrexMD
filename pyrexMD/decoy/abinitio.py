@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: abinitio.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 """
 .. hint:: This module contains functions for decoy creation using `PyRosetta`.
@@ -12,8 +12,8 @@
 from tqdm.notebook import tqdm
 import pyrexMD.misc as _misc
 import pyrexMD.topology as _top
-import pyrexMD.analysis.analysis as _ana
-from pyrexMD.analysis.analysis import get_Distance_Matrices
+import pyrexMD.analysis.analyze as _ana
+from pyrexMD.analysis.analyze import get_Distance_Matrices
 import numpy as np
 import matplotlib.pyplot as plt
 import os

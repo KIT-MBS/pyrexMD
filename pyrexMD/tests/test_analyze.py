@@ -2,10 +2,10 @@
 # @Date:   10.05.2021
 # @Filename: test_analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 
-import pyrexMD.analysis.analysis as ana
+import pyrexMD.analysis.analyze as ana
 import pyrexMD.misc as misc
 import MDAnalysis as mda
 import matplotlib

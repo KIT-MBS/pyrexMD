@@ -15,7 +15,7 @@ Example:
 
     import MDAnalysis as mda
     import pyrexMD.topology as top
-    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.analyze as ana
 
     ref = mda.Universe("path/to/pdb")
     mobile = mda.Universe("path/to/tpr", "path/to/xtc")

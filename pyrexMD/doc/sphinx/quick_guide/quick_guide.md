@@ -39,7 +39,7 @@ pyrexMD.rex
 pyrexMD.topology
     Contains functions to modify universe topologies, include contact bias etc.
 
-pyrexMD.analysis.analysis
+pyrexMD.analysis.analyze
     Contains various functions related to very basic trajectory analyses, e.g.
     RMSD, distances, etc.
 
@@ -184,7 +184,7 @@ accessible through the trajectory viewer.
     import pyrexMD.misc as misc
     import pyrexMD.core as core
     import pyrexMD.topology as top
-    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.analyze as ana
 
     # set up universe
     ref = mda.Universe(<pdb_file>)
@@ -221,7 +221,7 @@ forms of contact and bias analyses.
     import MDAnalysis as mda
     import pyrexMD.misc as misc
     import pyrexMD.topology as top
-    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.analyze as ana
     import pyrexMD.analysis.contacts as con
 
     # set up universes
@@ -319,7 +319,7 @@ distance cutoff of x <span>&#8491;</span>.
     import pyrexMD.misc as misc
     import pyrexMD.core as core
     import pyrexMD.topology as top
-    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.analyze as ana
     import pyrexMD.analysis.gdt as gdt
 
     # set up universes

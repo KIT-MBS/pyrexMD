@@ -16,7 +16,7 @@ Example:
     import MDAnalysis as mda
     import pyrexMD.misc as misc
     import pyrexMD.topology as top
-    import pyrexMD.analysis.analysis as ana
+    import pyrexMD.analysis.analyze as ana
     import pyrexMD.analysis.gdt as gdt
 
     ref = mda.Universe("path/to/pdb")
@@ -55,7 +55,7 @@ Content:
 
 import pyrexMD.misc as _misc
 import pyrexMD.topology as _top
-import pyrexMD.analysis.analysis as _ana
+import pyrexMD.analysis.analyze as _ana
 import MDAnalysis as mda
 import numpy as np
 import matplotlib.pyplot as plt

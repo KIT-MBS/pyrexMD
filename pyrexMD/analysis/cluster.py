@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 """
 .. hint:: This module contains functions for:
@@ -75,8 +75,8 @@ import seaborn as sns
 import heat as ht
 import h5py
 import pyrexMD.misc as _misc
-import pyrexMD.analysis.analysis as _ana
-from pyrexMD.analysis.analysis import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
+import pyrexMD.analysis.analyze as _ana
+from pyrexMD.analysis.analyze import get_Distance_Matrices, _HELP_sss_None2int  # required for internal conversion
 #from pyrexMD.analysis.abinitio import get_decoy_list, get_decoy_scores, get_decoy_RMSD
 import pandas as pd
 from sklearn.manifold import TSNE, MDS

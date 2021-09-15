@@ -190,11 +190,11 @@ example folder, which you can use to run and test the package on your own local
 machine.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Many analysis functions which calculate important values such as RMSD,
-QValues etc., can create figures in the same step if the keyword argument
-<code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have a wide range of possible
-keyword arguments, in which case you have to dig through the API docs to get
-the most potential out of the functions.</p>
+<p>Most analysis functions which calculate meaningful values such as
+RMSD, QValues, contact distances etc., can create figures in the same step
+if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have
+a wide range of possible keyword arguments, in which case you have to dig
+through the API docs to get the most potential out of the functions.</p>
 </div>
 <div class="section" id="module-overview">
 <h2>Module Overview<a class="headerlink" href="#module-overview" title="Permalink to this headline">¶</a></h2>
@@ -212,7 +212,7 @@ of setting up REX simulations.</p>
 </dd>
 <dt>pyrexMD.topology</dt><dd><p>Contains functions to modify universe topologies, include contact bias etc.</p>
 </dd>
-<dt>pyrexMD.analysis.analysis</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
+<dt>pyrexMD.analysis.analyze</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
 RMSD, distances, etc.</p>
 </dd>
 <dt>pyrexMD.analysis.cluster</dt><dd><p>Contains functions for decoy clustering and post-REX clustering analyses.</p>
@@ -343,7 +343,7 @@ accessible through the trajectory viewer.</p>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 
 <span class="c1"># set up universe</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="o">&lt;</span><span class="n">pdb_file</span><span class="o">&gt;</span><span class="p">)</span>
@@ -373,7 +373,7 @@ forms of contact and bias analyses.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
 
 <span class="c1"># set up universes</span>
@@ -451,7 +451,7 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analysis</span> <span class="k">as</span> <span class="nn">ana</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.analyze</span> <span class="k">as</span> <span class="nn">ana</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.gdt</span> <span class="k">as</span> <span class="nn">gdt</span>
 
 <span class="c1"># set up universes</span>
@@ -481,7 +481,7 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 </div>
 <img alt="_images/LA.png" src="_images/LA.png" />
 <p>The Local Accuracy (LA) figure gives a clear representation of how good each
-part of the model is refined compared to a reference structure. It is possible
+model part is refined compared to a reference structure. It is possible
 to show/hide each of the information columns (FRAME, TS and HA) individually.</p>
 </div>
 <div class="section" id="cluster-analyses">

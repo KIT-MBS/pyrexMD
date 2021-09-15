@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: __init__.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 15.09.2021
 
 import pyrexMD
 import pyrexMD.core as core
@@ -14,11 +14,13 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Element information is absent or missing for a few")
+warnings.filterwarnings("ignore", message="Unknown element  found for some atoms.")
 warnings.filterwarnings("ignore", message="Failed to guess the mass for the following atom types")
 warnings.filterwarnings("ignore", message="Unit cell dimensions not found.")
 warnings.filterwarnings("ignore", message="1 A\^3 CRYST1 record,")
 warnings.filterwarnings("ignore", message="Found no information for attr:")
 warnings.filterwarnings("ignore", message="!!! WARNING !!! Manipulating the local contents of a DNDarray needs")
+warnings.filterwarnings("ignore", message="All residues selected with")
 # MDAnalysis throws many unnecessary warnings when warnings module is used
 
 plt.style.use(f"{pyrexMD.__path__[0]}/.mplstyle")
@@ -45,7 +47,7 @@ import pyrexMD.core as core
 import pyrexMD.gmx as gmx
 import pyrexMD.misc as misc
 import pyrexMD.topology as top
-import pyrexMD.analysis.analysis as ana
+import pyrexMD.analysis.analyze as ana
 #import pyrexMD.analysis.contacts as con
 #import pyrexMD.analysis.cluster as clu
 #import pyrexMD.analysis.dihedrals as dih

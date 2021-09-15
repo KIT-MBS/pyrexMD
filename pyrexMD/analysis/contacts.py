@@ -35,7 +35,7 @@ Content:
 --------
 """
 
-import pyrexMD.analysis.analysis as _ana
+import pyrexMD.analysis.analyze as _ana
 import pyrexMD.misc as _misc
 import pyrexMD.topology as _top
 import numpy as np
