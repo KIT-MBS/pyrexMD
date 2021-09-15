@@ -321,9 +321,10 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <section id="id1">
 <h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 
 <span class="c1"># create ref pdb:</span>
-<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;./1l2y.pdb&quot;</span>
+<span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;path/to/pdb&quot;</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># generate topology &amp; box</span>
@@ -334,6 +335,9 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
+
+<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
+<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
 <span class="c1"># minimize</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
@@ -348,7 +352,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;npt&quot;</span><span class="p">)</span>
 
 <span class="c1"># MD run</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="o">-</span><span class="sa">f</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;md.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;traj.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;npt.gro&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="s2">&quot;npt.cpt&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffn</span><span class="o">=</span><span class="s2">&quot;traj&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1229,33 +1233,43 @@ speed-up the process of setting up REX simulations.</p>
 </div>
 <section id="id3">
 <h2>Example:<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
 
 <span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
 
-<span class="c1"># create rex directories and assign decoys</span>
+<span class="c1"># create rex_i directories and assign decoys</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">assign_best_decoys</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
 <span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">get_REX_DIRS</span><span class="p">()</span>
+
+<span class="c1"># check for consistent topology</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">check_REX_PDBS</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
+
+<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
+<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+<span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
+<span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="o">=</span><span class="s2">&quot;./rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
 
 <span class="c1"># create systems for each replica</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
 
 <span class="c1"># minimize</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># add bias contacts</span>
+<span class="c1"># add bias contacts (RES pairs defined in DCA_fin)</span>
 <span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">top</span><span class="o">.</span><span class="n">DCA_modify_topology</span><span class="p">(</span><span class="n">top_fin</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">DCA_used_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span> <span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;topol_mod.top&quot;</span><span class="p">)</span>
 
 <span class="c1"># prepare temperature distribution</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.006</span><span class="p">)</span>
 
 <span class="c1"># create mdp and tpr files</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">))</span>
 
-<span class="c1"># upload files on HPC and execute production run</span>
+<span class="c1"># next: upload REX MD run files on HPC and execute production run</span>
 </pre></div>
 </div>
 </section>
