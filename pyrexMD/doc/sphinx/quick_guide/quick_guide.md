@@ -350,7 +350,7 @@ distance cutoff of x <span>&#8491;</span>.
 .. image:: quick_guide/LA.png
 
 The Local Accuracy (LA) figure gives a clear representation of how good each
-part of the model is refined compared to a reference structure. It is possible
+model part is refined compared to a reference structure. It is possible
 to show/hide each of the information columns (FRAME, TS and HA) individually.
 
 Cluster Analyses

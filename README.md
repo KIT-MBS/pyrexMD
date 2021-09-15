@@ -6,22 +6,30 @@
 About pyrexMD
 =============
 
-`pyrexMD` is designed as an interactive 'all-purpose' toolkit for research
-projects which rely on (contact-guided) Replica Exchange Molecular Dynamics or
-(contact-guided) Molecular Dynamics. `pyrexMD` has three main goals:
+`pyrexMD` is mainly designed for research projects which:
 
-1. By utilizing various modified `GROMACS` and `MDAnalysis` python bindings,
-this package provides an environment to design, run and analyze the entire
-project within `jupyter` notebooks.
+- rely on (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics
+- or focus on structure analyses and comparison
+
+It has three main goals:
+
+1. Interactive 'all purpose' environment. By utilizing various modified
+`GROMACS` and `MDAnalysis` python bindings, this package provides a `jupyter`
+notebooks based environment to design, run and analyze the entire project.
 2. Data vizualization is important. Most analysis functions which calculate
 meaningful values such as RMSD, QValues, contact distances etc., can create
-specialized figures in the same step if the keyword argument `plot=True` is
-passed.
-3. Provided functions often combine many individual steps into larger,
-workflow-orientated functions with additional automating features to simplify
-the application. It is possible to rapidly create whole setup or structure
+specialized figures in the same step by passing the keyword argument
+``plot=True``.
+3. User-friendly and simplified application. Provided functions often combine many
+individual steps into larger, workflow-orientated functions with additional
+automation features. It is possible to rapidly create whole setup or structure
 analysis workflows within a few commands, thereby significantly enhancing
 productivity and reducing the time spent at various stages of the project.
+
+With `pyrexMD`, it becomes especially easy to create, share and reproduce
+research results or transfer the work on other target structures of interest.
+Furthermore, it lowers the technical boundaries for newcomers who want to do
+research utilizing Replica Exchange for enhanced sampling.
 
 `pyrexMD` should be used in `jupyter` notebooks and requires `GROMACS` to run MD simulations.
 
