@@ -2,11 +2,11 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 
 """
-.. hint:: This module contains functions related to the Global Distance Test (GDT) analyses.
+.. hint:: This module contains functions for Global-Distance-Test (GDT) analyses.
 
 Example:
 --------
@@ -63,7 +63,7 @@ import seaborn as sns
 from tqdm.notebook import tqdm
 ################################################################################
 ################################################################################
-# GDT (Global Distance Test) Analyses
+# GDT (Global-Distance-Test) Analyses
 
 
 def get_array_percent(dist_array, cutoff):
@@ -181,7 +181,7 @@ def _HELP_sss_None2int(obj, cfg):
 def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
         sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True, **kwargs):
     """
-    performs Global Distance Test (GDT).
+    performs Global-Distance-Test (GDT).
 
     Algorithm to identify how good "mobile" matches to "reference" by calculating
     the sets of residues which do not deviate more than a specified (pairwise)

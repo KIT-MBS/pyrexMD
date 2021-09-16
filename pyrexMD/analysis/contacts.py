@@ -2,11 +2,10 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 """
-.. hint:: This module contains functions related to native contact and bias
-    contact analyses.
+.. hint:: This module contains functions for native contact and bias contact analyses.
 
 Example:
 --------

@@ -2,20 +2,19 @@ Quick Guide
 ===========
 
 Here you can find a short overview of all package modules as well as some main
-applications with `pyrexMD`. Since most provided functions are
-workflow-orientated, you can perform large tasks (e.g. system setup, specific
-analyses, etc.) within a few commands. This guide is kept very short
-intentionally because most commands have obvious 'core' functionality.  All code
-snippets of this quick guide are taken from the `jupyter` notebooks  within the
-example folder, which you can use to run and test the package on your own local
-machine.
+applications with `pyrexMD`. Most functions are workflow-orientated so that you
+can perform complex tasks (e.g. system setup, specific analyses, etc.) within a
+few commands. This guide is kept very short  because most commands have an
+obvious 'core' functionality. All code snippets in this quick guide are taken
+from the `jupyter` notebooks within the example folder, which you can use to run
+and test the package on your local machine.
 
 
-.. Important:: Most analysis functions which calculate meaningful values such as
-    RMSD, QValues, contact distances etc., can create figures in the same step
-    if the keyword argument ``plot=True`` is passed. Normal plot functions have
-    a wide range of possible keyword arguments, in which case you have to dig
-    through the API docs to get the most potential out of the functions.
+.. Important:: Most analysis functions for calculating useful quantities such as
+    RMSDs, Q values, contact distances, etc., can generate figures in the same
+    step if the keyword argument ``plot=True`` is passed. Note that as normal
+    plot functions have many possible keyword arguments, you have to dig through
+    the API docs to get the most out of them.
 
 
 
@@ -23,53 +22,53 @@ Module Overview
 ---------------
 
 pyrexMD.core
-    Contains functions to enable interactive analyses. Its main purpose are the
-    iPlayer and iPlot classes, which allow the application of a trajectory viewer
-    or the dynamical linking between trajectory viewer and any 2D graph.
+    Contains functions enabling interactive analyses. Its main parts are the
+    iPlayer and iPlot classes, which allow the use of a trajectory viewer or a
+    dynamic linking of the trajectory viewer and any 2D graph.
 
 pyrexMD.gmx
-    Contains modified GromacsWrapper functions to streamline the interaction
+    Contains modified GromacsWrapper functions for streamlining the interaction
     with `GROMACS` for system setups etc.
 
 pyrexMD.rex
     Contains functions related to (contact-guided) Replica Exchange Molecular
-    Dynamics. It contains mainly functions to automate and speed-up the process
-    of setting up REX simulations.
+    Dynamics, mainly for automating and speeding up the simulation setup.
 
 pyrexMD.topology
-    Contains functions to modify universe topologies, include contact bias etc.
+    Contains functions for modifying universe topologies, including contact
+    bias, etc.
 
 pyrexMD.analysis.analyze
-    Contains various functions related to very basic trajectory analyses, e.g.
-    RMSD, distances, etc.
+    Contains various functions for basic trajectory analyses, e.g., calculating
+    RMSDs, distances, etc.
 
 pyrexMD.analysis.cluster
     Contains functions for decoy clustering and post-REX clustering analyses.
 
 pyrexMD.analysis.contacts
-    Contains functions related to native contact and bias contact analyses.
+    Contains functions for native contact and bias contact analyses.
 
 pyrexMD.analysis.dihedrals
-    Contains functions related to dihedral analyses.
+    Contains functions for dihedral-angle analyses.
 
 pyrexMD.analysis.gdt
-    Contains functions related to the Global Distance Test (GDT) analyses.
+    Contains functions for Global-Distance-Test (GDT) analyses.
 
 pyrexMD.misc
-    Consists of pyrexMD.misc.classes, pyrexMD.misc.func and pyrexMD.misc.plot.
-    This sub-package is a collection of miscellaneous functions and classes
-    which are used frequently. Included functions may contain modified versions
-    of small existing functions to extend their default behavior in order to
+    Consists of pyrexMD.misc.classes, pyrexMD.misc.func, and pyrexMD.misc.plot.
+    This sub-package is a collection of miscellaneous and frequently used
+    functions and classes. These functions may contain modified versions of
+    small existing functions to extend their default behavior in order to
     streamline ``pyrexMD``.
 
 
 Application Overview
 --------------------
 
-Setup of normal MD
-^^^^^^^^^^^^^^^^^^
-The interaction with `GROMACS` is very similar compared to the known command-line syntax.
-Commands, such as
+Setup of Normal MD Simulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using `GROMACS` in `pyrexMD` is very similar to the known command-line syntax.
+Commands such as
 
     gmx function -p parameter
 
@@ -77,9 +76,9 @@ simply become:
 
     gmx.function(p=parameter)
 
-Additionally to the expected `GROMACS` behavior, each gmx module function creates by
-default a unique log file with a meaningful name which is stored into the logs
-folder.
+Additionally to the expected `GROMACS` behavior, each gmx module function by
+default creates a unique log file with a meaningful name which is stored in the
+logs folder.
 
 The code example below shows a complete setup of a normal MD simulation.
 
@@ -120,14 +119,14 @@ The code example below shows a complete setup of a normal MD simulation.
 
 
 
-Setup of contact-guided REX MD
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Setup of Contact-Guided REX MD Simulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The code example below shows a complete setup of a contact-guided REX MD
 simulation using different starting conformations ("decoys") for each individual
-replica. It automates many system specific and ardous tasks in order to
-eliminate possible application errors, such as mismatching system sizes,
-incorrect mapping of bias contacts etc.
+replica. It automates many system-specific and arduous tasks to eliminate
+possible application errors, such as mismatching system sizes across replicas,
+incorrect mapping of bias contacts, etc.
 
     import pyrexMD.misc as misc
     import pyrexMD.rex as rex
@@ -145,7 +144,7 @@ incorrect mapping of bias contacts etc.
     # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory
     misc.cp("path/to/mdp/files", ".")
 
-    # get parameters for fixed boxsize and solvent molecules
+    # get parameters for fixed box size and solvent molecules
     boxsize, maxsol = rex.WF_get_system_parameters(wdir="./rex_0_get_system_parameters/")
 
     # create systems for each replica
@@ -172,11 +171,11 @@ incorrect mapping of bias contacts etc.
 Interactive Plots
 ^^^^^^^^^^^^^^^^^
 
-`pyrexMD` offers the ability to create interactive plots where a 2D graph is
-linked to the trajectory viewer of a specific universe. It allows to quickly
-inspect conformations at specific values by interacting with the graph itself
-(e.g. via ctrl-click) in order to get additional valueable information
-accessible through the trajectory viewer.
+`pyrexMD` can generate interactive plots by linking a 2D graph to the trajectory
+viewer of a specific universe. It allows to quickly inspect conformations at
+specific values by interacting with the graph itself (e.g. via ctrl-click). In
+this way, additional valuable information becomes accessible through the
+trajectory viewer.
 
 .. code:: ipython3
 
@@ -200,21 +199,22 @@ accessible through the trajectory viewer.
 
 .. image:: quick_guide/IPlayer.png
 
-In this example the interactive plot links the RMSD time evolution graph to the mobile trajectory.
+In this example, the interactive plot links the RMSD time evolution graph to the
+flexible trajectory.
 
 
 
 Contact and Bias Analyses
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-REX is a very powerful and versatile enhanced sampling method and especially
-suited to obtain native-like conformations within a single run. However it can
+REX is a very powerful and versatile enhanced-sampling method and especially
+suited to obtain native-like conformations within a single run. However, it can
 be computationally costly since it requires many replicas over a wide
-temperature range. By integrating (theoretical, experimental or mixed) bias
-contacts and coupling them to a bias potential one can narrow down the search
-space and guide the simulations towards specific conformations, which speeds up
-the process and lowers the computational costs. `pyrexMD` covers many different
-forms of contact and bias analyses.
+temperature range. By integrating (theoretical, experimental, or mixed) bias
+contacts via bias potentials, one can narrow down the search space and guide the
+simulations towards specific conformations. This speeds up the process and
+lowers the computational costs. `pyrexMD` covers many different forms of contact
+and bias analyses.
 
 .. code:: ipython3
 
@@ -240,7 +240,7 @@ The figure shows:
 - blue line: TPR for number of ranked contacts
 - red line: 75% threshold (TPR of used contacts should be above approx. 75% for contact-guided REX MD, see  https://doi.org/10.1371/journal.pone.0242072)
 - orange lines: suggested/guessed optimum number of contacts and the corresponding TPR
-- orange region: suggested region of interest between L/2 and L contacts
+- orange region: suggested region of interest between L/2 and L contacts (L = biomolecular sequence length)
 
 
 .. code:: ipython3
@@ -253,10 +253,11 @@ The figure shows:
 .. image:: quick_guide/QBias.png
 
 
-`pyrexMD` distinguishes mainly between two types of QValues. QNative (fraction
-of native contacts) and QBias (fraction of realized bias contacts). Both types
-can be used for structure analyses, however when simulating unknown target
-structures QNative becomes unaccessible due to the missing reference structure.
+`pyrexMD` distinguishes mainly between two types of Q values, i.e., QNative
+(fraction of native contacts) and QBias (fraction of realized bias contacts).
+Both types can be used for structure analyses; however, when simulating unknown
+target structures QNative becomes inaccessible due to the missing reference
+structure.
 
 .. code:: ipython3
 
@@ -269,10 +270,10 @@ structures QNative becomes unaccessible due to the missing reference structure.
 
 .. image:: quick_guide/ContactMap.png
 
-`pyrexMD`'s Contact Maps are designed to show native contacts (grey) and checks
-if bias contacts are native (green) or non-native (red). This functionality can
-be either used to compare and validate used bias contacts or to compare two
-structures and show which contacts got newly formed (green) and which broke up (red).
+`pyrexMD`'s Contact Maps show native contacts in grey and check whether bias
+contacts are native (green) or non-native (red). This functionality can be used
+to either compare and validate the used bias contacts or compare two structures
+and show the newly formed and broken contacts in green and red, respectively.
 
     # check native contact distances via ContactMap
     NC, NC_dist, DM = con.get_NC_distances(folded, folded)
@@ -280,24 +281,24 @@ structures and show which contacts got newly formed (green) and which broke up (
 
 .. image:: quick_guide/ContactMapDistances.png
 
-Additionally, it is also possible to analyze the contact distances vizualized
-as a contact map as well.
+Additionally, it is possible to analyze the contact distances within a contact
+map plot.
 
 GDT and LA Analyses
 ^^^^^^^^^^^^^^^^^^^
 
 The so-called Global Distance Test (GDT) is a method for structure evaluation
-comparable to the root-mean-square deviation (RMSD).  However, RMSD is a
-suboptimal measure of structural similarity as it strongly correlates with the
-largest displacement between mobile and target structure. This means if the
-mobile structure globally fits the target to a large extent and only one small
-segment is misaligned locally, the RMSD becomes disproportionately large.
-Analogously to the RMSD, the mobile structure is first aligned to the target
-structure. Then, the displacement distance of each residual Cα atom is
-calculated and compared with various cutoff thresholds to estimate how similar
-the two structures are. In a last step, percentages of residues with
-displacements below a considered threshold are used to calculate score values.
-The two most common scores are the total score (TS),
+similar to the root-mean-square deviation (RMSD).  However, RMSD is a suboptimal
+measure of structural similarity as it strongly correlates with the largest
+displacement between mobile and target structure. If the mobile structure
+globally fits the target to a large extent and only one small segment is
+misaligned locally, the RMSD becomes disproportionately large. For the GDT, the
+mobile structure is first aligned to the target structure analogously to an RMSD
+analysis. To estimate how similar the two structures are, the displacement of
+each residual Cα atom is calculated and compared to various cutoffs. In a last
+step, percentages of residues with displacements below a considered threshold
+are used to calculate scores. The two most common scores are the total score
+(TS),
 
 .. math::
 
@@ -349,15 +350,15 @@ distance cutoff of x <span>&#8491;</span>.
 
 .. image:: quick_guide/LA.png
 
-The Local Accuracy (LA) figure gives a clear representation of how good each
-model part is refined compared to a reference structure. It is possible
-to show/hide each of the information columns (FRAME, TS and HA) individually.
+The Local Accuracy (LA) plot gives a clear representation of how good each model
+part is refined compared to a reference structure. It is possible to show/hide
+each of the information columns (FRAME, TS and HA) individually.
 
 Cluster Analyses
 ^^^^^^^^^^^^^^^^
 
-REX MD simulations generate large amounts of data. Depending on the project goal
-filtering and clustering of structure ensembles will be necessary.
+REX MD simulations generate large amounts of data. Depending on the project goal,
+filtering and clustering of structural ensembles will be necessary.
 
 .. code:: ipython3
 
@@ -395,7 +396,7 @@ filtering and clustering of structure ensembles will be necessary.
 
 
 The example code above applies t-distributed stochastic neighbor embedding
-(TSNE) for dimension reduction of distance matrices (DM). Afterwards a 'fine'
+(TSNE) for dimension reduction of distance matrices (DM). Afterwards, a 'fine'
 and 'coarse' KMeans clustering is performed with 10 and 20 cluster centers,
 respectively.
 
@@ -459,7 +460,7 @@ file if the `save_as` value is set).
       3   43      1.91 |-194.022  2.585  -198.461  -190.412   28.96
 
 
-Analogously the cluster accuracy can be displayed with
+Analogously, the cluster accuracy can be displayed with
 
 .. code:: ipython3
 

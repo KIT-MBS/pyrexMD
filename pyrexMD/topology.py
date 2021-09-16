@@ -2,12 +2,12 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 
 """
-.. hint :: This module contains functions to modify universe topologies, include
-    contact bias etc.
+.. hint :: This module contains functions for modifying universe topologies,
+    including contact bias, etc.
 """
 
 import pyrexMD.misc as _misc

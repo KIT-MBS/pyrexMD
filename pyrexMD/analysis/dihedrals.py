@@ -2,10 +2,10 @@
 # @Date:   06.05.2021
 # @Filename: dihedrals.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 """
-.. hint:: This module contains functions related to dihedral analyses.
+.. hint:: This module contains functions for dihedral-angle analyses.
 
 Example:
 --------

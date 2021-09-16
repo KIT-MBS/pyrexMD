@@ -2,11 +2,11 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 """
-.. hint:: This module contains modified GromacsWrapper functions to streamline
-    the interaction with `GROMACS` for system setups etc.
+.. hint:: This module contains modified GromacsWrapper functions for
+    streamlining the interaction with `GROMACS` for system setups etc.
 
 
 Example:

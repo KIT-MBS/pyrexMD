@@ -2,13 +2,13 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 16.09.2021
 
 
 """
 .. hint:: This module contains functions related to (contact-guided) Replica
-    Exchange Molecular Dynamics. It contains mainly functions to automate and
-    speed-up the process of setting up REX simulations.
+    Exchange Molecular Dynamics, mainly for automating and speeding up the
+    simulation setup.
 
 Example:
 --------
@@ -31,7 +31,7 @@ Example:
     # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory
     misc.cp("path/to/mdp/files", ".")
 
-    # get parameters for fixed boxsize and solvent molecules
+    # get parameters for fixed box size and solvent molecules
     boxsize, maxsol = rex.WF_get_system_parameters(wdir="./rex_0_get_system_parameters/")
 
     # create systems for each replica
