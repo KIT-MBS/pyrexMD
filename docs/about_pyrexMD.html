@@ -84,55 +84,56 @@
 <a class="reference external image-reference" href="https://codecov.io/gh/KIT-MBS/pyrexMD"><img alt="codecov" src="https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW" /></a>
 <section id="about-pyrexmd">
 <h1>About pyrexMD<a class="headerlink" href="#about-pyrexmd" title="Permalink to this headline"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is mainly designed for research projects which:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is mainly designed for research projects which</p>
 <ul class="simple">
-<li><p>rely on (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics</p></li>
-<li><p>or focus on structure analyses and comparison</p></li>
+<li><p>use (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics (MD)</p></li>
+<li><p>or focus on structure analyses and comparison.</p></li>
 </ul>
 <p>It has three main goals:</p>
 <ol class="arabic simple">
-<li><p>Interactive ‘all purpose’ environment. By utilizing various modified
-<code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings, this package provides a <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>
-notebooks based environment to design, run and analyze the entire project.</p></li>
-<li><p>Data vizualization is important. Most analysis functions which calculate
-meaningful values such as RMSD, QValues, contact distances etc., can create
-specialized figures in the same step by passing the keyword argument
-<code class="docutils literal notranslate"><span class="pre">plot=True</span></code>.</p></li>
-<li><p>User-friendly and simplified application. Provided functions often combine many
-individual steps into larger, workflow-orientated functions with additional
-automation features. It is possible to rapidly create whole setup or structure
+<li><p>Interactive ‘all-purpose’ environment. By including various modified
+<code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> and <code class="docutils literal notranslate"><span class="pre">MDAnalysis</span></code> python bindings, this package provides a
+comprehensive <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>-notebooks based environment to design, run, and analyze
+MD simulation projects from beginning to end.</p></li>
+<li><p>Data visualization is important. In <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>, most analysis functions for
+calculating useful quantities, such as RMSDs, Q values, contact distances, etc.,
+can generate specialized figures in the same step by passing the keyword
+argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code>.</p></li>
+<li><p>User-friendly and simple application. Where possible, the provided functions
+combine many individual steps into comprehensive workflows with additional
+automation features. It is possible to rapidly create whole setup or structure-
 analysis workflows within a few commands, thereby significantly enhancing
 productivity and reducing the time spent at various stages of the project.</p></li>
 </ol>
-<p>With <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>, it becomes especially easy to create, share and reproduce
-research results or transfer the work on other target structures of interest.
-Furthermore, it lowers the technical boundaries for newcomers who want to do
-research utilizing Replica Exchange for enhanced sampling.</p>
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used in <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run MD simulations.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>, it becomes especially easy to create, share, and reproduce
+research results or transfer the work to other biomolecular structures of
+interest. Furthermore, it lowers the technical boundaries for newcomers who want
+to use Replica Exchange for enhanced sampling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> should be used with <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks and requires <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> to run
+MD simulations.</p>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
 <p>You can access the documentation via <a class="reference external" href="https://kit-mbs.github.io/pyrexMD/">https://kit-mbs.github.io/pyrexMD/</a>
-<span class="raw-html-m2r"><br/></span>and the quick guide via <a class="reference external" href="https://kit-mbs.github.io/pyrexMD/quick_guide.html">https://kit-mbs.github.io/pyrexMD/quick_guide.html</a></p>
+<span class="raw-html-m2r"><br/></span>and the quick guide via <a class="reference external" href="https://kit-mbs.github.io/pyrexMD/quick_guide.html">https://kit-mbs.github.io/pyrexMD/quick_guide.html</a>.</p>
 </section>
 <section id="installation-instructions">
 <h2>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline"></a></h2>
 <ol class="arabic simple">
-<li><p>install MPI:</p></li>
+<li><p>Install MPI:</p></li>
 </ol>
-<p>on ubuntu:</p>
+<p>On ubuntu:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
-<p>macOS:</p>
+<p>On macOS:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">mpich</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li><p>download and install MPI-enabled version of <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> following instructions:</p></li>
-</ol>
+<p>(2) Download and install an MPI-enabled version of <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> following the
+instructions given below:</p>
 <p><a class="reference external" href="https://manual.gromacs.org/documentation/current/index.html">https://manual.gromacs.org/documentation/current/index.html</a></p>
 <ol class="arabic simple" start="3">
-<li><p>download and install <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>:</p></li>
+<li><p>Download and install the <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> package:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">KIT</span><span class="o">-</span><span class="n">MBS</span><span class="o">/</span><span class="n">pyrexMD</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">pyrexMD</span>
@@ -140,37 +141,36 @@ research utilizing Replica Exchange for enhanced sampling.</p>
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>enable trajectory viewer for <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>:</p></li>
+<li><p>Enable the trajectory viewer for <code class="docutils literal notranslate"><span class="pre">jupyter</span></code>:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">nbextension</span> <span class="n">enable</span> <span class="o">--</span><span class="n">py</span> <span class="n">widgetsnbextension</span>
 <span class="n">jupyter</span> <span class="n">nbextension</span> <span class="n">enable</span> <span class="o">--</span><span class="n">py</span> <span class="n">nglview</span>
 </pre></div>
 </div>
-<p>(Optional): download and install <code class="docutils literal notranslate"><span class="pre">PyRosetta</span></code> if you want to use the pyrexMD.decoy.abinitio module:</p>
-<p><a class="reference external" href="http://www.pyrosetta.org/home">http://www.pyrosetta.org/home</a></p>
 </section>
 <section id="tests">
 <h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline"></a></h2>
-<p>To run the python tests with code coverage, go into pyrexMD folder and run</p>
+<p>To run the python tests with code coverage, go into the pyrexMD folder and run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coverage</span> <span class="n">run</span> <span class="o">-</span><span class="n">m</span> <span class="n">pytest</span>
 <span class="n">coverage</span> <span class="n">report</span> <span class="n">html</span>
 </pre></div>
 </div>
-<p>and open htmlcov with any browser to see code coverage, e.g.</p>
+<p>Open htmlcov with any browser to see the code coverage, e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">firefox</span> <span class="n">htmlcov</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<p>To run one of the short examples, go into the pyrexMD/examples folder and run</p>
+<p>To run one of the short examples, go into the pyrexMD/examples folder and run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">notebook</span>
 </pre></div>
 </div>
 </section>
 <section id="participating">
 <h2>Participating<a class="headerlink" href="#participating" title="Permalink to this headline"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is free and open source under the MIT license. We welcome your contribution so feel free to ask questions, report bugs, fork, etc.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is free and open source. It is published under the MIT license. We
+welcome your contribution so feel free to ask questions, report bugs, fork, etc.</p>
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline"></a></h2>
