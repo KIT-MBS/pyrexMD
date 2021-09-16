@@ -47,8 +47,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-overview">Module Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#application-overview">Application Overview</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#setup-of-normal-md">Setup of normal MD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setup-of-contact-guided-rex-md">Setup of contact-guided REX MD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-of-normal-md-simulation">Setup of Normal MD Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-of-contact-guided-rex-md-simulation">Setup of Contact-Guided REX MD Simulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interactive-plots">Interactive Plots</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#contact-and-bias-analyses">Contact and Bias Analyses</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gdt-and-la-analyses">GDT and LA Analyses</a></li>
@@ -89,62 +89,61 @@
   <section id="quick-guide">
 <h1>Quick Guide<a class="headerlink" href="#quick-guide" title="Permalink to this headline"></a></h1>
 <p>Here you can find a short overview of all package modules as well as some main
-applications with <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>. Since most provided functions are
-workflow-orientated, you can perform large tasks (e.g. system setup, specific
-analyses, etc.) within a few commands. This guide is kept very short
-intentionally because most commands have obvious ‘core’ functionality.  All code
-snippets of this quick guide are taken from the <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks  within the
-example folder, which you can use to run and test the package on your own local
-machine.</p>
+applications with <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>. Most functions are workflow-orientated so that you
+can perform complex tasks (e.g. system setup, specific analyses, etc.) within a
+few commands. This guide is kept very short  because most commands have an
+obvious ‘core’ functionality. All code snippets in this quick guide are taken
+from the <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> notebooks within the example folder, which you can use to run
+and test the package on your local machine.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Most analysis functions which calculate meaningful values such as
-RMSD, QValues, contact distances etc., can create figures in the same step
-if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Normal plot functions have
-a wide range of possible keyword arguments, in which case you have to dig
-through the API docs to get the most potential out of the functions.</p>
+<p>Most analysis functions for calculating useful quantities such as
+RMSDs, Q values, contact distances, etc., can generate figures in the same
+step if the keyword argument <code class="docutils literal notranslate"><span class="pre">plot=True</span></code> is passed. Note that as normal
+plot functions have many possible keyword arguments, you have to dig through
+the API docs to get the most out of them.</p>
 </div>
 <section id="module-overview">
 <h2>Module Overview<a class="headerlink" href="#module-overview" title="Permalink to this headline"></a></h2>
 <dl class="simple">
-<dt>pyrexMD.core</dt><dd><p>Contains functions to enable interactive analyses. Its main purpose are the
-iPlayer and iPlot classes, which allow the application of a trajectory viewer
-or the dynamical linking between trajectory viewer and any 2D graph.</p>
+<dt>pyrexMD.core</dt><dd><p>Contains functions enabling interactive analyses. Its main parts are the
+iPlayer and iPlot classes, which allow the use of a trajectory viewer or a
+dynamic linking of the trajectory viewer and any 2D graph.</p>
 </dd>
-<dt>pyrexMD.gmx</dt><dd><p>Contains modified GromacsWrapper functions to streamline the interaction
+<dt>pyrexMD.gmx</dt><dd><p>Contains modified GromacsWrapper functions for streamlining the interaction
 with <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> for system setups etc.</p>
 </dd>
 <dt>pyrexMD.rex</dt><dd><p>Contains functions related to (contact-guided) Replica Exchange Molecular
-Dynamics. It contains mainly functions to automate and speed-up the process
-of setting up REX simulations.</p>
+Dynamics, mainly for automating and speeding up the simulation setup.</p>
 </dd>
-<dt>pyrexMD.topology</dt><dd><p>Contains functions to modify universe topologies, include contact bias etc.</p>
+<dt>pyrexMD.topology</dt><dd><p>Contains functions for modifying universe topologies, including contact
+bias, etc.</p>
 </dd>
-<dt>pyrexMD.analysis.analyze</dt><dd><p>Contains various functions related to very basic trajectory analyses, e.g.
-RMSD, distances, etc.</p>
+<dt>pyrexMD.analysis.analyze</dt><dd><p>Contains various functions for basic trajectory analyses, e.g., calculating
+RMSDs, distances, etc.</p>
 </dd>
 <dt>pyrexMD.analysis.cluster</dt><dd><p>Contains functions for decoy clustering and post-REX clustering analyses.</p>
 </dd>
-<dt>pyrexMD.analysis.contacts</dt><dd><p>Contains functions related to native contact and bias contact analyses.</p>
+<dt>pyrexMD.analysis.contacts</dt><dd><p>Contains functions for native contact and bias contact analyses.</p>
 </dd>
-<dt>pyrexMD.analysis.dihedrals</dt><dd><p>Contains functions related to dihedral analyses.</p>
+<dt>pyrexMD.analysis.dihedrals</dt><dd><p>Contains functions for dihedral-angle analyses.</p>
 </dd>
-<dt>pyrexMD.analysis.gdt</dt><dd><p>Contains functions related to the Global Distance Test (GDT) analyses.</p>
+<dt>pyrexMD.analysis.gdt</dt><dd><p>Contains functions for Global-Distance-Test (GDT) analyses.</p>
 </dd>
-<dt>pyrexMD.misc</dt><dd><p>Consists of pyrexMD.misc.classes, pyrexMD.misc.func and pyrexMD.misc.plot.
-This sub-package is a collection of miscellaneous functions and classes
-which are used frequently. Included functions may contain modified versions
-of small existing functions to extend their default behavior in order to
+<dt>pyrexMD.misc</dt><dd><p>Consists of pyrexMD.misc.classes, pyrexMD.misc.func, and pyrexMD.misc.plot.
+This sub-package is a collection of miscellaneous and frequently used
+functions and classes. These functions may contain modified versions of
+small existing functions to extend their default behavior in order to
 streamline <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>.</p>
 </dd>
 </dl>
 </section>
 <section id="application-overview">
 <h2>Application Overview<a class="headerlink" href="#application-overview" title="Permalink to this headline"></a></h2>
-<section id="setup-of-normal-md">
-<h3>Setup of normal MD<a class="headerlink" href="#setup-of-normal-md" title="Permalink to this headline"></a></h3>
-<p>The interaction with <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> is very similar compared to the known command-line syntax.
-Commands, such as</p>
+<section id="setup-of-normal-md-simulation">
+<h3>Setup of Normal MD Simulation<a class="headerlink" href="#setup-of-normal-md-simulation" title="Permalink to this headline"></a></h3>
+<p>Using <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> in <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> is very similar to the known command-line syntax.
+Commands such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span> <span class="n">function</span> <span class="o">-</span><span class="n">p</span> <span class="n">parameter</span>
 </pre></div>
 </div>
@@ -152,9 +151,9 @@ Commands, such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">parameter</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function creates by
-default a unique log file with a meaningful name which is stored into the logs
-folder.</p>
+<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function by
+default creates a unique log file with a meaningful name which is stored in the
+logs folder.</p>
 <p>The code example below shows a complete setup of a normal MD simulation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
@@ -193,13 +192,13 @@ folder.</p>
 </pre></div>
 </div>
 </section>
-<section id="setup-of-contact-guided-rex-md">
-<h3>Setup of contact-guided REX MD<a class="headerlink" href="#setup-of-contact-guided-rex-md" title="Permalink to this headline"></a></h3>
+<section id="setup-of-contact-guided-rex-md-simulation">
+<h3>Setup of Contact-Guided REX MD Simulation<a class="headerlink" href="#setup-of-contact-guided-rex-md-simulation" title="Permalink to this headline"></a></h3>
 <p>The code example below shows a complete setup of a contact-guided REX MD
 simulation using different starting conformations (“decoys”) for each individual
-replica. It automates many system specific and ardous tasks in order to
-eliminate possible application errors, such as mismatching system sizes across
-replicas, incorrect mapping of bias contacts etc.</p>
+replica. It automates many system-specific and arduous tasks to eliminate
+possible application errors, such as mismatching system sizes across replicas,
+incorrect mapping of bias contacts, etc.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
@@ -216,7 +215,7 @@ replicas, incorrect mapping of bias contacts etc.</p>
 <span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-<span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
+<span class="c1"># get parameters for fixed box size and solvent molecules</span>
 <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="o">=</span><span class="s2">&quot;./rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
 
 <span class="c1"># create systems for each replica</span>
@@ -242,11 +241,11 @@ replicas, incorrect mapping of bias contacts etc.</p>
 </section>
 <section id="interactive-plots">
 <h3>Interactive Plots<a class="headerlink" href="#interactive-plots" title="Permalink to this headline"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> offers the ability to create interactive plots where a 2D graph is
-linked to the trajectory viewer of a specific universe. It allows to quickly
-inspect conformations at specific values by interacting with the graph itself
-(e.g. via ctrl-click) in order to get additional valueable information
-accessible through the trajectory viewer.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> can generate interactive plots by linking a 2D graph to the trajectory
+viewer of a specific universe. It allows to quickly inspect conformations at
+specific values by interacting with the graph itself (e.g. via ctrl-click). In
+this way, additional valuable information becomes accessible through the
+trajectory viewer.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
@@ -266,18 +265,19 @@ accessible through the trajectory viewer.</p>
 </pre></div>
 </div>
 <img alt="_images/IPlayer.png" src="_images/IPlayer.png" />
-<p>In this example the interactive plot links the RMSD time evolution graph to the mobile trajectory.</p>
+<p>In this example, the interactive plot links the RMSD time evolution graph to the
+flexible trajectory.</p>
 </section>
 <section id="contact-and-bias-analyses">
 <h3>Contact and Bias Analyses<a class="headerlink" href="#contact-and-bias-analyses" title="Permalink to this headline"></a></h3>
-<p>REX is a very powerful and versatile enhanced sampling method and especially
-suited to obtain native-like conformations within a single run. However it can
+<p>REX is a very powerful and versatile enhanced-sampling method and especially
+suited to obtain native-like conformations within a single run. However, it can
 be computationally costly since it requires many replicas over a wide
-temperature range. By integrating (theoretical, experimental or mixed) bias
-contacts and coupling them to a bias potential one can narrow down the search
-space and guide the simulations towards specific conformations, which speeds up
-the process and lowers the computational costs. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> covers many different
-forms of contact and bias analyses.</p>
+temperature range. By integrating (theoretical, experimental, or mixed) bias
+contacts via bias potentials, one can narrow down the search space and guide the
+simulations towards specific conformations. This speeds up the process and
+lowers the computational costs. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> covers many different forms of contact
+and bias analyses.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
@@ -300,7 +300,7 @@ forms of contact and bias analyses.</p>
 <li><p>blue line: TPR for number of ranked contacts</p></li>
 <li><p>red line: 75% threshold (TPR of used contacts should be above approx. 75% for contact-guided REX MD, see  <a class="reference external" href="https://doi.org/10.1371/journal.pone.0242072">https://doi.org/10.1371/journal.pone.0242072</a>)</p></li>
 <li><p>orange lines: suggested/guessed optimum number of contacts and the corresponding TPR</p></li>
-<li><p>orange region: suggested region of interest between L/2 and L contacts</p></li>
+<li><p>orange region: suggested region of interest between L/2 and L contacts (L = biomolecular sequence length)</p></li>
 </ul>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate QValue for realized bias contacts</span>
 <span class="n">bias_contacts</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">path_to_used_contacts</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
@@ -308,10 +308,11 @@ forms of contact and bias analyses.</p>
 </pre></div>
 </div>
 <img alt="_images/QBias.png" src="_images/QBias.png" />
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> distinguishes mainly between two types of QValues. QNative (fraction
-of native contacts) and QBias (fraction of realized bias contacts). Both types
-can be used for structure analyses, however when simulating unknown target
-structures QNative becomes unaccessible due to the missing reference structure.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> distinguishes mainly between two types of Q values, i.e., QNative
+(fraction of native contacts) and QBias (fraction of realized bias contacts).
+Both types can be used for structure analyses; however, when simulating unknown
+target structures QNative becomes inaccessible due to the missing reference
+structure.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create log files with native contacts at different conformations</span>
 <span class="n">con</span><span class="o">.</span><span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">unfolded</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;unfolded_contacts.txt&quot;</span><span class="p">)</span>
 <span class="n">con</span><span class="o">.</span><span class="n">get_Native_Contacts</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;folded_contacts.txt&quot;</span><span class="p">)</span>
@@ -321,33 +322,33 @@ structures QNative becomes unaccessible due to the missing reference structure.<
 </pre></div>
 </div>
 <img alt="_images/ContactMap.png" src="_images/ContactMap.png" />
-<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>‘s Contact Maps are designed to show native contacts (grey) and checks
-if bias contacts are native (green) or non-native (red). This functionality can
-be either used to compare and validate used bias contacts or to compare two
-structures and show which contacts got newly formed (green) and which broke up (red).</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code>‘s Contact Maps show native contacts in grey and check whether bias
+contacts are native (green) or non-native (red). This functionality can be used
+to either compare and validate the used bias contacts or compare two structures
+and show the newly formed and broken contacts in green and red, respectively.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># check native contact distances via ContactMap</span>
 <span class="n">NC</span><span class="p">,</span> <span class="n">NC_dist</span><span class="p">,</span> <span class="n">DM</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">get_NC_distances</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">folded</span><span class="p">)</span>
 <span class="n">con</span><span class="o">.</span><span class="n">plot_Contact_Map_Distances</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">NC</span><span class="o">=</span><span class="n">NC</span><span class="p">,</span> <span class="n">NC_dist</span><span class="o">=</span><span class="n">NC_dist</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="_images/ContactMapDistances.png" src="_images/ContactMapDistances.png" />
-<p>Additionally, it is also possible to analyze the contact distances vizualized
-as a contact map as well.</p>
+<p>Additionally, it is possible to analyze the contact distances within a contact
+map plot.</p>
 </section>
 <section id="gdt-and-la-analyses">
 <h3>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline"></a></h3>
 <p>The so-called Global Distance Test (GDT) is a method for structure evaluation
-comparable to the root-mean-square deviation (RMSD).  However, RMSD is a
-suboptimal measure of structural similarity as it strongly correlates with the
-largest displacement between mobile and target structure. This means if the
-mobile structure globally fits the target to a large extent and only one small
-segment is misaligned locally, the RMSD becomes disproportionately large.
-Analogously to the RMSD, the mobile structure is first aligned to the target
-structure. Then, the displacement distance of each residual Cα atom is
-calculated and compared with various cutoff thresholds to estimate how similar
-the two structures are. In a last step, percentages of residues with
-displacements below a considered threshold are used to calculate score values.
-The two most common scores are the total score (TS),</p>
+similar to the root-mean-square deviation (RMSD).  However, RMSD is a suboptimal
+measure of structural similarity as it strongly correlates with the largest
+displacement between mobile and target structure. If the mobile structure
+globally fits the target to a large extent and only one small segment is
+misaligned locally, the RMSD becomes disproportionately large. For the GDT, the
+mobile structure is first aligned to the target structure analogously to an RMSD
+analysis. To estimate how similar the two structures are, the displacement of
+each residual Cα atom is calculated and compared to various cutoffs. In a last
+step, percentages of residues with displacements below a considered threshold
+are used to calculate scores. The two most common scores are the total score
+(TS),</p>
 <div class="math notranslate nohighlight">
 \[GDT_{\rm{TS}} = \frac{1}{4} (P_1 + P_2 + P_4 + P_8),\]</div>
 <p>and the high-accuracy (HA) score,</p>
@@ -388,14 +389,14 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 </pre></div>
 </div>
 <img alt="_images/LA.png" src="_images/LA.png" />
-<p>The Local Accuracy (LA) figure gives a clear representation of how good each
-model part is refined compared to a reference structure. It is possible
-to show/hide each of the information columns (FRAME, TS and HA) individually.</p>
+<p>The Local Accuracy (LA) plot gives a clear representation of how good each model
+part is refined compared to a reference structure. It is possible to show/hide
+each of the information columns (FRAME, TS and HA) individually.</p>
 </section>
 <section id="cluster-analyses">
 <h3>Cluster Analyses<a class="headerlink" href="#cluster-analyses" title="Permalink to this headline"></a></h3>
-<p>REX MD simulations generate large amounts of data. Depending on the project goal
-filtering and clustering of structure ensembles will be necessary.</p>
+<p>REX MD simulations generate large amounts of data. Depending on the project goal,
+filtering and clustering of structural ensembles will be necessary.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.analysis.cluster</span> <span class="k">as</span> <span class="nn">clu</span>
 
@@ -428,7 +429,7 @@ filtering and clustering of structure ensembles will be necessary.</p>
 </div>
 <img alt="_images/TSNE.png" src="_images/TSNE.png" />
 <p>The example code above applies t-distributed stochastic neighbor embedding
-(TSNE) for dimension reduction of distance matrices (DM). Afterwards a ‘fine’
+(TSNE) for dimension reduction of distance matrices (DM). Afterwards, a ‘fine’
 and ‘coarse’ KMeans clustering is performed with 10 and 20 cluster centers,
 respectively.</p>
 <p>It is possible to link both scores and structure accuracy to clusters, which can
@@ -485,7 +486,7 @@ file if the <code class="docutils literal notranslate"><span class="pre">save_as
   <span class="mi">3</span>   <span class="mi">43</span>      <span class="mf">1.91</span> <span class="o">|-</span><span class="mf">194.022</span>  <span class="mf">2.585</span>  <span class="o">-</span><span class="mf">198.461</span>  <span class="o">-</span><span class="mf">190.412</span>   <span class="mf">28.96</span>
 </pre></div>
 </div>
-<p>Analogously the cluster accuracy can be displayed with</p>
+<p>Analogously, the cluster accuracy can be displayed with</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### print table with cluster accuracy stats</span>
 <span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">cluster_accuracy</span><span class="o">=</span><span class="n">cluster10_accuracy</span><span class="p">)</span>
 <span class="n">clu</span><span class="o">.</span><span class="n">WF_print_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">cluster_accuracy</span><span class="o">=</span><span class="n">cluster20_accuracy</span><span class="p">)</span>

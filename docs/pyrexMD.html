@@ -100,10 +100,9 @@
 <span id="pyrexmd-core"></span><h1>pyrexMD.core<a class="headerlink" href="#module-pyrexMD.core" title="Permalink to this headline"></a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions to enable interactive analyses. Its
-main purpose are the iPlayer and iPlot classes, which allow the application
-of a trajectory viewer or the dynamical linking between trajectory viewer
-and any 2D plot.</p>
+<p>This module contains functions enabling interactive analyses. Its main
+parts are the iPlayer and iPlot classes, which allow the use of a trajectory
+viewer or a dynamic linking of the trajectory viewer and any 2D graph.</p>
 </div>
 <section id="example">
 <h2>Example:<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
@@ -315,8 +314,8 @@ Interactive red bar can be moved by pressing any key.</p>
 <span id="pyrexmd-gmx"></span><h1>pyrexMD.gmx<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline"></a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains modified GromacsWrapper functions to streamline
-the interaction with <cite>GROMACS</cite> for system setups etc.</p>
+<p>This module contains modified GromacsWrapper functions for
+streamlining the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 </div>
 <section id="id1">
 <h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
@@ -1228,8 +1227,8 @@ can subsequently be processed to generate a run input file.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>This module contains functions related to (contact-guided) Replica
-Exchange Molecular Dynamics. It contains mainly functions to automate and
-speed-up the process of setting up REX simulations.</p>
+Exchange Molecular Dynamics, mainly for automating and speeding up the
+simulation setup.</p>
 </div>
 <section id="id3">
 <h2>Example:<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
@@ -1249,7 +1248,7 @@ speed-up the process of setting up REX simulations.</p>
 <span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-<span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
+<span class="c1"># get parameters for fixed box size and solvent molecules</span>
 <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="o">=</span><span class="s2">&quot;./rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
 
 <span class="c1"># create systems for each replica</span>
@@ -1672,8 +1671,8 @@ as template for tests if passed, otherwise uses first REX pdb as template.</p>
 <span id="pyrexmd-topology"></span><h1>pyrexMD.topology<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline"></a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions to modify universe topologies, include
-contact bias etc.</p>
+<p>This module contains functions for modifying universe topologies,
+including contact bias, etc.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_scoreFile">

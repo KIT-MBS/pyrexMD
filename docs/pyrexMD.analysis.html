@@ -113,8 +113,8 @@
 <span id="pyrexmd-analysis-analyze"></span><h2>pyrexMD.analysis.analyze<a class="headerlink" href="#module-pyrexMD.analysis.analyze" title="Permalink to this headline"></a></h2>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains various functions related to very basic trajectory
-analyses, e.g. RMSD, distances, etc.</p>
+<p>This module contains various functions for basic trajectory analyses,
+e.g., calculating RMSDs, distances, etc.</p>
 </div>
 <section id="example">
 <h3>Example:<a class="headerlink" href="#example" title="Permalink to this headline"></a></h3>
@@ -860,8 +860,7 @@ requires 1 extra bin.</p></li>
 <span id="pyrexmd-analysis-contacts"></span><h2>pyrexMD.analysis.contacts<a class="headerlink" href="#module-pyrexMD.analysis.contacts" title="Permalink to this headline"></a></h2>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions related to native contact and bias
-contact analyses.</p>
+<p>This module contains functions for native contact and bias contact analyses.</p>
 </div>
 <section id="id1">
 <h3>Example:<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
@@ -1497,7 +1496,7 @@ is protein or nucleic to select pre-defined color map.</p></li>
 <span id="pyrexmd-analysis-dihedrals"></span><h2>pyrexMD.analysis.dihedrals<a class="headerlink" href="#module-pyrexMD.analysis.dihedrals" title="Permalink to this headline"></a></h2>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions related to dihedral analyses.</p>
+<p>This module contains functions for dihedral-angle analyses.</p>
 </div>
 <section id="id3">
 <h3>Example:<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
@@ -1822,7 +1821,7 @@ dihedrals for more information.</p></li>
 <span id="pyrexmd-analysis-gdt"></span><h2>pyrexMD.analysis.gdt<a class="headerlink" href="#module-pyrexMD.analysis.gdt" title="Permalink to this headline"></a></h2>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions related to the Global Distance Test (GDT) analyses.</p>
+<p>This module contains functions for Global-Distance-Test (GDT) analyses.</p>
 </div>
 <section id="id5">
 <h3>Example:<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
@@ -1869,7 +1868,7 @@ dihedrals for more information.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.gdt.GDT">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.gdt.</span></span><span class="sig-name descname"><span class="pre">GDT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">CA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">10,</span> <span class="pre">0.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_resids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/gdt.html#GDT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.gdt.GDT" title="Permalink to this definition"></a></dt>
-<dd><p>performs Global Distance Test (GDT).</p>
+<dd><p>performs Global-Distance-Test (GDT).</p>
 <p>Algorithm to identify how good “mobile” matches to “reference” by calculating
 the sets of residues which do not deviate more than a specified (pairwise)
 CA distance cutoff.</p>
