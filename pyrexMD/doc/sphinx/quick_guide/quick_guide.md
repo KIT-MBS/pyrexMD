@@ -12,10 +12,9 @@ and test the package on your local machine.
 
 .. Important:: Most analysis functions for calculating useful quantities such as
     RMSDs, Q values, contact distances, etc., can generate figures in the same
-    step if the keyword argument ``plot=True`` is passed. Note that as normal
-    plot functions have many possible keyword arguments, you have to dig through
-    the API docs to get the most out of them.
-
+    step if the keyword argument ``plot=True`` is passed. Please refer to the
+    API docs in order to get the most out of plot-generating functions, as they
+    usually allow many valid keyword arguments.
 
 
 Module Overview
@@ -35,8 +34,9 @@ pyrexMD.rex
     Dynamics, mainly for automating and speeding up the simulation setup.
 
 pyrexMD.topology
-    Contains functions for modifying universe topologies, including contact
-    bias, etc.
+    Contains functions for modifying universe topologies, e.g., align
+    atoms/residues of two universes, get matching selection strings,
+    include bias contacts.
 
 pyrexMD.analysis.analyze
     Contains various functions for basic trajectory analyses, e.g., calculating
@@ -52,7 +52,7 @@ pyrexMD.analysis.dihedrals
     Contains functions for dihedral-angle analyses.
 
 pyrexMD.analysis.gdt
-    Contains functions for Global-Distance-Test (GDT) analyses.
+    Contains functions for global distance test (GDT) analyses.
 
 pyrexMD.misc
     Consists of pyrexMD.misc.classes, pyrexMD.misc.func, and pyrexMD.misc.plot.
@@ -207,14 +207,14 @@ flexible trajectory.
 Contact and Bias Analyses
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-REX is a very powerful and versatile enhanced-sampling method and especially
-suited to obtain native-like conformations within a single run. However, it can
-be computationally costly since it requires many replicas over a wide
-temperature range. By integrating (theoretical, experimental, or mixed) bias
-contacts via bias potentials, one can narrow down the search space and guide the
-simulations towards specific conformations. This speeds up the process and
-lowers the computational costs. `pyrexMD` covers many different forms of contact
-and bias analyses.
+REX is a very powerful and versatile sampling method. It improves sampling by
+running many replicas in parallel over a wide temperature range and allows
+switches of replicas between different temperatures while maintaining
+thermodynamic ensembles. By integrating (theoretical, experimental, or mixed)
+bias contacts via bias potentials, one can narrow down the search space and
+guide the simulations towards specific conformations. This speeds up the process
+and lowers the computational costs. `pyrexMD` covers many different forms of
+contact and bias analyses.
 
 .. code:: ipython3
 
@@ -287,7 +287,7 @@ map plot.
 GDT and LA Analyses
 ^^^^^^^^^^^^^^^^^^^
 
-The so-called Global Distance Test (GDT) is a method for structure evaluation
+The so-called global distance test (GDT) is a method for structure evaluation
 similar to the root-mean-square deviation (RMSD).  However, RMSD is a suboptimal
 measure of structural similarity as it strongly correlates with the largest
 displacement between mobile and target structure. If the mobile structure
@@ -350,9 +350,9 @@ distance cutoff of x <span>&#8491;</span>.
 
 .. image:: quick_guide/LA.png
 
-The Local Accuracy (LA) plot gives a clear representation of how good each model
-part is refined compared to a reference structure. It is possible to show/hide
-each of the information columns (FRAME, TS and HA) individually.
+The local accuracy (LA) plot clearly shows how good each model part is refined
+compared to a reference structure. It is possible to show/hide each of the
+information columns (FRAME, TS and HA) individually.
 
 Cluster Analyses
 ^^^^^^^^^^^^^^^^

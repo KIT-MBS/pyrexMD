@@ -2,12 +2,14 @@
 # @Date:   17.04.2021
 # @Filename: topology.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 17.09.2021
 
 
 """
 .. hint :: This module contains functions for modifying universe topologies,
-    including contact bias, etc.
+    e.g., align atoms/residues of two universes, get matching selection strings,
+    include bias contacts.
+
 """
 
 import pyrexMD.misc as _misc
@@ -349,8 +351,8 @@ def get_matching_selection(mobile, ref, sel="protein and name CA", norm=True, ve
 def check_matching_selection(mobile, ref, sel="protein", verbose=True):
     """
     Gets matching selection strings for mobile and reference and then tests if
-    matching selections have equal atoms and residues. Returns matchin selection
-    strings.
+    matching selections have equal atoms and residues. Returns matching
+    selection strings.
 
     Args:
         mobile (universe)
