@@ -1671,8 +1671,12 @@ as template for tests if passed, otherwise uses first REX pdb as template.</p>
 <span id="pyrexmd-topology"></span><h1>pyrexMD.topology<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline"></a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions for modifying universe topologies,
-including contact bias, etc.</p>
+<p>This module contains functions for modifying universe topologies, e.g.:</p>
+<ul class="simple">
+<li><p>align atoms/residues of two universes</p></li>
+<li><p>get matching selection strings of two universes</p></li>
+<li><p>include bias contacts</p></li>
+</ul>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_scoreFile">
@@ -1837,8 +1841,8 @@ shifting the resids of reference (usually smaller than mobile).</p>
 <dt class="sig sig-object py" id="pyrexMD.topology.check_matching_selection">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">check_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#check_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.check_matching_selection" title="Permalink to this definition"></a></dt>
 <dd><p>Gets matching selection strings for mobile and reference and then tests if
-matching selections have equal atoms and residues. Returns matchin selection
-strings.</p>
+matching selections have equal atoms and residues. Returns matching
+selection strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

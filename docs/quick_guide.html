@@ -116,9 +116,15 @@ with <code class="docutils literal notranslate"><span class="pre">GROMACS</span>
 <dt>pyrexMD.rex</dt><dd><p>Contains functions related to (contact-guided) Replica Exchange Molecular
 Dynamics, mainly for automating and speeding up the simulation setup.</p>
 </dd>
-<dt>pyrexMD.topology</dt><dd><p>Contains functions for modifying universe topologies, including contact
-bias, etc.</p>
+<dt>pyrexMD.topology</dt><dd><p>Contains functions for modifying universe topologies, e.g.,</p>
 </dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">align</span> <span class="n">atoms</span><span class="o">/</span><span class="n">residues</span> <span class="n">of</span> <span class="n">two</span> <span class="n">universes</span>
+<span class="o">-</span> <span class="n">get</span> <span class="n">matching</span> <span class="n">selection</span> <span class="n">strings</span> <span class="n">of</span> <span class="n">two</span> <span class="n">universes</span>
+<span class="o">-</span> <span class="n">include</span> <span class="n">bias</span> <span class="n">contacts</span>
+</pre></div>
+</div>
+<dl class="simple">
 <dt>pyrexMD.analysis.analyze</dt><dd><p>Contains various functions for basic trajectory analyses, e.g., calculating
 RMSDs, distances, etc.</p>
 </dd>
@@ -128,7 +134,7 @@ RMSDs, distances, etc.</p>
 </dd>
 <dt>pyrexMD.analysis.dihedrals</dt><dd><p>Contains functions for dihedral-angle analyses.</p>
 </dd>
-<dt>pyrexMD.analysis.gdt</dt><dd><p>Contains functions for Global-Distance-Test (GDT) analyses.</p>
+<dt>pyrexMD.analysis.gdt</dt><dd><p>Contains functions for global distance test (GDT) analyses.</p>
 </dd>
 <dt>pyrexMD.misc</dt><dd><p>Consists of pyrexMD.misc.classes, pyrexMD.misc.func, and pyrexMD.misc.plot.
 This sub-package is a collection of miscellaneous and frequently used
@@ -270,14 +276,14 @@ flexible trajectory.</p>
 </section>
 <section id="contact-and-bias-analyses">
 <h3>Contact and Bias Analyses<a class="headerlink" href="#contact-and-bias-analyses" title="Permalink to this headline"></a></h3>
-<p>REX is a very powerful and versatile enhanced-sampling method and especially
-suited to obtain native-like conformations within a single run. However, it can
-be computationally costly since it requires many replicas over a wide
-temperature range. By integrating (theoretical, experimental, or mixed) bias
-contacts via bias potentials, one can narrow down the search space and guide the
-simulations towards specific conformations. This speeds up the process and
-lowers the computational costs. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> covers many different forms of contact
-and bias analyses.</p>
+<p>REX is a very powerful and versatile sampling method. It improves sampling by
+running many replicas in parallel over a wide temperature range and allows
+switches of replicas between different temperatures while maintaining
+thermodynamic ensembles. By integrating (theoretical, experimental, or mixed)
+bias contacts via bias potentials, one can narrow down the search space and
+guide the simulations towards specific conformations. This speeds up the process
+and lowers the computational costs. <code class="docutils literal notranslate"><span class="pre">pyrexMD</span></code> covers many different forms of
+contact and bias analyses.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
@@ -337,7 +343,7 @@ map plot.</p>
 </section>
 <section id="gdt-and-la-analyses">
 <h3>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline"></a></h3>
-<p>The so-called Global Distance Test (GDT) is a method for structure evaluation
+<p>The so-called global distance test (GDT) is a method for structure evaluation
 similar to the root-mean-square deviation (RMSD).  However, RMSD is a suboptimal
 measure of structural similarity as it strongly correlates with the largest
 displacement between mobile and target structure. If the mobile structure
@@ -389,9 +395,9 @@ distance cutoff of x <span class="raw-html-m2r"><span>&#8491;</span></span>.</p>
 </pre></div>
 </div>
 <img alt="_images/LA.png" src="_images/LA.png" />
-<p>The Local Accuracy (LA) plot gives a clear representation of how good each model
-part is refined compared to a reference structure. It is possible to show/hide
-each of the information columns (FRAME, TS and HA) individually.</p>
+<p>The local accuracy (LA) plot clearly shows how good each model part is refined
+compared to a reference structure. It is possible to show/hide each of the
+information columns (FRAME, TS and HA) individually.</p>
 </section>
 <section id="cluster-analyses">
 <h3>Cluster Analyses<a class="headerlink" href="#cluster-analyses" title="Permalink to this headline"></a></h3>
