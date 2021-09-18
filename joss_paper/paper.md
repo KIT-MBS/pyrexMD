@@ -103,7 +103,7 @@ free open-source solution providing many different force fields, such as GROMOS
 [@mackerell2000development], or OPLS [@jorgensen1996development]. The core
 functionality of `Gromacs` can be extended by plug-ins, such as `PLUMED`
 [@bonomi2009plumed; @tribello2014plumed] or `SSAGES` [@sidky2018ssages]. Such
-plug-ins implement additional algorithms and enhanced- sampling methods which
+plug-ins implement additional algorithms and enhanced-sampling methods which
 interact during the MD simulation itself or can give access to user-defined
 collective variables for new types of analyses.
 
@@ -150,7 +150,7 @@ structure refinement.
 
 Figs. 1-3 exemplarily show a small selection of possible data visualizations
 after performing analyses with `pyrexMD`. Fig. 1 displays the application of the
-trajectory viewer with an interactive plot. Fig. 2 shows a true positive rate
+trajectory viewer with an interactive plot. Fig. 2 shows a true-positive-rate
 analysis of predicted bias contacts which are considered for a contact-guided
 REX simulation. Fig. 3 visualizes the local accuracy of conformations based on a
 global distance test for models obtained from a REX study.
