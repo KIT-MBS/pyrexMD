@@ -50,7 +50,7 @@ It has three main goals:
 
 1. Interactive 'all-purpose' environment. By including various modified
 `GROMACS` and `MDAnalysis` Python bindings, this package provides a
-comprehensive `jupyter`-notebooks based environment to design, run, and analyze
+comprehensive `jupyter` notebooks based environment to design, run, and analyze
 MD simulation projects from beginning to end.
 2. Data visualization is important. In `pyrexMD`, most analysis functions for
 calculating useful quantities, such as root-mean-square deviation (RMSD), Q
@@ -100,7 +100,7 @@ data and requires a systematic handling of I/O.
 One of the most used software packages for MD is `GROMACS` [@van2005gromacs], a
 free open-source solution providing many different force fields, such as GROMOS
 [@schmid2011definition], AMBER [@wang2004development], CHARMM
-[@mackerell2000development], or OPLS [@jorgensen1996development]. The core
+[@bjelkmar2010implementation], or OPLS [@jorgensen1996development]. The core
 functionality of `GROMACS` can be extended by plug-ins, such as `PLUMED`
 [@bonomi2009plumed; @tribello2014plumed] or `SSAGES` [@sidky2018ssages]. Such
 plug-ins implement additional algorithms and enhanced-sampling methods which
