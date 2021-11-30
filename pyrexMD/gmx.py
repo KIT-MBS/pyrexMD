@@ -2,10 +2,10 @@
 # @Date:   17.04.2021
 # @Filename: gmx.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 30.11.2021
 
 """
-.. hint:: This module contains modified GromacsWrapper functions for
+.. hint:: This module contains modified `GromacsWrapper` functions for
     streamlining the interaction with `GROMACS` for system setups etc.
 
 
@@ -160,7 +160,7 @@ def _log_func(logdir, logfile, cfg):
 
 def clean_up(path="./", pattern="gmx_pattern", ignore=None, verbose=True):
     """
-    Clean up gromacs backup files with the patterns #*# and .*offsets.npz
+    Clean up GROMACS backup files with the patterns #*# and .*offsets.npz
 
     .. Note:: pattern can be implemented into path variable directly.
 
@@ -241,7 +241,7 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
     """
     Modified function of gromacs.pdb2gmx().
 
-    Gromacs info:
+    GROMACS info:
         'pdb2gmx' reads a .pdb (or .gro) file, reads some database files, adds
         hydrogens to the molecules and generates coordinates in GROMACS (GROMOS),
         or optionally .pdb, format and a topology in GROMACS format. These files
@@ -254,12 +254,12 @@ def pdb2gmx(f, o="protein.gro", odir="./", ff="amber99sb-ildn", water="tip3p",
           | output directory
           | special case: odir is ignored when o is relative/absolute path
         ff (str):
-          | force field (see <gromacs_path>/top/<ff> for valid inputs)
+          | force field (see <GROMACS_path>/top/<ff> for valid inputs)
           | "amber99sb-ildn" etc. for proteins
           | "amber14sb_OL15" etc. for RNAs
         water (str): water model
         ignh (bool): ignore hydrogen
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         p (str): topology file: topol.top
@@ -300,7 +300,7 @@ def editconf(f, o="default", odir="./", verbose=True, **kwargs):
     - Modified function of gromacs.editconf()
     - Alias function of convert_TPR2PDB()
 
-    Gromacs info:
+    GROMACS info:
         'gmx editconf' converts generic structure format to .pdb, .gro, or .g96.
 
     Args:
@@ -312,7 +312,7 @@ def editconf(f, o="default", odir="./", verbose=True, **kwargs):
         odir (str):
           | output directory
           | special case: odir is ignored when o is relative/absolute path
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         box (int):
@@ -365,7 +365,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
     """
     Modified function of gromacs.convert_tpr().
 
-    Gromacs info:
+    GROMACS info:
         'gmx convert-tpr' can edit run input files in three ways:
         - modify tpr settings
         - create new tpr for a subset of original tpr
@@ -385,7 +385,7 @@ def convert_TPR(s, o="default", odir="./", sel="protein", verbose=True, **kwargs
           | "protein": protein atoms
           | "ca" or "calpha": CA atoms
           | "bb" or "backbone": backbone atoms
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         cprint_color (str)
@@ -427,7 +427,7 @@ def grompp(f, o, c, p="topol.top", verbose=True, **kwargs):
         o (str): output file: tpr
         c (str): structure file: gro tpr pdb (g96 brk ent esp)
         p (str): topology file: top
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         maxwarn (int):
@@ -485,7 +485,7 @@ def solvate(cp, cs="spc216.gro", o="solvent.gro", p="topol.top", verbose=True, *
           | default case: save in same directory as cp
           | special case: if o is relative/absolute path -> save there
         p (str): topology file: topol.top
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         maxsol (int):
@@ -527,7 +527,7 @@ def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
     """
     Modified fuction of gromacs.genion().
 
-    Gromacs info:
+    GROMACS info:
         gmx genion randomly replaces solvent molecules with monoatomic ions.
         The group of solvent molecules should be continuous and all molecules
         should have the same number of atoms.
@@ -544,7 +544,7 @@ def genion(s, o, p="topol.top", input="SOL", pname="NA", nname="CL", conc=0.15,
         conc (float): add salt concentration (mol/liter) and rescale to box size
         neutral (bool): add enough ions to neutralize the system. These ions are
           added on top of those specified with -np/-nn or -conc
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         cprint_color (str)
@@ -589,7 +589,7 @@ def mdrun(verbose=True, **kwargs):
       instead
 
     Args:
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         deffnm (str): default filename
@@ -611,7 +611,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
     """
     Modified function of gromacs.trjconv().
 
-    Gromacs info:
+    GROMACS info:
         gmx trjconv can convert trajectory files in many ways
 
         - from one format to another
@@ -636,7 +636,7 @@ def trjconv(s, f, o="default", odir="./", sel="protein", verbose=True, **kwargs)
           | "protein": protein atoms
           | "ca" or "calpha": CA atoms
           | "bb" or "backbone": backbone atoms
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         cprint_color (str)
@@ -721,9 +721,9 @@ def fix_TRAJ(tpr, xtc, o="default", odir="./", tu="ns", sel="protein", pbc="mol"
           | "mol": puts the center of mass of molecules in the box. requires structure file s.
           | "nojump": checks if atoms jump across the box and then puts them back
             (i.e. all molecules will remain whole)
-          | (see gromacs help text for other descriptions)
+          | (see GROMACS help text for other descriptions)
         center (bool): center atoms in box
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     .. Hint:: Find more valid Keyword Args via
 
@@ -788,7 +788,7 @@ def get_RMSD(ref, xtc, o="default", odir="./", tu="ns", sel=["bb", "bb"], verbos
           | "protein": protein atoms
           | "ca" or "calpha": CA atoms
           | "bb" or "backbone": backbone atoms
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         cprint_color (str)
@@ -843,12 +843,12 @@ def get_ref_structure(f, o="default", odir="./", ff="amber99sb-ildn", water="tip
           | output directory
           | special case: odir is ignored when o is relative/absolute path
         ff (str):
-          | force field (see <gromacs_path>/top/<ff> for valid inputs)
+          | force field (see <GROMACS_path>/top/<ff> for valid inputs)
           | "amber99sb-ildn" etc. for proteins
           | "amber14sb_OL15" etc. for RNAs
         water (str): water model
         ignh (bool): ignore hydrogen
-        verbose (bool): print/mute gromacs messages
+        verbose (bool): print/mute GROMACS messages
 
     Keyword Args:
         cprint_color (str)

@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 30.11.2021
 
 
 """
@@ -546,7 +546,7 @@ def WF_REX_setup_energy_minimization(rex_dirs, nsteps=None, verbose=False):
           | maximum number of steps
           | None: use .mdp option
           | int: use instead of .mdp option
-        verbose (bool): show/hide gromacs output
+        verbose (bool): show/hide GROMACS output
     """
     for rex_dir in rex_dirs:
         _misc.cprint("#######################################################################################")

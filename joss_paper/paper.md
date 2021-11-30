@@ -2,7 +2,7 @@
 title: 'pyrexMD: Workflow-Orientated Python Package for Replica Exchange Molecular Dynamics'
 tags:
   - Python
-  - Gromacs
+  - GROMACS
   - physics
   - biology
   - replica exchange
@@ -97,11 +97,11 @@ setup and pre-processing over testing and simulation-monitoring to
 post-processing and data analyses. Furthermore, REX can generate terabytes of
 data and requires a systematic handling of I/O.
 
-One of the most used software packages for MD is `Gromacs` [@van2005gromacs], a
+One of the most used software packages for MD is `GROMACS` [@van2005gromacs], a
 free open-source solution providing many different force fields, such as GROMOS
 [@schmid2011definition], AMBER [@wang2004development], CHARMM
 [@mackerell2000development], or OPLS [@jorgensen1996development]. The core
-functionality of `Gromacs` can be extended by plug-ins, such as `PLUMED`
+functionality of `GROMACS` can be extended by plug-ins, such as `PLUMED`
 [@bonomi2009plumed; @tribello2014plumed] or `SSAGES` [@sidky2018ssages]. Such
 plug-ins implement additional algorithms and enhanced-sampling methods which
 interact during the MD simulation itself or can give access to user-defined
