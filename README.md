@@ -1,6 +1,7 @@
 [![DOCS](https://img.shields.io/badge/docs-1.0-blue?&logo=github)](https://kit-mbs.github.io/pyrexMD/)
 [![GH Actions CI](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-actions-ci.yml/badge.svg)](https://github.com/KIT-MBS/pyrexMD/actions/workflows/gh-actions-ci.yml)
 [![codecov](https://codecov.io/gh/KIT-MBS/pyrexMD/branch/master/graph/badge.svg?token=TdmhhPgQNW)](https://codecov.io/gh/KIT-MBS/pyrexMD)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03325/status.svg)](https://doi.org/10.21105/joss.03325)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5744760.svg)](https://doi.org/10.5281/zenodo.5744760)
 
 About pyrexMD
@@ -15,7 +16,7 @@ It has three main goals:
 
 1. Interactive 'all-purpose' environment. By including various modified
 `GROMACS` and `MDAnalysis` Python bindings, this package provides a
-comprehensive `jupyter` notebooks based environment to design, run, and analyze
+comprehensive `Jupyter` notebooks based environment to design, run, and analyze
 MD simulation projects from beginning to end.
 2. Data visualization is important. In `pyrexMD`, most analysis functions for
 calculating useful quantities, such as root-mean-square deviation (RMSD), Q
@@ -32,7 +33,7 @@ research results or transfer the work to other biomolecular structures of
 interest. Furthermore, it lowers the technical barrier for non-specialists who
 want to use Replica Exchange for enhanced sampling.
 
-`pyrexMD` should be used with `jupyter` notebooks and requires `GROMACS` to run
+`pyrexMD` should be used with `Jupyter` notebooks and requires `GROMACS` to run
 MD simulations.
 
 
@@ -65,7 +66,7 @@ https://manual.gromacs.org/documentation/current/index.html
     python -m pip install .
 
 
-(4) Enable the trajectory viewer for `jupyter`:
+(4) Enable the trajectory viewer for `Jupyter`:
 
     jupyter nbextension enable --py widgetsnbextension
     jupyter nbextension enable --py nglview

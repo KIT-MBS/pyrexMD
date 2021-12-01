@@ -50,7 +50,7 @@ It has three main goals:
 
 1. Interactive 'all-purpose' environment. By including various modified
 `GROMACS` and `MDAnalysis` Python bindings, this package provides a
-comprehensive `jupyter` notebooks based environment to design, run, and analyze
+comprehensive `Jupyter` notebooks based environment to design, run, and analyze
 MD simulation projects from beginning to end.
 2. Data visualization is important. In `pyrexMD`, most analysis functions for
 calculating useful quantities, such as root-mean-square deviation (RMSD), Q

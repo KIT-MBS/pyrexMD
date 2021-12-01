@@ -6,7 +6,7 @@ applications with `pyrexMD`. Most functions are workflow-orientated so that you
 can perform complex tasks (e.g. system setup, specific analyses, etc.) within a
 few commands. This guide is kept very short  because most commands have an
 obvious 'core' functionality. All code snippets in this quick guide are taken
-from the `jupyter` notebooks within the example folder, which you can use to run
+from the `Jupyter` notebooks within the example folder, which you can use to run
 and test the package on your local machine.
 
 
