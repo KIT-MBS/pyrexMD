@@ -9,7 +9,7 @@ About pyrexMD
 
 `pyrexMD` is a Python package that is mainly designed for research projects which
 
-- use (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics (MD)
+- use (contact-guided) Replica Exchange Molecular Dynamics or (contact-guided) Molecular Dynamics
 - or focus on structure analyses and comparison.
 
 It has three main goals:
