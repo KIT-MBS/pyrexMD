@@ -76,8 +76,8 @@ simply become:
 
     gmx.function(p=parameter)
 
-Additionally to the expected `GROMACS` behavior, each gmx module function by
-default creates a unique log file with a meaningful name which is stored in the
+Additionally to the expected `GROMACS` behavior, each gmx module function creates
+by default a unique log file with a meaningful name which is stored in the
 logs folder.
 
 The code example below shows a complete setup of a normal MD simulation.
@@ -231,7 +231,7 @@ contact and bias analyses.
     top.norm_universe([folded, unfolded, mobile])
 
     # check True Positive Rate (TPR) of predicted bias contacts
-    con.plot_DCA_TPR(u1, DCA_fin=<path_to_predicted_contacts>, n_DCA=80, d_cutoff=8.0)
+    con.plot_DCA_TPR(folded, DCA_fin=<path_to_predicted_contacts>, n_DCA=80, d_cutoff=8.0)
 
 .. image:: quick_guide/TPR.png
 
