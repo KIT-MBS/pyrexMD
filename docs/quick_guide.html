@@ -152,8 +152,8 @@ Commands such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">parameter</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function by
-default creates a unique log file with a meaningful name which is stored in the
+<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function creates
+by default a unique log file with a meaningful name which is stored in the
 logs folder.</p>
 <p>The code example below shows a complete setup of a normal MD simulation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
@@ -292,7 +292,7 @@ contact and bias analyses.</p>
 <span class="n">top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">([</span><span class="n">folded</span><span class="p">,</span> <span class="n">unfolded</span><span class="p">,</span> <span class="n">mobile</span><span class="p">])</span>
 
 <span class="c1"># check True Positive Rate (TPR) of predicted bias contacts</span>
-<span class="n">con</span><span class="o">.</span><span class="n">plot_DCA_TPR</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">path_to_predicted_contacts</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span>
+<span class="n">con</span><span class="o">.</span><span class="n">plot_DCA_TPR</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">path_to_predicted_contacts</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="_images/TPR.png" src="_images/TPR.png" />
