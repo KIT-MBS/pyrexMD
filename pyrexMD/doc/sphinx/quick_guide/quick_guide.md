@@ -281,8 +281,9 @@ and show the newly formed and broken contacts in green and red, respectively.
 
 .. image:: quick_guide/ContactMapDistances.png
 
-Additionally, it is possible to analyze the contact distances within a contact
-map plot.
+Additionally, it is possible to analyze native contact distances within a contact
+map plot. This can be used to deduce how strong/important the invidiual contacts
+are regards to structure stability.
 
 GDT and LA Analyses
 ^^^^^^^^^^^^^^^^^^^
