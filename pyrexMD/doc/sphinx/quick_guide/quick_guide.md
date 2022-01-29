@@ -407,9 +407,9 @@ be used to select or compare the individual cluster ensembles, e.g. with
 .. code:: ipython3
 
     ### map scores (energies) and accuracy (GDT, RMSD) to clusters
-    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_file=score_file)
+    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_data=score_file)
     cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=cluster10, GDT=GDT_TS, RMSD=RMSD)
-    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_file=score_file)
+    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_data=score_file)
     cluster20_accuracy = clu.map_cluster_accuracy(cluster_data=cluster20, GDT=GDT_TS, RMSD=RMSD)
 
     ### print table with cluster scores stats

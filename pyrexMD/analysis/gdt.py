@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: gdt.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 22.01.2022
 
 
 """
@@ -179,7 +179,8 @@ def _HELP_sss_None2int(obj, cfg):
 
 
 def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
-        sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True, **kwargs):
+        sss=[None, None, None], cutoff=[0.5, 10, 0.5], true_resids=True,
+        verbose=True, **kwargs):
     """
     performs Global-Distance-Test (GDT).
 
@@ -261,7 +262,7 @@ def GDT(mobile, ref, sel1="protein and name CA", sel2="protein and name CA",
     RMSD = []  # list: tuples with (RMSD before alignment, RMSD after alignment)
 
     # analyze trajectory
-    for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step], **kwargs):
+    for ts in tqdm(mobile.trajectory[cfg.start: cfg.stop: cfg.step], disable=not verbose):
         PAIR_DISTANCES, _RMSD, _resids_mobile, _resids_ref = get_Pair_Distances(
             mobile, ref, sel1=sel1, sel2=sel2, weights=weights)
         RMSD.append(_RMSD)

@@ -91,3 +91,23 @@ To run one of the short examples, go into the pyrexMD/examples folder and run:
 ## Participating
 `pyrexMD` is free and open source. It is published under the MIT license. We
 welcome your contribution so feel free to ask questions, report bugs, fork, etc.
+
+
+## Citation
+
+Voronin et al., (2021). pyrexMD: Workflow-Orientated Python Package for Replica Exchange Molecular Dynamics. Journal of Open Source Software, 6(68), 3325, https://doi.org/10.21105/joss.03325
+
+bibtex entry:
+
+    @article{Voronin2021,
+    doi = {10.21105/joss.03325},
+    url = {https://doi.org/10.21105/joss.03325},
+    year = {2021},
+    publisher = {The Open Journal},
+    volume = {6},
+    number = {68},
+    pages = {3325},
+    author = {Arthur Voronin and Alexander Schug},
+    title = {pyrexMD: Workflow-Orientated Python Package for Replica Exchange Molecular Dynamics},
+    journal = {Journal of Open Source Software}
+    }

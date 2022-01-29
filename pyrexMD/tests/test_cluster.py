@@ -2,7 +2,7 @@
 # @Date:   09.05.2021
 # @Filename: test_cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 26.08.2021
+# @Last modified time: 29.01.2022
 
 import shutil
 import os
@@ -294,18 +294,18 @@ def test_map_cluster_scores():
     KMEANS = clu.apply_KMEANS(TSNE, n_clusters=10)
     score_file = f"{pre2}/energies.log"
 
-    scores_data = clu.map_cluster_scores(cluster_data=KMEANS, score_file=score_file)
-    assert isinstance(scores_data, clu.CLUSTER_DATA_SCORES)
-    assert hasattr(scores_data, "scores")
-    assert hasattr(scores_data, "mean_all")
-    assert hasattr(scores_data, "mean_all_filtered")
-    assert hasattr(scores_data, "mean")
-    assert hasattr(scores_data, "std")
-    assert hasattr(scores_data, "min")
-    assert hasattr(scores_data, "max")
+    score_data = clu.map_cluster_scores(cluster_data=KMEANS, score_data=score_file)
+    assert isinstance(score_data, clu.CLUSTER_DATA_SCORES)
+    assert hasattr(score_data, "scores")
+    assert hasattr(score_data, "mean_all")
+    assert hasattr(score_data, "mean_all_filtered")
+    assert hasattr(score_data, "mean")
+    assert hasattr(score_data, "std")
+    assert hasattr(score_data, "min")
+    assert hasattr(score_data, "max")
 
     # coverage
-    clu.map_cluster_scores(cluster_data=KMEANS, score_file=score_file, filter=False)
+    clu.map_cluster_scores(cluster_data=KMEANS, score_data=score_file, filter=False)
     return
 
 
@@ -376,7 +376,7 @@ def test_WF_print_cluster_accuracy_AND_test_WF_print_cluster_scores():
     cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=KMEANS, GDT=GDT, RMSD=RMSD)
 
     score_file = f"{pre2}/energies.log"
-    cluster10_scores = clu.map_cluster_scores(cluster_data=KMEANS, score_file=score_file)
+    cluster10_scores = clu.map_cluster_scores(cluster_data=KMEANS, score_data=score_file)
 
     log1 = clu.WF_print_cluster_accuracy(cluster_data=KMEANS, cluster_accuracy=cluster10_accuracy, targets=[0], save_as="./log1.log")
     log2 = clu.WF_print_cluster_scores(cluster_data=KMEANS, cluster_scores=cluster10_scores, targets=[0], save_as="./log2.log")

@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 15.09.2021
+# @Last modified time: 29.01.2022
 
 """
 .. hint:: This module contains functions for:
@@ -33,9 +33,9 @@ Example:
     cluster20 = clu.apply_KMEANS(tsne, n_clusters=20, random_state=1)
 
     ### map scores (energies) and accuracy (GDT, RMSD) to clusters
-    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_file=score_file)
+    cluster10_scores = clu.map_cluster_scores(cluster_data=cluster10, score_data=score_file)
     cluster10_accuracy = clu.map_cluster_accuracy(cluster_data=cluster10, GDT=GDT_TS, RMSD=RMSD)
-    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_file=score_file)
+    cluster20_scores = clu.map_cluster_scores(cluster_data=cluster20, score_data=score_file)
     cluster20_accuracy = clu.map_cluster_accuracy(cluster_data=cluster20, GDT=GDT_TS, RMSD=RMSD)
 
     ### plot cluster data
@@ -827,7 +827,7 @@ def scatterplot_clustermapping(xdata, ydata, labels, plot_only=None, **kwargs):
     return fig, ax
 
 
-def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **kwargs):
+def map_cluster_scores(cluster_data, score_data, filter=True, filter_tol=2.0, **kwargs):
     """
     map cluster scores/energies between `cluster_data` and `score_file`.
 
@@ -836,7 +836,9 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
 
     Args:
         cluster_data (CLUSTER_DATA): output of apply_DBSCAN(), apply_KMeans(), or heat_KMeans()
-        score_file (str): path to file containing cluster scores/energies. Logfile of abinitio.frame2score()
+        score_data (str, array, list):
+          | str: path to file containing cluster scores/energies. Logfile of abinitio.frame2score()
+          | array/list: scores/energies in same order as cluster_data
         filter (bool): apply filter ~ use only scores s which fulfil: filter_min <= s <= filter_max
         filter_tol (float):
           | defines filter_min and filter_max values
@@ -870,7 +872,10 @@ def map_cluster_scores(cluster_data, score_file, filter=True, filter_tol=2.0, **
                "prec": 3}
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
-    scores = _misc.read_file(score_file, usecols=cfg.usecols, skiprows=cfg.skiprows)
+    if isinstance(score_data, str):
+        scores = _misc.read_file(score_data, usecols=cfg.usecols, skiprows=cfg.skiprows)
+    elif isinstance(score_data, (list, np.ndarray)):
+        scores = score_data
     cluster_scores = CLUSTER_DATA_SCORES(cluster_data=cluster_data, scores=scores, filter=filter, filter_tol=filter_tol)
     return cluster_scores
 
@@ -1263,7 +1268,7 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
         n30_dist (array)
             n30 target distances, with distance n30_dist[i] = n10_centers[n10_targets[0]] - n30_centers[i]
     """
-    cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_file=score_file)
+    cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_data=score_file)
     #cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
 
     # find optimum center of n10 (lowest mean)

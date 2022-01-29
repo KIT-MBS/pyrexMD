@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 22.01.2022
 
 """
 .. hint:: This module contains various functions for basic trajectory analyses,
@@ -203,7 +203,7 @@ def get_rmsd(mobile, ref, sel1, sel2, prec=3, weights='mass', superposition=True
 
 
 def get_RMSD(mobile, ref, sel1, sel2, sss=[None, None, None], prec=3,
-             weights='mass', superposition=True, plot=False, **kwargs):
+             weights='mass', superposition=True, plot=False, verbose=True, **kwargs):
     """
     Returns rmsd for multiple frames.
 
@@ -244,7 +244,7 @@ def get_RMSD(mobile, ref, sel1, sel2, sss=[None, None, None], prec=3,
     cfg = _misc.CONFIG(default, **kwargs)
     ############################################################################
     FRAME, TIME, RMSD = [], [], []
-    for ts in tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step]):
+    for ts in tqdm(mobile.trajectory[cfg.start:cfg.stop:cfg.step], disable=not verbose):
         FRAME.append(ts.frame)
         TIME.append(ts.time)
         RMSD.append(get_rmsd(mobile, ref, sel1=sel1, sel2=sel2, prec=prec, weights=weights, superposition=superposition))
