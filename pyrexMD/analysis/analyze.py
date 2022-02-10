@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 22.01.2022
+# @Last modified time: 10.02.2022
 
 """
 .. hint:: This module contains various functions for basic trajectory analyses,
@@ -257,7 +257,7 @@ def get_RMSD(mobile, ref, sel1, sel2, sss=[None, None, None], prec=3,
     return FRAME, TIME, RMSD
 
 
-def get_RMSF(mobile, sel='protein and name CA', plot=False):
+def get_RMSF(mobile, sel='protein and name CA', plot=False, **kwargs):
     """
     Calculates the RMSF of mobile. Alias function of MDAnalysis.analysis.rms.RMSF.
     See help(MDAnalysis.analysis.rms.get_RMSF) for more information.
@@ -271,6 +271,12 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
         RMSF (array)
             array with RMSD values
     """
+    ############################################################################
+    default = {"xlabel": "RESID",
+               "ylabel": r"RMSF ($\AA$)",
+               }
+    cfg = _misc.CONFIG(default, **kwargs)
+    ############################################################################
     if not isinstance(mobile, (mda.core.universe.Universe, mda.core.groups.AtomGroup)):
         raise TypeError(f'''{get_RMSF.__module__}.{get_RMSF.__name__}():\
         \nmobile be MDA universe or atomgrp!''')
@@ -282,12 +288,11 @@ def get_RMSF(mobile, sel='protein and name CA', plot=False):
 
     if plot:
         if 'name CA' in sel:
-            PLOT(xdata=mobile.select_atoms(sel).resids, ydata=rmsf,
-                 xlabel='RESID', ylabel='RMSF')
+            PLOT(xdata=mobile.select_atoms(sel).resids, ydata=rmsf, **cfg)
 
         else:
-            PLOT(xdata=mobile.select_atoms(sel).ids, ydata=rmsf,
-                 xlabel='ID', ylabel='RMSF')
+            cfg.xlabel = "Atom ID"
+            PLOT(xdata=mobile.select_atoms(sel).ids, ydata=rmsf, **cfg)
 
     return rmsf
 
