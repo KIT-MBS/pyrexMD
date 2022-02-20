@@ -152,8 +152,8 @@ Commands such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gmx</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">parameter</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function by
-default creates a unique log file with a meaningful name which is stored in the
+<p>Additionally to the expected <code class="docutils literal notranslate"><span class="pre">GROMACS</span></code> behavior, each gmx module function creates
+by default a unique log file with a meaningful name which is stored in the
 logs folder.</p>
 <p>The code example below shows a complete setup of a normal MD simulation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
@@ -292,7 +292,7 @@ contact and bias analyses.</p>
 <span class="n">top</span><span class="o">.</span><span class="n">norm_universe</span><span class="p">([</span><span class="n">folded</span><span class="p">,</span> <span class="n">unfolded</span><span class="p">,</span> <span class="n">mobile</span><span class="p">])</span>
 
 <span class="c1"># check True Positive Rate (TPR) of predicted bias contacts</span>
-<span class="n">con</span><span class="o">.</span><span class="n">plot_DCA_TPR</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">path_to_predicted_contacts</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span>
+<span class="n">con</span><span class="o">.</span><span class="n">plot_DCA_TPR</span><span class="p">(</span><span class="n">folded</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">path_to_predicted_contacts</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">d_cutoff</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="_images/TPR.png" src="_images/TPR.png" />
@@ -333,8 +333,9 @@ and show the newly formed and broken contacts in green and red, respectively.</p
 </pre></div>
 </div>
 <img alt="_images/ContactMapDistances.png" src="_images/ContactMapDistances.png" />
-<p>Additionally, it is possible to analyze the contact distances within a contact
-map plot.</p>
+<p>Additionally, it is possible to analyze native contact distances within a contact
+map plot. This can be used to deduce how strong/important the invidiual contacts
+are regards to structure stability.</p>
 </section>
 <section id="gdt-and-la-analyses">
 <h3>GDT and LA Analyses<a class="headerlink" href="#gdt-and-la-analyses" title="Permalink to this headline"></a></h3>
@@ -436,9 +437,9 @@ respectively.</p>
 <p>It is possible to link both scores and structure accuracy to clusters, which can
 be used to select or compare the individual cluster ensembles, e.g. with</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### map scores (energies) and accuracy (GDT, RMSD) to clusters</span>
-<span class="n">cluster10_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
+<span class="n">cluster10_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">score_data</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
 <span class="n">cluster10_accuracy</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster10</span><span class="p">,</span> <span class="n">GDT</span><span class="o">=</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">RMSD</span><span class="o">=</span><span class="n">RMSD</span><span class="p">)</span>
-<span class="n">cluster20_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">score_file</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
+<span class="n">cluster20_scores</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_scores</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">score_data</span><span class="o">=</span><span class="n">score_file</span><span class="p">)</span>
 <span class="n">cluster20_accuracy</span> <span class="o">=</span> <span class="n">clu</span><span class="o">.</span><span class="n">map_cluster_accuracy</span><span class="p">(</span><span class="n">cluster_data</span><span class="o">=</span><span class="n">cluster20</span><span class="p">,</span> <span class="n">GDT</span><span class="o">=</span><span class="n">GDT_TS</span><span class="p">,</span> <span class="n">RMSD</span><span class="o">=</span><span class="n">RMSD</span><span class="p">)</span>
 
 <span class="c1">### print table with cluster scores stats</span>
@@ -455,7 +456,7 @@ file if the <code class="docutils literal notranslate"><span class="pre">save_as
   <span class="mi">1</span>   <span class="mi">61</span>      <span class="mf">5.78</span> <span class="o">|-</span><span class="mf">226.274</span>  <span class="mf">8.08</span>   <span class="o">-</span><span class="mf">241.86</span>   <span class="o">-</span><span class="mf">209.002</span>  <span class="o">-</span><span class="mf">3.292</span>
   <span class="mi">8</span>   <span class="mi">43</span>     <span class="mf">3.098</span> <span class="o">|-</span><span class="mf">225.174</span>  <span class="mf">7.679</span>  <span class="o">-</span><span class="mf">242.951</span>  <span class="o">-</span><span class="mf">206.42</span>   <span class="o">-</span><span class="mf">2.192</span>
   <span class="mi">2</span>   <span class="mi">52</span>     <span class="mf">2.807</span> <span class="o">|-</span><span class="mf">224.486</span>  <span class="mf">7.592</span>  <span class="o">-</span><span class="mf">240.913</span>  <span class="o">-</span><span class="mf">202.431</span>  <span class="o">-</span><span class="mf">1.504</span>
-  <span class="mi">7</span>   <span class="mi">41</span>     <span class="mf">9.439</span> <span class="o">|-</span><span class="mf">223.741</span>  <span class="mf">17.481</span>  <span class="o">-</span><span class="mf">249.136</span>  <span class="o">-</span><span class="mf">190.634</span>  <span class="o">-</span><span class="mf">0.759</span>
+  <span class="mi">7</span>   <span class="mi">41</span>     <span class="mf">9.439</span> <span class="o">|-</span><span class="mf">223.741</span>  <span class="mf">17.481</span> <span class="o">-</span><span class="mf">249.136</span>  <span class="o">-</span><span class="mf">190.634</span>  <span class="o">-</span><span class="mf">0.759</span>
   <span class="mi">5</span>   <span class="mi">53</span>     <span class="mf">3.441</span> <span class="o">|-</span><span class="mf">223.03</span>   <span class="mf">6.056</span>  <span class="o">-</span><span class="mf">237.002</span>  <span class="o">-</span><span class="mf">209.372</span>  <span class="o">-</span><span class="mf">0.048</span>
   <span class="mi">9</span>   <span class="mi">25</span>     <span class="mf">2.172</span> <span class="o">|-</span><span class="mf">220.319</span>  <span class="mf">7.431</span>  <span class="o">-</span><span class="mf">231.002</span>  <span class="o">-</span><span class="mf">203.796</span>   <span class="mf">2.663</span>
   <span class="mi">0</span>   <span class="mi">80</span>     <span class="mf">9.121</span> <span class="o">|-</span><span class="mf">216.962</span>  <span class="mf">7.09</span>   <span class="o">-</span><span class="mf">235.155</span>  <span class="o">-</span><span class="mf">200.969</span>   <span class="mf">6.02</span>
@@ -468,7 +469,7 @@ file if the <code class="docutils literal notranslate"><span class="pre">save_as
  <span class="mi">13</span>   <span class="mi">12</span>     <span class="mf">1.115</span> <span class="o">|-</span><span class="mf">236.354</span>  <span class="mf">12.82</span>  <span class="o">-</span><span class="mf">249.136</span>  <span class="o">-</span><span class="mf">201.079</span>  <span class="o">-</span><span class="mf">13.372</span>
  <span class="mi">12</span>   <span class="mi">22</span>     <span class="mf">2.137</span> <span class="o">|-</span><span class="mf">231.452</span>  <span class="mf">5.878</span>  <span class="o">-</span><span class="mf">243.144</span>  <span class="o">-</span><span class="mf">219.911</span>  <span class="o">-</span><span class="mf">8.47</span>
   <span class="mi">0</span>   <span class="mi">18</span>      <span class="mf">1.76</span> <span class="o">|-</span><span class="mf">231.239</span>  <span class="mf">5.605</span>  <span class="o">-</span><span class="mf">246.249</span>  <span class="o">-</span><span class="mf">220.788</span>  <span class="o">-</span><span class="mf">8.257</span>
-  <span class="mi">8</span>   <span class="mi">14</span>     <span class="mf">0.497</span> <span class="o">|-</span><span class="mf">230.679</span>  <span class="mf">11.003</span>  <span class="o">-</span><span class="mf">246.674</span>  <span class="o">-</span><span class="mf">208.399</span>  <span class="o">-</span><span class="mf">7.697</span>
+  <span class="mi">8</span>   <span class="mi">14</span>     <span class="mf">0.497</span> <span class="o">|-</span><span class="mf">230.679</span>  <span class="mf">11.003</span> <span class="o">-</span><span class="mf">246.674</span>  <span class="o">-</span><span class="mf">208.399</span>  <span class="o">-</span><span class="mf">7.697</span>
  <span class="mi">11</span>   <span class="mi">20</span>      <span class="mf">2.16</span> <span class="o">|-</span><span class="mf">230.552</span>  <span class="mf">5.368</span>  <span class="o">-</span><span class="mf">242.131</span>  <span class="o">-</span><span class="mf">219.766</span>  <span class="o">-</span><span class="mf">7.57</span>
  <span class="mi">15</span>   <span class="mi">31</span>     <span class="mf">1.638</span> <span class="o">|-</span><span class="mf">229.789</span>  <span class="mf">8.104</span>  <span class="o">-</span><span class="mf">241.151</span>  <span class="o">-</span><span class="mf">211.738</span>  <span class="o">-</span><span class="mf">6.807</span>
  <span class="mi">18</span>   <span class="mi">15</span>     <span class="mf">1.398</span> <span class="o">|-</span><span class="mf">228.603</span>  <span class="mf">6.845</span>  <span class="o">-</span><span class="mf">241.86</span>   <span class="o">-</span><span class="mf">212.383</span>  <span class="o">-</span><span class="mf">5.621</span>
