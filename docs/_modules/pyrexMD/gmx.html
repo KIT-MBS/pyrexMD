@@ -1,0 +1,1332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrexMD.gmx &mdash; pyrexMD 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API Docs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrexMD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrexMD.gmx</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrexMD.gmx</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
+<span class="c1"># @Date:   17.04.2021</span>
+<span class="c1"># @Filename: gmx.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 30.11.2021</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. hint:: This module contains modified `GromacsWrapper` functions for</span>
+<span class="sd">    streamlining the interaction with `GROMACS` for system setups etc.</span>
+
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyrexMD.gmx as gmx</span>
+<span class="sd">    import pyrexMD.misc as misc</span>
+
+<span class="sd">    # create ref pdb:</span>
+<span class="sd">    pdb = &quot;path/to/pdb&quot;</span>
+<span class="sd">    ref = gmx.get_ref_structure(pdb, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
+
+<span class="sd">    # generate topology &amp; box</span>
+<span class="sd">    gmx.pdb2gmx(f=ref, o=&quot;protein.gro&quot;, ff=&#39;amber99sb-ildn&#39;, water=&#39;tip3p&#39;, ignh=True)</span>
+<span class="sd">    gmx.editconf(f=&quot;protein.gro&quot;, o=&quot;box.gro&quot;, d=2.0, c=True, bt=&quot;cubic&quot;)</span>
+
+<span class="sd">    # generate solvent &amp; ions</span>
+<span class="sd">    gmx.solvate(cp=&quot;box.gro&quot;, o=&quot;solvent.gro&quot;)</span>
+<span class="sd">    gmx.grompp(f=&quot;ions.mdp&quot;, o=&quot;ions.tpr&quot;,c=&quot;solvent.gro&quot;)</span>
+<span class="sd">    gmx.genion(s=&quot;ions.tpr&quot;, o=&quot;ions.gro&quot;, neutral=True, input=&quot;SOL&quot;)</span>
+
+<span class="sd">    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
+<span class="sd">    misc.cp(&quot;path/to/mdp/files&quot;, &quot;.&quot;)</span>
+
+<span class="sd">    # minimize</span>
+<span class="sd">    gmx.grompp(f=&quot;min.mdp&quot;, o=&quot;min.tpr&quot;, c=&quot;ions.gro&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;min&quot;)</span>
+
+<span class="sd">    # NVT equilibration</span>
+<span class="sd">    gmx.grompp(f=&quot;nvt.mdp&quot;, o=&quot;nvt.tpr&quot;, c=&quot;min.gro&quot;, r=&quot;min.gro&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;nvt&quot;)</span>
+
+<span class="sd">    # NPT equilibration</span>
+<span class="sd">    gmx.grompp(f=&quot;npt.mdp&quot;, o=&quot;npt.tpr&quot;, c=&quot;nvt.gro&quot;, r=&quot;nvt.gro&quot;, t=&quot;nvt.cpt&quot;)</span>
+<span class="sd">    gmx.mdrun(deffnm=&quot;npt&quot;)</span>
+
+<span class="sd">    # MD run</span>
+<span class="sd">    gmx.grompp(f=&quot;md.mdp&quot;, o=&quot;traj.tpr&quot;, c=&quot;npt.gro&quot;, t=&quot;npt.cpt&quot;)</span>
+<span class="sd">    gmx.mdrun(deffn=&quot;traj&quot;)</span>
+
+<span class="sd">Content:</span>
+<span class="sd">--------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">gromacs</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;gromacs.config&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">gromacs</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">flags</span><span class="p">[</span><span class="s1">&#39;capture_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># print gromacs output</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+
+
+<span class="k">def</span> <span class="nf">__fix_ResourceWarning__</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fix &#39;ResourceWarning: unclosed file&#39; of GromacsWrapper&#39;s config.py module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_path</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{os.path.dirname(os.path.realpath(gromacs.__file__))}/config.py&quot;</span>
+    <span class="n">old_str</span> <span class="o">=</span> <span class="s2">&quot;import sys&quot;</span>
+    <span class="n">new_str</span> <span class="o">=</span> <span class="s2">&quot;import sys       ### fixed warning</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">new_str</span> <span class="o">+=</span> <span class="s2">&quot;import warnings  ### fixed warning</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">new_str</span> <span class="o">+=</span> <span class="s2">&quot;warnings.simplefilter(&#39;ignore&#39;, ResourceWarning)  ### fixed warning</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">needs_fix</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">old_text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;### fixed warning&quot;</span> <span class="ow">in</span> <span class="n">old_text</span><span class="p">:</span>
+            <span class="n">needs_fix</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_text</span> <span class="o">=</span> <span class="n">old_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_str</span><span class="p">,</span> <span class="n">new_str</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">needs_fix</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_text</span><span class="p">)</span>
+    <span class="k">return</span>
+
+
+<span class="c1">### execute fix</span>
+<span class="n">__fix_ResourceWarning__</span><span class="p">()</span>
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1"># Help functions</span>
+
+
+<span class="k">def</span> <span class="nf">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    setup default config.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+               <span class="s2">&quot;log_overwrite&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg</span>
+
+
+<span class="k">def</span> <span class="nf">_clean_func</span><span class="p">(</span><span class="n">ofile</span><span class="p">):</span>
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)))</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">odir</span>
+
+
+<span class="k">def</span> <span class="nf">_save_func</span><span class="p">(</span><span class="n">ofile</span><span class="p">,</span> <span class="n">cprint_color</span><span class="p">):</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saved file as: {os.path.realpath(ofile)}&quot;</span><span class="p">,</span> <span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates logfile and cleans up log direcotry.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        logdir (str): logdir path</span>
+<span class="sd">        logfile (str): logfile name</span>
+<span class="sd">        cfg (misc.CONFIG): config with cfg.cprint_color, cfg.log,</span>
+<span class="sd">                           cfg.log_overwrite, cfg.stderr, cfg.stdout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">logdir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">logdir</span><span class="p">)</span>
+    <span class="n">logfile</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{logdir}</span><span class="s2">/</span><span class="si">{logfile}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="o">.</span><span class="n">log_overwrite</span><span class="p">:</span>
+        <span class="n">log_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{logdir}</span><span class="s2">/{_misc.get_base(logfile)}_</span><span class="si">{i}</span><span class="s2">.log&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">log_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{logdir}</span><span class="s2">/*.log&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>  <span class="c1"># skip existing log_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logfile</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="k">break</span>  <span class="c1"># stop at first new log_name</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saved log as: </span><span class="si">{logfile}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;STDERR:</span><span class="se">\n\n</span><span class="si">{cfg.stderr}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;STDOUT:</span><span class="se">\n\n</span><span class="si">{cfg.stdout}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">clean_up</span><span class="p">(</span><span class="n">logdir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+
+
+<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;gmx_pattern&quot;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clean up GROMACS backup files with the patterns #*# and .*offsets.npz</span>
+
+<span class="sd">    .. Note:: pattern can be implemented into path variable directly.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): directory path</span>
+<span class="sd">        pattern (None, str):</span>
+<span class="sd">          | pattern</span>
+<span class="sd">          | None: check for files with path only</span>
+<span class="sd">          | str:  check for files with joined path of path + pattern</span>
+<span class="sd">          | &quot;gmx_pattern&quot;: remove files with the patterns #*# and .*offsets.npz</span>
+<span class="sd">        ignore (None, str, list of str, tuple of str):</span>
+<span class="sd">          | one or multiple ignore pattern</span>
+<span class="sd">          | None: no ignore pattern</span>
+<span class="sd">          | str: single ignore pattern</span>
+<span class="sd">          | list of str, tuple of str: list/tuple with multiple ignore patterns</span>
+<span class="sd">        verbose (bool): print message (&#39;removed file: ... &#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s2">&quot;gmx_pattern&quot;</span><span class="p">:</span>
+        <span class="c1"># iterate itself with gmx patterns</span>
+        <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;#*#&quot;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">ignore</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;.*offsets.npz&quot;</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">ignore</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">elif</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+
+    <span class="c1"># remove files</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">realpath</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ignore</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ignore</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">ign</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ign</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">continue</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;removed file:&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_sel_code</span><span class="p">(</span><span class="n">sel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get selection code.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        sel_code (str)</span>
+<span class="sd">          | &quot;0&quot;: code for system</span>
+<span class="sd">          | &quot;1&quot;: code for protein</span>
+<span class="sd">          | &quot;3&quot;: code for CA</span>
+<span class="sd">          | &quot;4&quot;: code for BB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;system&quot;</span> <span class="ow">or</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="k">elif</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+    <span class="k">elif</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ca&quot;</span> <span class="ow">or</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;calpha&quot;</span><span class="p">:</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
+    <span class="k">elif</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;bb&quot;</span> <span class="ow">or</span> <span class="n">sel</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;backbone&quot;</span><span class="p">:</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;4&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported selection string. Modify code to add more cases&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sel_code</span>
+
+
+<div class="viewcode-block" id="pdb2gmx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.pdb2gmx">[docs]</a><span class="k">def</span> <span class="nf">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
+            <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.pdb2gmx().</span>
+
+<span class="sd">    GROMACS info:</span>
+<span class="sd">        &#39;pdb2gmx&#39; reads a .pdb (or .gro) file, reads some database files, adds</span>
+<span class="sd">        hydrogens to the molecules and generates coordinates in GROMACS (GROMOS),</span>
+<span class="sd">        or optionally .pdb, format and a topology in GROMACS format. These files</span>
+<span class="sd">        can subsequently be processed to generate a run input file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (str): input structure file: pdb gro tpr (g96 brk ent esp)</span>
+<span class="sd">        o (str): output structure file: pdb gro (g96 brk ent esp)</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        ff (str):</span>
+<span class="sd">          | force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
+<span class="sd">          | &quot;amber99sb-ildn&quot; etc. for proteins</span>
+<span class="sd">          | &quot;amber14sb_OL15&quot; etc. for RNAs</span>
+<span class="sd">        water (str): water model</span>
+<span class="sd">        ignh (bool): ignore hydrogen</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        p (str): topology file: topol.top</span>
+<span class="sd">        i (str): include file for topology: posre.itp</span>
+<span class="sd">        n (str): index file: index.ndx</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        log (bool): save log file</span>
+<span class="sd">        log_overwrite (bool):</span>
+<span class="sd">          | True: save log file as &lt;logs/pdb2gmx.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/pdb2gmx_{i}.log&gt; for i=1,...,999</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.pdb2gmx.help()</span>
+<span class="sd">        - terminal -&gt; gmx pdb2gmx -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="n">ff</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="n">water</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">ignh</span><span class="o">=</span><span class="n">ignh</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.stderr}</span><span class="s2"> /n </span><span class="si">{cfg.stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">_clean_func</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{odir}</span><span class="s2">/logs&quot;</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;pdb2gmx.log&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="editconf"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.editconf">[docs]</a><span class="k">def</span> <span class="nf">editconf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - Modified function of gromacs.editconf()</span>
+<span class="sd">    - Alias function of convert_TPR2PDB()</span>
+
+<span class="sd">    GROMACS info:</span>
+<span class="sd">        &#39;gmx editconf&#39; converts generic structure format to .pdb, .gro, or .g96.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (str): tpr (gro g96 pdb brk ent esp)</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | pdb (gro g96)</span>
+<span class="sd">          | &quot;default&quot;: &lt;f&gt;.tpr -&gt; &lt;f&gt;.pdb</span>
+<span class="sd">          | &lt;f&gt;.gro -&gt; box.gro</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        box (int):</span>
+<span class="sd">          | box vector lengths xyz (only 1 value for bt=&quot;cubic&quot;).</span>
+<span class="sd">          | requires center=False to work.</span>
+<span class="sd">        bt (str): box type: cubic triclinic dodecahedron octahedron</span>
+<span class="sd">        c (bool): center molecule in box</span>
+<span class="sd">        d (str): distance between the solute and the box</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        log (bool): save log file</span>
+<span class="sd">        log_overwrite (bool):</span>
+<span class="sd">          | True: save log file as &lt;logs/editconf.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/editconf_{i}.log&gt; for i=1,...,999</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python  -&gt; gromacs.editconf.help()</span>
+<span class="sd">        - terminal -&gt; gmx editconf -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;.tpr&quot;</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(f)}.pdb&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;.gro&quot;</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="s2">&quot;box.gro&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.stderr}</span><span class="s2"> /n </span><span class="si">{cfg.stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">_clean_func</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{odir}</span><span class="s2">/logs&quot;</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;editconf.log&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<span class="c1"># alias function of editconf()</span>
+<span class="n">convert_TPR2PDB</span> <span class="o">=</span> <span class="n">editconf</span>
+
+
+<div class="viewcode-block" id="convert_TPR"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.convert_TPR">[docs]</a><span class="k">def</span> <span class="nf">convert_TPR</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.convert_tpr().</span>
+
+<span class="sd">    GROMACS info:</span>
+<span class="sd">        &#39;gmx convert-tpr&#39; can edit run input files in three ways:</span>
+<span class="sd">        - modify tpr settings</span>
+<span class="sd">        - create new tpr for a subset of original tpr</span>
+<span class="sd">        - setting the charges of a specified group to zero(useful when doing free energy estimates using the LIE (Linear Interaction Energy) method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): tpr</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | tpr</span>
+<span class="sd">          | &quot;default&quot;: &lt;s&gt;.tpr -&gt; &lt;s&gt;_&lt;sel&gt;.tpr</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string(case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.convert_tpr.help()</span>
+<span class="sd">        - terminal -&gt; gmx convert_tpr -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">sel_code</span> <span class="o">=</span> <span class="n">_get_sel_code</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(s)}_{sel.lower()}.tpr&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">gromacs</span><span class="o">.</span><span class="n">convert_tpr</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">sel_code</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;.*offsets.npz&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;#*_protein.tpr*#&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="grompp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.grompp">[docs]</a><span class="k">def</span> <span class="nf">grompp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.grompp().</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (str): input file: mdp</span>
+<span class="sd">        o (str): output file: tpr</span>
+<span class="sd">        c (str): structure file: gro tpr pdb (g96 brk ent esp)</span>
+<span class="sd">        p (str): topology file: top</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        maxwarn (int):</span>
+<span class="sd">          | Number of allowed warnings during input processing.</span>
+<span class="sd">          | Not for normal use and may generate unstable systems.</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        log (bool): save log file</span>
+<span class="sd">        log_overwrite (bool):</span>
+<span class="sd">          | True: save log file as &lt;logs/grompp.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/grompp_{i}.log&gt; for i=1,...,999</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.grompp.help()</span>
+<span class="sd">        - terminal -&gt; gmx grompp -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;maxwarn&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">maxwarn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;maxwarn&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;maxwarn&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;cprint_color&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">]</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">o</span><span class="p">)))</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                                   <span class="n">maxwarn</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">maxwarn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.stderr}</span><span class="s2"> /n </span><span class="si">{cfg.stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">_clean_func</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{odir}</span><span class="s2">/logs&quot;</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;grompp.log&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="solvate"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.solvate">[docs]</a><span class="k">def</span> <span class="nf">solvate</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="s2">&quot;spc216.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.solvate(). cp is usually &quot;box.gro&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cp (str): structure file ~ solute:  gro pdb tpr (g96 brk ent esp)</span>
+<span class="sd">        cs (str):</span>
+<span class="sd">          | structure file ~ solvent: gro pdb tpr (g96 brk ent esp)</span>
+<span class="sd">          | Note: &quot;spc216.gro&quot; is used for all 3-point water models</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | gro pdb (g96 brk ent esp)</span>
+<span class="sd">          | default case: save in same directory as cp</span>
+<span class="sd">          | special case: if o is relative/absolute path -&gt; save there</span>
+<span class="sd">        p (str): topology file: topol.top</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        maxsol (int):</span>
+<span class="sd">          | maximum number of solvent molecules to add if they fit in the box.</span>
+<span class="sd">          | 0 (default): ignore this setting</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        log (bool): save log file</span>
+<span class="sd">        log_overwrite (bool):</span>
+<span class="sd">          | True: save log file as &lt;logs/solvate.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/solvate_{i}.log&gt; for i=1,...,999</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.solvate.help()</span>
+<span class="sd">        - terminal -&gt; gmx solvate -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cp</span><span class="p">)))</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="n">cp</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.stderr}</span><span class="s2"> /n </span><span class="si">{cfg.stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">_clean_func</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{odir}</span><span class="s2">/logs&quot;</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;solvate.log&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="genion"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.genion">[docs]</a><span class="k">def</span> <span class="nf">genion</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">nname</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+           <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified fuction of gromacs.genion().</span>
+
+<span class="sd">    GROMACS info:</span>
+<span class="sd">        gmx genion randomly replaces solvent molecules with monoatomic ions.</span>
+<span class="sd">        The group of solvent molecules should be continuous and all molecules</span>
+<span class="sd">        should have the same number of atoms.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): structure file: tpr</span>
+<span class="sd">        o (str): output file: gro pdb (g96 brk ent esp)</span>
+<span class="sd">        p (str): topology file: topol.top</span>
+<span class="sd">        input (str):</span>
+<span class="sd">          | selection grp</span>
+<span class="sd">          | default: 13 (SOL)</span>
+<span class="sd">        pname (str): positive ion name</span>
+<span class="sd">        nname (str): negative ion name</span>
+<span class="sd">        conc (float): add salt concentration (mol/liter) and rescale to box size</span>
+<span class="sd">        neutral (bool): add enough ions to neutralize the system. These ions are</span>
+<span class="sd">          added on top of those specified with -np/-nn or -conc</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        log (bool): save log file</span>
+<span class="sd">        log_overwrite (bool):</span>
+<span class="sd">          | True: save log file as &lt;logs/genion.log&gt;</span>
+<span class="sd">          | False: save log file as &lt;logs/genion_{i}.log&gt; for i=1,...,999</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.genion.help()</span>
+<span class="sd">        - terminal -&gt; gmx genion -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_setup_config</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">o</span><span class="p">)))</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="n">pname</span><span class="p">,</span>
+                                                   <span class="n">nname</span><span class="o">=</span><span class="n">nname</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="n">neutral</span><span class="p">,</span>
+                                                   <span class="nb">input</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">input</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.stderr}</span><span class="s2"> /n </span><span class="si">{cfg.stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">odir</span> <span class="o">=</span> <span class="n">_clean_func</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">_log_func</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{odir}</span><span class="s2">/logs&quot;</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;genion.log&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="mdrun"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.mdrun">[docs]</a><span class="k">def</span> <span class="nf">mdrun</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Alias fuction of gromacs.mdrun().</span>
+
+<span class="sd">    .. Note:: output can be printed only after mdrun has finished. To see</span>
+<span class="sd">      realtime updates invoke the command using &quot;!gmx_mpi mdrun &lt;parameters&gt;&quot;</span>
+<span class="sd">      instead</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        deffnm (str): default filename</span>
+<span class="sd">        nsteps (int): maximum number of steps (used instead of mdp setting)</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">       - python -&gt; gromacs.mdrun.help()</span>
+<span class="sd">       - terminal -&gt; gmx mdrun -h</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">gromacs</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{stderr}</span><span class="s2"> /n </span><span class="si">{stdout}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="trjconv"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.trjconv">[docs]</a><span class="k">def</span> <span class="nf">trjconv</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.trjconv().</span>
+
+<span class="sd">    GROMACS info:</span>
+<span class="sd">        gmx trjconv can convert trajectory files in many ways</span>
+
+<span class="sd">        - from one format to another</span>
+<span class="sd">        - select a subset of atoms</span>
+<span class="sd">        - center atoms in the box</span>
+<span class="sd">        - fit atoms to reference structure</span>
+<span class="sd">        - reduce the number of frames</span>
+<span class="sd">        - etc.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (str): structure: tpr (gro g96 pdb brk ent)</span>
+<span class="sd">        f (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
+<span class="sd">        o (str): trajectory:</span>
+<span class="sd">          | xtc (trr gro g96 pdb tng)</span>
+<span class="sd">          | &quot;default&quot;: &lt;f&gt;.xtc -&gt; &lt;f&gt;_&lt;sel&gt;.xtc</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">       - python -&gt; gromacs.trjconv.help()</span>
+<span class="sd">       - terminal -&gt; gmx trjconv -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="c1"># check input files for same atom count</span>
+    <span class="n">u1</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">u1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">!=</span> <span class="n">u2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;s and f file have not the same atom count!</span>
+
+<span class="s2">        Atoms in s: </span><span class="si">{u1.atoms.n_atoms}</span><span class="s2"></span>
+<span class="s2">        Atoms in f: </span><span class="si">{u2.atoms.n_atoms}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">sel_code</span> <span class="o">=</span> <span class="n">_get_sel_code</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;center&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">sel_code</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{sel_code}</span><span class="s2"> </span><span class="si">{sel_code}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(f)}_{sel.lower()}.xtc&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>  <span class="c1"># special case for joinpath</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">gromacs</span><span class="o">.</span><span class="n">trjconv</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">sel_code</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;.*offsets.npz&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">ofile</span><span class="p">)),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;#*_protein.xtc*#&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="fix_TRAJ"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.fix_TRAJ">[docs]</a><span class="k">def</span> <span class="nf">fix_TRAJ</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="s2">&quot;mol&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fix topology:</span>
+<span class="sd">        - convert tpr to selection only</span>
+<span class="sd">        - if o=&quot;default&quot;: save as &lt;s&gt;_&lt;sel&gt;.tpr</span>
+
+<span class="sd">    Fix trajectory:</span>
+<span class="sd">        - selection only</span>
+<span class="sd">        - tu ns</span>
+<span class="sd">        - pbc mol</span>
+<span class="sd">        - center</span>
+<span class="sd">        - if o=&quot;default&quot;: save as &lt;f&gt;_&lt;sel&gt;.xtc</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tpr (str): structure: tpr</span>
+<span class="sd">        xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
+<span class="sd">        o (str, list):</span>
+<span class="sd">          | filenames of new structure and new trajectory (both selection only)</span>
+<span class="sd">          | &quot;default&quot; (str):</span>
+<span class="sd">          |    &lt;tpr&gt;.tpr -&gt; &lt;xtc&gt;_&lt;sel&gt;.tpr</span>
+<span class="sd">          |    &lt;xtc&gt;.xtc -&gt; &lt;xtc&gt;_&lt;sel&gt;.xtc</span>
+<span class="sd">          | [os, of] (list):</span>
+<span class="sd">          |    os (str): filename of new structure (selection only)</span>
+<span class="sd">          |    of (str): filename of new trajectory (selection only)</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        tu (str): time unit: fs ps ns us ms s</span>
+<span class="sd">        sel (str):</span>
+<span class="sd">          | selection string(case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        pbc (str):</span>
+<span class="sd">          | PBC treatment: none mol res atom nojump cluster whole</span>
+<span class="sd">          | &quot;mol&quot;: puts the center of mass of molecules in the box. requires structure file s.</span>
+<span class="sd">          | &quot;nojump&quot;: checks if atoms jump across the box and then puts them back</span>
+<span class="sd">            (i.e. all molecules will remain whole)</span>
+<span class="sd">          | (see GROMACS help text for other descriptions)</span>
+<span class="sd">        center (bool): center atoms in box</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    .. Hint:: Find more valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.trjconv.help()</span>
+<span class="sd">        - terminal -&gt; gmx trjconv -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tpr_file (str)</span>
+<span class="sd">            realpath of new tpr file (selection only)</span>
+<span class="sd">        xtc_file (str)</span>
+<span class="sd">            realpath of new xtc file (selection only)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check if o arg is &quot;default&quot; or list</span>
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(tpr)}_{sel.lower()}.tpr&quot;</span><span class="p">),</span>
+             <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(xtc)}_{sel.lower()}.xtc&quot;</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># error test</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Invalid value of &#39;o&#39; argument.</span>
+<span class="s2">    o (str or list): filenames of new structure and new trajectory (both selection only)</span>
+<span class="s2">        &quot;default&quot; (str):</span>
+<span class="s2">            &lt;tpr&gt;.tpr -&gt; &lt;xtc&gt;_&lt;sel&gt;.tpr</span>
+<span class="s2">            &lt;xtc&gt;.xtc -&gt; &lt;xtc&gt;_&lt;sel&gt;.xtc</span>
+<span class="s2">        [os, of] (list):</span>
+<span class="s2">            os (str): filename of new structure (selection only)</span>
+<span class="s2">            of (str): filename of new trajectory (selection only)&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="c1"># if no error: joinpath</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">[</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+             <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+    <span class="c1">### GromacsWrapper</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fixing topology:&quot;</span><span class="p">)</span>
+    <span class="n">tpr_file</span> <span class="o">=</span> <span class="n">convert_TPR</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">tpr</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">odir</span><span class="o">=</span><span class="n">odir</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>  <span class="c1"># selection only</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fixing trajectory:&quot;</span><span class="p">)</span>
+    <span class="n">xtc_file</span> <span class="o">=</span> <span class="n">trjconv</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">tpr_file</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">odir</span><span class="o">=</span><span class="n">odir</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="n">tu</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">,</span>
+                       <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">tpr_file</span><span class="p">)),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">clean_up</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">xtc_file</span><span class="p">)),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tpr_file</span><span class="p">,</span> <span class="n">xtc_file</span></div>
+
+
+<div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="s2">&quot;bb&quot;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modified function of gromacs.rms(). Calculate backbone RMSD.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref (str): reference structure: pdb (tpr gro g96 brk ent)</span>
+<span class="sd">        xtc (str): trajectory: xtc (trr cpt gro g96 pdb tng)</span>
+<span class="sd">        o (str):</span>
+<span class="sd">          | xvg</span>
+<span class="sd">          | &quot;default&quot;: rmsd.xvg</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        tu (str): time unit: fs ps ns us ms s</span>
+<span class="sd">        sel (list):</span>
+<span class="sd">          | list with selection strings (case independant)</span>
+<span class="sd">          | &quot;system&quot; or &quot;all&quot;: all atoms</span>
+<span class="sd">          | &quot;protein&quot;: protein atoms</span>
+<span class="sd">          | &quot;ca&quot; or &quot;calpha&quot;: CA atoms</span>
+<span class="sd">          | &quot;bb&quot; or &quot;backbone&quot;: backbone atoms</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+
+<span class="sd">    .. Hint:: Find valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.rms.help()</span>
+<span class="sd">        - terminal -&gt; gmx rms -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="c1"># check input files for same atom count</span>
+    <span class="n">u1</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">xtc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">u1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">!=</span> <span class="n">u2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;ref and xtc file have not the same atom count!</span>
+
+<span class="s2">        Atoms in ref: </span><span class="si">{u1.atoms.n_atoms}</span><span class="s2"></span>
+<span class="s2">        Atoms in xtc: </span><span class="si">{u2.atoms.n_atoms}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="s2">&quot;rmsd.xvg&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">sel_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sel</span><span class="p">:</span>
+            <span class="n">sel_code</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;{_get_sel_code(item)} &quot;</span>
+        <span class="n">gromacs</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">xtc</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">tu</span><span class="o">=</span><span class="n">tu</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">sel_code</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="get_ref_structure"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_ref_structure">[docs]</a><span class="k">def</span> <span class="nf">get_ref_structure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;amber99sb-ildn&quot;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
+                      <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates ref structure of input structure via pdb2gmx to fix atom count by</span>
+<span class="sd">    applying force field.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (str): input structure file: pdb gro tpr (g96 brk ent esp)</span>
+<span class="sd">        o (str): output structure file: pdb gro trp (g96 brk ent esp)</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | special case: odir is ignored when o is relative/absolute path</span>
+<span class="sd">        ff (str):</span>
+<span class="sd">          | force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
+<span class="sd">          | &quot;amber99sb-ildn&quot; etc. for proteins</span>
+<span class="sd">          | &quot;amber14sb_OL15&quot; etc. for RNAs</span>
+<span class="sd">        water (str): water model</span>
+<span class="sd">        ignh (bool): ignore hydrogen</span>
+<span class="sd">        verbose (bool): print/mute GROMACS messages</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+
+<span class="sd">    .. Hint:: Find valid Keyword Args via</span>
+
+<span class="sd">        - python -&gt; gromacs.pdb2gmx.help()</span>
+<span class="sd">        - terminal -&gt; gmx pdb2gmx -h</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(f)}_ref.pdb&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="c1"># GromacsWrapper</span>
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="n">gromacs</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="n">ff</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="n">water</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">ignh</span><span class="o">=</span><span class="n">ignh</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">_save_func</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### COMPLEX BUILDER</span>
+
+
+<div class="viewcode-block" id="create_complex"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.create_complex">[docs]</a><span class="k">def</span> <span class="nf">create_complex</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="p">[],</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;complex.gro&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create complex using multiple .gro files. First .gro file in &lt;f&gt; must have</span>
+<span class="sd">    largest box.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (list): list of gro files</span>
+<span class="sd">        o (str): output structure file: gro</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Wrong data type: f must be list.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Not enough input files: f must contain atleast 2 .gro files.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">gro</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">gro</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;.gro&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;Wrong extension: f does not contain .gro files.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">read</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">ndx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">read</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ndx</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{int(data[1]) + int(read[1])}</span><span class="se">\n</span><span class="s2">&quot;</span>           <span class="c1"># fix atom count</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">read</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>     <span class="c1"># fix atom count position (gro has fixed format)</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot; </span><span class="si">{temp}</span><span class="s2">&quot;</span>
+            <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+            <span class="n">box</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># test if 2nd box is smaller</span>
+            <span class="n">box_size_1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]]</span>
+            <span class="n">box_size_2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">read</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]]</span>
+            <span class="n">box_size_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">box_size_1</span><span class="p">)</span>  <span class="c1"># get box volume via a*b*c</span>
+            <span class="n">box_size_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">box_size_2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">box_size_1</span> <span class="o">&lt;</span> <span class="n">box_size_2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Wrong order of .gro files: box size of </span><span class="si">{f[0]}</span><span class="s2"> is smaller than </span><span class="si">{f[ndx]}</span><span class="s2">. Type help(</span><span class="si">{create_complex.__module__}</span><span class="s2">.</span><span class="si">{create_complex.__name__}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+            <span class="c1"># append data</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">read</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="c1">#append box size of f[0]</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saved complex as: </span><span class="si">{ofile}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="extend_complex_topology"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.extend_complex_topology">[docs]</a><span class="k">def</span> <span class="nf">extend_complex_topology</span><span class="p">(</span><span class="n">ligand_name</span><span class="p">,</span> <span class="n">ligand_itp</span><span class="p">,</span> <span class="n">ligand_prm</span><span class="p">,</span> <span class="n">ligand_nmol</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">top_out</span><span class="o">=</span><span class="s2">&quot;topol_complex.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extend an existing .top file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ligand_name (str): ligand name</span>
+<span class="sd">        ligand_itp (str): ligand .itp file</span>
+<span class="sd">        ligand_prm (str): ligand .prm file</span>
+<span class="sd">        ligand_nmol (int): number of ligand molecules</span>
+<span class="sd">        top (str): topology input file (will be extended)</span>
+<span class="sd">        top_out (str): topology output file</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ofile (str)</span>
+<span class="sd">            realpath of output file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_out</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="c1"># add very first ligand entry</span>
+        <span class="k">if</span> <span class="s2">&quot;; Include ligand topology</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="c1"># insert itp</span>
+                <span class="k">if</span> <span class="s2">&quot;; Include water topology</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;; Include ligand topology</span><span class="se">\n</span><span class="s1">#include &quot;</span><span class="si">{ligand_itp}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="c1"># insert prm</span>
+                <span class="k">if</span> <span class="s2">&quot;forcefield.itp&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\n</span><span class="s1">; Include ligand parameters</span><span class="se">\n</span><span class="s1">#include &quot;</span><span class="si">{ligand_prm}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="c1"># add additional ligand entry</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">itp_loc</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">prm_loc</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="c1"># insert itp</span>
+                <span class="k">if</span> <span class="s2">&quot;; Include ligand topology</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">itp_loc</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">itp_loc</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;#include &quot;</span><span class="si">{ligand_itp}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">itp_loc</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="c1"># insert prm</span>
+                <span class="k">if</span> <span class="s2">&quot;; Include ligand parameters</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">prm_loc</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">prm_loc</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;#include &quot;</span><span class="si">{ligand_prm}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">prm_loc</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="c1"># insert last line (ligand name, ligand_nmol) with correct width</span>
+        <span class="n">len_last_line</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">whitespace</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{ligand_name}{whitespace}{ligand_nmol}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">while</span> <span class="n">len_last_line</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
+            <span class="n">whitespace</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{ligand_name}{whitespace}{ligand_nmol}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="n">ofile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">top_out</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saved extended complex topology as: </span><span class="si">{ofile}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ofile</span></div>
+
+
+<div class="viewcode-block" id="create_positions_dat"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.create_positions_dat">[docs]</a><span class="k">def</span> <span class="nf">create_positions_dat</span><span class="p">(</span><span class="n">box_vec</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
+                         <span class="n">nmol</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create folder with position.dat files. Each file contains &lt;nmol&gt; copies of</span>
+<span class="sd">    the box center. Use in combination with &quot;gmx insert-molecule module&quot;</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        box_vec (list): box vectors</span>
+<span class="sd">        nmol (int, tuple, list, range): number of molecules to add (replaces -nmol from</span>
+<span class="sd">          insert-molecule cmd)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        file_dir (str)</span>
+<span class="sd">            realpath of folder containing positions.dat files</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | &gt;&gt; gmx insert-molecules -f &quot;box_25.gro&quot; -ci &quot;../model_ATP/atp_ini.pdb&quot;</span>
+<span class="sd">        | -o &quot;complex.gro&quot; -ip &quot;positions_dat/positions_100.dat&quot; -dr 5 5 5 -try 100</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;./positions_dat&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nmol</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">nmol</span> <span class="o">=</span> <span class="p">[</span><span class="n">nmol</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nmol</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">range</span><span class="p">)):</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&lt;nmol&gt; must be int, tuple, list or range object.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nmol</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{file_dir}</span><span class="s2">/positions_</span><span class="si">{n}</span><span class="s2">.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{box_vec[0]/2}</span><span class="se">\t</span><span class="s2">{box_vec[1]/2}</span><span class="se">\t</span><span class="s2">{box_vec[2]/2}</span><span class="se">\t\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Dumped positions.dat files into folder: </span><span class="si">{file_dir}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file_dir</span></div>
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### TEMPLATES</span>
+
+
+<div class="viewcode-block" id="get_template_1_EM"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_1_EM">[docs]</a><span class="k">def</span> <span class="nf">get_template_1_EM</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy Minimization Template:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gmx_mpi</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx_mpi grompp -f min.mdp -o em.tpr -c ions.gro -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx_mpi mdrun -v -deffnm em&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx grompp -f min.mdp -o em.tpr -c ions.gro -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx mdrun -v -deffnm em&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="get_template_2_NVT"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_2_NVT">[docs]</a><span class="k">def</span> <span class="nf">get_template_2_NVT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NVT Template:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gmx_mpi</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx_mpi grompp -f nvt.mdp -o nvt.tpr -c em.gro -r em.gro -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx_mpi mdrun -v -deffnm nvt&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx grompp -f nvt.mdp -o nvt.tpr -c em.gro -r em.gro -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx mdrun -v -deffnm nvt&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="get_template_3_NPT"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_3_NPT">[docs]</a><span class="k">def</span> <span class="nf">get_template_3_NPT</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NPT Template:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gmx_mpi</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx_mpi grompp -f npt.mdp -o npt.tpr -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx_mpi mdrun -v -deffnm npt&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx grompp -f npt.mdp -o npt.tpr -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx mdrun -v -deffnm npt&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="get_template_4_MD"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.gmx.get_template_4_MD">[docs]</a><span class="k">def</span> <span class="nf">get_template_4_MD</span><span class="p">(</span><span class="n">gmx_mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        gmx_mpi (bool): use gmx_mpi instead of gmx</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MD Template:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gmx_mpi</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx_mpi grompp -f md.mdp -o traj.tpr -c npt.gro -t npt.cpt -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx_mpi mdrun -v -deffnm traj</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;# with tabulated bonds add: -tableb table_b0.xvg</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;# to append add: -cpi -append&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;!gmx grompp -f md.mdp -o traj.tpr -c npt.gro -t npt.cpt -p topol.top</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;!gmx mdrun -v -deffnm traj</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;# with tabulated bonds add: -tableb table_b0.xvg</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;# to append add: -cpi -append&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, KIT-MBS.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
