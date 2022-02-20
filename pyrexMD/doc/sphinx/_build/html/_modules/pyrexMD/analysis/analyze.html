@@ -164,11 +164,11 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.09.2021</span>
+<span class="c1"># @Last modified time: 10.02.2022</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. hint:: This module contains various functions related to very basic trajectory</span>
-<span class="sd">    analyses, e.g. RMSD, distances, etc.</span>
+<span class="sd">.. hint:: This module contains various functions for basic trajectory analyses,</span>
+<span class="sd">    e.g., calculating RMSDs, distances, etc.</span>
 
 <span class="sd">Example:</span>
 <span class="sd">--------</span>
@@ -195,10 +195,10 @@
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">_top</span>
-<span class="kn">from</span> <span class="nn">pyrexMD.misc</span> <span class="kn">import</span> <span class="n">get_PDBid</span>
-<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">Bio.PDB</span> <span class="kn">import</span> <span class="n">PDBParser</span><span class="p">,</span> <span class="n">Polypeptide</span>
-<span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="kn">import</span> <span class="n">distances</span> <span class="k">as</span> <span class="n">_distances</span><span class="p">,</span> <span class="n">rms</span> <span class="k">as</span> <span class="n">_rms</span><span class="p">,</span> <span class="n">align</span> <span class="k">as</span> <span class="n">_align</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.misc</span> <span class="k">import</span> <span class="n">get_PDBid</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="k">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">Bio.PDB</span> <span class="k">import</span> <span class="n">PDBParser</span><span class="p">,</span> <span class="n">Polypeptide</span>
+<span class="kn">from</span> <span class="nn">MDAnalysis.analysis</span> <span class="k">import</span> <span class="n">distances</span> <span class="k">as</span> <span class="n">_distances</span><span class="p">,</span> <span class="n">rms</span> <span class="k">as</span> <span class="n">_rms</span><span class="p">,</span> <span class="n">align</span> <span class="k">as</span> <span class="n">_align</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -231,9 +231,9 @@
         <span class="n">tu</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">tu</span> <span class="o">==</span> <span class="s2">&quot;ps&quot;</span><span class="p">:</span>
-            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time = Frame * </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">tu</span><span class="si">}</span><span class="s2"> = Frame * </span><span class="si">{</span><span class="mf">0.001</span><span class="o">*</span><span class="n">dt</span><span class="si">}</span><span class="s2"> ns&quot;</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Time = Frame * </span><span class="si">{dt}</span><span class="s2"> </span><span class="si">{tu}</span><span class="s2"> = Frame * {0.001*dt} ns&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tu</span> <span class="o">==</span> <span class="s2">&quot;ns&quot;</span><span class="p">:</span>
-            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time=Frame * </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">tu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Time=Frame * </span><span class="si">{dt}</span><span class="s2"> </span><span class="si">{tu}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;type(u) must be MDAnalysis.core.universe.Universe.&quot;</span><span class="p">)</span>
     <span class="k">return</span></div>
@@ -257,7 +257,7 @@
     <span class="n">FASTA</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">pp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ppb</span><span class="o">.</span><span class="n">build_peptides</span><span class="p">(</span><span class="n">structure</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polypeptide </span><span class="si">{</span><span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> FASTA: </span><span class="si">{</span><span class="n">pp</span><span class="o">.</span><span class="n">get_sequence</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Polypeptide {ndx+1} FASTA: {pp.get_sequence()}&quot;</span><span class="p">)</span>
         <span class="n">FASTA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">get_sequence</span><span class="p">()))</span>
     <span class="k">return</span> <span class="n">FASTA</span></div>
 
@@ -365,7 +365,7 @@
 
 
 <div class="viewcode-block" id="get_RMSD"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analyze.get_RMSD">[docs]</a><span class="k">def</span> <span class="nf">get_RMSD</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="p">,</span> <span class="n">sss</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">prec</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-             <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+             <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns rmsd for multiple frames.</span>
 
@@ -406,7 +406,7 @@
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1">############################################################################</span>
     <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">cfg</span><span class="o">.</span><span class="n">step</span><span class="p">],</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">):</span>
         <span class="n">FRAME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
         <span class="n">TIME</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
         <span class="n">RMSD</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_rmsd</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel1</span><span class="o">=</span><span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span><span class="o">=</span><span class="n">sel2</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">superposition</span><span class="o">=</span><span class="n">superposition</span><span class="p">))</span>
@@ -415,11 +415,11 @@
 
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
         <span class="c1">#PLOT(xdata=FRAME, ydata=RMSD, xlabel=&#39;Frame&#39;, ylabel=f&#39;RMSD ($\AA$)&#39;, **kwargs)</span>
-        <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">TIME</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (ps)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;RMSD ($\AA$)&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">TIME</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">RMSD</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (ps)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;RMSD ($\AA$)&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">FRAME</span><span class="p">,</span> <span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span></div>
 
 
-<div class="viewcode-block" id="get_RMSF"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analyze.get_RMSF">[docs]</a><span class="k">def</span> <span class="nf">get_RMSF</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein and name CA&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_RMSF"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analyze.get_RMSF">[docs]</a><span class="k">def</span> <span class="nf">get_RMSF</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s1">&#39;protein and name CA&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the RMSF of mobile. Alias function of MDAnalysis.analysis.rms.RMSF.</span>
 <span class="sd">    See help(MDAnalysis.analysis.rms.get_RMSF) for more information.</span>
@@ -433,8 +433,14 @@
 <span class="sd">        RMSF (array)</span>
 <span class="sd">            array with RMSD values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="s2">&quot;RESID&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;RMSF ($\AA$)&quot;</span><span class="p">,</span>
+               <span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="p">(</span><span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">Universe</span><span class="p">,</span> <span class="n">mda</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">AtomGroup</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">get_RMSF</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">get_RMSF</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">():</span><span class="se">\</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{get_RMSF.__module__}</span><span class="s1">.</span><span class="si">{get_RMSF.__name__}</span><span class="s1">():</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">mobile be MDA universe or atomgrp!&#39;&#39;&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -444,12 +450,11 @@
 
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;name CA&#39;</span> <span class="ow">in</span> <span class="n">sel</span><span class="p">:</span>
-            <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">resids</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">rmsf</span><span class="p">,</span>
-                 <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;RESID&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;RMSF&#39;</span><span class="p">)</span>
+            <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">resids</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">rmsf</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">ids</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">rmsf</span><span class="p">,</span>
-                 <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;RMSF&#39;</span><span class="p">)</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Atom ID&quot;</span>
+            <span class="n">PLOT</span><span class="p">(</span><span class="n">xdata</span><span class="o">=</span><span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span><span class="o">.</span><span class="n">ids</span><span class="p">,</span> <span class="n">ydata</span><span class="o">=</span><span class="n">rmsf</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">rmsf</span></div>
 
@@ -567,7 +572,7 @@
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">pdb_file</span> <span class="ow">in</span> <span class="n">mobile</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">pdb_file</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;.pdb&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extension test of: </span><span class="si">{</span><span class="n">pdb_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Extension test of: </span><span class="si">{pdb_file}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;&lt;mobile&gt; is passed as list but does not contain .pdb file paths.&#39;</span><span class="p">)</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">mobile</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
@@ -1494,7 +1499,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Too much data within the heatmap to save it as a .pdf file.</span>
 <span class="s2">    (vector graphic ~ number of objects too high)</span>
 <span class="s2">    Saving figure as .png with 300 dpi instead...&quot;&quot;&quot;</span><span class="p">)</span>
-            <span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">((</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)))</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{os.path.dirname(os.path.realpath((cfg.save_as)))}/{_misc.get_base(cfg.save_as)}.png&quot;</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">save_as</span><span class="p">)</span>
 
     <span class="k">return</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
@@ -1586,7 +1591,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Too much data within the heatmap to save it as a .pdf file.</span>
 <span class="s2">    (vector graphic ~ number of objects too high)</span>
 <span class="s2">    Saving figure as .png with 300 dpi instead...&quot;&quot;&quot;</span><span class="p">)</span>
-            <span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{_misc.get_base(save_as)}.png&quot;</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">save_as</span><span class="p">)</span>
 
     <span class="k">return</span><span class="p">(</span><span class="n">TIME</span><span class="p">,</span> <span class="n">RMSD</span><span class="p">)</span></div>

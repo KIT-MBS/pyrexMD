@@ -180,8 +180,8 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pl</span>
 
-<span class="kn">from</span> <span class="nn">pyrexMD.misc.classes</span> <span class="kn">import</span> <span class="n">CONFIG</span>
-<span class="kn">from</span> <span class="nn">pyrexMD.misc.func</span> <span class="kn">import</span> <span class="n">joinpath</span><span class="p">,</span> <span class="n">round_up</span><span class="p">,</span> <span class="n">round_down</span><span class="p">,</span> <span class="n">flatten_array</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.misc.classes</span> <span class="k">import</span> <span class="n">CONFIG</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.misc.func</span> <span class="k">import</span> <span class="n">joinpath</span><span class="p">,</span> <span class="n">round_up</span><span class="p">,</span> <span class="n">round_down</span><span class="p">,</span> <span class="n">flatten_array</span>
 
 <span class="c1">################################################################################</span>
 <span class="c1">################################################################################</span>
@@ -1277,7 +1277,7 @@
 <span class="sd">      | self.neg_base10_factors: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">get_sign</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            signum function</span>
@@ -1325,7 +1325,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pos_base10_factors</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neg_base10_factors</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print class content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

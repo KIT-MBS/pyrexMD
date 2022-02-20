@@ -1,7 +1,6 @@
-name: GH Actions CI
-on:
-  push:
-    branches: [ master ]
+name: GH Actions Manual Update
+on: workflow_dispatch
+
 
 jobs:
   ## job 1 ##

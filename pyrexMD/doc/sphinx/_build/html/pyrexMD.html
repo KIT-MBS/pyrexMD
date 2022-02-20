@@ -193,17 +193,16 @@
 <span id="pyrexmd-core"></span><h1>pyrexMD.core<a class="headerlink" href="#module-pyrexMD.core" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions to enable interactive analyses. Its
-main purpose are the iPlayer and iPlot classes, which allow the application
-of a trajectory viewer or the dynamical linking between trajectory viewer
-and any 2D plot.</p>
+<p>This module contains functions enabling interactive analyses. Its main
+parts are the iPlayer and iPlot classes, which allow the use of a trajectory
+viewer or a dynamic linking of the trajectory viewer and any 2D graph.</p>
 </div>
 <div class="section" id="example">
 <h2>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="k">as</span> <span class="nn">core</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="k">as</span> <span class="nn">con</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="kn">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="kn">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.core</span> <span class="kn">as</span> <span class="nn">core</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.analysis.contacts</span> <span class="kn">as</span> <span class="nn">con</span>
 
 <span class="n">ref</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;pdb_file&gt;&quot;</span><span class="p">)</span>
 <span class="n">mobile</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s2">&quot;&lt;tpr_file&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;xtc_file&gt;&quot;</span><span class="p">)</span>
@@ -408,26 +407,26 @@ Interactive red bar can be moved by pressing any key.</p>
 <span id="pyrexmd-gmx"></span><h1>pyrexMD.gmx<a class="headerlink" href="#module-pyrexMD.gmx" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains modified GromacsWrapper functions to streamline
-the interaction with <cite>GROMACS</cite> for system setups etc.</p>
+<p>This module contains modified <cite>GromacsWrapper</cite> functions for
+streamlining the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 </div>
 <div class="section" id="id1">
 <h2>Example:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">gmx</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="kn">as</span> <span class="nn">gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="kn">as</span> <span class="nn">misc</span>
 
 <span class="c1"># create ref pdb:</span>
 <span class="n">pdb</span> <span class="o">=</span> <span class="s2">&quot;path/to/pdb&quot;</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c1"># generate topology &amp; box</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
 
 <span class="c1"># generate solvent &amp; ions</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
-<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
+<span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
 
 <span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -455,7 +454,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.gmx.clean_up">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gmx_pattern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.clean_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean up gromacs backup files with the patterns #*# and .*offsets.npz</p>
+<dd><p>Clean up GROMACS backup files with the patterns #*# and .*offsets.npz</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>pattern can be implemented into path variable directly.</p>
@@ -489,7 +488,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">convert_TPR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#convert_TPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.convert_TPR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.convert_tpr().</p>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>‘gmx convert-tpr’ can edit run input files in three ways:
+<dt>GROMACS info:</dt><dd><p>‘gmx convert-tpr’ can edit run input files in three ways:
 - modify tpr settings
 - create new tpr for a subset of original tpr
 - setting the charges of a specified group to zero(useful when doing free energy estimates using the LIE (Linear Interaction Energy) method.</p>
@@ -517,7 +516,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <div class="line">”bb” or “backbone”: backbone atoms</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -551,7 +550,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <li><p>Alias function of convert_TPR2PDB()</p></li>
 </ul>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
+<dt>GROMACS info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -569,7 +568,7 @@ the interaction with <cite>GROMACS</cite> for system setups etc.</p>
 <div class="line">special case: odir is ignored when o is relative/absolute path</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -671,7 +670,7 @@ insert-molecule cmd)</p></li>
 <li><p>Alias function of convert_TPR2PDB()</p></li>
 </ul>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
+<dt>GROMACS info:</dt><dd><p>‘gmx editconf’ converts generic structure format to .pdb, .gro, or .g96.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -689,7 +688,7 @@ insert-molecule cmd)</p></li>
 <div class="line">special case: odir is ignored when o is relative/absolute path</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -813,11 +812,11 @@ insert-molecule cmd)</p></li>
 <div class="line">”mol”: puts the center of mass of molecules in the box. requires structure file s.</div>
 <div class="line">”nojump”: checks if atoms jump across the box and then puts them back
 (i.e. all molecules will remain whole)</div>
-<div class="line">(see gromacs help text for other descriptions)</div>
+<div class="line">(see GROMACS help text for other descriptions)</div>
 </div>
 </p></li>
 <li><p><strong>center</strong> (<em>bool</em>) – center atoms in box</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 </dl>
@@ -847,7 +846,7 @@ insert-molecule cmd)</p></li>
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">genion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'topol.top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SOL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#genion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.genion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified fuction of gromacs.genion().</p>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>gmx genion randomly replaces solvent molecules with monoatomic ions.
+<dt>GROMACS info:</dt><dd><p>gmx genion randomly replaces solvent molecules with monoatomic ions.
 The group of solvent molecules should be continuous and all molecules
 should have the same number of atoms.</p>
 </dd>
@@ -868,7 +867,7 @@ should have the same number of atoms.</p>
 <li><p><strong>conc</strong> (<em>float</em>) – add salt concentration (mol/liter) and rescale to box size</p></li>
 <li><p><strong>neutral</strong> (<em>bool</em>) – add enough ions to neutralize the system. These ions are
 added on top of those specified with -np/-nn or -conc</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -930,7 +929,7 @@ added on top of those specified with -np/-nn or -conc</p></li>
 <div class="line">”bb” or “backbone”: backbone atoms</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -972,14 +971,14 @@ applying force field.</p>
 </div>
 </p></li>
 <li><p><strong>ff</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
+<div class="line">force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
 <div class="line">”amber99sb-ildn” etc. for proteins</div>
 <div class="line">”amber14sb_OL15” etc. for RNAs</div>
 </div>
 </p></li>
 <li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1056,7 +1055,7 @@ applying force field.</p>
 <li><p><strong>o</strong> (<em>str</em>) – output file: tpr</p></li>
 <li><p><strong>c</strong> (<em>str</em>) – structure file: gro tpr pdb (g96 brk ent esp)</p></li>
 <li><p><strong>p</strong> (<em>str</em>) – topology file: top</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1107,7 +1106,7 @@ instead</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
@@ -1131,7 +1130,7 @@ instead</p>
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">pdb2gmx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein.gro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#pdb2gmx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.pdb2gmx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.pdb2gmx().</p>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>‘pdb2gmx’ reads a .pdb (or .gro) file, reads some database files, adds
+<dt>GROMACS info:</dt><dd><p>‘pdb2gmx’ reads a .pdb (or .gro) file, reads some database files, adds
 hydrogens to the molecules and generates coordinates in GROMACS (GROMOS),
 or optionally .pdb, format and a topology in GROMACS format. These files
 can subsequently be processed to generate a run input file.</p>
@@ -1148,14 +1147,14 @@ can subsequently be processed to generate a run input file.</p>
 </div>
 </p></li>
 <li><p><strong>ff</strong> (<em>str</em>) – <div class="line-block">
-<div class="line">force field (see &lt;gromacs_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
+<div class="line">force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
 <div class="line">”amber99sb-ildn” etc. for proteins</div>
 <div class="line">”amber14sb_OL15” etc. for RNAs</div>
 </div>
 </p></li>
 <li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
 <li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1212,7 +1211,7 @@ can subsequently be processed to generate a run input file.</p>
 </div>
 </p></li>
 <li><p><strong>p</strong> (<em>str</em>) – topology file: topol.top</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1256,7 +1255,7 @@ can subsequently be processed to generate a run input file.</p>
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.gmx.</span></span><span class="sig-name descname"><span class="pre">trjconv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/gmx.html#trjconv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.gmx.trjconv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modified function of gromacs.trjconv().</p>
 <dl class="simple">
-<dt>Gromacs info:</dt><dd><p>gmx trjconv can convert trajectory files in many ways</p>
+<dt>GROMACS info:</dt><dd><p>gmx trjconv can convert trajectory files in many ways</p>
 <ul class="simple">
 <li><p>from one format to another</p></li>
 <li><p>select a subset of atoms</p></li>
@@ -1288,7 +1287,7 @@ can subsequently be processed to generate a run input file.</p>
 <div class="line">”bb” or “backbone”: backbone atoms</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute gromacs messages</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – print/mute GROMACS messages</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -1321,14 +1320,14 @@ can subsequently be processed to generate a run input file.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>This module contains functions related to (contact-guided) Replica
-Exchange Molecular Dynamics. It contains mainly functions to automate and
-speed-up the process of setting up REX simulations.</p>
+Exchange Molecular Dynamics, mainly for automating and speeding up the
+simulation setup.</p>
 </div>
 <div class="section" id="id3">
 <h2>Example:<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">misc</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="k">as</span> <span class="nn">rex</span>
-<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">top</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="kn">as</span> <span class="nn">misc</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.rex</span> <span class="kn">as</span> <span class="nn">rex</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="kn">as</span> <span class="nn">top</span>
 
 <span class="n">decoy_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/decoy/directory&quot;</span>
 
@@ -1342,14 +1341,14 @@ speed-up the process of setting up REX simulations.</p>
 <span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-<span class="c1"># get parameters for fixed boxsize and solvent molecules</span>
+<span class="c1"># get parameters for fixed box size and solvent molecules</span>
 <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span> <span class="o">=</span> <span class="n">rex</span><span class="o">.</span><span class="n">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="o">=</span><span class="s2">&quot;./rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
 
 <span class="c1"># create systems for each replica</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">)</span>
 
 <span class="c1"># minimize</span>
-<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rex</span><span class="o">.</span><span class="n">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="o">=</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
 <span class="c1"># add bias contacts (RES pairs defined in DCA_fin)</span>
 <span class="n">top</span><span class="o">.</span><span class="n">DCA_res2atom_mapping</span><span class="p">(</span><span class="n">ref_pdb</span><span class="o">=&lt;</span><span class="n">ref_pdb</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">DCA_fin</span><span class="o">=&lt;</span><span class="n">file_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">n_DCA</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
@@ -1399,7 +1398,7 @@ speed-up the process of setting up REX simulations.</p>
 <div class="line">int: use instead of .mdp option</div>
 </div>
 </p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – show/hide gromacs output</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – show/hide GROMACS output</p></li>
 </ul>
 </dd>
 </dl>
@@ -1765,8 +1764,9 @@ as template for tests if passed, otherwise uses first REX pdb as template.</p>
 <span id="pyrexmd-topology"></span><h1>pyrexMD.topology<a class="headerlink" href="#module-pyrexMD.topology" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>This module contains functions to modify universe topologies, include
-contact bias etc.</p>
+<p>This module contains functions for modifying universe topologies,
+e.g., align atoms/residues of two universes, get matching selection strings,
+include bias contacts.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.topology.DCA_modify_scoreFile">
@@ -1931,8 +1931,8 @@ shifting the resids of reference (usually smaller than mobile).</p>
 <dt class="sig sig-object py" id="pyrexMD.topology.check_matching_selection">
 <span class="sig-prename descclassname"><span class="pre">pyrexMD.topology.</span></span><span class="sig-name descname"><span class="pre">check_matching_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mobile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/topology.html#check_matching_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.topology.check_matching_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets matching selection strings for mobile and reference and then tests if
-matching selections have equal atoms and residues. Returns matchin selection
-strings.</p>
+matching selections have equal atoms and residues. Returns matching
+selection strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2298,7 +2298,7 @@ universe configuration which is sometimes NOT WANTED.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyrexMD.decoy.html">pyrexMD.decoy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pyrexMD.decoy.html#module-pyrexMD.decoy.abinitio">pyrexMD.decoy.abinitio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyrexMD.decoy.html#pyrexmd-decoy-abinitio">pyrexMD.decoy.abinitio</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyrexMD.misc.html">pyrexMD.misc</a><ul>

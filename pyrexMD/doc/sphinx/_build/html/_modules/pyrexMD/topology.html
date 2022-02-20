@@ -164,19 +164,21 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: topology.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 15.09.2021</span>
+<span class="c1"># @Last modified time: 17.09.2021</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. hint :: This module contains functions to modify universe topologies, include</span>
-<span class="sd">    contact bias etc.</span>
+<span class="sd">.. hint :: This module contains functions for modifying universe topologies,</span>
+<span class="sd">    e.g., align atoms/residues of two universes, get matching selection strings,</span>
+<span class="sd">    include bias contacts.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="k">import</span> <span class="n">tqdm</span>
 
 
 <span class="c1">################################################################################</span>
@@ -239,8 +241,8 @@
             <span class="n">item</span><span class="o">.</span><span class="n">set_residues</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">get_residues</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">residues</span><span class="p">)</span><span class="o">+</span><span class="n">shift</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shifting resids from:</span><span class="se">\n</span><span class="si">{</span><span class="n">before</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">to:</span><span class="se">\n</span><span class="si">{</span><span class="n">after</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Shifting resids from:</span><span class="se">\n</span><span class="si">{before}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">to:</span><span class="se">\n</span><span class="si">{after}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 
@@ -277,7 +279,7 @@
         <span class="k">if</span> <span class="n">info</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Norming atom ids...&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Norming </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1"> atom ids...&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Norming </span><span class="si">{info}</span><span class="s1"> atom ids...&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span>
 
@@ -388,7 +390,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">():</span><span class="se">\</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{norm_and_align_universe.__module__}</span><span class="s1">.</span><span class="si">{norm_and_align_universe.__name__}</span><span class="s1">():</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Number of atoms doesn&#39;t match! Cannot align atom ids.&#39;&#39;&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -403,7 +405,7 @@
         <span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span> <span class="o">+=</span> <span class="n">shift</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">norm_and_align_universe</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()::</span><span class="se">\</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{norm_and_align_universe.__module__}</span><span class="s1">.</span><span class="si">{norm_and_align_universe.__name__}</span><span class="s1">()::</span><span class="se">\</span>
 <span class="s1">        </span><span class="se">\n</span><span class="s1">Residues number doesn&#39;t match! Cannot align resids.&#39;&#39;&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -498,8 +500,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">get_resids_shift</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">align_resids</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-    <span class="n">sel1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2"> and resid </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">sel2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">sel1</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{sel}</span><span class="s2"> and resid {min(ref.residues.resids)}-{max(ref.residues.resids)}&quot;</span>
+    <span class="n">sel2</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{sel}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -511,8 +513,8 @@
 <div class="viewcode-block" id="check_matching_selection"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.topology.check_matching_selection">[docs]</a><span class="k">def</span> <span class="nf">check_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets matching selection strings for mobile and reference and then tests if</span>
-<span class="sd">    matching selections have equal atoms and residues. Returns matchin selection</span>
-<span class="sd">    strings.</span>
+<span class="sd">    matching selections have equal atoms and residues. Returns matching</span>
+<span class="sd">    selection strings.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        mobile (universe)</span>
@@ -525,15 +527,15 @@
     <span class="c1"># modify selection string if necessary</span>
     <span class="n">sel1</span><span class="p">,</span> <span class="n">sel2</span> <span class="o">=</span> <span class="n">get_matching_selection</span><span class="p">(</span><span class="n">mobile</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
     <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Matching selection strings:&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mobile:    sel1 = </span><span class="si">{</span><span class="n">sel1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference: sel2 = </span><span class="si">{</span><span class="n">sel2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Mobile:    sel1 = </span><span class="si">{sel1}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Reference: sel2 = </span><span class="si">{sel2}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">a1</span> <span class="o">=</span> <span class="n">mobile</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel1</span><span class="p">)</span>
     <span class="n">a2</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel2</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Atom counts:&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mobile:    sel1 contains </span><span class="si">{</span><span class="n">a1</span><span class="o">.</span><span class="n">n_atoms</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="si">}</span><span class="s2"> atoms.&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference: sel2 contains </span><span class="si">{</span><span class="n">a2</span><span class="o">.</span><span class="n">n_atoms</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="si">}</span><span class="s2"> atoms.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Mobile:    sel1 contains </span><span class="si">{a1.n_atoms}</span><span class="s2"> of </span><span class="si">{mobile.atoms.n_atoms}</span><span class="s2"> atoms.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Reference: sel2 contains </span><span class="si">{a2.n_atoms}</span><span class="s2"> of </span><span class="si">{ref.atoms.n_atoms}</span><span class="s2"> atoms.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">==</span> <span class="n">a2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mobile</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">==</span> <span class="n">ref</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">):</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Atom counts match&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -586,8 +588,8 @@
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;RES names do not match&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a2</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Warning: sel1 and sel2 have unequal atom counts!&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Atoms in mobile: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
-        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Atoms in reference: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">a2</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Atoms in mobile: {len(a1.atoms)}&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Atoms in reference: {len(a2.atoms)}&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 
@@ -672,7 +674,7 @@
     <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="n">frames</span><span class="p">]):</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">frame</span>
         <span class="n">structure</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">sel</span><span class="p">)</span>
-        <span class="n">temp_save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dirpath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">frame</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">temp_save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{dirpath}</span><span class="s2">/</span><span class="si">{base}</span><span class="s2">_</span><span class="si">{frame}{ext}</span><span class="s2">&quot;</span>
         <span class="n">structure</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">temp_save_as</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dumped structures into:&quot;</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dirpath</span></div>
@@ -808,10 +810,10 @@
             <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
                 <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">)</span>
             <span class="n">new_dir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">default_dir</span><span class="p">)</span>
-            <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">_DCA_used.txt&quot;</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{new_dir}</span><span class="s2">/{cfg.pdbid.upper()}_DCA_used.txt&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved log as:&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#DCA contacts top</span><span class="si">{</span><span class="n">n_DCA</span><span class="si">}</span><span class="s2"> (1 bond per contact)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;#DCA contacts top</span><span class="si">{n_DCA}</span><span class="s2"> (1 bond per contact)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;#RESi&quot;</span><span class="p">,</span> <span class="s2">&quot;RESj&quot;</span><span class="p">,</span> <span class="s2">&quot;ATOMi&quot;</span><span class="p">,</span> <span class="s2">&quot;ATOMj&quot;</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RES_PAIR</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ATOM_PAIR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
@@ -870,7 +872,7 @@
 
     <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">DCA_used_fin</span><span class="p">)</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="si">}</span><span class="s2">_topol_mod.top&quot;</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{cfg.pdbid}</span><span class="s2">_topol_mod.top&quot;</span>
 
     <span class="c1"># read and write files</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">top_fin</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
@@ -881,7 +883,7 @@
 
             <span class="c1"># add DCA bonds into bonds section</span>
             <span class="k">if</span> <span class="s2">&quot;[ bonds ]&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;; DCA bonds top</span><span class="si">{</span><span class="n">n_DCA</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;; DCA bonds top</span><span class="si">{n_DCA}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;;  ai    aj funct            c0            c1            c2            c3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ATOM_I</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
@@ -930,7 +932,7 @@
     <span class="n">score</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">score_fin</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">score_col</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span>
 
     <span class="c1"># shift residues</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shifting score file residues by </span><span class="si">{</span><span class="n">shift_res</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Shifting score file residues by </span><span class="si">{shift_res}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">resi</span> <span class="o">+=</span> <span class="n">shift_res</span>
     <span class="n">resj</span> <span class="o">+=</span> <span class="n">shift_res</span>
 
@@ -938,14 +940,14 @@
         <span class="n">dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">score_fin</span><span class="p">))</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">score_fin</span><span class="p">)</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_extension</span><span class="p">(</span><span class="n">score_fin</span><span class="p">)</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dirpath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">_mod</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{dirpath}</span><span class="s2">/</span><span class="si">{base}</span><span class="s2">_mod</span><span class="si">{ext}</span><span class="s2">&quot;</span>
 
     <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">resi</span><span class="p">)):</span>
-            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">resj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">score</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{resi[i]}</span><span class="se">\t</span><span class="si">{resj[i]}</span><span class="se">\t</span><span class="si">{score[i]}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{cfg.save_as}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cfg</span><span class="o">.</span><span class="n">save_as</span></div>
 </pre></div>
 
