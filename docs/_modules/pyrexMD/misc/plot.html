@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrexMD.misc.plot &mdash; pyrexMD 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+            <a href="../../../index.html" class="icon icon-home"> pyrexMD
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">API Docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrexMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pyrexMD.misc.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrexMD.misc.plot</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin &lt;arthur&gt;</span>
+<span class="c1"># @Date:   26.08.2021</span>
+<span class="c1"># @Filename: plot.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 26.08.2021</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. hint:: This module is a collection of plot-related functions which are used</span>
+<span class="sd">    frequently. Included functions may contain modified versions of small existing</span>
+<span class="sd">    functions to extend their default behavior in order to streamline pyrexMD.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pl</span>
+
+<span class="kn">from</span> <span class="nn">pyrexMD.misc.classes</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+<span class="kn">from</span> <span class="nn">pyrexMD.misc.func</span> <span class="kn">import</span> <span class="n">joinpath</span><span class="p">,</span> <span class="n">round_up</span><span class="p">,</span> <span class="n">round_down</span><span class="p">,</span> <span class="n">flatten_array</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### custom plt.figure()</span>
+
+
+<div class="viewcode-block" id="figure"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.figure">[docs]</a><span class="k">def</span> <span class="nf">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hr</span><span class="o">=</span><span class="p">[],</span> <span class="n">wr</span><span class="o">=</span><span class="p">[],</span>
+           <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+           <span class="n">context</span><span class="o">=</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;ticks&#39;</span><span class="p">,</span> <span class="n">font_scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+           <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Top level container for all the plot elements. Modified version of plt.figure()</span>
+<span class="sd">    with gridspec and seaborn elements. &quot;Example&quot; below shows how to plot data</span>
+<span class="sd">    by using misc.figure() and plt.sca() # set current axis</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num (int): figure.number (to reuse the figure canvas)</span>
+<span class="sd">        figsize (tuple)</span>
+<span class="sd">        dpi (None, int):</span>
+<span class="sd">          | dpi settings of figure</span>
+<span class="sd">          | if monitor dpi is 100 and figure dpi is 300, then figure will be displayed</span>
+<span class="sd">          | on the monitor 3x larger (compared to printed version with e.g. 300 dpi printer).</span>
+<span class="sd">        grid (list): nrows, ncols ~ height x width</span>
+<span class="sd">        hr (list): height ratio of rows</span>
+<span class="sd">        wr (list) width ratio of columns</span>
+<span class="sd">        font_scale (float)</span>
+<span class="sd">        palette (None, str, list, tuple):</span>
+<span class="sd">          | None: use current palette</span>
+<span class="sd">          | str: name of the palette, see seaborn documentation</span>
+<span class="sd">          | list: list of colors</span>
+<span class="sd">          | tuple: tuple of colors</span>
+<span class="sd">        n_colors (None, int):</span>
+<span class="sd">          | None: use default number of color cycles based on palette</span>
+<span class="sd">          | int: remap number of color cycles for the palette</span>
+<span class="sd">        context (None, dict, str):</span>
+<span class="sd">          | Affects sizes and widths of the plot, e.g. labelsize,</span>
+<span class="sd">          | linesize, etc. See return values of sns.plotting_context() to get</span>
+<span class="sd">          | all valid dict settings.</span>
+<span class="sd">          | str:&#39;notebook&#39;: scaled by 1.0</span>
+<span class="sd">          |     &#39;paper&#39;: scaled by 0.8</span>
+<span class="sd">          |     &#39;talk&#39;: scaled by 1.3</span>
+<span class="sd">          |     &#39;poster&#39;: scaled by 1.6</span>
+<span class="sd">        style (None, dict, str):</span>
+<span class="sd">          | Affects aesthetic style of the plots, e.g. axes color,</span>
+<span class="sd">          | grid display, etc. See return values of sns.axes_style() to get all</span>
+<span class="sd">          | valid dict settings.</span>
+<span class="sd">          | str:&#39;ticks&#39;, &#39;dark&#39;, &#39;white&#39;, &#39;darkgrid&#39;, &#39;whitegrid&#39;</span>
+<span class="sd">        despine (bool):</span>
+<span class="sd">          | Remove the top and right spines from all axes. See sns.despine()</span>
+<span class="sd">          | documentation for individual axis spine removal.</span>
+<span class="sd">        offset (dict/int):</span>
+<span class="sd">          | Absolute distance of spines. Use a dict to offset individual spines,</span>
+<span class="sd">          | e.g. offset={&quot;bottom&quot;:0, &quot;left&quot;:20}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])</span>
+<span class="sd">        | plt.sca(ax[0])</span>
+<span class="sd">        | plt.plot([0,1,2], [0,4,4])</span>
+<span class="sd">        | plt.plot([0,1,2], [0,10,10])</span>
+<span class="sd">        | plt.sca(ax[2])</span>
+<span class="sd">        | plt.plot([0,-1,-2], [0,-4,-4])</span>
+<span class="sd">        | plt.plot([0,-1,-2], [0,-10,-10])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">wr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">grid</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">hr</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">grid</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">wr</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">wr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">font_scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>  <span class="c1"># context scales font elements by default</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">font_scale</span><span class="o">=</span><span class="n">font_scale</span><span class="p">)</span>  <span class="c1"># double scaling with font_scale</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="n">palette</span><span class="p">,</span> <span class="n">n_colors</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">width_ratios</span><span class="o">=</span><span class="n">wr</span><span class="p">,</span> <span class="n">height_ratios</span><span class="o">=</span><span class="n">hr</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">gs_item</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs_item</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">despine</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="c1">#plt.show()</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="scatter"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.scatter">[docs]</a><span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates scatter plot. Applies cmap for z values if z is passed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (array)</span>
+<span class="sd">        y (array)</span>
+<span class="sd">        z (None, array)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        figsize (tuple): Defaults to (6.6, 5.6)</span>
+<span class="sd">        aspect (&#39;auto&#39;, &#39;equal&#39;, int):</span>
+<span class="sd">          | aspect ratio of figure. Defaults to &#39;auto&#39;.</span>
+<span class="sd">          | &#39;auto&#39;: fill the position rectangle with data.</span>
+<span class="sd">          | &#39;equal&#39;: synonym for aspect=1, i.e. same scaling for x and y.</span>
+<span class="sd">          | int: a circle will be stretched such that the height is *int* times the width.</span>
+<span class="sd">        marker (None, str)</span>
+<span class="sd">        ms (None, int): marker size</span>
+<span class="sd">        cmap (str):</span>
+<span class="sd">          | colormap name, e.g. &#39;virids&#39;, &#39;plasma&#39;, &#39;inferno&#39;, &#39;summer&#39;, &#39;winter&#39;, &#39;cool&#39;, etc.</span>
+<span class="sd">          | You can reverse the cmap by appending &#39;_r&#39; to the name.</span>
+<span class="sd">          | See https://matplotlib.org/stable/tutorials/colors/colormaps.html</span>
+<span class="sd">        vmin (None, float): min value of cmap and colorbar</span>
+<span class="sd">        vmax (None, float): max value of cmap and colorbar</span>
+<span class="sd">        cbar_label (None, str)</span>
+<span class="sd">        xlabel (None, str)</span>
+<span class="sd">        ylabel (None, str)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.6</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">),</span>
+               <span class="s2">&quot;aspect&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ms&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="s2">&quot;viridis&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_label&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">###########################################################</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">marker</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">aspect</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_pad"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.set_pad">[docs]</a><span class="k">def</span> <span class="nf">set_pad</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set pad (spacing) between axis and axis labels</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        xpad (None, float):</span>
+<span class="sd">          | spacing between xaxis and its labels</span>
+<span class="sd">          | None: use current settings</span>
+<span class="sd">        ypad (None, float):</span>
+<span class="sd">          | spacing between yaxis and its labels</span>
+<span class="sd">          | None: use current settings</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xpad&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+               <span class="s2">&quot;ypad&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">xpad</span><span class="o">=</span><span class="n">xpad</span><span class="p">,</span> <span class="n">ypad</span><span class="o">=</span><span class="n">ypad</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">.</span><span class="n">axes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_or_ax</span><span class="o">.</span><span class="n">axes</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">axes</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_or_ax</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig_or_ax</span>
+
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">xpad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+                <span class="n">tick</span><span class="o">.</span><span class="n">set_pad</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xpad</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ypad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+                <span class="n">tick</span><span class="o">.</span><span class="n">set_pad</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ypad</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="legend"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.legend">[docs]</a><span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlecolors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">handlelength</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">handletextpad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Alias function of plt.legend() with most frequently used parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labels (sequence of strings)</span>
+<span class="sd">        handlescolors (list)</span>
+<span class="sd">        handlelength (None/int/float)</span>
+<span class="sd">        handletextpad (None/int/float)</span>
+<span class="sd">        loc (str):</span>
+<span class="sd">          | Location String   Location Code</span>
+<span class="sd">          | -------------------------------</span>
+<span class="sd">          | &#39;best&#39;            0</span>
+<span class="sd">          | &#39;upper right&#39;     1</span>
+<span class="sd">          | &#39;upper left&#39;      2</span>
+<span class="sd">          | &#39;lower left&#39;      3</span>
+<span class="sd">          | &#39;lower right&#39;     4</span>
+<span class="sd">          | &#39;right&#39;           5</span>
+<span class="sd">          | &#39;center left&#39;     6</span>
+<span class="sd">          | &#39;center right&#39;    7</span>
+<span class="sd">          | &#39;lower center&#39;    8</span>
+<span class="sd">          | &#39;upper center&#39;    9</span>
+<span class="sd">          | &#39;center&#39;          10</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        title (str)</span>
+<span class="sd">        edgecolor (str)</span>
+<span class="sd">        fancybox (bool):</span>
+<span class="sd">          | True:  legendbox with round edges</span>
+<span class="sd">          | False: legendbox with normal edges</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                        <span class="n">handlelength</span><span class="o">=</span><span class="n">handlelength</span><span class="p">,</span>
+                        <span class="n">handletextpad</span><span class="o">=</span><span class="n">handletextpad</span><span class="p">,</span>
+                        <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">handlecolors</span> <span class="o">!=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">handlecolors</span><span class="p">):</span>
+            <span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="savefig"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.savefig">[docs]</a><span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filedir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    general helpfunction</span>
+
+<span class="sd">      - save current figure</span>
+<span class="sd">      - print message &quot;Saved figure as: ...&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (None, str):</span>
+<span class="sd">          | None: do not save figure</span>
+<span class="sd">          | str: file name or realpath to file</span>
+<span class="sd">        filedir (str): file directory</span>
+<span class="sd">        create_dir (bool): create directory if it does not exist yet</span>
+<span class="sd">        dpi (int): dpi settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        realpath (str)</span>
+<span class="sd">            realpath to saved figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">filedir</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">joinpath</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="n">create_dir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="n">create_dir</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">realpath</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved figure as:&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">realpath</span></div>
+
+
+<span class="c1">### alias function</span>
+<span class="n">save_fig</span> <span class="o">=</span> <span class="n">savefig</span>
+
+
+<div class="viewcode-block" id="autoapply_limits"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.autoapply_limits">[docs]</a><span class="k">def</span> <span class="nf">autoapply_limits</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply plt.xlim() and plt.ylim() on each axis object based on its xmin, xmax,</span>
+<span class="sd">    ymin, ymax values.</span>
+
+<span class="sd">    .. NOTE::</span>
+
+<span class="sd">      - use only after plotting data</span>
+<span class="sd">      - currently works only with Line2D data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        margin (float): extra margin on upper limits, where margin=0.01 equals 1% of xmax and ymax</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        xlim (list)</span>
+<span class="sd">            if fig_or_ax is axis</span>
+<span class="sd">        ylim (list)</span>
+<span class="sd">            if fig_or_ax is axis</span>
+<span class="sd">        XLIM (list of lists)</span>
+<span class="sd">            if fig_or_ax is figure</span>
+<span class="sd">        YLIM (list of lists)</span>
+<span class="sd">            if fig_or_ax is figure</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        | &gt;&gt; fig, ax = misc.figure(grid=[2,2], hr=[1,1], wr=[2,1])</span>
+<span class="sd">        | &gt;&gt; plt.sca(ax[0])</span>
+<span class="sd">        | &gt;&gt; plt.plot([0,1,2], [0,4,4])</span>
+<span class="sd">        | &gt;&gt; plt.plot([0,1,2], [0,10,10])</span>
+<span class="sd">        | &gt;&gt; autoapply_limits(fig, margin=0.05)</span>
+<span class="sd">        | ([[0, 2.1], [0, 0], [0, 0], [0, 0]],</span>
+<span class="sd">        | [[0,10.5], [0, 0], [0, 0], [0, 0]])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Test if object is figure or axis</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;axes&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_or_ax</span><span class="p">]</span>
+
+    <span class="c1"># get and apply limits</span>
+    <span class="n">XLIM</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">YLIM</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()</span>
+
+            <span class="c1"># if Line2D data does not exist</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">XLIM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+                <span class="n">YLIM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+
+            <span class="c1"># if Line2D data does exist</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">xdata</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+                    <span class="n">ydata</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+                    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">xdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>
+                    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">ydata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">xmin</span> <span class="o">&lt;</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">xmin</span>
+                    <span class="k">if</span> <span class="n">xmax</span> <span class="o">&gt;</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xmax</span>
+                    <span class="k">if</span> <span class="n">ymin</span> <span class="o">&lt;</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ymin</span>
+                    <span class="k">if</span> <span class="n">ymax</span> <span class="o">&gt;</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ymax</span>
+
+                <span class="c1"># save limits for each axis object</span>
+                <span class="k">if</span> <span class="n">margin</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="o">*</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="o">*</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+                <span class="n">XLIM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+                <span class="n">YLIM</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">XLIM</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">XLIM</span><span class="p">,</span> <span class="n">YLIM</span><span class="p">)</span></div>
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1"># pickle functions</span>
+
+
+<div class="viewcode-block" id="pickle_dump"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.pickle_dump">[docs]</a><span class="k">def</span> <span class="nf">pickle_dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s1">&#39;./pickle&#39;</span><span class="p">,</span>
+                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    bug: can&#39;t dump figures which used the misc.add_cbar() or misc.add_cbar_ax() function</span>
+<span class="sd">         because of the use of ax.inset_axes().</span>
+
+<span class="sd">    Create pickle directory and pickle.dump object as &quot;&lt;pickledir&gt;/&lt;filename&gt;.pickle&quot;</span>
+
+<span class="sd">    Special cases:</span>
+
+<span class="sd">      - filename contains relative path: ignores pickledir input</span>
+<span class="sd">      - filename contains absolute path: ignores pickledir input</span>
+
+<span class="sd">    Reason:</span>
+
+<span class="sd">        intention is to dump file under the path &quot;filename&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (matplotlib.figure.Figure/&lt;any object&gt;)</span>
+<span class="sd">        filename (str):</span>
+<span class="sd">          | filename, hardcoded to add &quot;.pickle&quot; extension.</span>
+<span class="sd">          | Can be relative or absolute path including the filename.</span>
+<span class="sd">        pickledir (str): default pickle directory</span>
+<span class="sd">        overwrite (bool): overwrite pickle dumped file if it already exists</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        save_as (str): alias of filename</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        filepath (str)</span>
+<span class="sd">            realpath of dumped .pickle file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;save_as&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;save_as&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;misc.pickle_dump(): missing 1 required argument: &#39;filename&#39; or &#39;save_as&#39;&quot;</span><span class="p">)</span>
+    <span class="c1"># convention: save files with &#39;.pickle&#39; ending</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">:]</span> <span class="o">!=</span> <span class="s2">&quot;.pickle&quot;</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">+</span><span class="s2">&quot;.pickle&quot;</span>
+
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">joinpath</span><span class="p">(</span><span class="n">filedir</span><span class="o">=</span><span class="n">pickledir</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pickle.dumped figure as:&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pickle.dumped object as:&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">filepath</span></div>
+
+
+<span class="k">def</span> <span class="nf">_pickle_get_ax_type</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get axis type by counting &lt;matplotlib.lines.Line2D&gt; and &lt;matplotlib.patches.Rectangle&gt; objects.</span>
+<span class="sd">    Additionally checks the ratio of Rectangle height:width to detect if barplot was created using</span>
+<span class="sd">    plt.bar() or plt.barh().</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ax_type (str)</span>
+<span class="sd">            | &quot;line plot&quot; ~ ax was created using plt.plot()</span>
+<span class="sd">            | &quot;bar plot&quot;  ~ ax was created using plt.bar()</span>
+<span class="sd">            | &quot;barh plot&quot; ~ ax was created using plt.barh()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artists</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">()</span>
+
+    <span class="n">n_lines</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n_rectangles</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maxh</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maxw</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">):</span>
+            <span class="n">n_lines</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">):</span>
+            <span class="n">n_rectangles</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">h</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">maxh</span><span class="p">:</span>
+                <span class="n">maxh</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">maxw</span><span class="p">:</span>
+                <span class="n">maxw</span> <span class="o">=</span> <span class="n">w</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">n_rectangles</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_rectangles</span> <span class="o">&gt;</span> <span class="n">n_lines</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">maxh</span> <span class="o">&gt;</span> <span class="n">maxw</span><span class="p">:</span>
+            <span class="n">ax_type</span> <span class="o">=</span> <span class="s2">&quot;bar plot&quot;</span>
+        <span class="k">if</span> <span class="n">maxw</span> <span class="o">&gt;</span> <span class="n">maxh</span><span class="p">:</span>
+            <span class="n">ax_type</span> <span class="o">=</span> <span class="s2">&quot;barh plot&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_type</span> <span class="o">=</span> <span class="s2">&quot;line plot&quot;</span>
+    <span class="k">return</span> <span class="n">ax_type</span>
+
+
+<span class="k">def</span> <span class="nf">_pickle_get_ax_data</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get specific axis data:</span>
+
+<span class="sd">      - limits</span>
+<span class="sd">      - scaling</span>
+<span class="sd">      - ticks</span>
+<span class="sd">      - ticklabels</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+
+<span class="sd">    Returns:&quot;&quot;&quot;</span>
+    <span class="c1"># NOTE 1: End this docstring with |Returns:&quot;&quot;&quot;| to remove trailing newline</span>
+    <span class="c1"># NOTE 2: Missing doc string part is coded right after this function.</span>
+    <span class="c1">#         It will be appended once here and to other docstrings during</span>
+    <span class="c1">#         the first initialization of the module.</span>
+    <span class="c1">#         -&gt; see INIT_append_docstrings()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig_or_ax</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">figure</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig_or_ax</span>
+
+    <span class="c1">### ticklabels are &quot;complicated&quot;</span>
+    <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+        <span class="n">xticklabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+    <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+        <span class="n">yticklabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+    <span class="n">ax_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ax_type&quot;</span><span class="p">:</span> <span class="n">_pickle_get_ax_type</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">),</span>
+               <span class="s2">&quot;xlim&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">(),</span>
+               <span class="s2">&quot;ylim&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">(),</span>
+               <span class="s2">&quot;xscale&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xscale</span><span class="p">(),</span>
+               <span class="s2">&quot;yscale&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yscale</span><span class="p">(),</span>
+               <span class="s2">&quot;xticks&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">(),</span>
+               <span class="s2">&quot;yticks&quot;</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">(),</span>
+               <span class="s2">&quot;xticklabels&quot;</span><span class="p">:</span> <span class="n">xticklabels</span><span class="p">,</span>
+               <span class="s2">&quot;yticklabels&quot;</span><span class="p">:</span> <span class="n">yticklabels</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">ax_data</span>
+
+
+<span class="n">__pickle_get_ax_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        ax_data (dict)</span>
+<span class="s2">            dictionary containing specific axis data, see table below</span>
+
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            | key         | value        | description                         |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |ax_type (str)| &quot;line plot&quot;  | ax was created using plt.plot()     |</span>
+<span class="s2">            +             +--------------+-------------------------------------+</span>
+<span class="s2">            |             | &quot;bar plot&quot;   | ax was created using plt.bar()      |</span>
+<span class="s2">            +             +--------------+-------------------------------------+</span>
+<span class="s2">            |             | &quot;barh plot&quot;  | ax was created using plt.barh()     |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xlim/ylim    | tuple        | content of ax.get_xlim()            |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xscale/yscale| str          | content of ax.get_xscale()          |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |xticks/yticks| array        | content of ax.get_xticks()          |</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">            |x/yticklabels| list         | text content of ax.get_xticklabels()|</span>
+<span class="s2">            +-------------+--------------+-------------------------------------+</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_pickle_get_line_data</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get &lt;matplotlib.lines.Line2D&gt; objects data of figure/axis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+
+<span class="sd">    Returns:&quot;&quot;&quot;</span>
+    <span class="c1"># NOTE 1: End this docstring with |Returns:&quot;&quot;&quot;| to remove trailing newline</span>
+    <span class="c1"># NOTE 2: Missing doc string part is coded right after this function.</span>
+    <span class="c1">#         It will be appended once here and to other docstrings during</span>
+    <span class="c1">#         the first initialization of the module.</span>
+    <span class="c1">#         -&gt; see INIT_append_docstrings()</span>
+
+    <span class="n">artists</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">()</span>
+    <span class="n">line_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">):</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;__description__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;line data ~ plt.plot()&quot;</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_linestyle</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_linewidth</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_marker</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;mec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_mec</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;mfc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_mfc</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_markersize</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;xdata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ydata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+            <span class="n">line_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">line_data</span>
+
+
+<span class="n">__pickle_get_line_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        line_data (list)</span>
+<span class="s2">            list of dicts, which contain data about &lt;matplotlib.lines.Line2D&gt;</span>
+<span class="s2">            objects with viable Keyword Args as shown in the table below</span>
+
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | alpha   | ls (linestyle) | mac (marker edgecolor)  | xdata  |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | color   | lw (linewidth) | mfc (marker facecolor)  | ydata  |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">            | label   | marker         | ms (markersize)         |        |</span>
+<span class="s2">            +---------+----------------+-------------------------+--------+</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_pickle_get_rectangle_data</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get &lt;matplotlib.patches.Rectangle&gt; objects data of figure/axis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+
+<span class="sd">    Returns:&quot;&quot;&quot;</span>
+    <span class="c1"># NOTE 1: End this docstring with |Returns:&quot;&quot;&quot;| to remove trailing newline</span>
+    <span class="c1"># NOTE 2: Missing doc string part is coded right after this function.</span>
+    <span class="c1">#         It will be appended once here and to other docstrings during</span>
+    <span class="c1">#         the first initialization of the module.</span>
+    <span class="c1">#         -&gt; see INIT_append_docstrings()</span>
+
+    <span class="n">artists</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_default_bbox_extra_artists</span><span class="p">()</span>
+    <span class="n">rect_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">):</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;__description__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rectangle data ~ plt.bar() or plt.barh()&quot;</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_bbox</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;bbox_points&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_bbox</span><span class="p">()</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_ec</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_fc</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fill&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_fill</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_ls</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_lw</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()</span>
+
+            <span class="c1"># ignore figure canvas rectangle</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;bbox_points&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])):</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rect_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rect_data</span>
+
+
+<span class="n">__pickle_get_rectangle_data___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        rect_data (list)</span>
+<span class="s2">            list of dicts, which contain data about &lt;matplotlib.patches.Rectangle&gt;</span>
+<span class="s2">            objects with viable Keyword Args as shown in the table below</span>
+
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | alpha          | fill   | width  |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | bbox           | height |  xy    |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | bbox_points    | label  |        |</span>
+<span class="s2">            +----------------+--------+--------+</span>
+<span class="s2">            | ec (edgecolor) | ls (linestyle)  |</span>
+<span class="s2">            +----------------+-----------------+</span>
+<span class="s2">            | fc (facecolor) | lw (linewidth)  |</span>
+<span class="s2">            +----------------+-----------------+</span>
+
+<span class="s2">        .. Hint:: xy are the userland coordinates starting from bottom left</span>
+<span class="s2">           rectangle corner (rectangle is defined by xy, width, height)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">__pickle_get_rectangle_data___bugs_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Current bugs/problems:</span>
+<span class="s2">        EDGECOLOR:</span>
+<span class="s2">        case 1) if plt.bar(..., ec=&#39;None&#39;, alpha=0.6) was used, then item.get_ec()</span>
+<span class="s2">                returns array for black color but with alpha value of 0</span>
+<span class="s2">        case 2) if figure is pickle.dumped and then loaded, the edgecolor values</span>
+<span class="s2">                are displayed correct (i.e. black with alpha of 0)</span>
+<span class="s2">        case 3) if plt.bar(...,ec=&lt;read value&gt; , alpha=0.6) is used, all edge</span>
+<span class="s2">                colors get an alpha value of 0.6</span>
+
+<span class="s2">        Although this is somehow expected, but case 1) and case 3) should still</span>
+<span class="s2">        yield the same results.</span>
+
+<span class="s2">        -&gt; workaround is coded in misc.pickle_plot()</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="pickle_load"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.pickle_load">[docs]</a><span class="k">def</span> <span class="nf">pickle_load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pickledir</span><span class="o">=</span><span class="s2">&quot;./pickle&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    pickle.load figure from &quot;&lt;pickledir&gt;/&lt;filename&gt;.pickle&quot;. If the pickle file</span>
+<span class="sd">    contains figure data, auto detects the figure type (i.e. it created using</span>
+<span class="sd">    plt.plot(), plt.bar() or plt.barh()).</span>
+
+<span class="sd">    .. Warning:: %matplotlib notebook backend leaves empty space below figure in</span>
+<span class="sd">       jupyter notebook when closing figs which were loaded via pickle files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): realpath to .pickle file or filename within pickledir</span>
+<span class="sd">        pickledir (str): default pickle directory</span>
+<span class="sd">        plot (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ax_data (dict)</span>
+<span class="sd">            if pickle file is a figure object</span>
+<span class="sd">        line_data (list)</span>
+<span class="sd">            if pickle file is a figure object</span>
+<span class="sd">        rect_data (list)</span>
+<span class="sd">            if pickle file is a figure object</span>
+<span class="sd">        object (?)</span>
+<span class="sd">            else</span>
+
+<span class="sd">    .. Note ::&quot;&quot;&quot;</span>
+    <span class="c1"># NOTE 1: End this docstring with |Notes:&quot;&quot;&quot;| to remove trailing newline</span>
+    <span class="c1"># NOTE 2: Missing doc string part is coded right after this function.</span>
+    <span class="c1">#         It will be appended once here and to other docstrings during</span>
+    <span class="c1">#         the first initialization of the module.</span>
+    <span class="c1">#         -&gt; see INIT_append_docstrings()</span>
+
+    <span class="c1"># test if filename is &quot;fullpath&quot; or &quot;relative path to pickle_dir&quot;</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">joinpath</span><span class="p">(</span><span class="n">filedir</span><span class="o">=</span><span class="n">pickledir</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">obj</span>
+            <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+            <span class="n">line_data</span> <span class="o">=</span> <span class="n">_pickle_get_line_data</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+            <span class="n">rect_data</span> <span class="o">=</span> <span class="n">_pickle_get_rectangle_data</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">plot</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">ax_data</span><span class="p">,</span> <span class="n">line_data</span><span class="p">,</span> <span class="n">rect_data</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">obj</span></div>
+
+
+<span class="n">__pickle_load___append_doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Example:</span>
+<span class="s2">        | ax_data, line_data, rect_data = pickle_load( &lt; filename &gt; )</span>
+<span class="s2">        |  # acces data</span>
+<span class="s2">        | line_data[0][&quot;xdata&quot;]</span>
+<span class="s2">        | line_data[0][&quot;color&quot;]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="pickle_plot"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.pickle_plot">[docs]</a><span class="k">def</span> <span class="nf">pickle_plot</span><span class="p">(</span><span class="n">pickle_files</span><span class="o">=</span><span class="p">[],</span> <span class="n">import_settings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                <span class="n">align_ylim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hist_minorticks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates multifigure from loading pickle_files</span>
+
+<span class="sd">    .. Warning:: data is first loaded -&gt; creates a figure -&gt; closed. However in</span>
+<span class="sd">       jupyter %matplotlib notebook backend leaves empty space below figure when</span>
+<span class="sd">       closing figs which were loaded via pickle. The empty space is only visible</span>
+<span class="sd">       in the notebook (i.e. saving a pickle_plot figure is working fine.)</span>
+
+<span class="sd">    .. Note: Code for &quot;align&quot; parameter is currently only intended for figures with</span>
+<span class="sd">        grid = [&lt;any&gt;, 2], i.e. width of 2 figures.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pickle_files (str,list of str): path to pickle file(s) containing the (sub)figure data</span>
+<span class="sd">        import_settings (bool): apply settings (for line and rectangle objects) from imported pickle_files</span>
+<span class="sd">        xscale (str):</span>
+<span class="sd">          | &#39;auto&#39;, &#39;linear&#39;, &#39;log&#39;, &#39;symlog&#39;, &#39;logit&#39;</span>
+<span class="sd">          | &#39;auto&#39;: apply xscale of the used pickle_files</span>
+<span class="sd">        yscale (str):</span>
+<span class="sd">          | &#39;auto&#39;, &#39;linear&#39;, &#39;log&#39;, &#39;symlog&#39;, &#39;logit&#39;</span>
+<span class="sd">          | &#39;auto&#39;: apply yscale of the used pickle_files</span>
+<span class="sd">        align_ylim (bool): align y axis limits of figures on the same row</span>
+<span class="sd">        hist_minorticks (bool): turns minorticks (~logscale) for hist figure on/off</span>
+
+<span class="sd">    .. Hint:: Args and Keyword Args of misc.figure() are valid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (class)</span>
+<span class="sd">            matplotlib.figure.Figure</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s2">&quot;grid&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">nrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">round_up</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">ncols</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">pickle_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">pickle_files</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="n">pickle_files</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;help(pickle_plot)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid type of &#39;pickle_files&#39;. Read the docstring above.&quot;</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">pickle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">):</span>
+        <span class="c1"># skip pickle_files with empty path string</span>
+        <span class="k">if</span> <span class="n">pickle</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># python: continue with NEXT loop iteration</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickle_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="n">ndx</span><span class="p">])</span>
+            <span class="k">pass</span>  <span class="c1"># python: continue with CURRENT loop iteration aka &quot;do nothing&quot;</span>
+
+        <span class="n">ax_data</span><span class="p">,</span> <span class="n">line_data</span><span class="p">,</span> <span class="n">rect_data</span> <span class="o">=</span> <span class="n">pickle_load</span><span class="p">(</span><span class="n">pickle</span><span class="p">)</span>
+
+        <span class="c1">### reconstruct figure</span>
+        <span class="k">if</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;line plot&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">line_data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">import_settings</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xdata&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;ydata&quot;</span><span class="p">],</span>
+                             <span class="n">alpha</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
+                             <span class="n">label</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">],</span>
+                             <span class="n">marker</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;ms&quot;</span><span class="p">],</span>
+                             <span class="n">mec</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;mec&quot;</span><span class="p">],</span> <span class="n">mfc</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;mfc&quot;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xdata&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;ydata&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bar plot&quot;</span> <span class="ow">or</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;barh plot&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">rect_data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">import_settings</span><span class="p">:</span>
+                    <span class="c1">### workaround start: weird bug with edge colors not properly importing the alpha value</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;ec&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="n">temp_ec</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">temp_ec</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;ec&quot;</span><span class="p">]</span>
+                    <span class="c1">### workaround end</span>
+
+                    <span class="k">if</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bar plot&quot;</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">],</span>
+                                <span class="n">fc</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;fc&quot;</span><span class="p">],</span> <span class="n">ec</span><span class="o">=</span><span class="n">temp_ec</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+                                <span class="n">fill</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;fill&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;barh plot&quot;</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">],</span>
+                                 <span class="n">fc</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;fc&quot;</span><span class="p">],</span> <span class="n">ec</span><span class="o">=</span><span class="n">temp_ec</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+                                 <span class="n">fill</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;fill&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">import_settings</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bar plot&quot;</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ax_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;barh plot&quot;</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;xy&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">])</span>
+
+        <span class="c1">### general settings</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;xlim&quot;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ylim&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">xscale</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;xscale&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">yscale</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;yscale&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">align_ylim</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span>
+        <span class="k">for</span> <span class="n">ndx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">ndx</span> <span class="o">%</span> <span class="n">cfg</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ref_ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">target_ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ndx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">align_limits</span><span class="p">(</span><span class="n">ref_ax</span><span class="o">=</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="o">=</span><span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="c1"># &quot;&quot;&quot;</span>
+        <span class="c1"># if &quot;grid&quot; in kwargs:</span>
+        <span class="c1">#     for ndx in range(kwargs[&quot;grid&quot;][0]*kwargs[&quot;grid&quot;][1]):</span>
+        <span class="c1">#         i = ndx//kwargs[&quot;grid&quot;][1]</span>
+        <span class="c1">#         j = i + ndx % kwargs[&quot;grid&quot;][1]</span>
+        <span class="c1">#         if i != j:</span>
+        <span class="c1">#             align_limits(ref_ax=ax[i], target_ax=ax[j], apply_on=&#39;y&#39;)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     for i in range(0, len(ax), 2):</span>
+        <span class="c1">#         align_limits(ref_ax=ax[i], target_ax=ax[i+1], apply_on=&#39;y&#39;)</span>
+        <span class="c1"># &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">hist_minorticks</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">minorticks_off</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="hide_figure"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.hide_figure">[docs]</a><span class="k">def</span> <span class="nf">hide_figure</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Alias function of hide_plot(). &quot;Hide&quot; figure by setting its size to (0, 0)</span>
+<span class="sd">    inches. If number is passed, apply on figure with that number.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fig_or_ax (None, matplotlib.figure.Figure/matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        num (None, int): if integer is passed, hide figure with this number</span>
+<span class="sd">        close (bool): if True, close figure instead of just hiding</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig_or_ax</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_or_ax</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">fig_or_ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">fig_or_ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">close</span> <span class="ow">and</span> <span class="n">num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">close</span> <span class="ow">and</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<span class="n">hide_plot</span> <span class="o">=</span> <span class="n">hide_figure</span>
+
+
+<span class="c1">#################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### limits, ticks and labels functions for plot aesthetics of gridplots</span>
+
+<div class="viewcode-block" id="align_limits"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.align_limits">[docs]</a><span class="k">def</span> <span class="nf">align_limits</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_lim</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - Read limits of ref_ax and asign them to target_ax</span>
+<span class="sd">    - if &quot;new_lim&quot; is passed: assign new values to both ref_ax and target_ax</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
+<span class="sd">        new_lim (list): assign new values to both ref_ax and target_ax</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="c1"># nested functions</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_x</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_lim</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;xlim&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">new_lim</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_y</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_lim</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;ylim&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">new_lim</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="align_ticks"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.align_ticks">[docs]</a><span class="k">def</span> <span class="nf">align_ticks</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticks</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - Read ticks of ref_ax and asign them to target_ax</span>
+<span class="sd">    - if &quot;new_ticks&quot; is passed: assign new values to both ref_ax and target_ax</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
+<span class="sd">        new_ticks (list): assign new values to both ref_ax and target_ax</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="c1"># nested functions</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_x</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_ticks</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;xticks&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">new_ticks</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_y</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_ticks</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;yticks&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">new_ticks</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="align_ticklabels"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.align_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">align_ticklabels</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">,</span> <span class="n">target_ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">new_ticklabels</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - Read ticklabels of ref_ax and asign them to target_ax</span>
+<span class="sd">    - if &quot;new_ticklabels&quot; is passed: assign new values to both ref_ax and target_ax</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        target_ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
+<span class="sd">        new_ticklabels (list): assign new values to both ref_ax and target_ax</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax_data</span> <span class="o">=</span> <span class="n">_pickle_get_ax_data</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="c1"># nested functions</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_x</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_ticklabels</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;xticklabels&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">new_ticklabels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_y</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_ticklabels</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">ax_data</span><span class="p">[</span><span class="s2">&quot;yticklabels&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">new_ticklabels</span><span class="p">)</span>
+    <span class="c1">##################################################</span>
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_x</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">ref_ax</span><span class="p">)</span>
+        <span class="n">_apply_on_y</span><span class="p">(</span><span class="n">target_ax</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="apply_shared_axes"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.apply_shared_axes">[docs]</a><span class="k">def</span> <span class="nf">apply_shared_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    - removes xticklabels of all axes except for bottom row.</span>
+<span class="sd">    - removes yticklabels of all axes except for left column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ax (class, list)</span>
+<span class="sd">            ax or list of axes ~ matplotlib.axes._subplots.Axes</span>
+<span class="sd">        grid (list)</span>
+<span class="sd">            grid of figure (example: grid=[2,2] for 2x2 figure or grid =[3,2] for 3x2 figure)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ndx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># grid indices of left column</span>
+    <span class="n">ndx_left</span> <span class="o">=</span> <span class="n">ndx</span><span class="p">[::</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="c1"># grid indices of bottom row</span>
+    <span class="n">ndx_bottom</span> <span class="o">=</span> <span class="n">ndx</span><span class="p">[</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ndx</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">ndx_left</span><span class="p">)]:</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ndx</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">ndx_bottom</span><span class="p">)]:</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="convert_ticklabels"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.convert_ticklabels">[docs]</a><span class="k">def</span> <span class="nf">convert_ticklabels</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read ticklabels of axes and multiply with &quot;multiplier&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        axes (list of matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        multiplier (int/float): multiplier for conversion, ie: new_tickvalue = multiplier * old_tickvalue</span>
+<span class="sd">        apply_on (str): &#39;x&#39;, &#39;y&#39;, &#39;xy&#39;</span>
+<span class="sd">        prec (int):</span>
+<span class="sd">          | precision</span>
+<span class="sd">          | 0: use integers with no decimal precision</span>
+<span class="sd">          | n: float with n decimal precision</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+            <span class="c1"># read</span>
+            <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="n">xticklabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+            <span class="c1"># convert</span>
+            <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">prec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">xticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">xticklabels</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+            <span class="c1"># read</span>
+            <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="n">yticklabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+
+            <span class="c1"># convert</span>
+            <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">prec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">*</span><span class="n">multiplier</span><span class="p">,</span> <span class="n">prec</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">yticklabels</span> <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">yticklabels</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="number_base_factorization"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.number_base_factorization">[docs]</a><span class="k">class</span> <span class="nc">number_base_factorization</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to get 10base factorization of any number,</span>
+<span class="sd">    e.g. 123 = 3*10^0 + 2*10^1 + 1*10^2</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">      | &gt;&gt; x = number_base_factorization(123)</span>
+<span class="sd">      | &gt;&gt; x() # show content of x</span>
+<span class="sd">      | self.number: 123</span>
+<span class="sd">      | self.sign: +</span>
+<span class="sd">      | self.digits: [1, 2, 3]</span>
+<span class="sd">      | self.pos_base10_factors: [3, 2, 1]</span>
+<span class="sd">      | self.neg_base10_factors: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">get_sign</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            signum function</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;+&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;-&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get_digits</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Convert &lt;num&gt; into list of digits.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">digits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;-.&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">digits</span><span class="p">[</span><span class="n">digits</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="n">digits</span>
+
+        <span class="k">def</span> <span class="nf">base10_factorize</span><span class="p">(</span><span class="n">digits</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            get base10 factorization of a list with digits.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                digits (list)</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                pos_base10_factors (list)</span>
+<span class="sd">                    list with positive factors</span>
+<span class="sd">                neg_base10_factors (list)</span>
+<span class="sd">                    list with negative factors</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">pos_base10_factors</span> <span class="o">=</span> <span class="n">digits</span><span class="p">[:</span><span class="n">temp</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">neg_base10_factors</span> <span class="o">=</span> <span class="n">digits</span><span class="p">[</span><span class="n">temp</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pos_base10_factors</span> <span class="o">=</span> <span class="n">digits</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">neg_base10_factors</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">pos_base10_factors</span><span class="p">,</span> <span class="n">neg_base10_factors</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">num</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign</span> <span class="o">=</span> <span class="n">get_sign</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digits</span> <span class="o">=</span> <span class="n">get_digits</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">base10_factorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_base10_factors</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_base10_factors</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print class content.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.number:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.sign:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.digits:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.pos_base10_factors:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_base10_factors</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.neg_base10_factors:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_base10_factors</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="setup_ticks"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.setup_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_ticks</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">major_base</span><span class="p">,</span> <span class="n">minor_base</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Setup axis ticks of a plot in vmin &lt;= ticks &lt;= vmax.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vmin (int, float)</span>
+<span class="sd">        vmax (int, float)</span>
+<span class="sd">        major_base (int, float)</span>
+<span class="sd">        minor_base (int, float)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        majorticks (list)</span>
+<span class="sd">            list with majorticks</span>
+<span class="sd">        minorticks (list)</span>
+<span class="sd">            list with minorticks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">min_</span> <span class="o">=</span> <span class="n">round_down</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">major_base</span><span class="p">)</span>
+    <span class="n">max_</span> <span class="o">=</span> <span class="n">round_up</span><span class="p">(</span><span class="n">vmax</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">major_base</span><span class="p">)</span>
+
+    <span class="n">majorticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="o">+</span><span class="n">major_base</span><span class="p">,</span> <span class="n">major_base</span><span class="p">)</span>
+    <span class="n">majorticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">majorticks</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">vmin</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">vmax</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">minor_base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">minorticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">min_</span><span class="o">+</span><span class="n">minor_base</span><span class="p">,</span> <span class="n">max_</span><span class="p">,</span> <span class="n">minor_base</span><span class="p">)</span>
+        <span class="n">minorticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">minorticks</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">majorticks</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">minorticks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">majorticks</span><span class="p">,</span> <span class="n">minorticks</span></div>
+
+
+<div class="viewcode-block" id="setup_logscale_ticks"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.setup_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Setup majorticks and minorticks for logscale with ticks &lt;= vmax.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vmax (int, float)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        majorticks (list)</span>
+<span class="sd">            ticks at 1, 10, 100, 1000, etc.</span>
+<span class="sd">        minorticks (list):</span>
+<span class="sd">            ticks at 2, 3, 4,..., 8, 9, 20,30,40,...,80,90, etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vmax_factorized</span> <span class="o">=</span> <span class="n">number_base_factorization</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span>
+    <span class="n">majorticks</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">minorticks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vmax_factorized</span><span class="o">.</span><span class="n">pos_base10_factors</span><span class="p">):</span>
+        <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">setup_ticks</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="n">ndx</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">major_base</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">minor_base</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="n">ndx</span><span class="p">)</span>
+        <span class="n">majorticks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">major</span><span class="p">)</span>
+        <span class="n">minorticks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">minor</span><span class="p">)</span>
+
+    <span class="n">majorticks</span> <span class="o">=</span> <span class="n">flatten_array</span><span class="p">(</span><span class="n">majorticks</span><span class="p">)</span>
+    <span class="n">minorticks</span> <span class="o">=</span> <span class="n">flatten_array</span><span class="p">(</span><span class="n">minorticks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">majorticks</span><span class="p">,</span> <span class="n">minorticks</span></div>
+
+
+<div class="viewcode-block" id="set_logscale_ticks"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.set_logscale_ticks">[docs]</a><span class="k">def</span> <span class="nf">set_logscale_ticks</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">apply_on</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minorticks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply logscale ticks on ax. If vmax is specified, sets vmax as upper limit.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        apply_on (str): &quot;x&quot;, &quot;y&quot;, &quot;xy&quot;</span>
+<span class="sd">        vmin (None, int, float): highest logscale tick value</span>
+<span class="sd">        minorticks (bool): display minorticks on/off</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        xmin (None, int, float)</span>
+<span class="sd">        xmax (None, int, float)</span>
+<span class="sd">        ymin (None, int, float)</span>
+<span class="sd">        ymax (None, int, float)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="n">vmax</span><span class="p">,</span>
+               <span class="s2">&quot;xmin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;xmax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ymin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;ymax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([],</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">major</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">minorticks</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">minor</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># set upper limit via vmax (not cfg.vmax)</span>
+        <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">xmax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">apply_on</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+        <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="n">setup_logscale_ticks</span><span class="p">(</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ymin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ymax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([],</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">major</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">minorticks</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">minor</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># set upper limit via vmax (not cfg.vmax)</span>
+        <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ymax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<span class="c1">#################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### colorbar functions</span>
+
+
+<div class="viewcode-block" id="create_cmap"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.create_cmap">[docs]</a><span class="k">def</span> <span class="nf">create_cmap</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a LinearSegmentedColormap</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq (sequence): sequence of color strings and floats. The floats describe the color thresholds and</span>
+<span class="sd">           should be increasing and in the interval (0,1).</span>
+<span class="sd">        vmin (float): min value of cmap</span>
+<span class="sd">        vmax (float): max value of cmap</span>
+<span class="sd">        ax (None, ax): figure ax for adding colorbar</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        cmap (LinearSegmentedColormap)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        seq = [&quot;lightblue&quot;, 2/6, &quot;lightgreen&quot;, 3/6, &quot;yellow&quot;, 4/6, &quot;orange&quot;, 5/6, &quot;red&quot;]</span>
+<span class="sd">        cmap = misc.create_cmap(seq, vmin=0, vmax=12)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">seq</span><span class="p">[</span><span class="n">ndx</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ColorConverter</span><span class="p">()</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">cdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;red&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;green&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">r1</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">r2</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">])</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;green&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">])</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">])</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="s1">&#39;CustomMap&#39;</span><span class="p">,</span> <span class="n">cdict</span><span class="p">)</span>
+
+    <span class="c1"># add colorbar if ax is passed</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">_norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+
+<div class="viewcode-block" id="add_cbar_ax"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.add_cbar_ax">[docs]</a><span class="k">def</span> <span class="nf">add_cbar_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add colorbar ax relative to existing ax.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        bounds (str,list):</span>
+<span class="sd">          | str: &quot;auto&quot;: apply bounds based on kws &#39;orientation&#39; and &#39;location&#39;.</span>
+<span class="sd">          | list: [x0, y0, height, width] using axes coordinates.</span>
+<span class="sd">          |       Ignores kws &#39;orientation&#39; and &#39;location&#39;.</span>
+<span class="sd">        location (str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
+<span class="sd">        orientation (str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        cbar_ax (matplotlib.axes._axes.Axes)</span>
+<span class="sd">            colorbar ax</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># apply passed bounds and ignore kws &#39;orientation&#39; and &#39;location&#39;</span>
+    <span class="k">if</span> <span class="n">bounds</span> <span class="o">!=</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># apply bounds based on kws &#39;orientation&#39; and &#39;location&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;top&quot;</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span>
+        <span class="k">elif</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;bottom&quot;</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span>
+
+        <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">:</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">orientation</span> <span class="o">==</span> <span class="s2">&quot;vertical&quot;</span><span class="p">:</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">]</span>
+
+    <span class="n">cbar_ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cbar_ax</span></div>
+
+
+<div class="viewcode-block" id="add_cbar"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.add_cbar">[docs]</a><span class="k">def</span> <span class="nf">add_cbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cbar_ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw colorbar relative to existing ax.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ax (matplotlib.axes._subplots.Axes)</span>
+<span class="sd">        cbar_ax (None/matplotlib.axes._axes.Axes):</span>
+<span class="sd">          | colorbar ax</span>
+<span class="sd">          | None: add new cbar_ax relative to existing ax</span>
+<span class="sd">          | matplotlib.axes._axes.Axes: use passed cbar_ax (can be created using misc.add_cbar_ax()).</span>
+<span class="sd">        cmap (None, LinearSegmentedColormap): output of create_cmap()</span>
+<span class="sd">        bounds (str, list):</span>
+<span class="sd">          | str: &quot;auto&quot;: apply bounds based on kws &#39;orientation&#39; and &#39;location&#39;.</span>
+<span class="sd">          | list: [x0, y0, height, width] using axes coordinates.</span>
+<span class="sd">          |       Ignores kws &#39;orientation&#39; and &#39;location&#39;.</span>
+<span class="sd">        location (str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
+<span class="sd">        orientation (str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        vmin (None, float): colorbar min value</span>
+<span class="sd">        vmax (None, float): colorbar max value</span>
+<span class="sd">        cbar_label/label (None, str)</span>
+<span class="sd">        cbar_fontweight/fontweight (None, str): &quot;bold&quot;, &quot;normal&quot;</span>
+<span class="sd">        cbar_location/location (None, str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
+<span class="sd">        cbar_orientation/orientation (None, str): &quot;vertical&quot;, &quot;horizontal&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        cbar (matplotlib.colorbar.Colorbar)</span>
+<span class="sd">            color bar</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_label&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_fontweight&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+               <span class="s2">&quot;cbar_orientation&quot;</span><span class="p">:</span> <span class="n">orientation</span>
+               <span class="p">}</span>
+
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">update_by_alias</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cbar_label&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">update_by_alias</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;fontweight&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cbar_fontweight&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cbar_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cbar_ax</span> <span class="o">=</span> <span class="n">add_cbar_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span>
+                              <span class="n">location</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_location</span><span class="p">,</span>
+                              <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">QuadMesh</span><span class="p">):</span>
+            <span class="n">QuadMesh</span> <span class="o">=</span> <span class="n">item</span>  <span class="c1"># QuadMesh ~ sns.heatmap() plots</span>
+
+    <span class="k">if</span> <span class="s2">&quot;QuadMesh&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+        <span class="c1"># mappable must be matplotlib.cm.ScalarMappable ~ sns.heatmap()</span>
+        <span class="c1"># see help(fig.colorbar) for more info</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">QuadMesh</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">_norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">),</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#print(&quot;misc.add_cbar() works currently only with sns.heatmap() plots.&quot;)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_orientation</span><span class="p">)</span>
+
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_label</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_fontweight</span><span class="p">)</span>
+    <span class="n">cbar_set_ticks_position</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cbar_location</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cbar</span></div>
+
+
+<div class="viewcode-block" id="cbar_set_ticks_position"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.cbar_set_ticks_position">[docs]</a><span class="k">def</span> <span class="nf">cbar_set_ticks_position</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set ticks position of colorbar.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cbar (matplotlib.colorbar.Colorbar)</span>
+<span class="sd">        location (str): &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;top&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;top&quot;</span> <span class="ow">or</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;bottom&quot;</span><span class="p">:</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span> <span class="ow">or</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<span class="c1">#################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### complete / append docstrings</span>
+
+
+<div class="viewcode-block" id="INIT_append_docstrings"><a class="viewcode-back" href="../../../pyrexMD.misc.html#pyrexMD.misc.plot.INIT_append_docstrings">[docs]</a><span class="k">def</span> <span class="nf">INIT_append_docstrings</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Some functions in this module have split up docstrings.</span>
+<span class="sd">    The intention of this design choice is to assure that docstrings which rely</span>
+<span class="sd">    on each other are matching and always up to date. This function is executed</span>
+<span class="sd">    ONCE upon initialization of the module and appends the missing parts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_pickle_get_ax_data</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">__pickle_get_ax_data___append_doc__</span>
+    <span class="n">_pickle_get_line_data</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">__pickle_get_line_data___append_doc__</span>
+    <span class="n">_pickle_get_rectangle_data</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">__pickle_get_rectangle_data___append_doc__</span> <span class="o">+</span> <span class="n">__pickle_get_rectangle_data___bugs_doc__</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="n">__pickle_get_ax_data___append_doc__</span><span class="p">,</span>
+                 <span class="n">__pickle_get_line_data___append_doc__</span><span class="p">,</span>
+                 <span class="n">__pickle_get_rectangle_data___append_doc__</span><span class="p">,</span>
+                 <span class="n">__pickle_load___append_doc__</span><span class="p">]:</span>
+        <span class="n">pickle_load</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">item</span>
+    <span class="k">return</span></div>
+
+
+<span class="n">INIT_append_docstrings</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, KIT-MBS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

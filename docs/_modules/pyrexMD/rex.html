@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrexMD.rex &mdash; pyrexMD 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+            <a href="../../index.html" class="icon icon-home"> pyrexMD
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about_pyrexMD.html">About pyrexMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_guide.html">Quick Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API Docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrexMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>pyrexMD.rex</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrexMD.rex</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Author: Arthur Voronin</span>
+<span class="c1"># @Date:   05.05.2021</span>
+<span class="c1"># @Filename: rex.py</span>
+<span class="c1"># @Last modified by:   arthur</span>
+<span class="c1"># @Last modified time: 30.11.2021</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. hint:: This module contains functions related to (contact-guided) Replica</span>
+<span class="sd">    Exchange Molecular Dynamics, mainly for automating and speeding up the</span>
+<span class="sd">    simulation setup.</span>
+
+<span class="sd">Example:</span>
+<span class="sd">--------</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    import pyrexMD.misc as misc</span>
+<span class="sd">    import pyrexMD.rex as rex</span>
+<span class="sd">    import pyrexMD.topology as top</span>
+
+<span class="sd">    decoy_dir = &quot;path/to/decoy/directory&quot;</span>
+
+<span class="sd">    # create rex_i directories and assign decoys</span>
+<span class="sd">    rex.assign_best_decoys(decoy_dir)</span>
+<span class="sd">    rex_dirs = rex.get_REX_DIRS()</span>
+
+<span class="sd">    # check for consistent topology</span>
+<span class="sd">    rex.check_REX_PDBS(decoy_dir)</span>
+
+<span class="sd">    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
+<span class="sd">    misc.cp(&quot;path/to/mdp/files&quot;, &quot;.&quot;)</span>
+
+<span class="sd">    # get parameters for fixed box size and solvent molecules</span>
+<span class="sd">    boxsize, maxsol = rex.WF_get_system_parameters(wdir=&quot;./rex_0_get_system_parameters/&quot;)</span>
+
+<span class="sd">    # create systems for each replica</span>
+<span class="sd">    rex.WF_REX_setup(rex_dirs=rex_dirs, boxsize=boxsize, maxsol=maxsol)</span>
+
+<span class="sd">    # minimize</span>
+<span class="sd">    rex.WF_REX_setup_energy_minimization(rex_dirs=rex_dirs, nsteps=10, verbose=False)</span>
+
+<span class="sd">    # add bias contacts (RES pairs defined in DCA_fin)</span>
+<span class="sd">    top.DCA_res2atom_mapping(ref_pdb=&lt;ref_pdb&gt;, DCA_fin=&lt;file_path&gt;, n_DCA=50, usecols=(0,1))</span>
+<span class="sd">    top.DCA_modify_topology(top_fin=&quot;topol.top&quot;, DCA_used_fin=&lt;file_path&gt; , k=10, save_as=&quot;topol_mod.top&quot;)</span>
+
+<span class="sd">    # prepare temperature distribution</span>
+<span class="sd">    rex.prep_REX_temps(T_0=280, n_REX=len(rex_dirs), k=0.006)</span>
+
+<span class="sd">    # create mdp and tpr files</span>
+<span class="sd">    rex.prep_REX_mdp(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
+<span class="sd">    rex.prep_REX_tpr(main_dir=&quot;./&quot;, n_REX=len(rex_dirs))</span>
+
+<span class="sd">    # next: upload REX MD run files on HPC and execute production run</span>
+
+<span class="sd">Content:</span>
+<span class="sd">--------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">MDAnalysis</span> <span class="kn">import</span> <span class="n">Universe</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.topology</span> <span class="k">as</span> <span class="nn">_top</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.gmx</span> <span class="k">as</span> <span class="nn">_gmx</span>
+<span class="kn">import</span> <span class="nn">pyrexMD.misc</span> <span class="k">as</span> <span class="nn">_misc</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<div class="viewcode-block" id="apply_ff_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.apply_ff_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">apply_ff_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">n_decoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="s2">&quot;./PDBID_best_decoys_ref&quot;</span><span class="p">,</span>
+                         <span class="n">create_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply forcefield on best decoys and save as &lt;filename&gt;_ref.pdb.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        best_decoys_dir (str): directory with</span>
+
+<span class="sd">          - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
+<span class="sd">          - decoy_scores.log (output of cluster.log_cluster.decoys())</span>
+<span class="sd">        n_decoys (None, int):</span>
+<span class="sd">          | None: use all decoys from best_decoys_dir</span>
+<span class="sd">          | int: use this number of decoys from best_decoys_dir</span>
+<span class="sd">        odir (str):</span>
+<span class="sd">          | output directory</span>
+<span class="sd">          | Note: if &quot;PDBID&quot; in &lt;odir&gt; and no &lt;pdbid&gt; kwarg is passed -&gt; find and replace &quot;PDBID&quot; in &lt;odir&gt; automatically based on filenames</span>
+<span class="sd">        create_dir (bool)</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        pdbid (str)</span>
+<span class="sd">        logfile (str): logfile name (default: &quot;decoy_scores.log&quot;)</span>
+<span class="sd">        water (str): water model (default: &quot;tip3p&quot;)</span>
+<span class="sd">        input (str): forcefield number (default: &quot;6&quot;)</span>
+<span class="sd">        cprint_color (str)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        odir (str)</span>
+<span class="sd">            output directory with ref pdb files (forcefield is applied)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pdbid&quot;</span><span class="p">:</span> <span class="s2">&quot;PDBID&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;logfile&quot;</span><span class="p">:</span> <span class="s2">&quot;decoy_scores.log&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;water&quot;</span><span class="p">:</span> <span class="s2">&quot;tip3p&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># replace PDBID if passed</span>
+    <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">odir</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">!=</span> <span class="s2">&quot;PDBID&quot;</span><span class="p">:</span>
+        <span class="n">odir</span> <span class="o">=</span> <span class="n">odir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PDBID&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="p">)</span>
+    <span class="c1"># find and replace PDBID if not passed</span>
+    <span class="k">if</span> <span class="s2">&quot;PDBID&quot;</span> <span class="ow">in</span> <span class="n">odir</span> <span class="ow">and</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">==</span> <span class="s2">&quot;PDBID&quot;</span><span class="p">:</span>
+        <span class="n">min_length</span> <span class="o">=</span> <span class="mi">999999</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/*pdb&quot;</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_base</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_length</span><span class="p">:</span>
+                <span class="n">min_filename</span> <span class="o">=</span> <span class="n">filename</span>
+                <span class="n">min_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_PDBid</span><span class="p">(</span><span class="n">min_filename</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">odir</span> <span class="o">=</span> <span class="n">odir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PDBID&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pdbid</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">create_dir</span><span class="p">:</span>
+        <span class="n">odir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">odir</span><span class="p">)</span>
+
+    <span class="c1"># apply ff</span>
+    <span class="n">DECOY_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span>
+                   <span class="n">_misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                   <span class="n">usecols</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">n_decoys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">DECOY_PATHS</span> <span class="o">=</span> <span class="n">DECOY_PATHS</span><span class="p">[:</span><span class="n">n_decoys</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">DECOY_PATHS</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">get_ref_structure</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">odir</span><span class="o">=</span><span class="n">odir</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">water</span><span class="p">,</span>
+                                   <span class="nb">input</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">_gmx</span><span class="o">.</span><span class="n">clean_up</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_gmx</span><span class="o">.</span><span class="n">clean_up</span><span class="p">(</span><span class="n">odir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># copy and fix log</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_log</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">odir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_log</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">old_log</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;.pdb&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">new_log</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pdb&quot;</span><span class="p">,</span> <span class="s2">&quot;_ref.pdb&quot;</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">n_decoys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_decoys</span> <span class="o">==</span> <span class="n">count</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved files to: </span><span class="si">{</span><span class="n">odir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">odir</span></div>
+
+
+<div class="viewcode-block" id="assign_best_decoys"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.assign_best_decoys">[docs]</a><span class="k">def</span> <span class="nf">assign_best_decoys</span><span class="p">(</span><span class="n">best_decoys_dir</span><span class="p">,</span> <span class="n">rex_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assigns decoys based on ranking taken from &lt;best_decoys_dir&gt;/decoy_scores.log</span>
+<span class="sd">    to each rex subdirectory rex_1, rex_2, ...</span>
+<span class="sd">    Also creates a &#39;rex_0_get_system_parameters&#39; directory, which is a copy of rex_1.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        best_decoys_dir (str): directory with</span>
+
+<span class="sd">          - best decoys (output of cluster.rank_cluster_decoys() -&gt; cluster.copy_cluster.decoys())</span>
+<span class="sd">          - decoys_score.log (output of cluster.log_cluster.decoys())</span>
+<span class="sd">        rex_dir (str): rex directory with folders rex_1, rex_2, ...</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        cprint_color (str)</span>
+<span class="sd">        realpath (bool): prints realpaths</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cprint_color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;realpath&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">DECOY_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span>
+                   <span class="n">_misc</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_decoys_dir</span><span class="si">}</span><span class="s2">/decoy_scores.log&quot;</span><span class="p">,</span>
+                                   <span class="n">usecols</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">DECOY_PATHS</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;rex_</span><span class="si">{</span><span class="n">ndx</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ndx</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>    <span class="c1"># rex_0_get_system_parameters: copy of rex_1</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">,</span> <span class="s2">&quot;rex_0_get_system_parameters/&quot;</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">realpath</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source files to directories: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">)</span><span class="si">}</span><span class="s2">/rex_&lt;i&gt; (i=1,...,</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">DECOY_PATHS</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copied source files to directories: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">)</span><span class="si">}</span><span class="s2">/rex_&lt;i&gt; (i=1,...,</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">DECOY_PATHS</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cprint_color</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="get_REX_DIRS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.get_REX_DIRS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_DIRS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get list with REX DIRS.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        main_dir (str): directory with folders rex_1, rex_2, etc.</span>
+<span class="sd">        realpath (bool): return realpath</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        REX_DIRS (list)</span>
+<span class="sd">            list with REX directory paths</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
+    <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># remove emptry entries</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">realpath</span><span class="p">:</span>
+        <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_DIRS</span><span class="p">]</span>
+
+    <span class="c1"># filter for directories</span>
+    <span class="n">REX_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_DIRS</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">REX_DIRS</span></div>
+
+
+<div class="viewcode-block" id="get_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.get_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">get_REX_PDBS</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get list with REX PDBS.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        main_dir (str): directory with folders rex_1, rex_2, etc.</span>
+<span class="sd">        realpath (bool): return realpath</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        REX_PDBS (list)</span>
+<span class="sd">            list with PDB paths within folders rex_1, rex_2, etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_REX</span> <span class="o">=</span> <span class="mi">300</span>   <span class="c1"># hardcoded but will be filtered automatically</span>
+    <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">flatten_array</span><span class="p">([</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/rex_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/*.pdb&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># remove emptry entries</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">realpath</span><span class="p">:</span>
+        <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_PDBS</span><span class="p">]</span>
+
+    <span class="c1"># filter for files</span>
+    <span class="n">REX_PDBS</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">REX_PDBS</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">REX_PDBS</span></div>
+
+
+<div class="viewcode-block" id="check_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.check_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">check_REX_PDBS</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">,</span> <span class="n">ref_pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb</span>
+<span class="sd">    as template for tests if passed, otherwise uses first REX pdb as template.</span>
+
+<span class="sd">    .. Note ::</span>
+
+<span class="sd">        - if target is known -&gt; apply ff -&gt; save as ref -&gt; use as ref</span>
+<span class="sd">        - if target is unknown -&gt; use ref_pdb=None or use one of REX_PDBS -&gt; apply ff -&gt; use as ref</span>
+<span class="sd">        - use check2_REX_PDBS() for debugging if check_REX_PDBS() fails.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        REX_PDBS (list): output of get_REX_PDBS()</span>
+<span class="sd">        ref_pdb (None, str):</span>
+<span class="sd">          | reference pdb</span>
+<span class="sd">          | None: use ref_pdb as template for tests</span>
+<span class="sd">          | str: use first REX pdb as template for tests</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        ref_is_known(bool):</span>
+<span class="sd">          | True:  use ref_pdb as template for tests</span>
+<span class="sd">          | False: use first REX DPB as template for tests</span>
+<span class="sd">        verbose (bool)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ref_pdb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># treat first pdb as &quot;template pdb&quot; with target arrays</span>
+        <span class="n">template_pdb</span> <span class="o">=</span> <span class="n">REX_PDBS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Using first REX PDB as template for tests...&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># treat ref pdb as &quot;template pdb&quot; with target arrays</span>
+        <span class="n">template_pdb</span> <span class="o">=</span> <span class="n">ref_pdb</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Using ref_pdb as template for tests...&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+    <span class="n">template_RESID</span><span class="p">,</span> <span class="n">template_RESNAME</span><span class="p">,</span> <span class="n">template_ID</span><span class="p">,</span> <span class="n">template_NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">pdb_file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">):</span>
+        <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ID</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">template_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">template_RESID</span> <span class="o">!=</span> <span class="n">RESID</span> <span class="ow">or</span> <span class="n">template_ID</span> <span class="o">!=</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">template_NAME</span> <span class="o">!=</span> <span class="n">NAME</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsed arrays of </span><span class="si">{</span><span class="n">template_pdb</span><span class="si">}</span><span class="s2"> do not match with </span><span class="si">{</span><span class="n">pdb_file</span><span class="si">}</span><span class="s2">. Use check2_REX_PDBS() for debugging.&quot;</span><span class="p">)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Check passed: All REX PDBs have equal RES, ID, NAME arrays&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="check2_REX_PDBS"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.check2_REX_PDBS">[docs]</a><span class="k">def</span> <span class="nf">check2_REX_PDBS</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">,</span> <span class="n">ref_pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used for debbuging if check_REX_PDBS() fails.</span>
+
+<span class="sd">    Tests if all REX PDBS have equal topologies (RES, ID, NAME arrays). Uses ref_pdb</span>
+<span class="sd">    as template for tests if passed, otherwise uses first REX pdb as template.</span>
+
+<span class="sd">    .. Note ::</span>
+
+<span class="sd">        - if target is known -&gt; apply ff -&gt; save as ref -&gt; use as ref</span>
+<span class="sd">        - if target is unknown -&gt; use ref_pdb=None or use one of REX_PDBS -&gt; apply ff -&gt; use as ref</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        REX_PDBS (list): output of get_REX_PDBS()</span>
+<span class="sd">        ref_pdb (None, str):</span>
+<span class="sd">          | reference pdb</span>
+<span class="sd">          | None: use ref_pdb as template for tests</span>
+<span class="sd">          | str: use first REX pdb as template for tests</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        ref_is_known(bool):</span>
+<span class="sd">          | True:  use ref_pdb as template for tests</span>
+<span class="sd">          | False: use first REX DPB as template for tests</span>
+<span class="sd">        verbose (bool)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ref_pdb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_pdb</span> <span class="o">=</span> <span class="n">REX_PDBS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ref pdb: </span><span class="si">{</span><span class="n">ref_pdb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+    <span class="n">check_passed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">test_pdb</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">REX_PDBS</span><span class="p">):</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">Universe</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">Universe</span><span class="p">(</span><span class="n">test_pdb</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span> <span class="o">==</span> <span class="n">x2</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">check_passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;###########################################################################################&quot;</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RES NAMES are not equal (</span><span class="si">{</span><span class="n">test_pdb</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span> <span class="o">==</span> <span class="n">x2</span><span class="o">.</span><span class="n">residues</span><span class="o">.</span><span class="n">resnames</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;###########################################################################################&quot;</span><span class="p">)</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RES NAMES are equal (</span><span class="si">{</span><span class="n">test_pdb</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span> <span class="o">==</span> <span class="n">x2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">check_passed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATOM NAMES are not equal (</span><span class="si">{</span><span class="n">test_pdb</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;resid1: </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">resids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">    resid2: </span><span class="si">{</span><span class="n">x2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">resids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> || atom-id1: </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">    atom-id2: </span><span class="si">{</span><span class="n">x2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> || atom-name1:</span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">    atom-name2:</span><span class="si">{</span><span class="n">x2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATOM NAMES are equal (</span><span class="si">{</span><span class="n">test_pdb</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">check_passed</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Check passed: All REX PDBs have equal RES, ID, NAME arrays&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Check failed.&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### DCA REX setup functions</span>
+<span class="c1">### -&gt; allow different start conformations with fixed boxsize and solution number</span>
+<div class="viewcode-block" id="WF_getParameter_boxsize"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_boxsize">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_boxsize</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/editconf.log&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read &lt;logfile&gt; and suggest a &#39;fixed boxsize&#39; parameter for REX simulations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        logfile (str): path to &lt;editconf.log&gt; containing the line &#39;system size: X Y Z&#39;</span>
+<span class="sd">        base (float): round up base for highest box dimension taken from &lt;logfile&gt;</span>
+<span class="sd">        verbose (bool)prep_REX_tpr</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        boxsize (float)</span>
+<span class="sd">            suggested boxsize parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">boxsize</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading logfile: </span><span class="si">{</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="s2">&quot;new box vectors&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+                    <span class="n">boxsize</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">round_up</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">dims</span><span class="p">),</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="s2">&quot;system size&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">&quot;diameter&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s2">&quot;box volume&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">boxsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;No boxsize parameters found.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;suggested box size: </span><span class="si">{</span><span class="n">boxsize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">boxsize</span></div>
+
+
+<div class="viewcode-block" id="WF_getParameter_maxsol"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_getParameter_maxsol">[docs]</a><span class="k">def</span> <span class="nf">WF_getParameter_maxsol</span><span class="p">(</span><span class="n">logfile</span><span class="o">=</span><span class="s2">&quot;./logs/solvate.log&quot;</span><span class="p">,</span> <span class="n">maxsol_reduce</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read &lt;logfile&gt; and suggest a &#39;max solution&#39; parameter for REX simulations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        logfile (str): path to &lt;editconf.log&gt; containing the line &#39;system size: X Y Z&#39;</span>
+<span class="sd">        maxsol_reduce (int):</span>
+<span class="sd">          | reduce max solution number taken from &lt;logfile&gt;</span>
+<span class="sd">          | -&gt; guarantees fixed solution number for different start configurations</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        maxsol (int)</span>
+<span class="sd">            suggested max solution parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">maxsol</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Number of solvent molecules&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">maxsol</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="n">maxsol_reduce</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()][</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading logfile: </span><span class="si">{</span><span class="n">logfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;suggested max solution: </span><span class="si">{</span><span class="n">maxsol</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">maxsol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_misc</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;No solution parameter found.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">maxsol</span></div>
+
+
+<div class="viewcode-block" id="WF_get_system_parameters"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_get_system_parameters">[docs]</a><span class="k">def</span> <span class="nf">WF_get_system_parameters</span><span class="p">(</span><span class="n">wdir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get system parameters &quot;boxsize&quot; and &quot;maxsol&quot; for system in working directory</span>
+<span class="sd">    wdir. Typically, wdir is supposed to be the folder &quot;rex_0_get_system_parameters&quot;</span>
+<span class="sd">    which is created during the Workflow for setup of REX MD simulations during</span>
+<span class="sd">    the execution of rex.assign_best_decoys().</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wdir (str): working directory</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        d (int): distance between model and system edges. Defaults to 2.</span>
+<span class="sd">        bt (str): box type. Defaults to &quot;cubic&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        boxsize (float)</span>
+<span class="sd">            suggested value for maximum boxsize</span>
+<span class="sd">        maxsol (int)</span>
+<span class="sd">            suggested value for maximum solvent molecules</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+               <span class="s2">&quot;bt&quot;</span><span class="p">:</span> <span class="s2">&quot;cubic&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">########################################################################</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">wdir</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The working directory wdir does not exist or is not a directory.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># save cwd and go to wdir</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">wdir</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">wdir</span><span class="p">)</span>
+
+    <span class="n">pdbs</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pdb&quot;</span><span class="p">)</span>
+    <span class="n">ref_pdbs</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_ref.pdb&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_pdbs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found multiple &#39;_ref.pdbs&#39; in working directory </span><span class="si">{</span><span class="n">wdir</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_pdbs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">decoy_pdb</span> <span class="o">=</span> <span class="n">ref_pdbs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_pdbs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Found no &#39;_ref.pdbs&#39; in working directory </span><span class="si">{wdir}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdbs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found multiple pdbs in working directory </span><span class="si">{</span><span class="n">wdir</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdbs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">decoy_pdb</span> <span class="o">=</span> <span class="n">pdbs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdbs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Found no pdbs in working directory </span><span class="si">{wdir}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="c1"># generate topology</span>
+        <span class="n">protein_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">decoy_pdb</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># generate box</span>
+        <span class="n">box_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">protein_gro</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">bt</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># get boxsize</span>
+    <span class="n">boxsize</span> <span class="o">=</span> <span class="n">WF_getParameter_boxsize</span><span class="p">(</span><span class="s2">&quot;./logs/editconf_1.log&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="c1"># apply fixed boxsize</span>
+        <span class="n">box_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">protein_gro</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">bt</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">boxsize</span> <span class="o">==</span> <span class="n">WF_getParameter_boxsize</span><span class="p">(</span><span class="s2">&quot;./logs/editconf_2.log&quot;</span><span class="p">):</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success: new box vectors have fixed size: </span><span class="si">{</span><span class="n">boxsize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check above if new box vectors have fixed size: </span><span class="si">{</span><span class="n">boxsize</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+        <span class="c1"># generate solvent</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="n">box_gro</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># get maximum solvent number</span>
+    <span class="n">maxsol</span> <span class="o">=</span> <span class="n">WF_getParameter_maxsol</span><span class="p">(</span><span class="s2">&quot;./logs/solvate_1.log&quot;</span><span class="p">)</span>
+
+    <span class="c1"># go back to cwd</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span></div>
+
+
+<div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workflow: REX setup (without energy minimization)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())</span>
+<span class="sd">        boxsize (float): suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())</span>
+<span class="sd">        maxsol (int): suggested max solution parameter (output of gmx.WF_getParameter_max_solution())</span>
+<span class="sd">        verbose (bool): show blue log messages (saved file as, saved log as)</span>
+<span class="sd">        verbose_gmx (bool): show gmx module messages (requires verbose=True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">rex_dir</span> <span class="ow">in</span> <span class="n">rex_dirs</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">)</span>
+        <span class="n">decoy_pdb</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(</span><span class="s2">&quot;*_ref.pdb&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using decoy pdb: </span><span class="si">{</span><span class="n">decoy_pdb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 1) generate topology</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating topology...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">protein_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">decoy_pdb</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># 2) generate box</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating box with fixed size (</span><span class="si">{</span><span class="n">boxsize</span><span class="si">}</span><span class="s2">) ...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">protein_gro</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose_gmx</span><span class="p">)</span>
+
+        <span class="c1"># 3) generate solvent</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating solvent with fixed solvent molecules (</span><span class="si">{</span><span class="n">maxsol</span><span class="si">}</span><span class="s2">)...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">maxsol</span><span class="o">=</span><span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose_gmx</span><span class="p">)</span>
+
+        <span class="c1"># 4) generate ions</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Generating ions...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;../ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose_gmx</span><span class="p">)</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Finished setup of all REX DIRS (skipped energy minimization).&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="WF_REX_setup_energy_minimization"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup_energy_minimization">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup_energy_minimization</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workflow: REX energy minimization</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())</span>
+<span class="sd">        nsteps (None,int):</span>
+<span class="sd">          | maximum number of steps</span>
+<span class="sd">          | None: use .mdp option</span>
+<span class="sd">          | int: use instead of .mdp option</span>
+<span class="sd">        verbose (bool): show/hide GROMACS output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">rex_dir</span> <span class="ow">in</span> <span class="n">rex_dirs</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">rex_dir</span><span class="p">)</span>
+
+        <span class="c1"># 5) energy minimization</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Performing energy minimization...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;../min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;em.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="s2">&quot;topol.top&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nsteps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_gmx</span><span class="o">.</span><span class="n">mdrun</span><span class="p">(</span><span class="n">deffnm</span><span class="o">=</span><span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="n">nsteps</span><span class="o">=</span><span class="n">nsteps</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="n">_gmx</span><span class="o">.</span><span class="n">clean_up</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;Finished energy minimization of all REX DIRS.&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="create_special_group_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_special_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_special_group_ndx</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;special_group.ndx&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create index file for special group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_pdb (str): PDB file (after applying force field)</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        save_as (str)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ </span><span class="si">{</span><span class="n">sel</span><span class="si">}</span><span class="s2"> ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ATOM</span><span class="p">)):</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">ATOM</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">realpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="create_pull_group_ndx"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.create_pull_group_ndx">[docs]</a><span class="k">def</span> <span class="nf">create_pull_group_ndx</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="s2">&quot;name CA&quot;</span><span class="p">,</span> <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;pull_group.ndx&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create index file for pull group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ref_pdb (str): PDB file (after applying force field)</span>
+<span class="sd">        sel (str): selection string</span>
+<span class="sd">        save_as (str)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RESID</span><span class="p">,</span> <span class="n">RESNAME</span><span class="p">,</span> <span class="n">ATOM</span><span class="p">,</span> <span class="n">NAME</span> <span class="o">=</span> <span class="n">_top</span><span class="o">.</span><span class="n">parsePDB</span><span class="p">(</span><span class="n">ref_pdb</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="n">sel</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RESID</span><span class="p">)):</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ pull_res</span><span class="si">{</span><span class="n">RESID</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> ]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">ATOM</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">realpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file as: </span><span class="si">{</span><span class="n">realpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">################################################################################</span>
+<span class="c1">### prep REX run files functions</span>
+
+
+<div class="viewcode-block" id="prep_REX_temps"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_temps">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_temps</span><span class="p">(</span><span class="n">T_0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare REX temperatures.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        T_0 (None/float): starting temperature (Kelvin)</span>
+<span class="sd">        n_REX (None/int): number of replica</span>
+<span class="sd">        k (None/float): temperature distrubtion scaling factor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">T1</span> <span class="o">=</span> <span class="p">[]</span>		<span class="c1"># list with temperatures for method 1</span>
+    <span class="n">T2</span> <span class="o">=</span> <span class="p">[]</span>		<span class="c1"># list with temperatures for method 2</span>
+
+    <span class="k">if</span> <span class="n">T_0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">T_0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter starting temperature T_0 (Kelvin): &quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter starting temperature T_0 (Kelvin): &quot;</span><span class="p">,</span> <span class="n">T_0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_REX</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_REX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter replica number n_REX: &quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter replica number n_REX: &quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter scaling factor k: &quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter scaling factor k: &quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="c1"># method 1: same function for all replica</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Method 1:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;REX Temperature Distribution: T_i = T_0*exp(k*i)&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rex_temps.log&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved log as: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="s1">&#39;rex_temps.log&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Function: T_i = </span><span class="si">{}</span><span class="s2">*exp(</span><span class="si">{}</span><span class="s2">*i)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T_0</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Temperatures:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="p">):</span>
+            <span class="n">T_i</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="mf">1.00</span><span class="o">*</span><span class="n">T_0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">i</span><span class="p">),</span> <span class="s2">&quot;.2f&quot;</span><span class="p">)</span>
+            <span class="n">T1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T_i</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T_i</span><span class="p">))</span>
+
+    <span class="c1"># method 2: same as method 1 but with adjusting the coefficients ai</span>
+    <span class="c1"># (ai increase spacing of higher temperatures to get lower exchange probabilities)</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># lin. stretching factors</span>
+    <span class="n">delta_a</span> <span class="o">=</span> <span class="mf">0.04</span>
+
+    <span class="c1"># increase a by delta_a every 10 replica</span>
+    <span class="k">if</span> <span class="n">n_REX</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_REX</span><span class="o">//</span><span class="mi">10</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.00</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">delta_a</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">n_REX</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.00</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">delta_a</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Method 2&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;REX Temperature Distribution:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T_0 = </span><span class="si">{}</span><span class="s2"> K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T_0</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T_i = T_(i-1) + a_i * DELTA&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rex_temps.log&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>    <span class="c1"># same fout name as method 1 -&gt; will overwrite</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved log as: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="s1">&#39;rex_temps.log&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;REX Temperature Distribution:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;T_0 = </span><span class="si">{}</span><span class="s2"> K ; DELTA = T_0 * (exp(k*i)-exp(k*(i-1)))</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T_0</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;T_i = T_(i-1) + a_j * DELTA</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chosen Parameter:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;k = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)):</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a_</span><span class="si">{}</span><span class="s2"> = </span><span class="si">{:.2f}</span><span class="s2"> for i = </span><span class="si">{}</span><span class="s2">..</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="mi">9</span><span class="p">))</span>
+
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Temperatures:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_REX</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">T2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T_0</span><span class="p">)</span>  <span class="c1"># start value 300 K</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">//</span><span class="mi">10</span>  <span class="c1"># find out which a[index] to use</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">T_0</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+                <span class="n">T2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T2</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">*</span><span class="n">delta</span><span class="p">)</span>
+
+        <span class="n">T2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;.2f&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">T2</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">T2</span><span class="p">)):</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T2</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="c1"># comparison of method 1 and 2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Temperatures Method 1:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">T1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Temperatures Method 2:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+
+    <span class="c1"># DELTA TEST</span>
+    <span class="n">DELTA1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">DELTA2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">DELTA_DELTA</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">T1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">DELTA1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">T1</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">T1</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;.2f&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Delta Temps Method 1 (DTM1):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">DELTA1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">DELTA2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">T2</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">T2</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;.2f&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Delta Temps Method 2 (DTM2):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">DELTA2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">DELTA1</span><span class="p">)):</span>
+        <span class="n">DELTA_DELTA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">DELTA2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">DELTA1</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;.2f&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Delta_Delta (DTM2-DTM1):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">DELTA_DELTA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="prep_REX_mdp"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_mdp">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_mdp</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare REX mdp -&gt; copy template and change tempereratures according to rex_temps.log</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        main_dir (str): main directory with rex_1, rex_2, etc.</span>
+<span class="sd">        template (str): template file</span>
+<span class="sd">        n_REX (None/int): number of replica</span>
+<span class="sd">        verbose (bool)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rex_temps.log&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="c1"># search for REX temperatures (should be last entry)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">REX_TEMPS</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+
+    <span class="c1"># create N rex.mdp files and edit the ref_t line</span>
+    <span class="k">if</span> <span class="n">n_REX</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_REX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter n_REX:&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter n_REX:&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2"> as template and changing temperatures according to rex_temps.log...&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;rex_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_misc</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="n">template</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved mdp file as: &quot;</span> <span class="o">+</span> <span class="n">file_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;ref_t&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ref_t   = </span><span class="si">%s</span><span class="s2">       </span><span class="si">%s</span><span class="s2">         ; reference temperature, one for each group, in K</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REX_TEMPS</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">REX_TEMPS</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="s2">&quot;gen_temp&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;gen_temp = </span><span class="si">%s</span><span class="s2">  ; temperature for Maxwell distribution</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REX_TEMPS</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="prep_REX_tpr"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.prep_REX_tpr">[docs]</a><span class="k">def</span> <span class="nf">prep_REX_tpr</span><span class="p">(</span><span class="n">main_dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare REX tpr.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        main_dir (str): main directory with rex_1, rex_2, etc.</span>
+<span class="sd">        n_REX (None/int): number of replica</span>
+<span class="sd">        verbose (bool)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        f (str)</span>
+<span class="sd">        o (str)</span>
+<span class="sd">        c (str)</span>
+<span class="sd">        p (str)</span>
+
+<span class="sd">    .. Note:: Keyword Args are parameter of gmx.grompp(f,o,c,r,p)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="s2">&quot;rex.mdp&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;o&quot;</span><span class="p">:</span> <span class="s2">&quot;rex.tpr&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;em.gro&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="s2">&quot;topol_mod.top&quot;</span><span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_misc</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1">############################################################################</span>
+    <span class="n">rex_dirs</span> <span class="o">=</span> <span class="n">get_REX_DIRS</span><span class="p">(</span><span class="n">main_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_REX</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_REX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter n_REX:&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter n_REX:&quot;</span><span class="p">,</span> <span class="n">n_REX</span><span class="p">)</span>
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;preparing rex.tpr for </span><span class="si">{</span><span class="n">n_REX</span><span class="si">}</span><span class="s2"> replica.&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ndx</span><span class="p">,</span> <span class="n">rex_dir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">[:</span><span class="n">n_REX</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;#######################################################################################&quot;</span><span class="p">)</span>
+        <span class="n">_gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rex_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rex_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">o</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">c</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rex_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rex_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished REX tpr creation for REX DIRS (i=1..</span><span class="si">{</span><span class="n">n_REX</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, KIT-MBS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
