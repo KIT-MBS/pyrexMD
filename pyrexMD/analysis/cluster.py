@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: cluster.py
 # @Last modified by:   arthur
-# @Last modified time: 29.01.2022
+# @Last modified time: 24.02.2022
 
 """
 .. hint:: This module contains functions for:
@@ -1269,7 +1269,7 @@ def get_cluster_targets(cluster_data_n10, cluster_data_n30, score_file, prec=3, 
             n30 target distances, with distance n30_dist[i] = n10_centers[n10_targets[0]] - n30_centers[i]
     """
     cluster_scores_n10 = map_cluster_scores(cluster_data=cluster_data_n10, score_data=score_file)
-    #cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_file=score_file)
+    #cluster_scores_n30 = map_cluster_scores(cluster_data=cluster_data_n30, score_data=score_file)
 
     # find optimum center of n10 (lowest mean)
     _, n10_targets = _misc.get_ranked_array(cluster_scores_n10.mean, reverse=True, verbose=False)
