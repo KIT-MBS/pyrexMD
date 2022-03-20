@@ -26,7 +26,7 @@ step by passing the keyword argument ``plot=True``.
 combine individual steps into comprehensive workflows with additional automation
 features. It is possible to rapidly create whole setup or structure-analysis
 workflows within a few commands, thereby significantly enhancing productivity
-and reducing the time spent at various stages of the project.
+and reducing the time spent on various stages of the project.
 
 With `pyrexMD`, it becomes straightforward to create, share, and reproduce
 research results or transfer the work to other biomolecular structures of
