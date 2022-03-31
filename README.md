@@ -28,7 +28,7 @@ features. It is possible to rapidly create whole setup or structure-analysis
 workflows within a few commands, thereby significantly enhancing productivity
 and reducing the time spent on various stages of the project.
 
-With `pyrexMD`, it becomes straightforward to create, share, and reproduce
+`pyrexMD` makes it straightforward to create, share, and reproduce
 research results or transfer the work to other biomolecular structures of
 interest. Furthermore, it lowers the technical barrier for non-specialists who
 want to use Replica Exchange for enhanced sampling.
