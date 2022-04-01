@@ -93,13 +93,13 @@ The code example below shows a complete setup of a normal MD simulation.
     gmx.pdb2gmx(f=ref, o="protein.gro", ff='amber99sb-ildn', water='tip3p', ignh=True)
     gmx.editconf(f="protein.gro", o="box.gro", d=2.0, c=True, bt="cubic")
 
+    # copy mdp files (ions.mdp, min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory
+    misc.cp("path/to/mdp/files", ".")
+
     # generate solvent & ions
     gmx.solvate(cp="box.gro", o="solvent.gro")
     gmx.grompp(f="ions.mdp", o="ions.tpr",c="solvent.gro")
     gmx.genion(s="ions.tpr", o="ions.gro", neutral=True, input="SOL")
-
-    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory
-    misc.cp("path/to/mdp/files", ".")
 
     # minimize
     gmx.grompp(f="min.mdp", o="min.tpr", c="ions.gro")
@@ -141,7 +141,7 @@ incorrect mapping of bias contacts, etc.
     # check for consistent topology
     rex.check_REX_PDBS(decoy_dir)
 
-    # copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory
+    # copy mdp files (ions.mdp, min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory
     misc.cp("path/to/mdp/files", ".")
 
     # get parameters for fixed box size and solvent molecules
