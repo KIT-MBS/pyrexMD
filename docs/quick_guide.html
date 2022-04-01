@@ -167,13 +167,13 @@ logs folder.</p>
 <span class="n">gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">editconf</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;protein.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bt</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
 
+<span class="c1"># copy mdp files (ions.mdp, min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
+<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
 <span class="c1"># generate solvent &amp; ions</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">solvate</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="s2">&quot;box.gro&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;ions.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;solvent.gro&quot;</span><span class="p">)</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">genion</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;ions.tpr&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">,</span> <span class="n">neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;SOL&quot;</span><span class="p">)</span>
-
-<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, md.mdp) into working directory</span>
-<span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
 <span class="c1"># minimize</span>
 <span class="n">gmx</span><span class="o">.</span><span class="n">grompp</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;min.mdp&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="s2">&quot;min.tpr&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;ions.gro&quot;</span><span class="p">)</span>
@@ -213,7 +213,7 @@ incorrect mapping of bias contacts, etc.</p>
 <span class="c1"># check for consistent topology</span>
 <span class="n">rex</span><span class="o">.</span><span class="n">check_REX_PDBS</span><span class="p">(</span><span class="n">decoy_dir</span><span class="p">)</span>
 
-<span class="c1"># copy mdp files (min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
+<span class="c1"># copy mdp files (ions.mdp, min.mdp, nvt.mdp, npt.mdp, rex.mdp) into working directory</span>
 <span class="n">misc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="s2">&quot;path/to/mdp/files&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
 <span class="c1"># get parameters for fixed box size and solvent molecules</span>
