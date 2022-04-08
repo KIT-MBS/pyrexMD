@@ -1276,7 +1276,7 @@ simulation setup.</p>
 <h2>Content:<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.rex.WF_REX_setup">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_gmx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.rex.</span></span><span class="sig-name descname"><span class="pre">WF_REX_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rex_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amber99sb-ildn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tip3p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_gmx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/rex.html#WF_REX_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.rex.WF_REX_setup" title="Permalink to this definition"></a></dt>
 <dd><p>Workflow: REX setup (without energy minimization)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1284,6 +1284,14 @@ simulation setup.</p>
 <li><p><strong>rex_dirs</strong> (<em>list</em>) – list with rex_dirs (output of rex.get_REX_DIRS())</p></li>
 <li><p><strong>boxsize</strong> (<em>float</em>) – suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())</p></li>
 <li><p><strong>maxsol</strong> (<em>int</em>) – suggested max solution parameter (output of gmx.WF_getParameter_max_solution())</p></li>
+<li><p><strong>ff</strong> (<em>str</em>) – <div class="line-block">
+<div class="line">force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</div>
+<div class="line">”amber99sb-ildn” etc. for proteins</div>
+<div class="line">”amber14sb_OL15” etc. for RNAs</div>
+</div>
+</p></li>
+<li><p><strong>water</strong> (<em>str</em>) – water model</p></li>
+<li><p><strong>ignh</strong> (<em>bool</em>) – ignore hydrogen</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – show blue log messages (saved file as, saved log as)</p></li>
 <li><p><strong>verbose_gmx</strong> (<em>bool</em>) – show gmx module messages (requires verbose=True)</p></li>
 </ul>

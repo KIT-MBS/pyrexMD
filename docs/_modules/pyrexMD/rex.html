@@ -73,7 +73,7 @@
 <span class="c1"># @Date:   05.05.2021</span>
 <span class="c1"># @Filename: rex.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 30.11.2021</span>
+<span class="c1"># @Last modified time: 01.04.2022</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -563,7 +563,8 @@
     <span class="k">return</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span></div>
 
 
-<div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="WF_REX_setup"><a class="viewcode-back" href="../../pyrexMD.html#pyrexMD.rex.WF_REX_setup">[docs]</a><span class="k">def</span> <span class="nf">WF_REX_setup</span><span class="p">(</span><span class="n">rex_dirs</span><span class="p">,</span> <span class="n">boxsize</span><span class="p">,</span> <span class="n">maxsol</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s1">&#39;amber99sb-ildn&#39;</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="s1">&#39;tip3p&#39;</span><span class="p">,</span>
+                 <span class="n">ignh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_gmx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Workflow: REX setup (without energy minimization)</span>
 
@@ -571,6 +572,12 @@
 <span class="sd">        rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())</span>
 <span class="sd">        boxsize (float): suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())</span>
 <span class="sd">        maxsol (int): suggested max solution parameter (output of gmx.WF_getParameter_max_solution())</span>
+<span class="sd">        ff (str):</span>
+<span class="sd">          | force field (see &lt;GROMACS_path&gt;/top/&lt;ff&gt; for valid inputs)</span>
+<span class="sd">          | &quot;amber99sb-ildn&quot; etc. for proteins</span>
+<span class="sd">          | &quot;amber14sb_OL15&quot; etc. for RNAs</span>
+<span class="sd">        water (str): water model</span>
+<span class="sd">        ignh (bool): ignore hydrogen</span>
 <span class="sd">        verbose (bool): show blue log messages (saved file as, saved log as)</span>
 <span class="sd">        verbose_gmx (bool): show gmx module messages (requires verbose=True)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -583,7 +590,7 @@
         <span class="c1"># 1) generate topology</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating topology...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">_misc</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">):</span>
-            <span class="n">protein_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">decoy_pdb</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">protein_gro</span> <span class="o">=</span> <span class="n">_gmx</span><span class="o">.</span><span class="n">pdb2gmx</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">decoy_pdb</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="n">ff</span><span class="p">,</span> <span class="n">water</span><span class="o">=</span><span class="n">water</span><span class="p">,</span> <span class="n">ignh</span><span class="o">=</span><span class="n">ignh</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># 2) generate box</span>
         <span class="n">_misc</span><span class="o">.</span><span class="n">cprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating box with fixed size (</span><span class="si">{</span><span class="n">boxsize</span><span class="si">}</span><span class="s2">) ...&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
