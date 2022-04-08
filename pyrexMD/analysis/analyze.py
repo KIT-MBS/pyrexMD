@@ -2,7 +2,7 @@
 # @Date:   17.04.2021
 # @Filename: analysis.py
 # @Last modified by:   arthur
-# @Last modified time: 10.02.2022
+# @Last modified time: 08.04.2022
 
 """
 .. hint:: This module contains various functions for basic trajectory analyses,
@@ -528,7 +528,7 @@ def get_trendline(xdata, ydata, compress=10):
     return trend_xdata, trend_ydata
 
 
-def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
+def plot_trendline(xdata, ydata, compress=10, fig=None, remove_previous=True, **kwargs):
     """
     Plot trendline of <xdata, ydata> and return trendline object
 
@@ -538,7 +538,8 @@ def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
         xdata (list, array)
         ydata (list, array)
         compress (int): compress factor (sum and normalize <compress> elements)
-        fignum (int): figure number (get with plt.gcf().number)
+        fig (int): figure number (get with plt.gcf().number)
+        remove_previous (bool): remove previous trendline data
 
     Keyword Args:
         "alpha": 1.0
@@ -573,11 +574,12 @@ def plot_trendline(xdata, ydata, compress=10, fig=None, **kwargs):
         fig = plt.gcf()
 
     # remove existing trendline
-    try:
-        fig.trendline.remove()
-        del fig.trendline
-    except AttributeError:
-        pass  # no trendline found -> do nothing
+    if remove_previous:
+        try:
+            fig.trendline.remove()
+            del fig.trendline
+        except AttributeError:
+            pass  # no trendline found -> do nothing
 
     # plot new trendline
     trendline = plt.plot(trend_xdata, trend_ydata,
