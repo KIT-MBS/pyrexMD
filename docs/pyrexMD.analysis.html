@@ -805,7 +805,7 @@ requires 1 extra bin.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrexMD.analysis.analyze.plot_trendline">
-<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analyze.</span></span><span class="sig-name descname"><span class="pre">plot_trendline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analyze.html#plot_trendline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analyze.plot_trendline" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrexMD.analysis.analyze.</span></span><span class="sig-name descname"><span class="pre">plot_trendline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_previous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrexMD/analysis/analyze.html#plot_trendline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrexMD.analysis.analyze.plot_trendline" title="Permalink to this definition"></a></dt>
 <dd><p>Plot trendline of &lt;xdata, ydata&gt; and return trendline object</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -817,7 +817,8 @@ requires 1 extra bin.</p></li>
 <li><p><strong>xdata</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
 <li><p><strong>ydata</strong> (<em>list</em><em>, </em><em>array</em>) – </p></li>
 <li><p><strong>compress</strong> (<em>int</em>) – compress factor (sum and normalize &lt;compress&gt; elements)</p></li>
-<li><p><strong>fignum</strong> (<em>int</em>) – figure number (get with plt.gcf().number)</p></li>
+<li><p><strong>fig</strong> (<em>int</em>) – figure number (get with plt.gcf().number)</p></li>
+<li><p><strong>remove_previous</strong> (<em>bool</em>) – remove previous trendline data</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>

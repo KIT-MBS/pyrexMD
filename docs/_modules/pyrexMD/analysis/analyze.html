@@ -73,7 +73,7 @@
 <span class="c1"># @Date:   17.04.2021</span>
 <span class="c1"># @Filename: analysis.py</span>
 <span class="c1"># @Last modified by:   arthur</span>
-<span class="c1"># @Last modified time: 10.02.2022</span>
+<span class="c1"># @Last modified time: 08.04.2022</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">.. hint:: This module contains various functions for basic trajectory analyses,</span>
@@ -599,7 +599,7 @@
     <span class="k">return</span> <span class="n">trend_xdata</span><span class="p">,</span> <span class="n">trend_ydata</span></div>
 
 
-<div class="viewcode-block" id="plot_trendline"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analyze.plot_trendline">[docs]</a><span class="k">def</span> <span class="nf">plot_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_trendline"><a class="viewcode-back" href="../../../pyrexMD.analysis.html#pyrexMD.analysis.analyze.plot_trendline">[docs]</a><span class="k">def</span> <span class="nf">plot_trendline</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_previous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot trendline of &lt;xdata, ydata&gt; and return trendline object</span>
 
@@ -609,7 +609,8 @@
 <span class="sd">        xdata (list, array)</span>
 <span class="sd">        ydata (list, array)</span>
 <span class="sd">        compress (int): compress factor (sum and normalize &lt;compress&gt; elements)</span>
-<span class="sd">        fignum (int): figure number (get with plt.gcf().number)</span>
+<span class="sd">        fig (int): figure number (get with plt.gcf().number)</span>
+<span class="sd">        remove_previous (bool): remove previous trendline data</span>
 
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        &quot;alpha&quot;: 1.0</span>
@@ -644,11 +645,12 @@
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
 
     <span class="c1"># remove existing trendline</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">trendline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-        <span class="k">del</span> <span class="n">fig</span><span class="o">.</span><span class="n">trendline</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="k">pass</span>  <span class="c1"># no trendline found -&gt; do nothing</span>
+    <span class="k">if</span> <span class="n">remove_previous</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">trendline</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">fig</span><span class="o">.</span><span class="n">trendline</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># no trendline found -&gt; do nothing</span>
 
     <span class="c1"># plot new trendline</span>
     <span class="n">trendline</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trend_xdata</span><span class="p">,</span> <span class="n">trend_ydata</span><span class="p">,</span>
