@@ -2,7 +2,7 @@
 # @Date:   05.05.2021
 # @Filename: rex.py
 # @Last modified by:   arthur
-# @Last modified time: 30.11.2021
+# @Last modified time: 01.04.2022
 
 
 """
@@ -492,7 +492,8 @@ def WF_get_system_parameters(wdir, verbose=False, **kwargs):
     return boxsize, maxsol
 
 
-def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
+def WF_REX_setup(rex_dirs, boxsize, maxsol, ff='amber99sb-ildn', water='tip3p',
+                 ignh=True, verbose=False, verbose_gmx=False):
     """
     Workflow: REX setup (without energy minimization)
 
@@ -500,6 +501,12 @@ def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
         rex_dirs (list): list with rex_dirs (output of rex.get_REX_DIRS())
         boxsize (float): suggested boxsize parameter (output of gmx.WF_getParameter_boxsize())
         maxsol (int): suggested max solution parameter (output of gmx.WF_getParameter_max_solution())
+        ff (str):
+          | force field (see <GROMACS_path>/top/<ff> for valid inputs)
+          | "amber99sb-ildn" etc. for proteins
+          | "amber14sb_OL15" etc. for RNAs
+        water (str): water model
+        ignh (bool): ignore hydrogen
         verbose (bool): show blue log messages (saved file as, saved log as)
         verbose_gmx (bool): show gmx module messages (requires verbose=True)
     """
@@ -512,7 +519,7 @@ def WF_REX_setup(rex_dirs, boxsize, maxsol, verbose=False, verbose_gmx=False):
         # 1) generate topology
         _misc.cprint("\nGenerating topology...", "red")
         with _misc.HiddenPrints(verbose=verbose):
-            protein_gro = _gmx.pdb2gmx(f=decoy_pdb, verbose=False)
+            protein_gro = _gmx.pdb2gmx(f=decoy_pdb, ff=ff, water=water, ignh=ignh, verbose=False)
 
         # 2) generate box
         _misc.cprint(f"Generating box with fixed size ({boxsize}) ...", "red")

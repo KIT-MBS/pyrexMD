@@ -2,7 +2,7 @@
 # @Date:   07.05.2021
 # @Filename: contacts.py
 # @Last modified by:   arthur
-# @Last modified time: 16.09.2021
+# @Last modified time: 01.04.2022
 
 """
 .. hint:: This module contains functions for native contact and bias contact analyses.
@@ -467,16 +467,16 @@ def plot_Contact_Map_Distances(ref, NC, NC_dist, pdbid="pdbid", **kwargs):
         del seq[-1]
         return seq
     ############################################################################
-    cmap_Protein = {"dodgerblue": 2.0,
-                    "lightgreen": 3.0,
-                    "yellow": 4.0,
-                    "orange": 5.0,
-                    "red": 6.0}
-    cmap_RNA = {"dodgerblue": 4.0,
-                "lightgreen": 6.0,
-                "yellow": 8.0,
-                "orange": 10.0,
-                "red": 12.0}
+    cmap_Protein = {"tab:blue": 2.0,
+                    "tab:green": 3.0,
+                    "tab:olive": 4.0,
+                    "tab:orange": 5.0,
+                    "tab:red": 6.0}
+    cmap_RNA = {"tab:blue": 4.0,
+                "tab:green": 6.0,
+                "tab:olive": 8.0,
+                "tab:orange": 10.0,
+                "tab:red": 12.0}
     default = {"cmap": None,
                "vmin": None,
                "vmax": None,
