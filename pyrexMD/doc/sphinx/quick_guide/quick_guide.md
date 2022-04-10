@@ -46,7 +46,7 @@ pyrexMD.analysis.cluster
     Contains functions for decoy clustering and post-REX clustering analyses.
 
 pyrexMD.analysis.contacts
-    Contains functions for native contact and bias contact analyses.
+    Contains functions for native-contact and bias-contact analyses.
 
 pyrexMD.analysis.dihedrals
     Contains functions for dihedral-angle analyses.
